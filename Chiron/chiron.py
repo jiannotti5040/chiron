@@ -23798,7 +23798,10 @@ class Chiron:
         self.congress.seal()
         st = self.state()
         cd = st.get("Congress", {}) if isinstance(st.get("Congress"), dict) else {}
-        gsum = {"domains": len(st.get("domains", [])), "items": cd.get("vault_items"),
+        # true domain total = live this run UNION everything persisted (the summary),
+        # so resumed runs report the full count, not just domains touched this session
+        all_domains = set(st.get("domains", [])) | set(getattr(self, "_domains_summary", {}))
+        gsum = {"domains": len(all_domains), "items": cd.get("vault_items"),
                 "minted_organisms": len(self.self_mod.history), "languages": len(st.get("atlas", [])),
                 "tiers": self.memory_tiers(), "integral": self.growth["integral"],
                 "general": self.growth["general"], "cross_domain_transfers": self.growth["cross_domain"],
