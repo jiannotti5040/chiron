@@ -268,6 +268,8 @@ def main(argv=None):
     ap.add_argument("--dry-run", action="store_true", help="offline demo: built-in sample, no network, no git")
     ap.add_argument("--reset", action="store_true", help="wipe to a clean seed Congress + clear resume state, then exit")
     ap.add_argument("--once", action="store_true", help="run a single pass through the topics, then exit")
+    ap.add_argument("--serve", action="store_true", help="also open the live dashboard while crawling (one command)")
+    ap.add_argument("--port", type=int, default=8765, help="dashboard port for --serve")
     args = ap.parse_args(argv)
     P = load_params(args.params)
 
@@ -327,6 +329,16 @@ def main(argv=None):
         if len(seen) > before:
             print("[resume] recognized %d already-ingested articles from the Congress" % (len(seen) - before))
 
+    if args.serve and not args.dry_run:                 # one command: crawl + live dashboard
+        try:
+            import chiron as _ch, threading as _th
+            _th.Thread(target=_ch._serve_dashboard,
+                       args=(["--congress", cong, "--port", str(args.port)],), daemon=True).start()
+        except Exception as _e:
+            print("[serve] could not start dashboard:", _e)
+
+    push_marker = [size_mb(cong)]      # Congress size at last push; push again only after +push_when_mb growth
+
     def push(reason=""):
         if args.dry_run:                                # NEVER mutate the real Congress in a dry run
             tmp = cong + ".dryrun"
@@ -341,6 +353,7 @@ def main(argv=None):
             info = org.compact(); org.save_memory(cong)
             print("  [compacted -> %.2f MB; trimmed %s; kept %d laws]"
                   % (size_mb(cong), info["trimmed"], info["integral_laws_kept"]))
+        push_marker[0] = size_mb(cong)                  # reset the growth counter at every push
         if not gitcfg.get("push"):
             print("  [saved %.2f MB locally]" % size_mb(cong)); return
         git(["add", cong])
@@ -418,7 +431,7 @@ def main(argv=None):
                     queue(lt, domain)                  # children inherit the parent's subject
             except Exception:
                 pass
-        if size_mb(cong) >= thresh:
+        if size_mb(cong) - push_marker[0] >= thresh:   # push per +push_when_mb of GROWTH (not absolute size)
             push("(full)")
         return 1                          # request pacing is handled globally in _fetch
 
