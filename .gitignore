@@ -12,6 +12,7 @@ Creative Works/
 chiron_checkpoint_*.json
 grow.log
 nohup.out
+chiron_control.json
 chiron_fastops.so
 *.so
 proposals/

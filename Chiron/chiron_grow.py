@@ -501,12 +501,36 @@ def main(argv=None):
             push("(full)")
         return 1                          # request pacing is handled globally in _fetch
 
+    control_path = os.path.join(os.path.dirname(cong), "chiron_control.json")
+    applied_source = None
+
     mode = "single pass (--once)" if args.once else "dry-run (one demo pass)" if args.dry_run else "CONTINUOUS"
     print("[grow] %s — Ctrl-C to stop." % mode)
     try:
         while True:
             state["passes"] = state.get("passes", 0) + 1
             print("==== pass %d ====" % state["passes"]); new_this_pass = 0
+            # operator redirect: pick up a new feed set from the dashboard, if any
+            if not args.dry_run:
+                try:
+                    ns = (json.load(open(control_path)).get("source")
+                          if os.path.exists(control_path) else None)
+                except Exception:
+                    ns = None
+                if ns and ns != applied_source:
+                    src = ns
+                    smode = src.get("name", "wikipedia")
+                    src_prefix = {"wikipedia": "wikipedia:", "web": "web:", "api": "api:",
+                                  "oeis": "oeis:"}.get(smode, smode + ":")
+                    same_dom = bool(src.get("same_domain_only", False))
+                    api_url = src.get("api_url", api_url)
+                    ua = src.get("user_agent", ua)
+                    _SSL["verify"] = bool(src.get("verify_ssl", True)); _SSL["ctx"] = None
+                    frontier.clear(); frontier_set.clear(); item_domain.clear()
+                    applied_source = ns
+                    print("  [redirect] now consuming: %s %s" % (smode,
+                          str(src.get("seeds") or src.get("query") or src.get("list_url") or "")[:80]))
+                    save_state()
             if not args.dry_run and gitcfg.get("pull_first"):
                 git(["pull", "--rebase"])
             # 1) seed the pass. wikipedia: topic search (deepening each pass).

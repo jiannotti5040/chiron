@@ -27146,6 +27146,38 @@ def _serve_dashboard(argv):
                 return {"state": org.self_growth_state(),
                         "concepts": list(getattr(org, "concepts", {}).values()),
                         "congress_path": congress_path}
+            if path == "/api/source":
+                # operator redirects what the grower consumes: writes a control file
+                # the grower picks up on its next pass (wikipedia / web / api / oeis).
+                ctrl = (os.path.join(os.path.dirname(os.path.abspath(congress_path)), "chiron_control.json")
+                        if congress_path else None)
+                if not ctrl:
+                    return {"error": "start serve with --congress <file> to control the feed"}
+                if payload and payload.get("name"):
+                    name = payload["name"]; value = str(payload.get("value", "")).strip()
+                    if name == "web":
+                        src = {"name": "web", "seeds": [s for s in re.split(r"[\s,]+", value) if s],
+                               "same_domain_only": bool(payload.get("same_domain_only")),
+                               "domain_label": payload.get("domain_label") or "web"}
+                    elif name == "api":
+                        src = {"name": "api", "list_url": value,
+                               "items_path": payload.get("items_path", ""),
+                               "id_field": payload.get("id_field", "id")}
+                    elif name == "oeis":
+                        src = {"name": "oeis", "search_url": "https://oeis.org/search",
+                               "query": value or "keyword:core"}
+                    else:
+                        src = {"name": "wikipedia", "api_url": "https://en.wikipedia.org/w/api.php"}
+                    src["verify_ssl"] = True
+                    src.setdefault("user_agent", "Chiron-Grow/1.0 (operator-directed; dashboard)")
+                    with open(ctrl, "w", encoding="utf-8") as f:
+                        _json.dump({"source": src}, f, indent=2)
+                    return {"ok": True, "source": src,
+                            "note": "the grower switches to this feed on its next pass"}
+                try:
+                    return {"current": _json.load(open(ctrl, encoding="utf-8")).get("source")}
+                except Exception:
+                    return {"current": None}
             if path == "/api/ledger":
                 gw = _fresh()._growth_state()
                 return {"laws": gw["laws"], "history": gw["history"]}
