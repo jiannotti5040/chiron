@@ -108,28 +108,34 @@ _THROTTLE = {"last": 0.0, "min": 0.0}    # min seconds between ANY two requests 
 
 
 def _fetch(url, ua, timeout=25):
-    gap = _THROTTLE["min"] - (time.perf_counter() - _THROTTLE["last"])
-    if gap > 0:
-        time.sleep(gap)
-    _THROTTLE["last"] = time.perf_counter()
     req = urllib.request.Request(url, headers={"User-Agent": ua, "Accept": "*/*"})
-    try:
-        with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx()) as r:
-            return r.read()
-    except urllib.error.URLError as e:
-        # macOS Python without a CA bundle raises CERTIFICATE_VERIFY_FAILED. These
-        # are read-only fetches of public material, so fall back to unverified TLS
-        # once and keep going rather than dying on every request.
-        reason = str(getattr(e, "reason", e))
-        if (not _SSL["fell_back"]) and ("CERTIFICATE_VERIFY" in reason or "SSL" in reason):
-            _SSL["fell_back"] = True
-            _SSL["verify"] = False
-            _SSL["ctx"] = None
-            print("  [ssl] CA verification unavailable on this machine; "
-                  "continuing with unverified TLS for public reads")
+    for attempt in range(6):
+        gap = _THROTTLE["min"] - (time.perf_counter() - _THROTTLE["last"])
+        if gap > 0:
+            time.sleep(gap)
+        _THROTTLE["last"] = time.perf_counter()
+        try:
             with urllib.request.urlopen(req, timeout=timeout, context=_ssl_ctx()) as r:
                 return r.read()
-        raise
+        except urllib.error.HTTPError as e:
+            # 429 = rate-limited. Wait what the server asks (Retry-After), else an
+            # escalating backoff, then retry the SAME request — don't abort the batch.
+            if e.code == 429 and attempt < 5:
+                ra = e.headers.get("Retry-After") if getattr(e, "headers", None) else None
+                wait = float(ra) if (ra and str(ra).isdigit()) else min(20 * (2 ** attempt), 300)
+                print("  [429 rate-limited by source — waiting %ds]" % int(wait))
+                time.sleep(wait); continue
+            raise
+        except urllib.error.URLError as e:
+            # macOS Python without a CA bundle raises CERTIFICATE_VERIFY_FAILED on
+            # read-only public fetches; fall back to unverified TLS once, then retry.
+            reason = str(getattr(e, "reason", e))
+            if (not _SSL["fell_back"]) and ("CERTIFICATE_VERIFY" in reason or "SSL" in reason):
+                _SSL["fell_back"] = True; _SSL["verify"] = False; _SSL["ctx"] = None
+                print("  [ssl] CA verification unavailable; continuing with unverified TLS")
+                continue
+            raise
+    raise urllib.error.URLError("max retries exceeded (rate limit)")
 
 
 def _get(url, ua, timeout=25):
@@ -200,18 +206,27 @@ def wiki_titles(api_url, topic, limit, offset, ua):
     return [it["title"] for it in d.get("query", {}).get("search", [])]
 
 
+_WIKI_LINKS_CACHE = {}     # title -> links, captured alongside the extract in ONE request
+
+
 def wiki_text(api_url, title, ua):
-    q = {"action": "query", "prop": "extracts", "explaintext": 1, "redirects": 1,
-         "titles": title, "format": "json"}
+    # Fetch the article's text AND its links in a single request (prop=extracts|links),
+    # halving the number of calls to the source — the biggest lever against 429s.
+    q = {"action": "query", "prop": "extracts|links", "explaintext": 1, "redirects": 1,
+         "plnamespace": 0, "pllimit": 200, "titles": title, "format": "json"}
     d = _get(api_url + "?" + urllib.parse.urlencode(q), ua)
     for _, pg in d.get("query", {}).get("pages", {}).items():
+        _WIKI_LINKS_CACHE[title] = [l["title"] for l in pg.get("links", []) if l.get("title")]
         return pg.get("extract", "") or ""
     return ""
 
 
 def wiki_links(api_url, title, ua, limit=20):
-    # The article's outbound links (namespace 0 = real articles) become the
-    # ever-growing frontier, so the crawl extends itself instead of running dry.
+    # Reuse the links captured with the extract (no extra request). Only if the text
+    # wasn't fetched first do we make a dedicated links call.
+    cached = _WIKI_LINKS_CACHE.pop(title, None)
+    if cached is not None:
+        return cached[:max(0, limit)]
     q = {"action": "query", "prop": "links", "plnamespace": 0,
          "pllimit": max(1, min(500, limit)), "titles": title, "format": "json"}
     d = _get(api_url + "?" + urllib.parse.urlencode(q), ua)
