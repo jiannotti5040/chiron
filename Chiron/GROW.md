@@ -52,9 +52,17 @@ pass), `--reset` (clean seed + clear cursor). Background it with
   subject.
 - **`api`** — `source.name:"api"` with `list_url`, `items_path` (dot-path to the
   array), `id_field`, optional `item_url_template`.
+- **`oeis`** — `source.name:"oeis"` with a `query` (default `keyword:core`). Feeds the
+  engine **structured integer sequences** — its ideal food: nearly every sequence
+  collapses to a verified law (arithmetic, geometric, recurrence, polynomial…), so
+  this is the source that best showcases what Chiron actually does. Ready profile:
+  `python3 chiron_grow.py --params grow-public/profiles/oeis.json --once`.
 
-Other knobs: `topics`, `articles_per_topic`, `links_per_article`,
-`frontier_per_pass`, `push_when_mb`, `max_congress_mb`, `rate_limit_seconds`, and
+Wikipedia fetches are **batched** (≈20 articles per request) and skip
+disambiguation/list/index pages; each item is capped at `max_chars_per_item` so the
+Congress stays value-dense. Other knobs: `topics`, `articles_per_topic`,
+`links_per_article`, `frontier_per_pass`, `push_when_mb`, `max_congress_mb`,
+`rate_limit_seconds`, and
 `git` (`push` / `pull_first` / `branch`).
 
 ## Notes

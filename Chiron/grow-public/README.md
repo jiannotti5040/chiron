@@ -45,6 +45,21 @@ It crawls the seed legal texts (staying on-domain), reduces them to text, and
 assimilates them as the `regulation` subject. Add your own jurisdictions by editing
 `profiles/regulatory.json` → `source.seeds`.
 
+## Structured data — OEIS (the engine's ideal food)
+
+The invariant engine shines on structured sequences, not prose. A ready profile
+feeds it the OEIS (On-Line Encyclopedia of Integer Sequences), where nearly every
+entry collapses to a verified law:
+
+```bash
+cd Chiron
+python3 chiron_grow.py --params grow-public/profiles/oeis.json --once
+```
+
+Each sequence's terms go straight to `collapse` — arithmetic, geometric, recurrence,
+polynomial, and more become integral laws with high yield. Change the corpus via
+`profiles/oeis.json` → `source.query` (e.g. `keyword:nice`).
+
 ## Any source — website, API, or wiki
 
 Edit `parameters.json` → `source`:

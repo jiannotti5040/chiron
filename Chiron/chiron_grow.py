@@ -67,6 +67,7 @@ DEFAULT_PARAMS = {
                "government", "medicine", "philosophy", "debate", "rhetoric",
                "art", "music", "economics", "humanities", "poetry", "literature"],
     "articles_per_topic": 100,
+    "max_chars_per_item": 8000,
     "links_per_article": 20,
     "frontier_per_pass": 400,
     "frontier_max": 20000,
@@ -207,11 +208,40 @@ def wiki_titles(api_url, topic, limit, offset, ua):
 
 
 _WIKI_LINKS_CACHE = {}     # title -> links, captured alongside the extract in ONE request
+_WIKI_TEXT_CACHE = {}      # title -> extract, captured by a BATCH prefetch (anti-429)
+
+# Low-value pages the crawl should not waste requests on (disambiguation, lists, etc.)
+_SKIP_TITLE = re.compile(r"\((disambiguation)\)\s*$|^(List of|Index of|Outline of|Glossary of)\b", re.I)
+
+
+def is_relevant_title(title):
+    return bool(title) and not _SKIP_TITLE.search(title)
+
+
+def wiki_prefetch(api_url, titles, ua, links_limit=500):
+    # Pull text + links for up to ~20 titles in ONE request and cache them, so the
+    # per-article consider() calls hit cache instead of the network (~20x fewer calls).
+    titles = [t for t in dict.fromkeys(titles) if t][:20]
+    if not titles:
+        return
+    q = {"action": "query", "prop": "extracts|links", "explaintext": 1, "redirects": 1,
+         "plnamespace": 0, "pllimit": links_limit, "titles": "|".join(titles), "format": "json"}
+    try:
+        d = _get(api_url + "?" + urllib.parse.urlencode(q), ua)
+    except Exception:
+        return
+    for _, pg in d.get("query", {}).get("pages", {}).items():
+        t = pg.get("title")
+        if not t:
+            continue
+        _WIKI_TEXT_CACHE[t] = pg.get("extract", "") or ""
+        _WIKI_LINKS_CACHE[t] = [l["title"] for l in pg.get("links", []) if l.get("title")]
 
 
 def wiki_text(api_url, title, ua):
-    # Fetch the article's text AND its links in a single request (prop=extracts|links),
-    # halving the number of calls to the source — the biggest lever against 429s.
+    cached = _WIKI_TEXT_CACHE.pop(title, None)     # served by a batch prefetch?
+    if cached is not None:
+        return cached
     q = {"action": "query", "prop": "extracts|links", "explaintext": 1, "redirects": 1,
          "plnamespace": 0, "pllimit": 200, "titles": title, "format": "json"}
     d = _get(api_url + "?" + urllib.parse.urlencode(q), ua)
@@ -219,6 +249,20 @@ def wiki_text(api_url, title, ua):
         _WIKI_LINKS_CACHE[title] = [l["title"] for l in pg.get("links", []) if l.get("title")]
         return pg.get("extract", "") or ""
     return ""
+
+
+def oeis_page(search_url, query, offset, ua):
+    # OEIS search API -> structured integer sequences (the engine's ideal food).
+    # Each result's 'data' is a comma-separated sequence; 'keyword' gives the subject.
+    q = {"q": query, "fmt": "json", "start": int(offset)}
+    d = _get(search_url + "?" + urllib.parse.urlencode(q), ua)
+    out = []
+    for r in (d.get("results") or []):
+        num, data = r.get("number"), (r.get("data") or "")
+        kw = [k for k in (r.get("keyword") or "").split(",") if k]
+        if num is not None and data:
+            out.append(("A%06d" % num, data, kw))
+    return out
 
 
 def wiki_links(api_url, title, ua, limit=20):
@@ -248,7 +292,7 @@ def wiki_random(api_url, ua, n=5):
     return [it["title"] for it in d.get("query", {}).get("random", [])]
 
 
-_SRC_PREFIXES = ("wikipedia:", "web:", "api:")
+_SRC_PREFIXES = ("wikipedia:", "web:", "api:", "oeis:")
 
 
 def seen_from_congress(path):
@@ -314,6 +358,7 @@ def main(argv=None):
     frontier_per_pass = int(P.get("frontier_per_pass", 400))
     frontier_max = int(P.get("frontier_max", 20000))
     random_when_idle = int(P.get("random_when_idle", 10))
+    max_chars = int(P.get("max_chars_per_item", 8000))   # bound per-item storage (slim Congress)
 
     if args.reset:
         chiron.Chiron().save_memory(cong)
@@ -391,6 +436,8 @@ def main(argv=None):
                   open(state_path, "w"))
 
     def queue(title, domain=None):
+        if smode == "wikipedia" and not is_relevant_title(title):
+            return                                       # skip disambiguation/list/index pages
         if title not in seen and title not in frontier_set and len(frontier) < frontier_max:
             frontier.append(title); frontier_set.add(title)
             if domain:
@@ -425,6 +472,8 @@ def main(argv=None):
         # extending itself and the Congress organizes by subject. Returns 1 if ingested.
         if key in seen:
             return 0
+        if smode == "wikipedia" and not is_relevant_title(key):
+            seen.add(key); return 0                    # disambiguation/list/index -> not worth a request
         if text is None and not args.dry_run:
             try:
                 text = text_of(key)
@@ -433,6 +482,8 @@ def main(argv=None):
         seen.add(key)
         if not text or len(text) < 12:
             return 0
+        if max_chars > 0 and len(text) > max_chars:    # bound per-item storage (slim Congress)
+            text = text[:max_chars]
         try:
             res = org.assimilate(text, source=src_prefix + key, author=author, domain_hint=domain)
         except Exception as e:
@@ -472,6 +523,8 @@ def main(argv=None):
                             print("  [fetch error: %s] backing off 30s" % str(e)[:90]); time.sleep(30); break
                         if not batch:
                             break
+                        if not args.dry_run and smode == "wikipedia":
+                            wiki_prefetch(api_url, [t for t, _ in batch], ua, links_per_article)
                         for item in batch:
                             n = consider(item[0], item[1], domain=topic)   # subject = the topic
                             got += n; new_this_pass += n
@@ -494,17 +547,34 @@ def main(argv=None):
                         queue(k, label)
                 except Exception as e:
                     print("  [api list error: %s] backing off 30s" % str(e)[:80]); time.sleep(30)
+            elif smode == "oeis":                       # STRUCTURED data — the engine's ideal food
+                search_url = src.get("search_url", "https://oeis.org/search")
+                query = src.get("query", "keyword:core")
+                off = int(offsets.get("oeis", 0))
+                try:
+                    rows = oeis_page(search_url, query, off, ua)
+                except Exception as e:
+                    print("  [oeis error: %s] backing off 30s" % str(e)[:80]); rows = []; time.sleep(30)
+                for sid, data, kw in rows:
+                    new_this_pass += consider(sid, text=data, domain="oeis:" + (kw[0] if kw else "sequence"))
+                offsets["oeis"] = (off + len(rows)) if rows else 0   # loop back when exhausted
+                save_state()
             # 2) drain the self-built frontier — this is the continuous expansion
             if not args.dry_run and frontier:
                 print("  -- frontier: %d queued; ingesting up to %d --" % (len(frontier), frontier_per_pass))
                 drained = 0
                 while frontier and drained < frontier_per_pass:
-                    title = frontier.pop(0); frontier_set.discard(title)
-                    dom = item_domain.pop(title, None)
-                    new_this_pass += consider(title, domain=dom); drained += 1
-                    if drained % 25 == 0:
-                        save_state()
-                save_state()
+                    chunk = []                            # pull a batch, prefetch it in ONE request, then ingest
+                    while frontier and len(chunk) < 20 and drained + len(chunk) < frontier_per_pass:
+                        chunk.append(frontier.pop(0))
+                    for t in chunk:
+                        frontier_set.discard(t)
+                    if smode == "wikipedia":
+                        wiki_prefetch(api_url, chunk, ua, links_per_article)
+                    for title in chunk:
+                        dom = item_domain.pop(title, None)
+                        new_this_pass += consider(title, domain=dom); drained += 1
+                    save_state()
             # 3) nothing left to ingest -> discover brand-new material at random
             if not args.dry_run and new_this_pass == 0:
                 try:

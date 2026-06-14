@@ -1,0 +1,26 @@
+name: Chiron CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install numpy
+      - name: Engine self-test (full embedded gate suite)
+        run: python Chiron/chiron.py selftest
+      - name: Grower offline dry-run
+        run: python Chiron/chiron_grow.py --params Chiron/grow-public/parameters.json --dry-run --once
+      - name: Unit tests
+        run: |
+          python Chiron/tests/test_chiron.py
+          python Chiron/tests/test_grow.py
