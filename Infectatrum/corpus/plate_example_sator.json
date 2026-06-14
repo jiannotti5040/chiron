@@ -1,0 +1,8 @@
+{
+  "tabula": "FIXTURE",
+  "source": "fixture (SATOR square — NOT Caramuel)",
+  "family": "cancellata-lattice",
+  "confidence": "high",
+  "flags": ["fixture-not-source"],
+  "grid": [["S","A","T","O","R"],["A","R","E","P","O"],["T","E","N","E","T"],["O","P","E","R","A"],["R","O","T","A","S"]]
+}

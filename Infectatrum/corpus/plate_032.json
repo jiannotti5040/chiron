@@ -1,0 +1,29 @@
+{
+  "tabula": "XXXII",
+  "source": "Caramuel, Primus Calamus (1663), p.484 (scan idx 483), TAB XXXII",
+  "image_ref": "pl_483.png",
+  "family": "labyrinthus-musicus-emblematicus (13x13 grid of rebus emblems — rose, crescent, full-moon/ring, MUSICAL STAVES with notes; palindromic border acrostic)",
+  "title_diplomatic": "SANCTUS Monachorum Occidentalium Pater et Dux BENEDICTUS, Homo vere Parthenius, speciali Benedictae favore fuit.",
+  "title_translation": "Saint Benedict, father and leader of the Western monks, a truly virginal man, enjoyed the special favour of the Blessed (Virgin).",
+  "border_acrostic": "ROSA COR VI NVLLA VI COR ROSA",
+  "border_note": "The top border reads ROSA COR VI NVLLA VI COR ROSA — a PALINDROME (reads identically forward and reversed). The same words anchor the four sides; corners carry rose emblems. The palindromic border is the recurrens spine of the whole plate.",
+  "dedication_diplomatic": "ILLVSTRISSIMO D.D. EMANVELI DEL YERRO, EQVITI MILITARIS ORDINIS de Alcantara, nec non D. Sebastiano et D. Augustino eiusdem Fratribus ... (note on St. Benedict resisting the Demon's temptation by rolling in thorns — the Rose-among-thorns emblem) ... humillimus servus Rotherus Scala Satrianus.",
+  "music_note": "Many cells contain actual MUSICAL NOTATION (four-line staves with neumes/notes) — the plate encodes a melody as one of its readable ductus. A genuinely multi-modal labyrinth: text-border + emblem-grid + music-cells.",
+  "confidence": "mixed (border high, emblem/music cells structural)",
+  "flags": ["palindromic-border", "musical-notation-cells", "emblem-grid", "rose-among-thorns-theme", "multimodal"],
+  "figure": {
+    "tokens": {
+      "b_rosa1": "ROSA", "b_cor1": "COR", "b_vi1": "VI", "b_nulla": "NVLLA", "b_vi2": "VI", "b_cor2": "COR", "b_rosa2": "ROSA",
+      "emb_rose": "ROSA", "emb_crescent": "LVNA_CRESCENS", "emb_fullmoon": "LVNA_PLENA",
+      "emb_music": "MELOS", "emb_thorn": "SPINA"
+    },
+    "walks": {
+      "border_currens": ["b_rosa1", "b_cor1", "b_vi1", "b_nulla", "b_vi2", "b_cor2", "b_rosa2"],
+      "border_recurrens": ["b_rosa2", "b_cor2", "b_vi2", "b_nulla", "b_vi1", "b_cor1", "b_rosa1"],
+      "emblem_diag": ["emb_rose", "emb_crescent", "emb_music", "emb_fullmoon", "emb_thorn"]
+    },
+    "walk_confidence": {"border_currens": "high", "border_recurrens": "high", "emblem_diag": "med"},
+    "node_confidence": {"b_rosa1": "high", "b_cor1": "high", "b_vi1": "high", "b_nulla": "high", "b_rosa2": "high"}
+  },
+  "calibration_role": "Multimodal palindrome plate: ROSA COR VI NVLLA VI COR ROSA is an exact word-palindrome (currens == recurrens), the definitive echo/op_is_echo test at verse level, while the music-notation cells prove the substrate model holds for a non-linguistic (melodic) ductus."
+}

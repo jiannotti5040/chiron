@@ -1,0 +1,42 @@
+{
+  "tabula": "XX",
+  "source": "Caramuel, Primus Calamus (1663), p.460 (scan idx 459), TABVLA XX",
+  "image_ref": "pl_459.png",
+  "family": "compendium (18 numbered sub-figures: rebus, music, 3D cube, sphere, letter-grids; plus a multilingual logogriph key)",
+  "title_diplomatic": "TABVLA XX — Figura prima ... Figura decima octava; CVBVS METAMETRICVS; LOGOGRIPHORVM EXPOSITIO",
+  "note": "The richest single plate. Contains the CUBVS METAMETRICVS (a 3D wireframe cube lettered A-E for tri-axial spatial reading) and a spherical metametric labyrinth (Figura 18: a globe of lettered great-circles with central value-key A-vu / B-uu / C / D / E / F / G-vu / H). Figures I-XIV are rebuses decoded by the LOGOGRIPHORVM EXPOSITIO key, which is MULTILINGUAL (Latin, Spanish, French).",
+  "logogriph_key": {
+    "I": "Emendez-vous qu'attendez-vous la mort",
+    "II": "Mort la mis la mort",
+    "III": "Consuelate Corazon, si has passion y espira, que el Mundo rueda",
+    "IV": "Lauro y corona a las letras",
+    "V": "De mi amor o de mi vida sera fin",
+    "VI": "Et libri et gladii errores carpebimus orbis",
+    "VII": "Il faut disner comme souper",
+    "XIV": "Soles (Sol es) coronare inter corona soles"
+  },
+  "languages": ["Latin", "Spanish", "French"],
+  "confidence": "mixed (key high, sub-grids med, 3D/sphere structural)",
+  "flags": ["compendium-18-figures", "3D-cube-topology", "spherical-topology", "multilingual-logogriphs", "music-notation-cells"],
+  "figure": {
+    "tokens": {
+      "cube_A": "A", "cube_B": "B", "cube_C": "C", "cube_D": "D", "cube_E": "E",
+      "sph_center": "METAMETRICVS_THESAVRVS_VALOR",
+      "key_Avu": "A_VV", "key_E": "E", "key_Buu": "B_VV", "key_F": "F", "key_C": "C", "key_Gvu": "G_VV", "key_D": "D", "key_H": "H",
+      "log5": "DE_MI_AMOR_O_DE_MI_VIDA_SERA_FIN",
+      "log7": "IL_FAUT_DISNER_COMME_SOUPER",
+      "log3": "CONSUELATE_CORAZON_SI_HAS_PASSION_Y_ESPIRA_QUE_EL_MUNDO_RUEDA",
+      "log6": "ET_LIBRI_ET_GLADII_ERRORES_CARPEBIMUS_ORBIS",
+      "us1": "SVSVS", "us2": "VSESV", "us3": "SEIES"
+    },
+    "walks": {
+      "cube_x_axis": ["cube_A", "cube_B", "cube_C"],
+      "cube_y_axis": ["cube_A", "cube_D", "cube_E"],
+      "sphere_value_key": ["key_Avu", "key_Buu", "key_C", "key_D", "key_E", "key_F", "key_Gvu", "key_H"],
+      "grid_undecima_diag": ["us1", "us2", "us3"]
+    },
+    "walk_confidence": {"cube_x_axis": "med", "cube_y_axis": "med", "sphere_value_key": "high", "grid_undecima_diag": "med"},
+    "node_confidence": {"cube_A": "high", "cube_B": "high", "cube_C": "high", "cube_D": "high", "cube_E": "high", "sph_center": "high", "log5": "high", "log7": "high"}
+  },
+  "calibration_role": "The capstone topology plate: CUBVS METAMETRICVS gives a genuine 3D substrate (tri-axial reading) and the spherical labyrinth a 2-sphere substrate (great-circle reading). Multilingual logogriphs test the Language-atlas concept directly: the SAME rebus reads in Latin, Spanish, or French depending on chart."
+}

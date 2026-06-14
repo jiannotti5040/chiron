@@ -1,0 +1,217 @@
+venturi.py — 360-degree evolving Venturi for cross-domain injection.
+Standalone. No dependencies except numpy and math (both standard).
+
+Run:  python3 venturi.py
+“””
+
+import math
+import numpy as np
+
+# —————————————————————————
+
+# Silver Ratio constants
+
+# —————————————————————————
+
+SQRT2          = math.sqrt(2)
+SQRT_E         = math.sqrt(math.e)
+DELTA_S        = 1.0 + SQRT2           # Silver Ratio
+INV_DELTA_S_SQ = 1.0 / DELTA_S**2     # 3 - 2√2 ≈ 0.17157
+C1_SILVER      = 1.0 - SQRT2           # ≈ -0.41421
+
+def silver_E_target(kT):
+return kT * INV_DELTA_S_SQ
+
+def silver_dz_dt_floor(kT, lam, N, dt):
+return math.sqrt(2.0 * kT * INV_DELTA_S_SQ * lam * dt) / N
+
+def silver_field_scale(kT):
+return math.sqrt(2.0 * silver_E_target(kT))
+
+def engine3_complex_state(x):
+return complex(x * C1_SILVER, x * SQRT_E)
+
+# —————————————————————————
+
+# Venturi
+
+# —————————————————————————
+
+class Venturi:
+“””
+360-degree evolving Venturi for cross-domain injection.
+
+```
+V(r, r0) = (r0 / max(r, r_in))^beta * envelope(r)
+dr0/dt   = -lam_v * (E - E*)/E* * r0
+G        = 1 - (r_in/r0)^2
+
+dψ/dt|venturi = G * V(r, r0(t)) * phi_inject
+"""
+
+def __init__(self, N=32, kT=0.005, lam=0.4,
+             r0=0.15, r_in=0.04, r_out=0.42,
+             beta=1.0, lam_v=0.1, coupling=1.0, dt=0.04):
+
+    self.N        = N
+    self.kT       = kT
+    self.lam      = lam
+    self.r0       = r0
+    self.r0_init  = r0
+    self.r_in     = r_in
+    self.r_out    = r_out
+    self.beta     = beta
+    self.lam_v    = lam_v
+    self.coupling = coupling
+    self.dt       = dt
+    self.t        = 0.0
+
+    self.E_star      = silver_E_target(kT)
+    self.dz_dt_floor = silver_dz_dt_floor(kT, lam, N, dt)
+    self.field_scale = silver_field_scale(kT)
+
+    self.history = []
+    self._R = self._radial_grid(N)
+
+# ------------------------------------------------------------------
+
+def _radial_grid(self, N):
+    x = np.linspace(0, 1, N, endpoint=False)
+    X, Y = np.meshgrid(x, x)
+    dx = np.abs(X - 0.5); dx = np.minimum(dx, 1 - dx)
+    dy = np.abs(Y - 0.5); dy = np.minimum(dy, 1 - dy)
+    return np.sqrt(dx**2 + dy**2)
+
+def _V(self, r0):
+    r_eff    = np.maximum(self._R, self.r_in)
+    throat   = (r0 / r_eff) ** self.beta
+    envelope = np.clip((self.r_out - self._R) / (self.r_out - r0 + 1e-8), 0, 1)
+    return throat * envelope
+
+def _G(self, r0):
+    return max(0.0, 1.0 - (self.r_in / max(r0, self.r_in + 1e-8))**2)
+
+def _evolve_r0(self, E):
+    dr0 = -self.lam_v * (E - self.E_star) / (self.E_star + 1e-15) * self.r0
+    self.r0 = float(np.clip(self.r0 + dr0 * self.dt, 0.03, 0.45))
+    return dr0
+
+# ------------------------------------------------------------------
+
+def step(self, psi, phi_inject, z_dc):
+    """
+    One Venturi step.
+
+    psi        : current field (N x N complex)
+    phi_inject : what you're injecting (N x N complex)
+    z_dc       : DC projected state (drives throat evolution)
+
+    Returns psi_out (N x N complex)
+    """
+    E     = float(np.real(z_dc @ z_dc) / 2.0)
+    dr0   = self._evolve_r0(E)
+    G     = self._G(self.r0)
+    V     = self._V(self.r0)
+    self.t += self.dt
+
+    psi_out = psi + self.dt * G * self.coupling * V * phi_inject
+
+    self.history.append({
+        "t": self.t, "r0": self.r0, "G": G,
+        "E": E, "dr0_dt": dr0,
+    })
+    return psi_out
+
+def inject_text(self, text, psi, z_dc, anchor="dIse"):
+    """
+    Inject a text string into the field via Venturi.
+    text -> binary weight -> Silver complex state -> 360° field -> step
+    """
+    binary     = ''.join(format(ord(c), '08b') for c in text)
+    anc_binary = ''.join(format(ord(c), '08b') for c in anchor)
+    x          = len(binary) / max(len(anc_binary), 1)
+
+    z_c   = engine3_complex_state(x)
+    phi_s = self._azimuthal_field(z_c, psi)
+    return self.step(psi, phi_s, z_dc)
+
+def _azimuthal_field(self, z_c, psi):
+    """360° injection: amplitude |z_c|, phase rotates around field center."""
+    intensity = np.abs(psi)**2
+    total     = intensity.sum() + 1e-15
+    coords    = np.linspace(0, 1, self.N, endpoint=False)
+    X, Y      = np.meshgrid(coords, coords)
+    cx        = float((intensity * X).sum() / total)
+    cy        = float((intensity * Y).sum() / total)
+    dx        = X - cx; dx -= np.round(dx)
+    dy        = Y - cy; dy -= np.round(dy)
+    theta     = np.arctan2(dy, dx)
+    return abs(z_c) * np.exp(1j * (np.angle(z_c) + theta))
+
+def reset(self):
+    self.r0 = self.r0_init
+    self.t  = 0.0
+    self.history.clear()
+
+def summary(self):
+    if not self.history:
+        return "No steps yet."
+    h = self.history[-1]
+    return (
+        f"t={h['t']:.3f}  r0={h['r0']:.4f}  G={h['G']:.4f}  "
+        f"E={h['E']:.4e}  E*={self.E_star:.4e}  dr0/dt={h['dr0_dt']:.4e}"
+    )
+```
+
+# —————————————————————————
+
+# Demo — runs without UMA, just numpy
+
+# —————————————————————————
+
+if **name** == “**main**”:
+import numpy as np
+
+```
+print("=== 360-degree Venturi — standalone demo ===\n")
+
+N   = 32
+kT  = 0.005
+lam = 0.4
+dt  = 0.04
+rng = np.random.default_rng(42)
+
+# Random initial field
+psi = 0.3 * (rng.standard_normal((N, N)) + 1j * rng.standard_normal((N, N)))
+
+# Fake DC projection (2-vector mean of field)
+def project(psi):
+    m = psi.mean()
+    return np.array([m.real, m.imag])
+
+venturi = Venturi(N=N, kT=kT, lam=lam, dt=dt)
+
+print(f"Silver constants:")
+print(f"  1/delta_S^2 = {INV_DELTA_S_SQ:.6f}  (= 3 - 2*sqrt(2))")
+print(f"  sqrt(e)     = {SQRT_E:.6f}  (exponential bridge)")
+print(f"  E_target    = {silver_E_target(kT):.6e}  (kT / delta_S^2)")
+print(f"  dz/dt floor = {silver_dz_dt_floor(kT, lam, N, dt):.6e}")
+print()
+print(f"{'step':>5}  {'r0':>7}  {'G':>7}  {'E_field':>12}  {'dr0/dt':>12}")
+print("-" * 55)
+
+for step in range(50):
+    z_dc = project(psi)
+    psi  = venturi.inject_text("THRUPUT semantic field resolution", psi, z_dc)
+
+    if step % 5 == 0:
+        h = venturi.history[-1]
+        print(f"{step:>5}  {h['r0']:>7.4f}  {h['G']:>7.4f}  "
+              f"{h['E']:>12.4e}  {h['dr0_dt']:>12.4e}")
+
+print()
+print("Final:", venturi.summary())
+print()
+print("Throat expands when E < E* (below Silver target -> release)")
+print("Throat contracts when E > E* (above Silver target -> more suction)")
+```

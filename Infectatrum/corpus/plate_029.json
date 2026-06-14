@@ -1,0 +1,30 @@
+{
+  "tabula": "XXIX",
+  "source": "Caramuel, Primus Calamus (1663), p.478 (scan idx 477), TAB XXIX",
+  "image_ref": "pl_477.png",
+  "family": "emblema-graecum + micro-labyrinthus (Greek monosyllable-cartouche with Latin gloss; below, a small grille VITA/SATA + vine emblem)",
+  "title_diplomatic": "ΣΥ ΝΟΥΣ, ΒΟΥΣ, ΛΙΣ, ΛΥΓΞ: ΠΥΡ, ΦΛΟΞ ΦΩΣ: ΔΡΥΣ, ΔΟΡΥ, ΛΑΣ, ΣΕΙΡ. — Tu Mens, Bos, Leo, Lynx, Ignisque et Flammula, Lumen, Quercus et Hasta, Lapis, Sol quoque clarus eris.",
+  "title_translation": "You are Mind, Ox, Lion, Lynx, and Fire and Flame, Light, Oak and Spear, Stone, and you shall be the bright Sun too. (a chain of Greek monosyllables, each glossed by a Latin word — a bilingual lexical labyrinth)",
+  "micro_motto": "AI! STA VI. et cur? VIS VITA VITI",
+  "micro_grille": "S A / VITA / A I (the small framed grille spells VITA bounded by S-A / A-I, a vine/VITIS pun: VITA VITI = 'life of the vine')",
+  "note": "Two devices on one plate: (1) a Greek-to-Latin monosyllable cartouche where each tiny Greek word maps to a Latin word — a pure lexical atlas; (2) a vine emblem with a micro-grille spelling VITA and the palindromic-punning motto AI STA VI ... VIS VITA VITI (read both directions on the VITA/VITIS root).",
+  "confidence": "high (both devices small and legible)",
+  "flags": ["greek-latin-lexical-atlas", "vine-emblem", "micro-grille", "palindromic-pun"],
+  "figure": {
+    "tokens": {
+      "gk1": "NOVS", "gk2": "BOVS", "gk3": "LIS", "gk4": "LYNX", "gk5": "PYR",
+      "gk6": "PHLOX", "gk7": "PHOS", "gk8": "DRYS", "gk9": "DORY", "gk10": "LAS", "gk11": "SEIR",
+      "lat1": "MENS", "lat2": "BOS", "lat3": "LEO", "lat4": "LYNX", "lat5": "IGNIS",
+      "lat6": "FLAMMVLA", "lat7": "LVMEN", "lat8": "QVERCVS", "lat9": "HASTA", "lat10": "LAPIS", "lat11": "SOL",
+      "m_s": "S", "m_a1": "A", "m_vita": "VITA", "m_a2": "A", "m_i": "I", "m_vi": "VI"
+    },
+    "walks": {
+      "greek_chain": ["gk1", "gk2", "gk3", "gk4", "gk5", "gk6", "gk7", "gk8", "gk9", "gk10", "gk11"],
+      "latin_gloss": ["lat1", "lat2", "lat3", "lat4", "lat5", "lat6", "lat7", "lat8", "lat9", "lat10", "lat11"],
+      "vita_grille": ["m_s", "m_a1", "m_vita", "m_a2", "m_i"]
+    },
+    "walk_confidence": {"greek_chain": "high", "latin_gloss": "high", "vita_grille": "high"},
+    "node_confidence": {"lat1": "high", "lat2": "high", "lat3": "high", "lat11": "high", "m_vita": "high"}
+  },
+  "calibration_role": "A clean, fully-legible bilingual ATLAS in miniature: Greek chain <-> Latin gloss is an explicit one-to-one chart map (perfect for chart_transition_cost: zero loss, a bijection). The VITA grille is a small exact-palindrome echo test."
+}

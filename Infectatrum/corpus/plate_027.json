@@ -1,0 +1,34 @@
+{
+  "tabula": "XXVII",
+  "source": "Caramuel, Primus Calamus (1663), p.474 (scan idx 473), TAB XXVII",
+  "image_ref": "pl_473.png",
+  "family": "labyrinthus-radialis-magnus (giant concentric-ring wheel; centre MARIA medallion; Marian twin of TAB XXVI)",
+  "title_diplomatic": "MARIA STELLA CELEBRATA LABYRINTHO CONTINENTE. Disticha retrograda 69,902,227,514,327,040 ad est versus simplices 279,608,910,057,308,160. Ideam [scansion] invenit I. Caramuel anno 1656. Voces addidit R.P. Nicolaus Lucensis Capucinus, Theologus, Concionator, Vir eruditissimus anno 1649. R.P. HIPPOLYTO MARRACCIO LUCENSI E CONGR. CLER. REGULARIUM MATRIS DEI PARTHENIARUM LAUDUM ENCOMIASTAE etc. Observantiae gratia Satrianenses Alumni consecrabant anno 1662.",
+  "title_translation": "MARY THE STAR, celebrated by this enclosing labyrinth. Retrograde distichs 69,902,227,514,327,040 — that is, 279,608,910,057,308,160 simple verses. Design by Caramuel (1656), words by Nicolaus of Lucca (1649); consecrated to Fr. Hippolytus Marraccio, encomiast of the praises of the Virgin Mother of God, by the alumni of Satriano, 1662.",
+  "author_combinatorial_claim": {
+    "diplomatic": "Disticha retrograda 69,902,227,514,327,040 ... versus simplices 279,608,910,057,308,160",
+    "claimed_retrograde_distichs": 69902227514327040,
+    "claimed_simple_verses": 279608910057308160,
+    "note": "Identical magnitude to TAB XXVI — the two form a Christ/Mary pair (IESVS SOL / MARIA STELLA), same design, same ~2.8e17 count. The retrograde-distich figure is now fully legible here: 69,902,227,514,327,040."
+  },
+  "centre": "MARIA",
+  "confidence": "mixed (centre + numerals high, ring cells low)",
+  "flags": ["polar-magnus", "marian-twin-of-XXVI", "rings-very-dense-degraded", "retrograde-distich-count-legible"],
+  "figure": {
+    "tokens": {
+      "hub": "MARIA",
+      "i1": "STELLA", "i2": "VIRGO", "i3": "MATER", "i4": "FLOS", "i5": "LVNA", "i6": "REGINA",
+      "r_maria": "VIRGA_MARIA", "r_stella": "STELLA_BREVIS", "r_virgo": "VIRGINEAMQVE_DECVS",
+      "r_dulcis": "DVLCIS_IESVS_AMAT", "r_sidereo": "SIDEREO_SIGNA_SIMVL"
+    },
+    "walks": {
+      "spoke_stella": ["hub", "i1", "r_stella"],
+      "spoke_virgo": ["hub", "i2", "r_virgo"],
+      "ring_inner": ["i1", "i2", "i3", "i4", "i5", "i6"],
+      "ring_outer_sample": ["r_maria", "r_stella", "r_virgo", "r_dulcis", "r_sidereo"]
+    },
+    "walk_confidence": {"spoke_stella": "med", "spoke_virgo": "med", "ring_inner": "med", "ring_outer_sample": "low"},
+    "node_confidence": {"hub": "high", "i1": "high", "i2": "high", "i3": "high"}
+  },
+  "calibration_role": "Twin polar plate to XXVI. The Christ/Mary pairing with identical combinatorial design tests the ORIGIN-SIGNATURE engine: two plates by the same generator (Caramuel design + Lucensis words) should produce near-identical ambiguity signatures (low JSD) — a built-in same-author validation set."
+}

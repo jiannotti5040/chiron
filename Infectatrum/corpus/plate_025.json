@@ -1,0 +1,32 @@
+{
+  "tabula": "XXV",
+  "source": "Caramuel, Primus Calamus (1663), p.470 (scan idx 469), TABULA XXIV at foot (misprint; =XXV by position)",
+  "image_ref": "pl_469.png",
+  "family": "labyrinthus-sinensis (a grid of CHINESE CHARACTERS read as heptastichs 16 ways, with a Latin transliteration table and a romanization key)",
+  "engraver_note": "Foot prints 'TABVLA XXIV' — third consecutive misprint in the series. Numbering = XXV by position.",
+  "title_diplomatic": "IESU TIE CIAM — Societas Iesu, Sinensibus expressa Heptastichis quae XVI leguntur. Admodum Rdo et Eruditissimo P. Athanasio Kirchero, Orientalium omnium linguarum peritissimo, Philosopho et Theologo profundissimo D.C.Q. TABULA XXIV.",
+  "title_translation": "JESUS ... The Society of Jesus, expressed for the Chinese in heptastichs that may be read 16 ways. To the most reverend and learned Fr. Athanasius Kircher, most skilled of all in Oriental languages, profound philosopher and theologian, dedicated.",
+  "cross_linguistic_note": "THIS PLATE IS THE LITERAL SOURCE PROOF of the engine's Language-as-atlas principle. A grid of Chinese characters is read as Latin verse via a transliteration table; a romanization key maps character-pairs to syllables (VV->te, NN->mai, FF->lo, YY->kie, PP->tim, etc.). The SAME grid yields meaning in Chinese and in Latin — two charts over one substrate. Dedicated, fittingly, to Kircher.",
+  "rebus_acrostic": "The left and right margins reveal IESU / MARIA / G. NACIO via initial letters (Caramuel notes: 'ad illorum labium MALIA est MARIA').",
+  "romanization_key_sample": {"VV": "te", "NN": "mai", "FF": "lo", "YY": "kie", "PP": "tim", "HH": "se", "AA": "ma", "RR": "tao", "KK": "chum", "DD": "chue", "LL": "piao", "MM": "lim", "EE": "yen", "XX": "hia", "QQ": "yeu", "ZZ": "siu", "TT": "nie"},
+  "claimed_readings": 16,
+  "confidence": "mixed (Latin table high, Chinese glyphs recorded as positions not transcribed)",
+  "flags": ["chinese-characters-not-transcribed-as-text", "cross-linguistic-atlas-proof", "romanization-key-present", "kircher-dedication", "heptastich-16-ways"],
+  "figure": {
+    "tokens": {
+      "key_VV": "TE", "key_NN": "MAI", "key_FF": "LO", "key_YY": "KIE", "key_PP": "TIM",
+      "key_HH": "SE", "key_AA": "MA", "key_RR": "TAO", "key_ZZ": "SIU", "key_TT": "NIE",
+      "acro_iesu": "IESV", "acro_maria": "MARIA", "acro_nacio": "G_NACIO",
+      "lat1": "PHALANX_AVXILIANS", "lat2": "DIADEMA_PVLCRA", "lat3": "DIVA_PVLCRA",
+      "lat4": "MVNDI_GAVDIA_CONTEMNENS", "lat5": "ARMA_CONTRA_HOSTES_FVGANS"
+    },
+    "walks": {
+      "romanization_key": ["key_VV", "key_NN", "key_FF", "key_YY", "key_PP", "key_HH", "key_AA", "key_RR", "key_ZZ", "key_TT"],
+      "acrostic_margin": ["acro_iesu", "acro_maria", "acro_nacio"],
+      "latin_column": ["lat1", "lat2", "lat3", "lat4", "lat5"]
+    },
+    "walk_confidence": {"romanization_key": "high", "acrostic_margin": "med", "latin_column": "med"},
+    "node_confidence": {"key_VV": "high", "key_NN": "high", "key_FF": "high", "key_YY": "high", "acro_iesu": "high", "acro_maria": "high"}
+  },
+  "calibration_role": "THE atlas plate: one Chinese-character substrate read in two languages via an explicit transliteration chart. Direct source-grounded vindication of infer_basis / chart_transition_cost — the same object, different charts, different readings, measurable loss between them."
+}

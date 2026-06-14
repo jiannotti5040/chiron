@@ -1,0 +1,41 @@
+{
+"author": "ARCHITECT AND SOLE OWNER: Jacob Iannotti",
+"authors": {},
+"bank": {
+"capital": {},
+"ledger": [],
+"ownerships": []
+},
+"crystal": {
+"basis": {},
+"cells": {},
+"generation": 0
+},
+"domains_summary": {},
+"format": "chiron-congress",
+"growth": {
+"cross_domain": 0,
+"general": 0,
+"history": [],
+"integral": 0,
+"laws": [],
+"reuse": 0
+},
+"growth_fam_domains": {},
+"growth_gen_seen": [],
+"ingested_sources": [],
+"library": {},
+"license": "LICENSE: Proprietary and strictly restricted. Unauthorized use, alteration, or distribution is computationally verifiable.",
+"manifest_entries": [],
+"manifest_rooms": {
+"bank": "d3acf052626f213b",
+"crystal": "89192aac104b5cab",
+"library": "89192aac104b5cab",
+"vault": "89192aac104b5cab"
+},
+"membranes": {},
+"root": "63389a2bdf7df11795e4d33bdee6bc8327e418bc898d05ce3daa155d1a8fe7da",
+"tombstones": [],
+"vault": {},
+"version": "1.0"
+}

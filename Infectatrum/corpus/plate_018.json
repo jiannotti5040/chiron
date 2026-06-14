@@ -1,0 +1,30 @@
+{
+  "tabula": "XVIII",
+  "source": "Caramuel, Primus Calamus (1663), p.456 (scan idx 455), TAB. XVIII",
+  "image_ref": "pl_455.png",
+  "family": "carmen-cancellatum (intext/grille: large capitals A-M-A-F-A-M-A tile the lattice as a recurring acrostic; verse text fills interstitial cells)",
+  "title_diplomatic": "EXIMIUM ET CLARISS. D.D. PETRUM FRANCISCUM PASSERINUM SS. THEOLOG. PROTONOT. ET IU. DOCT. APOSTOLICUM, EQUITEM AURATUM, COMIT. PALAT. etc. — AMA FAMA. Sic jubent Monsserratenses Studiosi, eius virtutum Praecones, et doctrinae Discipuli.",
+  "title_translation": "To the distinguished and most renowned Peter Francis Passerinus, doctor of sacred theology, apostolic protonotary and doctor of law, golden knight, count palatine, etc. — LOVE FAME. So bid the students of Montserrat, heralds of his virtues and disciples of his doctrine.",
+  "grille_text": "AMA FAMA",
+  "topology_note": "The grille letters A M A F A M A recur across rows and down columns, forming the cancellatum frame; the embedded verse is read by tracing the non-capital cells. A classic intext where the highlighted letters spell the motto in many directions.",
+  "confidence": "mixed (grille high, interstitial text med/low)",
+  "flags": ["cancellatum-grille", "interstitial-verse-dense", "portrait-header"],
+  "author_combinatorial_claim": {"diplomatic": "(no single numeral; multiplicity from grille-path permutation)", "note": "AMA FAMA readable along many lattice paths"},
+  "figure": {
+    "tokens": {
+      "g00": "A", "g01": "M", "g02": "A", "g03": "F", "g04": "A", "g05": "M", "g06": "A",
+      "t_aurea": "AVREA", "t_redeunt": "REDEVNT", "t_florent": "FLORENT", "t_phoenix": "INTVM_PHOENIX",
+      "t_ciscus": "PISCISCVS", "t_gloria": "PRVDENSIS_GLORIA_GENTIS", "t_melos": "ORE_MELOS",
+      "t_secund": "FECVNDA", "t_lucianus": "HIC_LINGVA_LVCIANVS", "t_schol": "MITTVNT_SCHOLAE",
+      "t_angelico": "ANGELICO", "t_lauro": "LAVRO", "t_virtutis": "VIRTVTIS", "t_amaperit": "AMA_PERIT"
+    },
+    "walks": {
+      "grille_row0": ["g00", "g01", "g02", "g03", "g04", "g05", "g06"],
+      "motto_diag": ["g00", "g01", "g02", "g03"],
+      "verse_sample": ["t_aurea", "t_redeunt", "t_florent", "t_phoenix", "t_melos"]
+    },
+    "walk_confidence": {"grille_row0": "high", "motto_diag": "high", "verse_sample": "low"},
+    "node_confidence": {"g00": "high", "g01": "high", "g02": "high", "g03": "high", "g04": "high", "g05": "high", "g06": "high", "t_aurea": "med", "t_redeunt": "med", "t_phoenix": "med"}
+  },
+  "calibration_role": "First true CANCELLATUM (grille/intext) — exercises the recognizer on a plate whose meaning lives in highlighted-cell paths, not full-row reading. The grille letters AMA FAMA recurring across many directions is a bounded, verifiable |Σ|."
+}

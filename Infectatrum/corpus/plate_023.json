@@ -1,0 +1,31 @@
+{
+  "tabula": "XXIII",
+  "source": "Caramuel, Primus Calamus (1663), p.466 (scan idx 465), TABVLA XXIII",
+  "image_ref": "pl_465.png",
+  "family": "carmen-cancellatum (ornamental capitals A-E-R-I tile the field; central column emblem; Greek labyrinthon subtitle)",
+  "title_diplomatic": "BREVEM HVNC DE SANCTI BASILII MAGNI LAVDIB. ΛΑΒΥΡΙΝΘΟΝ — Quemadmodum Reverendo et Eruditissimo Viro P. Basilio de AEREA Capucino etc. in festo Patroni observantiae ergo consecrabat. Anno aerae Christianae CIↃIↃCLVIII. D. Claudius Clemens Monsserr. Religiosus. (emblem: TALIS EST M. BASILIVS)",
+  "title_translation": "This brief LABYRINTH on the praises of St. Basil the Great ... consecrated to the most reverend and learned Fr. Basil de Aerea, Capuchin, on his patron's feast, 1658, by Br. Claudius Clemens of Montserrat.",
+  "greek_subtitle": "ΛΑΒΥΡΙΝΘΟΝ (labyrinthon)",
+  "emblem_motto": "TALIS EST M. BASILIVS (a flaming column)",
+  "grille_text": "A E R I E R I A (ornamental capitals tiling the lattice; note AEREA = the dedicatee's name woven into the grille)",
+  "note": "The grille letters spell AEREA — the dedicatee Fr. Basil de AEREA — so the cancellatum frame IS the honorand's name, recurring across the field. A name-grille (onomastic cancellatum).",
+  "confidence": "mixed (grille high, interstitial low)",
+  "flags": ["cancellatum-grille", "onomastic-grille-AEREA", "greek-subtitle", "central-column-emblem"],
+  "figure": {
+    "tokens": {
+      "c_tl": "A", "c_tr": "A", "c_bl": "A", "c_br": "A",
+      "g_e1": "E", "g_r1": "R", "g_i1": "I", "g_e2": "E", "g_r2": "R", "g_i2": "I",
+      "emblem": "TALIS_EST_M_BASILIVS",
+      "t_augustum": "AVGVSTVM", "t_corpus": "CORPVS", "t_columna": "SIMILE_ESSE_COLUMNA",
+      "t_miracula": "IN_MIRACVLA_CHRISTI", "t_magister": "MAGISTER", "t_gloria": "NIX_LAVS_GLORIA_NORM"
+    },
+    "walks": {
+      "grille_diag": ["c_tl", "g_e1", "g_r1", "g_i1", "g_e2", "c_br"],
+      "name_aerea": ["c_tl", "g_e1", "g_r1", "g_e2", "c_tr"],
+      "verse_sample": ["t_augustum", "t_corpus", "t_columna", "t_magister"]
+    },
+    "walk_confidence": {"grille_diag": "high", "name_aerea": "med", "verse_sample": "low"},
+    "node_confidence": {"c_tl": "high", "c_tr": "high", "c_bl": "high", "c_br": "high", "emblem": "high"}
+  },
+  "calibration_role": "Onomastic cancellatum (the grille spells the honorand's name AEREA). Greek subtitle confirms the labyrinthon genre label. Tests grille-as-name recognition."
+}

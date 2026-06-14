@@ -1,0 +1,28 @@
+{
+  "tabula": "XXIV",
+  "source": "Caramuel, Primus Calamus (1663), p.468 (scan idx 467), printed 'TABVLA XXIII' at foot",
+  "image_ref": "pl_467.png",
+  "family": "carmen-cancellatum (ornamental S-V-A-I capitals tile the field; corners=S; central S medallion; interstitial verse)",
+  "engraver_note": "Foot reads 'TABVLA XXIII' but the true XXIII is the St. Basil plate (p.466). This is the SECOND consecutive engraver misprint (XXII printed as XXI, XXIV printed as XXIII). Recorded as anomaly; numbering = XXIV by position. Pattern of misprints itself is data: the engraver's series ran one behind for these plates.",
+  "title_diplomatic": "REVERENDISSIMO AMPLISSIMO ET EXIMIO D.D. BENEDICTO CELEBERRIMI MONASTERII ALTENBURGENSIS PRAELATO MERITISSimo, S.C.M. CONSILIARIO, STATUUM AUSTRIAE DEPUTATO etc. Foelicia anni ineuntis auspicia apprecans, hanc PANEGYRIN LABYRINTICAM dedicabat F. Claudius Clemens Monsserratensis studiosus.",
+  "title_translation": "To the most reverend, ample and distinguished lord Benedict, most deserving prelate of the celebrated monastery of Altenburg, councillor of His Sacred Caesarean Majesty, deputy of the Estates of Austria, etc. ... Br. Claudius Clemens of Montserrat dedicated this panegyric labyrinth.",
+  "grille_text": "S V A I A V S (ornamental capitals; corners and centre = S)",
+  "confidence": "mixed (grille high, interstitial low)",
+  "flags": ["cancellatum-grille", "engraver-misprint-XXIII-for-XXIV", "consecutive-misprint-pattern", "central-S-medallion"],
+  "figure": {
+    "tokens": {
+      "c_tl": "S", "c_tr": "S", "c_bl": "S", "c_br": "S", "centre": "S",
+      "g_v1": "V", "g_a1": "A", "g_i1": "I", "g_a2": "A", "g_v2": "V",
+      "t_summa": "SVMMA", "t_virtu": "VIRTV", "t_cor": "COR", "t_radios": "RADIOS",
+      "t_magni": "MAGNI", "t_decor": "DECOR", "t_unus": "VNVS"
+    },
+    "walks": {
+      "grille_diag": ["c_tl", "g_v1", "g_a1", "centre", "g_a2", "g_v2", "c_br"],
+      "grille_top": ["c_tl", "g_v1", "g_a1", "g_i1", "c_tr"],
+      "verse_sample": ["t_summa", "t_virtu", "t_cor", "t_radios"]
+    },
+    "walk_confidence": {"grille_diag": "high", "grille_top": "high", "verse_sample": "low"},
+    "node_confidence": {"c_tl": "high", "c_tr": "high", "c_bl": "high", "c_br": "high", "centre": "high"}
+  },
+  "calibration_role": "Third cancellatum in the dedicatory series; the consecutive engraver misprints (XXII->XXI, XXIV->XXIII) are themselves an ANOMALY the zero-correction transcription preserves — exactly the 'measure the anomaly, don't fix the typo' discipline."
+}

@@ -1,0 +1,30 @@
+{
+  "tabula": "XIX",
+  "source": "Caramuel, Primus Calamus (1663), p.458 (scan idx 457), TABVLA XIX",
+  "image_ref": "pl_457.png",
+  "family": "carmen-figuratum (horizontal verse lines overlaid by an emblematic letter-figure spelling the motto; chalice/monstrance silhouette)",
+  "title_diplomatic": "Hoc Rmo Domino G. Lemens Abb. Vlrbacensis Ordinis S. Benedicti — DE AVGVSTISSIMO EUCHARISTIAE SACRAMENTO ΕΠΙΓΡΑΜΜΑ. Amplissimo et Reverendissimo Domino Dno PETRO FRANCISCO PASSERINO, Protonotario Apostolico, Philosophiae Iuris utriusque ac SS. Theologiae Doctori, Collegae S. Inquisitionis Placentinae Consultori dignissimo etc. Calendis Ianuarii Anni CIↃIↃC LIX Xeny et Observantiae gratia offerebat D. Dominicus Platus.",
+  "title_translation": "An EPIGRAM on the most august Sacrament of the Eucharist ... offered by D. Dominicus Platus on the Kalends of January 1659.",
+  "signature_diplomatic": "Construxi Pe(G)ma hoc VATES iuvenis (L)ibus annis Salutis 1588 Aetatis 23. Sculptum Lovanii anno 1627 et iterum Pragae anno 1659.",
+  "note": "A carmen figuratum: the verse is read line-by-line (horizontal) while a superimposed figure of large display letters traces the Eucharistic emblem (chalice/host). The embedded capitals spell the dedicatory motto. Composed by Dominicus Platus at 23 (1588), engraved Louvain 1627, re-engraved Prague 1659 — Caramuel reproduces a famous earlier pattern-poem.",
+  "confidence": "mixed (first lines high, figure-woven cells low)",
+  "flags": ["figuratum-overlay", "greek-title", "reproduced-historical-poem"],
+  "figure": {
+    "tokens": {
+      "l1a": "CORPVS_VIRGINEA_MATER", "l1b": "A_QVOD_TRAXIT_AB_ALIO",
+      "l2a": "AETHEREI_QVONDAM", "l2b": "IN_SOBOLE_SANCTISSIMA_PATRIS",
+      "l3a": "NVNC_CASTO", "l3b": "OSTIA_SACRA_REPOSITVM",
+      "l4a": "EXIMIO_SEMPER", "l4b": "DECORAND", "l4c": "RVM",
+      "fig_E": "E", "fig_T": "T", "fig_H": "H", "fig_O": "O", "fig_S": "S"
+    },
+    "walks": {
+      "line1": ["l1a", "l1b"],
+      "line2": ["l2a", "l2b"],
+      "line3": ["l3a", "l3b"],
+      "figure_letters": ["fig_E", "fig_T", "fig_H", "fig_O", "fig_S"]
+    },
+    "walk_confidence": {"line1": "high", "line2": "high", "line3": "med", "figure_letters": "low"},
+    "node_confidence": {"l1a": "high", "l1b": "high", "l2a": "high", "l2b": "high", "l3a": "med", "l3b": "med"}
+  },
+  "calibration_role": "First carmen FIGURATUM (text overlaid by emblem-figure) and first reproduced historical pattern-poem — tests that the engine handles a substrate where a horizontal reading and a figural reading coexist over the same cells."
+}

@@ -1,0 +1,94 @@
+{
+  "tabula": "XIII",
+  "source": "Caramuel, Primus Calamus (1663), p.446 (scan idx 445), TAB. XIII",
+  "image_ref": "tab13_full.png (992x1600, full embedded resolution of source scan)",
+  "family": "figurata-geometric",
+  "title_diplomatic": "Ad gloriam laudemque S. THOMAE DOCTORIS ANGELICI, Labyrinthus Hexagonus Retrogradus",
+  "title_translation": "To the glory and praise of St. Thomas the Angelic Doctor: a Retrograde Hexagonal Labyrinth",
+  "geometry": "hexagram (two overlaid triangles), Aquinas portrait at centre flanked by sun and moon; 6 tip cells carry -abilibus adjectives shared by two lines each; AQUINAS pivots at the two horizontal centres and (rotated) at the four slope crossings; each of the 6 sides is one verse line readable forward and word-retrograde (the declared 'Retrogradus' ductus)",
+  "confidence": "mixed (per-cell below)",
+  "flags": ["slope-cell-ordering-partially-conjectural", "two-verbs-low-confidence"],
+  "operating_manual": "two-pass; diplomatic preserved; expansions marked [..]; conjectures marked <..>; no silent completion",
+  "cells": {
+    "row1": [
+      {"id": "t_ul", "diplomatic": "innu/mera/bilibus", "normalized": "innumerabilibus", "confidence": "high", "role": "tip upper-left"},
+      {"id": "r1n", "diplomatic": "metris", "normalized": "metris", "confidence": "high"},
+      {"id": "r1v", "diplomatic": "laude/tur", "normalized": "laudetur", "confidence": "high"},
+      {"id": "aq_h1", "diplomatic": "AQUINAS", "normalized": "AQUINAS", "confidence": "high", "role": "pivot"},
+      {"id": "r1v2", "diplomatic": "dica/tur", "normalized": "dicatur", "confidence": "high"},
+      {"id": "r1n2", "diplomatic": "verbis", "normalized": "verbis", "confidence": "high"},
+      {"id": "t_ur", "diplomatic": "irrepa/rabili/bus", "normalized": "irreparabilibus", "confidence": "high", "role": "tip upper-right"}
+    ],
+    "row2": [
+      {"id": "t_ll", "diplomatic": "amplifi/cabili/bus", "normalized": "amplificabilibus", "confidence": "high", "role": "tip lower-left"},
+      {"id": "r2n", "diplomatic": "gazis", "normalized": "gazis", "confidence": "high"},
+      {"id": "r2v", "diplomatic": "orne/tur", "normalized": "ornetur", "confidence": "high"},
+      {"id": "aq_h2", "diplomatic": "AQUINAS", "normalized": "AQUINAS", "confidence": "high", "role": "pivot"},
+      {"id": "r2v2", "diplomatic": "done/tur", "normalized": "donetur", "confidence": "high"},
+      {"id": "r2n2", "diplomatic": "lauris", "normalized": "lauris", "confidence": "high"},
+      {"id": "t_lr", "diplomatic": "conde/corabi/libus", "normalized": "condecorabilibus", "confidence": "high", "role": "tip lower-right"}
+    ],
+    "apex_and_slopes": [
+      {"id": "t_top", "diplomatic": "insupera/bilibus", "normalized": "insuperabilibus", "confidence": "high", "role": "tip top"},
+      {"id": "s_nl", "diplomatic": "nume:/ris", "normalized": "numeris", "confidence": "high", "role": "upper-left slope noun"},
+      {"id": "s_nr", "diplomatic": "linguis", "normalized": "linguis", "confidence": "high", "role": "upper-right slope noun"},
+      {"id": "aq_xl", "diplomatic": "AQVINAS (rotated)", "normalized": "AQUINAS", "confidence": "high", "role": "left crossing pivot"},
+      {"id": "aq_xr", "diplomatic": "AQVINAS (rotated)", "normalized": "AQUINAS", "confidence": "high", "role": "right crossing pivot"},
+      {"id": "s_pv", "diplomatic": "pinga/tur", "normalized": "pingatur", "confidence": "high", "role": "delta-left verb"},
+      {"id": "s_st", "diplomatic": "stellis", "normalized": "stellis", "confidence": "high", "role": "delta-left noun"},
+      {"id": "s_ty", "diplomatic": "typis", "normalized": "typis", "confidence": "high", "role": "delta-right noun"},
+      {"id": "s_cv", "diplomatic": "c<a>nte/tur", "normalized": "<cantetur>", "confidence": "med", "role": "delta-right verb (conjectural reading of c.nte-tur)"},
+      {"id": "s_ca", "diplomatic": "cala/mis", "normalized": "calamis", "confidence": "high", "role": "nabla-left noun (the book's own pun: 'with pens')"},
+      {"id": "s_gv", "diplomatic": "<.>ga/tur (partially occluded)", "normalized": "<cingatur>", "confidence": "low", "role": "nabla-left verb CONJECTURE"},
+      {"id": "s_se", "diplomatic": "sertis (rotated)", "normalized": "sertis", "confidence": "med", "role": "nabla-left lower noun"},
+      {"id": "s_gn", "diplomatic": "gnomis (rotated)", "normalized": "<gnomis>", "confidence": "med", "role": "nabla-right noun (conjectural)"},
+      {"id": "s_cv2", "diplomatic": "<.>te/tur (rotated)", "normalized": "<coronetur>", "confidence": "low", "role": "nabla-right verb CONJECTURE"},
+      {"id": "s_pa", "diplomatic": "palmis (rotated)", "normalized": "palmis", "confidence": "high", "role": "nabla-right lower noun"},
+      {"id": "t_bot", "diplomatic": "<venerab>/bilibus (rotated)", "normalized": "<venerab>ilibus", "confidence": "med", "role": "tip bottom"}
+    ]
+  },
+  "figure": {
+    "tokens": {
+      "t_ul": "INNUMERABILIBUS", "r1n": "METRIS", "r1v": "LAUDETUR", "aq_h1": "AQUINAS",
+      "r1v2": "DICATUR", "r1n2": "VERBIS", "t_ur": "IRREPARABILIBUS",
+      "t_ll": "AMPLIFICABILIBUS", "r2n": "GAZIS", "r2v": "ORNETUR", "aq_h2": "AQUINAS",
+      "r2v2": "DONETUR", "r2n2": "LAURIS", "t_lr": "CONDECORABILIBUS",
+      "t_top": "INSUPERABILIBUS", "s_nl": "NUMERIS", "s_nr": "LINGUIS",
+      "aq_xl": "AQUINAS", "aq_xr": "AQUINAS",
+      "s_pv": "PINGATUR", "s_st": "STELLIS", "s_ty": "TYPIS", "s_cv": "CANTETUR",
+      "s_ca": "CALAMIS", "s_gv": "CINGATUR", "s_se": "SERTIS",
+      "s_gn": "GNOMIS", "s_cv2": "CORONETUR", "s_pa": "PALMIS", "t_bot": "VENERABILIBUS"
+    },
+    "walks": {
+      "currens":   ["t_ul", "r1n", "r1v", "aq_h1", "r1v2", "r1n2", "t_ur"],
+      "recurrens": ["t_ur", "r1n2", "r1v2", "aq_h1", "r1v", "r1n", "t_ul"],
+      "currens_2":   ["t_ll", "r2n", "r2v", "aq_h2", "r2v2", "r2n2", "t_lr"],
+      "recurrens_2": ["t_lr", "r2n2", "r2v2", "aq_h2", "r2v", "r2n", "t_ll"],
+      "delta_left":  ["t_top", "s_nl", "aq_xl", "s_pv", "s_st", "t_ll"],
+      "delta_right": ["t_top", "s_nr", "aq_xr", "s_cv", "s_ty", "t_lr"],
+      "nabla_left":  ["t_ul", "s_ca", "aq_xl", "s_gv", "s_se", "t_bot"],
+      "nabla_right": ["t_ur", "s_gn", "aq_xr", "s_cv2", "s_pa", "t_bot"]
+    },
+    "walk_confidence": {
+      "currens": "high", "recurrens": "high", "currens_2": "high", "recurrens_2": "high",
+      "delta_left": "med", "delta_right": "med", "nabla_left": "low", "nabla_right": "low"
+    }
+  },
+  "verses_normalized": [
+    {"line": "Innumerabilibus metris laudetur AQUINAS dicatur verbis irreparabilibus", "confidence": "high",
+     "translation": "In innumerable metres let AQUINAS be praised; let him be proclaimed in irrevocable words.",
+     "retrograde": "Irreparabilibus verbis dicatur AQUINAS laudetur metris innumerabilibus"},
+    {"line": "Amplificabilibus gazis ornetur AQUINAS donetur lauris condecorabilibus", "confidence": "high",
+     "translation": "With treasures ever-amplifiable let AQUINAS be adorned; let him be endowed with laurels most becoming.",
+     "retrograde": "Condecorabilibus lauris donetur AQUINAS ornetur gazis amplificabilibus"},
+    {"line": "Insuperabilibus numeris AQUINAS pingatur stellis amplificabilibus", "confidence": "med",
+     "translation": "In insuperable numbers let AQUINAS be painted with amplifiable stars."},
+    {"line": "Insuperabilibus linguis AQUINAS <cantetur> typis condecorabilibus", "confidence": "med",
+     "translation": "In insuperable tongues let AQUINAS <be sung> in types most becoming."},
+    {"line": "Innumerabilibus calamis AQUINAS <cingatur> sertis <venerab>ilibus", "confidence": "low",
+     "translation": "With innumerable pens let AQUINAS <be girded> with <venerable> garlands."},
+    {"line": "Irreparabilibus <gnomis> AQUINAS <coronetur> palmis <venerab>ilibus", "confidence": "low",
+     "translation": "With irrevocable <maxims> let AQUINAS <be crowned> with <venerable> palms."}
+  ],
+  "retrogradus_note": "The plate's declared ductus ('Retrogradus' printed in the title) is word-level retrograde reading: each side-line, read with its word order reversed, remains grammatical Latin with the same sense. The engine encodes this as paired currens/recurrens walks over the same cells."
+}

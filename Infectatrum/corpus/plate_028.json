@@ -1,0 +1,33 @@
+{
+  "tabula": "XXVIII",
+  "source": "Caramuel, Primus Calamus (1663), p.476 (scan idx 475), labeled FIGURA XXVI",
+  "image_ref": "pl_475.png",
+  "family": "labyrinthus-quadratus-bipartitus (rectangular grid; each cell split by a diagonal into two triangular half-cells, each carrying text — a bipartite-cell lattice)",
+  "numbering_note": "Header reads 'FIGURA XXVI'; this is the figure-count, which now diverges from the tabula-count (tabula XXVIII by position). Both numbering systems run in parallel in the late plates. Recorded as observed.",
+  "title_diplomatic": "LABYRINTHUS de laudibus PHILIPPI Magni, huius nominis IV, Hispaniarum Regis Catholici, Indiarum Monarchae, etc. ... Illustrissimo et Reverendissimo D.D. Antonio del Yerro, Militaris Ord. de Alcantara Equiti, Priori de Burgitabus Abbati de Sancta Catherina etc. D. Bernardus Weyms D.C.",
+  "title_translation": "A LABYRINTH on the praises of Philip the Great, fourth of this name, Catholic King of the Spains, Monarch of the Indies, etc. ... to Lord Antonio del Yerro, knight of the Military Order of Alcantara, prior of Burgos, abbot of St. Catherine.",
+  "political_note": "First explicitly POLITICAL labyrinth (praising a living monarch, Philip IV) rather than a saint — a panegyric to secular power. Cells reference naval victory, the Indies, rebels subdued (Bellum, classes, regiones).",
+  "confidence": "mixed (first rows high, lower rows med)",
+  "flags": ["bipartite-diagonal-cells", "political-panegyric", "figura-vs-tabula-numbering-diverge"],
+  "figure": {
+    "tokens": {
+      "r1c1a": "BOREAS_GENTES", "r1c1b": "MAVRVS_DEBELLASTI", "r1c2": "INSOLENTES_AVDACES",
+      "r1c3": "AVSTRALES_SPLENDORES", "r1c4": "PERCVSSIS_REGIONES", "r1c5": "DVX_FVRORES",
+      "r1c6": "ACCEPISTI_LAVDES", "r1c7": "CVM_CANDIDOS", "r1c8": "REBELLI_NECEM",
+      "r2c1": "EVERTENTES_SVBIECTAS", "r2c2": "EMINENTES_DESTRVCTAS", "r2c3": "DAS_HONORES",
+      "r2c4": "REDVXISTI_DVXAD", "r2c5": "FOVES_FLORES", "r2c6": "COMPOSVISTI",
+      "last1": "PHILIPPI_CESHIMVS_REGIERVNT", "last2": "PLORAVERVNT_CHRISTALLI",
+      "last3": "VICTA_SOR_MIRANTVR", "last4": "NVNC_PERIBIT", "last5": "MVLTIPLICAT_GORIONES",
+      "last6": "FAMA_SCRIBIT_MVSA", "last7": "VIRVM_FOR_NASIA", "last8": "QVI_LAVDE_AETERNA"
+    },
+    "walks": {
+      "row1": ["r1c1a", "r1c2", "r1c3", "r1c4", "r1c5", "r1c6", "r1c7", "r1c8"],
+      "row1_lower_triangles": ["r1c1b", "r1c2", "r1c3", "r1c4"],
+      "row2": ["r2c1", "r2c2", "r2c3", "r2c4", "r2c5", "r2c6"],
+      "last_row": ["last1", "last2", "last3", "last4", "last5", "last6", "last7", "last8"]
+    },
+    "walk_confidence": {"row1": "high", "row1_lower_triangles": "med", "row2": "high", "last_row": "med"},
+    "node_confidence": {"r1c1a": "high", "r1c2": "high", "r1c3": "high", "r2c1": "high", "r2c2": "high"}
+  },
+  "calibration_role": "First political panegyric and first BIPARTITE-CELL lattice (diagonal-split cells, each half a distinct token). Tests the substrate model on cells that carry TWO tokens — a refinement the FigureGraph handles by giving each half-cell its own node id."
+}

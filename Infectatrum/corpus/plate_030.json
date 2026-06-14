@@ -1,0 +1,35 @@
+{
+  "tabula": "XXX",
+  "source": "Caramuel, Primus Calamus (1663), p.480 (scan idx 479), TAB XXX",
+  "image_ref": "pl_479.png",
+  "family": "labyrinthus-hispanicus-bipartitus (Spanish/Castilian verse in a diagonal-split bipartite-cell rectangular grid)",
+  "language": "Spanish (Castilian)",
+  "title_diplomatic": "EN ALABANZA DEL ILL.mo Y REVEND.mo SEÑOR DON ANGEL MANRIQUE DE LARA, Catredatico de Prima de la Universidad de Salamanca etc., General de la Orden de Cister etc., Obispo da Badaxos etc., mi Maestro. LABYRINTHO.",
+  "title_translation": "In praise of the most illustrious and reverend lord Don Angel Manrique de Lara, prime professor of the University of Salamanca, General of the Cistercian Order, Bishop of Badajoz, etc., my Master. A LABYRINTH.",
+  "footer_diplomatic": "Illustrissimum scripsi Iuvenis sub annum MDCXXIV, dum noster ipse Philosophicum Collegium usitaret, et quia etiamnum gratissima mihi est tanti Viri memoria, ut noster adversus illum innotescat affectus, edi in lucem cui animus, anno MDCLXII. [Se decim modis legi potest.]",
+  "claimed_readings": 16,
+  "note": "First fully VERNACULAR SPANISH labyrinth — the verse cells are Castilian ('las dulces flores y claueles', 'Coronado de palmas y laureles', 'Los reyes coronados'). Bipartite diagonal cells as in TAB XXVIII. Confirms the genre is language-agnostic in the source itself: Latin, Greek, Chinese, and now Spanish labyrinths all coexist.",
+  "confidence": "mixed (Spanish text largely legible)",
+  "flags": ["spanish-vernacular", "bipartite-diagonal-cells", "readable-16-ways", "author-youthful-1624-work"],
+  "figure": {
+    "tokens": {
+      "r1c1": "A_MANRIQVE_LA_GLORIA", "r1c2": "SACRIFIQVE_PALMAS_Y_LAVRELES", "r1c3": "LAS_DVLCES_FLORES",
+      "r1c4": "CORONADOS_DE_FLORES_Y_CLAVELES", "r1c5": "ESTIENDAN_POR_LOS_DELICADOS", "r1c6": "LOS_REYES_CORONADOS",
+      "r1c7": "MVLTIPLICO_LOS_ACENTOS_CANCIONES", "r1c8": "VENERA_ROMPE_SVBLADOS",
+      "r2c1": "SACRIFIQVE_LAVRE_Y_CORONAS", "r2c2": "EN_NOMBRE_DE_MAGVE", "r2c3": "LOS_ACONTOS_DE_MARTE",
+      "r2c4": "DESTERRADOS_DEL_ORIZONTE", "r2c5": "LOS_LAVROS_AVRIENS_CORONAS",
+      "last1": "LOS_BLASONES_TARAN_PROSTRADOS", "last2": "CON_CANCIONES_TIPLICA_DE_ACENTOS",
+      "last3": "DE_CYBELES_LOS_LABIOS_ESMALTADOS", "last4": "DELICADOS_DE_RAMEN", "last5": "DEFLORESY_CLAVELES_CORONADOS",
+      "last6": "BIEN_TEMPLADOS_DVLCES_INSTRVMENTOS", "last7": "MIL_PALMAS_Y_LAVRELES_SIGVE", "last8": "LA_GLORIA_DE_ESTOS_A_MANRIQVE"
+    },
+    "walks": {
+      "row1": ["r1c1", "r1c2", "r1c3", "r1c4", "r1c5", "r1c6", "r1c7", "r1c8"],
+      "row2": ["r2c1", "r2c2", "r2c3", "r2c4", "r2c5"],
+      "last_row": ["last1", "last2", "last3", "last4", "last5", "last6", "last7", "last8"],
+      "col1": ["r1c1", "r2c1", "last1"]
+    },
+    "walk_confidence": {"row1": "high", "row2": "high", "last_row": "med", "col1": "med"},
+    "node_confidence": {"r1c1": "high", "r1c2": "high", "r1c3": "high", "r1c4": "high", "last8": "high"}
+  },
+  "calibration_role": "Spanish-vernacular plate — forces the Language gate to be language-agnostic (the wordform gate already is). Together with the Latin/Greek/Chinese plates, the corpus now spans FOUR languages over one engine, the strongest possible demonstration of Language-as-swappable-parameter."
+}

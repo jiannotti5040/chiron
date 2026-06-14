@@ -1,0 +1,61 @@
+{
+  "tabula": "XV",
+  "source": "Caramuel, Primus Calamus (1663), p.450 (scan idx 449), TABVLA XV",
+  "image_ref": "plate_p450.png (984x1600, full embedded resolution)",
+  "family": "carmen-quadratum-rebus (rectangular lattice, word-cells interleaved with sun/eagle emblems; four corners anchor SARRIA VIVE DIU)",
+  "title_diplomatic": "ILLVSTRISS. ET REVERENDISS. D.D. doctrina THOMAE, nobilitate SARRIAE, eloquentia REGIO CONCIONATORI, prudentia CONSILIARIO CAESARIO, Orbis Hispani decori, Ordinis Praedicatorum gloriae, Ingeniorum Aquila, Eruditorum Soli, Theologorum Phoenici, ob vitae merita et praestita Europae et Imperio servitia ad Tranensem Archiepiscopatum evecto.",
+  "title_translation": "To the most illustrious and reverend lord, in doctrine a Thomas, in nobility a Sarria, royal preacher in eloquence, Caesarian counsellor in prudence, ornament of the Spanish world, glory of the Order of Preachers, Eagle of wits, Sun of the learned, Phoenix of theologians, raised to the Archbishopric of Trani for his life's merits and services to Europe and the Empire.",
+  "author_combinatorial_claim": {
+    "diplomatic": "MONSSERRATENSES STVDIOSI hunc Labyrinthum Metricum, et in ipso 14,996,480 (hoc est quatuordecim milliones, nongenta nonaginta sex millia, quadringenta et octoginta) Carmina legenda a centro ad angulos: totidemque legenda ab angulis ad centrum, hilares et gratulabundi CONSECRABANT.",
+    "claimed_verses": 14996480,
+    "ductus_stated": "a centro ad angulos / ab angulis ad centrum (centre->angles and angles->centre, bidirectional)",
+    "note": "The students of Montserrat dedicate this metric labyrinth claiming 14,996,480 verses readable centre-to-corners and back. The author's explicit |Σ| claim and explicit bidirectional ductus make this a clean calibration target alongside TAB. XIV."
+  },
+  "confidence": "mixed (per-node below)",
+  "flags": ["rebus-emblem-cells-not-textual", "centre-cell-CARMINE-CONCELEBRET-is-the-pivot", "interior-rows-partially-degraded"],
+  "operating_manual": "two-pass; diplomatic verbatim; sun/eagle emblem cells recorded as <EMBLEM> not invented as words; zero normalization in diplomatic layer",
+  "figure": {
+    "tokens": {
+      "corner_tl": "SARRIA_VIVE_DIU", "corner_tr": "SARRIA_VIVE_DIU",
+      "corner_bl": "SARRIA_VIVE_DIU", "corner_br": "SARRIA_VIVE_DIU",
+      "centre": "CARMINE_CONCELEBRET",
+      "t1": "QUEM_REX", "t2": "EXALTAT", "t3": "IBERUS", "t4": "CONCLAMET", "t5": "LYCEUS",
+      "u1": "COELUM", "u2": "EXTOLLIT", "u3": "HONORVS", "u4": "ORESTES", "u5": "DEPANGAT", "u6": "MUNDUS",
+      "v1": "QUEM_SOL", "v2": "TE_ILLUSTRAT", "v3": "AD_ASTRA", "v4": "TE_CASTOR", "v5": "ABROTEUS", "v6": "SUBRUNIGAT", "v7": "REBOET",
+      "w1": "FORTUNAT", "w2": "HONORE", "w3": "TE_ORPHEUS", "w4": "TE_IMMENSUS", "w5": "ARATUS", "w6": "CONDICAT", "w7": "DIVINUS",
+      "x1": "PROMOVIT", "x2": "ADORNANS", "x3": "TE_MUNDUS", "x4": "DULCI", "x5": "TE_GNARUS", "x6": "ACHATES", "x7": "EOUS",
+      "y1": "HONORANS", "y2": "TE_PONTUS", "y3": "COMPTO", "y4": "MULTO", "y5": "TE_AURATUS",
+      "z1": "AQUINAS", "z2": "PARNASSUS", "z3": "DOCTO", "z4": "PULCHRO", "z5": "TE_EXCELSUS", "z6": "OLYMPUS",
+      "aa1": "HORIZON", "aa2": "TE_ILLUSTRIS", "aa3": "PICTO", "aa4": "VINCTE", "aa5": "TE_LECTUS", "aa6": "AGATHON",
+      "ab1": "COELESTIS", "ab2": "APOLLES", "ab3": "TE_ARGUTUS", "ab4": "PEXO", "ab5": "TE_ARMATUS", "ab6": "ABRENUS", "ab7": "CUS_DIXAT",
+      "ac1": "SUBTILIS", "ac2": "ARION", "ac3": "TE_DULCIS", "ac4": "TE_PERSUL", "ac5": "ULYSSES", "ac6": "VESPONDET",
+      "ad1": "THOMA", "ad2": "SUBLIMIS", "ad3": "XERXES", "ad4": "TE_PHOEBUS", "ad5": "AMICE", "ad6": "CUI_INCULCAT", "ad7": "PIETAS",
+      "ae1": "DOCTOR", "ae2": "SIS_ORBIS", "ae3": "HYDASPES", "ae4": "UBIQUE", "ae5": "CUI_FATUR", "ae6": "BONITAS",
+      "af1": "SPECIMEN", "af2": "VIRTUTIS", "af3": "OVANTI", "af4": "CLA_AC_MAT", "af5": "PROBITAS"
+    },
+    "walks": {
+      "top_row": ["corner_tl", "t1", "t2", "t3", "t4", "t5", "corner_tr"],
+      "centre_to_top": ["centre", "z3", "w3", "v2", "t1", "corner_tl"],
+      "row_v_currens": ["v1", "v2", "v3", "v4", "v5", "v6", "v7"],
+      "row_w_currens": ["w1", "w2", "w3", "w4", "w5", "w6", "w7"],
+      "row_x_currens": ["x1", "x2", "x3", "x4", "x5", "x6", "x7"],
+      "left_col": ["corner_tl", "v1", "w1", "x1", "y1", "z1", "aa1", "ab1", "ac1", "ad1", "ae1", "af1", "corner_bl"]
+    },
+    "walk_confidence": {
+      "top_row": "high", "row_v_currens": "med", "row_w_currens": "med",
+      "row_x_currens": "med", "left_col": "med", "centre_to_top": "low"
+    },
+    "node_confidence": {
+      "corner_tl": "high", "corner_tr": "high", "corner_bl": "high", "corner_br": "high",
+      "centre": "high", "t1": "high", "t2": "high", "t3": "med", "t4": "high", "t5": "high",
+      "u1": "high", "u2": "high", "u4": "high", "u6": "high",
+      "v1": "high", "v2": "high", "v3": "high", "v4": "high", "v5": "med", "v6": "med", "v7": "med",
+      "w1": "high", "w2": "high", "w3": "high", "w4": "med", "w5": "high", "w6": "med", "w7": "high",
+      "x1": "high", "x2": "high", "x3": "high", "x4": "high", "x5": "med", "x6": "high", "x7": "high",
+      "z1": "high", "aa1": "high", "ad1": "high", "ae1": "high",
+      "ab7": "low", "ac4": "low", "ad4": "med", "af4": "low"
+    },
+    "emblem_layer_note": "Alternating sun (radiant face) and double-eagle emblems fill the interstitial cells. As in TAB. XIV these are the rebus substitution layer that produces the asserted multi-million |Σ|; recorded as structure, not transcribed as words."
+  },
+  "calibration_role": "Second adversarial/synthetic-ambiguity calibration plate. Asserted |Σ| = 14,996,480 with an EXPLICIT bidirectional ductus (centre<->angles). Complements TAB. XIV (diamond) with a rectangular lattice, giving the detector two legitimate-but-saturated specimens of different topology."
+}

@@ -1,0 +1,30 @@
+{
+  "tabula": "XXXI",
+  "source": "Caramuel, Primus Calamus (1663), p.482 (scan idx 481), TAB XXXI",
+  "image_ref": "pl_481.png",
+  "family": "rebus-cancellatum (13x13 grid; ornamental capitals A/M/F as grille, interleaved with emblem-cells decoded by a numbered key)",
+  "title_diplomatic": "(key row) 1 dicit perfectionem, 2 praemium, 3 pietatem, 4 ut ornatum, ADAMAN[tem], 5 AMETHystus, 6 alba fama, 7 super amoris ... (foot) 8 flos amoris et fecunditas estem clara",
+  "note": "A pictorial rebus labyrinth: the recurring capitals A, M, F tile the lattice (likely AMor / Fama / Maria triads), while each EMBLEM (heart=amor, palm=victory, chalice, lamp=lumen, pyramid, eagle, amethyst) is a token decoded by the numbered legend. The verse is assembled by substituting emblem->word per the key and reading the grille letters. The most purely IMAGE-CODED plate.",
+  "rebus_key": {
+    "1": "perfectionem", "2": "praemium", "3": "pietatem", "4": "ornatum (ADAMANtem)",
+    "5": "AMETHystus", "6": "alba fama", "7": "super amoris", "8": "flos amoris et fecunditas"
+  },
+  "confidence": "mixed (grille letters + key high, emblem-to-cell mapping med)",
+  "flags": ["pure-rebus", "emblem-tokens", "numbered-decode-key", "AMF-grille", "13x13"],
+  "figure": {
+    "tokens": {
+      "c_tl": "A", "c_tr": "A", "c_bl": "A", "c_br": "A",
+      "g_m1": "M", "g_f1": "F", "g_a1": "A", "g_m2": "M", "g_f2": "F",
+      "emb_heart": "AMOR", "emb_palm": "VICTORIA", "emb_chalice": "GRATIA",
+      "emb_lamp": "LVMEN", "emb_pyramid": "GLORIA", "emb_eagle": "AQVILA", "emb_amethyst": "AMETHYSTVS"
+    },
+    "walks": {
+      "grille_diag": ["c_tl", "g_m1", "g_f1", "g_a1", "g_m2", "c_br"],
+      "rebus_row": ["c_tl", "emb_heart", "g_m1", "emb_palm", "g_f1", "emb_chalice", "c_tr"],
+      "decode_chain": ["emb_heart", "emb_palm", "emb_lamp", "emb_pyramid", "emb_eagle"]
+    },
+    "walk_confidence": {"grille_diag": "high", "rebus_row": "med", "decode_chain": "med"},
+    "node_confidence": {"c_tl": "high", "c_tr": "high", "emb_heart": "med", "emb_amethyst": "high"}
+  },
+  "calibration_role": "Most purely PICTORIAL plate — the meaning lives in an emblem->word substitution key, the clearest case of a non-textual Language (the decode key IS a Language whose admits() maps emblems to lexemes). Tests that the engine treats a pictorial code as just another chart."
+}

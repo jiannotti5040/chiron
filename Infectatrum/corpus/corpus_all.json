@@ -1,0 +1,2368 @@
+{
+  "corpus": "Caramuel, Primus Calamus ob oculos ponens Metametricam (Rome, 1663) — transcribed labyrinth plates",
+  "schema_version": "1.0",
+  "plate_count": 21,
+  "tabulae": [
+    "XIII",
+    "XIV",
+    "XIX",
+    "XV",
+    "XVI",
+    "XVII",
+    "XVIII",
+    "XX",
+    "XXI",
+    "XXII",
+    "XXIII",
+    "XXIV",
+    "XXIX",
+    "XXV",
+    "XXVI",
+    "XXVII",
+    "XXVIII",
+    "XXX",
+    "XXXI",
+    "XXXII",
+    "XXXIII"
+  ],
+  "transcription_discipline": "two-pass (diplomatic verbatim + normalized); node-level confidence; strict graph JSON (nodes + walks separated; shared intersection nodes reuse ids); zero-hallucination diplomatic layer; emblem/rebus cells recorded as structure not invented words",
+  "note": "Each entry preserves the full individual plate record. Spectrum measures are produced by infectatrum.py at load time, not stored here, so the corpus stays pure source-transcription.",
+  "plates": {
+    "XIII": {
+      "tabula": "XIII",
+      "source": "Caramuel, Primus Calamus (1663), p.446 (scan idx 445), TAB. XIII",
+      "image_ref": "tab13_full.png (992x1600, full embedded resolution of source scan)",
+      "family": "figurata-geometric",
+      "title_diplomatic": "Ad gloriam laudemque S. THOMAE DOCTORIS ANGELICI, Labyrinthus Hexagonus Retrogradus",
+      "title_translation": "To the glory and praise of St. Thomas the Angelic Doctor: a Retrograde Hexagonal Labyrinth",
+      "geometry": "hexagram (two overlaid triangles), Aquinas portrait at centre flanked by sun and moon; 6 tip cells carry -abilibus adjectives shared by two lines each; AQUINAS pivots at the two horizontal centres and (rotated) at the four slope crossings; each of the 6 sides is one verse line readable forward and word-retrograde (the declared 'Retrogradus' ductus)",
+      "confidence": "mixed (per-cell below)",
+      "flags": [
+        "slope-cell-ordering-partially-conjectural",
+        "two-verbs-low-confidence"
+      ],
+      "operating_manual": "two-pass; diplomatic preserved; expansions marked [..]; conjectures marked <..>; no silent completion",
+      "cells": {
+        "row1": [
+          {
+            "id": "t_ul",
+            "diplomatic": "innu/mera/bilibus",
+            "normalized": "innumerabilibus",
+            "confidence": "high",
+            "role": "tip upper-left"
+          },
+          {
+            "id": "r1n",
+            "diplomatic": "metris",
+            "normalized": "metris",
+            "confidence": "high"
+          },
+          {
+            "id": "r1v",
+            "diplomatic": "laude/tur",
+            "normalized": "laudetur",
+            "confidence": "high"
+          },
+          {
+            "id": "aq_h1",
+            "diplomatic": "AQUINAS",
+            "normalized": "AQUINAS",
+            "confidence": "high",
+            "role": "pivot"
+          },
+          {
+            "id": "r1v2",
+            "diplomatic": "dica/tur",
+            "normalized": "dicatur",
+            "confidence": "high"
+          },
+          {
+            "id": "r1n2",
+            "diplomatic": "verbis",
+            "normalized": "verbis",
+            "confidence": "high"
+          },
+          {
+            "id": "t_ur",
+            "diplomatic": "irrepa/rabili/bus",
+            "normalized": "irreparabilibus",
+            "confidence": "high",
+            "role": "tip upper-right"
+          }
+        ],
+        "row2": [
+          {
+            "id": "t_ll",
+            "diplomatic": "amplifi/cabili/bus",
+            "normalized": "amplificabilibus",
+            "confidence": "high",
+            "role": "tip lower-left"
+          },
+          {
+            "id": "r2n",
+            "diplomatic": "gazis",
+            "normalized": "gazis",
+            "confidence": "high"
+          },
+          {
+            "id": "r2v",
+            "diplomatic": "orne/tur",
+            "normalized": "ornetur",
+            "confidence": "high"
+          },
+          {
+            "id": "aq_h2",
+            "diplomatic": "AQUINAS",
+            "normalized": "AQUINAS",
+            "confidence": "high",
+            "role": "pivot"
+          },
+          {
+            "id": "r2v2",
+            "diplomatic": "done/tur",
+            "normalized": "donetur",
+            "confidence": "high"
+          },
+          {
+            "id": "r2n2",
+            "diplomatic": "lauris",
+            "normalized": "lauris",
+            "confidence": "high"
+          },
+          {
+            "id": "t_lr",
+            "diplomatic": "conde/corabi/libus",
+            "normalized": "condecorabilibus",
+            "confidence": "high",
+            "role": "tip lower-right"
+          }
+        ],
+        "apex_and_slopes": [
+          {
+            "id": "t_top",
+            "diplomatic": "insupera/bilibus",
+            "normalized": "insuperabilibus",
+            "confidence": "high",
+            "role": "tip top"
+          },
+          {
+            "id": "s_nl",
+            "diplomatic": "nume:/ris",
+            "normalized": "numeris",
+            "confidence": "high",
+            "role": "upper-left slope noun"
+          },
+          {
+            "id": "s_nr",
+            "diplomatic": "linguis",
+            "normalized": "linguis",
+            "confidence": "high",
+            "role": "upper-right slope noun"
+          },
+          {
+            "id": "aq_xl",
+            "diplomatic": "AQVINAS (rotated)",
+            "normalized": "AQUINAS",
+            "confidence": "high",
+            "role": "left crossing pivot"
+          },
+          {
+            "id": "aq_xr",
+            "diplomatic": "AQVINAS (rotated)",
+            "normalized": "AQUINAS",
+            "confidence": "high",
+            "role": "right crossing pivot"
+          },
+          {
+            "id": "s_pv",
+            "diplomatic": "pinga/tur",
+            "normalized": "pingatur",
+            "confidence": "high",
+            "role": "delta-left verb"
+          },
+          {
+            "id": "s_st",
+            "diplomatic": "stellis",
+            "normalized": "stellis",
+            "confidence": "high",
+            "role": "delta-left noun"
+          },
+          {
+            "id": "s_ty",
+            "diplomatic": "typis",
+            "normalized": "typis",
+            "confidence": "high",
+            "role": "delta-right noun"
+          },
+          {
+            "id": "s_cv",
+            "diplomatic": "c<a>nte/tur",
+            "normalized": "<cantetur>",
+            "confidence": "med",
+            "role": "delta-right verb (conjectural reading of c.nte-tur)"
+          },
+          {
+            "id": "s_ca",
+            "diplomatic": "cala/mis",
+            "normalized": "calamis",
+            "confidence": "high",
+            "role": "nabla-left noun (the book's own pun: 'with pens')"
+          },
+          {
+            "id": "s_gv",
+            "diplomatic": "<.>ga/tur (partially occluded)",
+            "normalized": "<cingatur>",
+            "confidence": "low",
+            "role": "nabla-left verb CONJECTURE"
+          },
+          {
+            "id": "s_se",
+            "diplomatic": "sertis (rotated)",
+            "normalized": "sertis",
+            "confidence": "med",
+            "role": "nabla-left lower noun"
+          },
+          {
+            "id": "s_gn",
+            "diplomatic": "gnomis (rotated)",
+            "normalized": "<gnomis>",
+            "confidence": "med",
+            "role": "nabla-right noun (conjectural)"
+          },
+          {
+            "id": "s_cv2",
+            "diplomatic": "<.>te/tur (rotated)",
+            "normalized": "<coronetur>",
+            "confidence": "low",
+            "role": "nabla-right verb CONJECTURE"
+          },
+          {
+            "id": "s_pa",
+            "diplomatic": "palmis (rotated)",
+            "normalized": "palmis",
+            "confidence": "high",
+            "role": "nabla-right lower noun"
+          },
+          {
+            "id": "t_bot",
+            "diplomatic": "<venerab>/bilibus (rotated)",
+            "normalized": "<venerab>ilibus",
+            "confidence": "med",
+            "role": "tip bottom"
+          }
+        ]
+      },
+      "figure": {
+        "tokens": {
+          "t_ul": "INNUMERABILIBUS",
+          "r1n": "METRIS",
+          "r1v": "LAUDETUR",
+          "aq_h1": "AQUINAS",
+          "r1v2": "DICATUR",
+          "r1n2": "VERBIS",
+          "t_ur": "IRREPARABILIBUS",
+          "t_ll": "AMPLIFICABILIBUS",
+          "r2n": "GAZIS",
+          "r2v": "ORNETUR",
+          "aq_h2": "AQUINAS",
+          "r2v2": "DONETUR",
+          "r2n2": "LAURIS",
+          "t_lr": "CONDECORABILIBUS",
+          "t_top": "INSUPERABILIBUS",
+          "s_nl": "NUMERIS",
+          "s_nr": "LINGUIS",
+          "aq_xl": "AQUINAS",
+          "aq_xr": "AQUINAS",
+          "s_pv": "PINGATUR",
+          "s_st": "STELLIS",
+          "s_ty": "TYPIS",
+          "s_cv": "CANTETUR",
+          "s_ca": "CALAMIS",
+          "s_gv": "CINGATUR",
+          "s_se": "SERTIS",
+          "s_gn": "GNOMIS",
+          "s_cv2": "CORONETUR",
+          "s_pa": "PALMIS",
+          "t_bot": "VENERABILIBUS"
+        },
+        "walks": {
+          "currens": [
+            "t_ul",
+            "r1n",
+            "r1v",
+            "aq_h1",
+            "r1v2",
+            "r1n2",
+            "t_ur"
+          ],
+          "recurrens": [
+            "t_ur",
+            "r1n2",
+            "r1v2",
+            "aq_h1",
+            "r1v",
+            "r1n",
+            "t_ul"
+          ],
+          "currens_2": [
+            "t_ll",
+            "r2n",
+            "r2v",
+            "aq_h2",
+            "r2v2",
+            "r2n2",
+            "t_lr"
+          ],
+          "recurrens_2": [
+            "t_lr",
+            "r2n2",
+            "r2v2",
+            "aq_h2",
+            "r2v",
+            "r2n",
+            "t_ll"
+          ],
+          "delta_left": [
+            "t_top",
+            "s_nl",
+            "aq_xl",
+            "s_pv",
+            "s_st",
+            "t_ll"
+          ],
+          "delta_right": [
+            "t_top",
+            "s_nr",
+            "aq_xr",
+            "s_cv",
+            "s_ty",
+            "t_lr"
+          ],
+          "nabla_left": [
+            "t_ul",
+            "s_ca",
+            "aq_xl",
+            "s_gv",
+            "s_se",
+            "t_bot"
+          ],
+          "nabla_right": [
+            "t_ur",
+            "s_gn",
+            "aq_xr",
+            "s_cv2",
+            "s_pa",
+            "t_bot"
+          ]
+        },
+        "walk_confidence": {
+          "currens": "high",
+          "recurrens": "high",
+          "currens_2": "high",
+          "recurrens_2": "high",
+          "delta_left": "med",
+          "delta_right": "med",
+          "nabla_left": "low",
+          "nabla_right": "low"
+        }
+      },
+      "verses_normalized": [
+        {
+          "line": "Innumerabilibus metris laudetur AQUINAS dicatur verbis irreparabilibus",
+          "confidence": "high",
+          "translation": "In innumerable metres let AQUINAS be praised; let him be proclaimed in irrevocable words.",
+          "retrograde": "Irreparabilibus verbis dicatur AQUINAS laudetur metris innumerabilibus"
+        },
+        {
+          "line": "Amplificabilibus gazis ornetur AQUINAS donetur lauris condecorabilibus",
+          "confidence": "high",
+          "translation": "With treasures ever-amplifiable let AQUINAS be adorned; let him be endowed with laurels most becoming.",
+          "retrograde": "Condecorabilibus lauris donetur AQUINAS ornetur gazis amplificabilibus"
+        },
+        {
+          "line": "Insuperabilibus numeris AQUINAS pingatur stellis amplificabilibus",
+          "confidence": "med",
+          "translation": "In insuperable numbers let AQUINAS be painted with amplifiable stars."
+        },
+        {
+          "line": "Insuperabilibus linguis AQUINAS <cantetur> typis condecorabilibus",
+          "confidence": "med",
+          "translation": "In insuperable tongues let AQUINAS <be sung> in types most becoming."
+        },
+        {
+          "line": "Innumerabilibus calamis AQUINAS <cingatur> sertis <venerab>ilibus",
+          "confidence": "low",
+          "translation": "With innumerable pens let AQUINAS <be girded> with <venerable> garlands."
+        },
+        {
+          "line": "Irreparabilibus <gnomis> AQUINAS <coronetur> palmis <venerab>ilibus",
+          "confidence": "low",
+          "translation": "With irrevocable <maxims> let AQUINAS <be crowned> with <venerable> palms."
+        }
+      ],
+      "retrogradus_note": "The plate's declared ductus ('Retrogradus' printed in the title) is word-level retrograde reading: each side-line, read with its word order reversed, remains grammatical Latin with the same sense. The engine encodes this as paired currens/recurrens walks over the same cells."
+    },
+    "XIV": {
+      "tabula": "XIV",
+      "source": "Caramuel, Primus Calamus (1663), p.448 (scan idx 447), TAB. XIV",
+      "image_ref": "plate_p448.png (1034x1600, full embedded resolution)",
+      "family": "quadratum-rebus (diamond lattice rotated 45deg, word-cells interleaved with astral emblems)",
+      "title_diplomatic": "S. THOMAE AQVINATI Doctori Angelico Praeceptori Virgineo, Literary Orbis Soli, Naturae Oculo, Academiae Phoenici: Scholarum Stellae et Gymnasiorum Lauro et Palmae.",
+      "title_translation": "To St. Thomas Aquinas, Angelic Doctor, Virginal Teacher, Sun of the literary world, Eye of nature, Phoenix of the Academy, Star of the schools and Laurel and Palm of the gymnasia.",
+      "author_combinatorial_claim": {
+        "diplomatic": "Hoc Retrogradum Distichon et in ipso 9,823,275 Disticha recurrentia, adeoque 39,293,100 simplicia carmina, devotionis gratia consecrabat I. Caramuel Salmanticae Anno Dni 1629.",
+        "claimed_recurrent_distichs": 9823275,
+        "claimed_simple_verses": 39293100,
+        "note": "Caramuel ASSERTS this single retrograde distich yields 9,823,275 recurrent distichs / 39,293,100 simple verses. This is the author's own |Σ| claim — a calibration target for the adversarial/synthetic-ambiguity detector: an astronomically high asserted multiplicity from a compact lattice.",
+        "margin_product_ladder_diplomatic": [
+          "3",
+          "per 9",
+          "15",
+          "per 7",
+          "105",
+          "per 9",
+          "945",
+          "per 11",
+          "10,395",
+          "per 9",
+          "93,555",
+          "per 7",
+          "654,885",
+          "per 5",
+          "3,274,425",
+          "per 3",
+          "9,823,275"
+        ],
+        "ladder_confidence": "med (margin partially cropped/degraded; values read top-to-bottom)"
+      },
+      "confidence": "mixed (per-node below)",
+      "flags": [
+        "rebus-emblem-cells-not-textual",
+        "margin-ladder-partially-degraded",
+        "lattice-only-spine-transcribed"
+      ],
+      "operating_manual": "two-pass; diplomatic preserved verbatim; emblem cells recorded as <EMBLEM:type> not invented words; zero normalization in diplomatic layer",
+      "figure": {
+        "tokens": {
+          "apex_top": "HORIZON",
+          "r1a": "DECLAMAT",
+          "r1b": "OLIVA",
+          "r1c": "CUSTODIS",
+          "r2a": "METRO",
+          "r2b": "COMMENDAT",
+          "r2c": "AMICA",
+          "r2d": "DELPHINUS",
+          "r2e": "PALMAS",
+          "r3a": "IAM",
+          "r3b": "NUMERIS",
+          "r3c": "DECANTAT",
+          "r3d": "ACHATES",
+          "r3e": "MAGNETIS",
+          "r3f": "PLAUSUS",
+          "r3g": "HUIC",
+          "r4a": "TUBA",
+          "r4b": "SI",
+          "r4c": "MODULIS",
+          "r4d": "DEMONSTRAT",
+          "r4e": "HONORA",
+          "r4f": "SPLENDORIS",
+          "r4g": "CATHEDRAS",
+          "r4h": "HIC",
+          "r4i": "DICAT",
+          "r5a": "VNGVENTVM",
+          "r5b": "SCHOLA",
+          "r5c": "VSVAE",
+          "r5d": "THOMAM",
+          "r5e": "DILAUDAT",
+          "r5f": "OLYMPVS",
+          "r5g": "DOCTORIS",
+          "r5h": "LAURVS",
+          "r5i": "ET",
+          "r5j": "DEDIT",
+          "r5k": "ANGELIS",
+          "r6a": "TOGA",
+          "r6b": "DVM",
+          "r6c": "VERSV",
+          "r6d": "PERLVSTRAT",
+          "r6e": "HONESTA",
+          "r6f": "PHOENICIS",
+          "r6g": "MORES",
+          "r6h": "AC",
+          "r6i": "SACRAT",
+          "r7a": "CVM",
+          "r7b": "PVLCHRE",
+          "r7c": "PROPUGNAT",
+          "r7d": "ADAVCTA",
+          "r7e": "TORRENTIS",
+          "r7f": "RADIOS",
+          "r7g": "EN",
+          "r8a": "DOCTE",
+          "r8b": "DESCRIBIT",
+          "r8c": "AMANDA",
+          "r8d": "MOTORIS",
+          "r8e": "LAVDES",
+          "r9a": "DEFENDIT",
+          "r9b": "OPTIMA",
+          "r9c": "RECTORIS",
+          "apex_bot": "AQVINVM"
+        },
+        "walks": {
+          "currens_spine": [
+            "apex_top",
+            "r2b",
+            "r3c",
+            "r4d",
+            "r5d",
+            "r6d",
+            "r7c",
+            "r8b",
+            "apex_bot"
+          ],
+          "row5_currens": [
+            "r5a",
+            "r5b",
+            "r5c",
+            "r5d",
+            "r5e",
+            "r5f",
+            "r5g",
+            "r5h",
+            "r5i",
+            "r5j",
+            "r5k"
+          ],
+          "row5_recurrens": [
+            "r5k",
+            "r5j",
+            "r5i",
+            "r5h",
+            "r5g",
+            "r5f",
+            "r5e",
+            "r5d",
+            "r5c",
+            "r5b",
+            "r5a"
+          ],
+          "row4_currens": [
+            "r4a",
+            "r4b",
+            "r4c",
+            "r4d",
+            "r4e",
+            "r4f",
+            "r4g",
+            "r4h",
+            "r4i"
+          ],
+          "row6_currens": [
+            "r6a",
+            "r6b",
+            "r6c",
+            "r6d",
+            "r6e",
+            "r6f",
+            "r6g",
+            "r6h",
+            "r6i"
+          ]
+        },
+        "walk_confidence": {
+          "currens_spine": "med",
+          "row5_currens": "med",
+          "row5_recurrens": "med",
+          "row4_currens": "high",
+          "row6_currens": "med"
+        },
+        "node_confidence": {
+          "apex_top": "high",
+          "apex_bot": "med",
+          "r2a": "high",
+          "r2b": "high",
+          "r2c": "high",
+          "r2d": "med",
+          "r2e": "high",
+          "r3b": "high",
+          "r3c": "high",
+          "r3d": "med",
+          "r3e": "high",
+          "r3f": "med",
+          "r3g": "high",
+          "r4c": "high",
+          "r4d": "high",
+          "r4e": "high",
+          "r4f": "med",
+          "r4g": "high",
+          "r4i": "high",
+          "r5d": "high",
+          "r5e": "med",
+          "r5f": "med",
+          "r5g": "high",
+          "r5h": "high",
+          "r5k": "med",
+          "r5a": "low",
+          "r5c": "low",
+          "r6d": "high",
+          "r6f": "med",
+          "r7c": "med",
+          "r7d": "low",
+          "r8b": "med",
+          "r9a": "high"
+        },
+        "emblem_layer_note": "Between word-cells the lattice carries astral emblems (sun, crescent moon, eye, six-pointed star, column, altar). These are a parallel rebus ductus, recorded as structure but NOT transcribed as words (zero-hallucination rule). They are why the plate's true |Σ| is enormous: each emblem-cell is a substitutable token."
+      },
+      "verses_normalized": [
+        {
+          "line": "Vngventvm schola vsvae Thomam dilaudat Olympus doctoris laurus et dedit Angelis",
+          "confidence": "med",
+          "translation": "(spine row, conjectural ordering) The school ... praises Thomas; Olympus gave the doctor's laurel to the angels.",
+          "flag": "row5 ordering and r5a/r5c low-confidence"
+        }
+      ],
+      "calibration_role": "TAB. XIV is the FOG-OF-WAR / ADVERSARIAL calibration plate: its author asserts |Σ| ~ 9.8M-39.3M from a single compact lattice. Run through adversarial_score(), a near-saturated, low-negative-space spectrum of this asserted magnitude is exactly the synthetic-inflation signature the detector is built to flag — here it is LEGITIMATE (Caramuel really can generate them), which makes it the ideal true-positive-for-structure / false-positive-for-threat test."
+    },
+    "XV": {
+      "tabula": "XV",
+      "source": "Caramuel, Primus Calamus (1663), p.450 (scan idx 449), TABVLA XV",
+      "image_ref": "plate_p450.png (984x1600, full embedded resolution)",
+      "family": "carmen-quadratum-rebus (rectangular lattice, word-cells interleaved with sun/eagle emblems; four corners anchor SARRIA VIVE DIU)",
+      "title_diplomatic": "ILLVSTRISS. ET REVERENDISS. D.D. doctrina THOMAE, nobilitate SARRIAE, eloquentia REGIO CONCIONATORI, prudentia CONSILIARIO CAESARIO, Orbis Hispani decori, Ordinis Praedicatorum gloriae, Ingeniorum Aquila, Eruditorum Soli, Theologorum Phoenici, ob vitae merita et praestita Europae et Imperio servitia ad Tranensem Archiepiscopatum evecto.",
+      "title_translation": "To the most illustrious and reverend lord, in doctrine a Thomas, in nobility a Sarria, royal preacher in eloquence, Caesarian counsellor in prudence, ornament of the Spanish world, glory of the Order of Preachers, Eagle of wits, Sun of the learned, Phoenix of theologians, raised to the Archbishopric of Trani for his life's merits and services to Europe and the Empire.",
+      "author_combinatorial_claim": {
+        "diplomatic": "MONSSERRATENSES STVDIOSI hunc Labyrinthum Metricum, et in ipso 14,996,480 (hoc est quatuordecim milliones, nongenta nonaginta sex millia, quadringenta et octoginta) Carmina legenda a centro ad angulos: totidemque legenda ab angulis ad centrum, hilares et gratulabundi CONSECRABANT.",
+        "claimed_verses": 14996480,
+        "ductus_stated": "a centro ad angulos / ab angulis ad centrum (centre->angles and angles->centre, bidirectional)",
+        "note": "The students of Montserrat dedicate this metric labyrinth claiming 14,996,480 verses readable centre-to-corners and back. The author's explicit |Σ| claim and explicit bidirectional ductus make this a clean calibration target alongside TAB. XIV."
+      },
+      "confidence": "mixed (per-node below)",
+      "flags": [
+        "rebus-emblem-cells-not-textual",
+        "centre-cell-CARMINE-CONCELEBRET-is-the-pivot",
+        "interior-rows-partially-degraded"
+      ],
+      "operating_manual": "two-pass; diplomatic verbatim; sun/eagle emblem cells recorded as <EMBLEM> not invented as words; zero normalization in diplomatic layer",
+      "figure": {
+        "tokens": {
+          "corner_tl": "SARRIA_VIVE_DIU",
+          "corner_tr": "SARRIA_VIVE_DIU",
+          "corner_bl": "SARRIA_VIVE_DIU",
+          "corner_br": "SARRIA_VIVE_DIU",
+          "centre": "CARMINE_CONCELEBRET",
+          "t1": "QUEM_REX",
+          "t2": "EXALTAT",
+          "t3": "IBERUS",
+          "t4": "CONCLAMET",
+          "t5": "LYCEUS",
+          "u1": "COELUM",
+          "u2": "EXTOLLIT",
+          "u3": "HONORVS",
+          "u4": "ORESTES",
+          "u5": "DEPANGAT",
+          "u6": "MUNDUS",
+          "v1": "QUEM_SOL",
+          "v2": "TE_ILLUSTRAT",
+          "v3": "AD_ASTRA",
+          "v4": "TE_CASTOR",
+          "v5": "ABROTEUS",
+          "v6": "SUBRUNIGAT",
+          "v7": "REBOET",
+          "w1": "FORTUNAT",
+          "w2": "HONORE",
+          "w3": "TE_ORPHEUS",
+          "w4": "TE_IMMENSUS",
+          "w5": "ARATUS",
+          "w6": "CONDICAT",
+          "w7": "DIVINUS",
+          "x1": "PROMOVIT",
+          "x2": "ADORNANS",
+          "x3": "TE_MUNDUS",
+          "x4": "DULCI",
+          "x5": "TE_GNARUS",
+          "x6": "ACHATES",
+          "x7": "EOUS",
+          "y1": "HONORANS",
+          "y2": "TE_PONTUS",
+          "y3": "COMPTO",
+          "y4": "MULTO",
+          "y5": "TE_AURATUS",
+          "z1": "AQUINAS",
+          "z2": "PARNASSUS",
+          "z3": "DOCTO",
+          "z4": "PULCHRO",
+          "z5": "TE_EXCELSUS",
+          "z6": "OLYMPUS",
+          "aa1": "HORIZON",
+          "aa2": "TE_ILLUSTRIS",
+          "aa3": "PICTO",
+          "aa4": "VINCTE",
+          "aa5": "TE_LECTUS",
+          "aa6": "AGATHON",
+          "ab1": "COELESTIS",
+          "ab2": "APOLLES",
+          "ab3": "TE_ARGUTUS",
+          "ab4": "PEXO",
+          "ab5": "TE_ARMATUS",
+          "ab6": "ABRENUS",
+          "ab7": "CUS_DIXAT",
+          "ac1": "SUBTILIS",
+          "ac2": "ARION",
+          "ac3": "TE_DULCIS",
+          "ac4": "TE_PERSUL",
+          "ac5": "ULYSSES",
+          "ac6": "VESPONDET",
+          "ad1": "THOMA",
+          "ad2": "SUBLIMIS",
+          "ad3": "XERXES",
+          "ad4": "TE_PHOEBUS",
+          "ad5": "AMICE",
+          "ad6": "CUI_INCULCAT",
+          "ad7": "PIETAS",
+          "ae1": "DOCTOR",
+          "ae2": "SIS_ORBIS",
+          "ae3": "HYDASPES",
+          "ae4": "UBIQUE",
+          "ae5": "CUI_FATUR",
+          "ae6": "BONITAS",
+          "af1": "SPECIMEN",
+          "af2": "VIRTUTIS",
+          "af3": "OVANTI",
+          "af4": "CLA_AC_MAT",
+          "af5": "PROBITAS"
+        },
+        "walks": {
+          "top_row": [
+            "corner_tl",
+            "t1",
+            "t2",
+            "t3",
+            "t4",
+            "t5",
+            "corner_tr"
+          ],
+          "centre_to_top": [
+            "centre",
+            "z3",
+            "w3",
+            "v2",
+            "t1",
+            "corner_tl"
+          ],
+          "row_v_currens": [
+            "v1",
+            "v2",
+            "v3",
+            "v4",
+            "v5",
+            "v6",
+            "v7"
+          ],
+          "row_w_currens": [
+            "w1",
+            "w2",
+            "w3",
+            "w4",
+            "w5",
+            "w6",
+            "w7"
+          ],
+          "row_x_currens": [
+            "x1",
+            "x2",
+            "x3",
+            "x4",
+            "x5",
+            "x6",
+            "x7"
+          ],
+          "left_col": [
+            "corner_tl",
+            "v1",
+            "w1",
+            "x1",
+            "y1",
+            "z1",
+            "aa1",
+            "ab1",
+            "ac1",
+            "ad1",
+            "ae1",
+            "af1",
+            "corner_bl"
+          ]
+        },
+        "walk_confidence": {
+          "top_row": "high",
+          "row_v_currens": "med",
+          "row_w_currens": "med",
+          "row_x_currens": "med",
+          "left_col": "med",
+          "centre_to_top": "low"
+        },
+        "node_confidence": {
+          "corner_tl": "high",
+          "corner_tr": "high",
+          "corner_bl": "high",
+          "corner_br": "high",
+          "centre": "high",
+          "t1": "high",
+          "t2": "high",
+          "t3": "med",
+          "t4": "high",
+          "t5": "high",
+          "u1": "high",
+          "u2": "high",
+          "u4": "high",
+          "u6": "high",
+          "v1": "high",
+          "v2": "high",
+          "v3": "high",
+          "v4": "high",
+          "v5": "med",
+          "v6": "med",
+          "v7": "med",
+          "w1": "high",
+          "w2": "high",
+          "w3": "high",
+          "w4": "med",
+          "w5": "high",
+          "w6": "med",
+          "w7": "high",
+          "x1": "high",
+          "x2": "high",
+          "x3": "high",
+          "x4": "high",
+          "x5": "med",
+          "x6": "high",
+          "x7": "high",
+          "z1": "high",
+          "aa1": "high",
+          "ad1": "high",
+          "ae1": "high",
+          "ab7": "low",
+          "ac4": "low",
+          "ad4": "med",
+          "af4": "low"
+        },
+        "emblem_layer_note": "Alternating sun (radiant face) and double-eagle emblems fill the interstitial cells. As in TAB. XIV these are the rebus substitution layer that produces the asserted multi-million |Σ|; recorded as structure, not transcribed as words."
+      },
+      "calibration_role": "Second adversarial/synthetic-ambiguity calibration plate. Asserted |Σ| = 14,996,480 with an EXPLICIT bidirectional ductus (centre<->angles). Complements TAB. XIV (diamond) with a rectangular lattice, giving the detector two legitimate-but-saturated specimens of different topology."
+    },
+    "XVI": {
+      "tabula": "XVI",
+      "source": "Caramuel, Primus Calamus (1663), p.452 (scan idx 451), TABVLA XVI",
+      "image_ref": "pl_451.png (full embedded resolution)",
+      "family": "labyrinthus-radialis (polar wheel: concentric rings x radial spokes; cartouche COELVM LILIVET DENSE; centre hub 'Lilia PHOEB. amat')",
+      "title_diplomatic": "COELVM LILIVET DENSE — Lilia PHOEBVS amat",
+      "topology_note": "First POLAR plate. Readings run two ways: SPOKE (hub -> rim along one radius) and RING (circumferentially within one ring). Verse forms as the reader spirals/rotates. ~36 spokes x ~6 rings; only inner-ring anchors transcribed with confidence, outer rings flagged.",
+      "confidence": "mixed (inner high, outer low)",
+      "flags": [
+        "polar-topology",
+        "outer-rings-degraded",
+        "anchor-cells-only-transcribed"
+      ],
+      "author_combinatorial_claim": {
+        "diplomatic": "(no explicit numeral legible on this plate)",
+        "note": "radial labyrinth; multiplicity arises from spoke x ring permutation"
+      },
+      "figure": {
+        "tokens": {
+          "hub": "LILIA_PHOEBVS_AMAT",
+          "i1": "APOLLO",
+          "i2": "OLYMPVS",
+          "i3": "CANTAT",
+          "i4": "CANIT",
+          "i5": "PHOEBVS",
+          "i6": "PHOEBO",
+          "r1": "CARMINA_APOLLO_CANIT",
+          "r2": "PEGASIDES_PERENNES",
+          "r3": "CASTALIDES_COLVNT",
+          "r4": "DVLCIS_APOLLO_CANIT",
+          "s1": "LILIA",
+          "s2": "FLORA",
+          "s3": "SIDERA",
+          "s4": "LVMINA",
+          "s5": "NVMEN",
+          "s6": "FAMA"
+        },
+        "walks": {
+          "spoke_apollo": [
+            "hub",
+            "i1",
+            "r1"
+          ],
+          "spoke_olympus": [
+            "hub",
+            "i2",
+            "r2"
+          ],
+          "ring_inner": [
+            "i1",
+            "i2",
+            "i3",
+            "i4",
+            "i5",
+            "i6"
+          ],
+          "ring_outer_sample": [
+            "r1",
+            "r2",
+            "r3",
+            "r4"
+          ]
+        },
+        "walk_confidence": {
+          "spoke_apollo": "med",
+          "spoke_olympus": "med",
+          "ring_inner": "med",
+          "ring_outer_sample": "low"
+        },
+        "node_confidence": {
+          "hub": "high",
+          "i1": "high",
+          "i2": "high",
+          "i3": "high",
+          "i4": "high",
+          "i5": "high",
+          "r1": "med",
+          "r2": "low",
+          "r3": "low",
+          "r4": "med"
+        },
+        "emblem_layer_note": "Surrounded by a star-field and four planetary-orbit roundels (Copernican/Ptolemaic diagrams) in the corners; mitres and arms in the cartouche header."
+      },
+      "calibration_role": "First polar-topology plate — exercises the FigureGraph on non-rectangular, non-triangular geometry (rings+spokes). Tests that DETECT/ductus handle a substrate whose 'rows' are curved."
+    },
+    "XVII": {
+      "tabula": "XVII",
+      "source": "Caramuel, Primus Calamus (1663), p.454 (scan idx 453), TABULA XVII",
+      "image_ref": "pl_453.png",
+      "family": "labyrinthus-radialis-quincunx (FIVE connected polar wheels in a cross/quincunx, joined by ET / fovet / AVSTRIACOS scroll)",
+      "title_diplomatic": "Reverendissimo & Eximio D. Mag. mo D. MICHAELI ... dignissimo apud S. Crucem Abbati Cisterciensis Ordinis Visitatori et Vicario Generali, S. Theol. Doctori ... anno MDCLIII ... Monsserratenses (Claustra Sancta Crucis) Studiosi.",
+      "author_combinatorial_claim": {
+        "diplomatic": "novies mille sexcenta et quadraginta quatuor billiones (seu millionum milliones) centies decies septies mille & quadringenti triginta duo milliones, septingenta quindecim millia sexcenta et octo carmina",
+        "claimed_verses": 9644117432715608,
+        "note": "~9.644 QUADRILLION carmina — the LARGEST asserted multiplicity in the entire book. Five wheels whose joint permutation yields the figure. The supreme adversarial/synthetic-ambiguity calibration target."
+      },
+      "confidence": "mixed (hubs high, rings low)",
+      "flags": [
+        "five-wheel-polar",
+        "rings-dense-degraded",
+        "hubs-and-joints-transcribed"
+      ],
+      "figure": {
+        "tokens": {
+          "hub_top": "ET_AUGET",
+          "hub_left": "ET_ORNAT",
+          "hub_centre": "SACRA_CRUX",
+          "hub_right": "OLYMPVS",
+          "hub_bottom": "LAUDAT",
+          "joint_et": "ET",
+          "joint_fovet": "FOVET",
+          "joint_aust": "AVSTRIACOS",
+          "tc1": "RAPHAEL",
+          "tc2": "MICHAEL",
+          "tc3": "VRBS",
+          "tc4": "FLORVS",
+          "tc5": "MAVRVS",
+          "lc1": "BERNARDVS",
+          "lc2": "ROBERTVS",
+          "lc3": "IVSTINVS",
+          "lc4": "DONATVS",
+          "lc5": "IOSEPHVS",
+          "lc6": "MATTHIAS",
+          "rc1": "CAELESTIS",
+          "rc2": "DILECTVS",
+          "rc3": "FACVNDVS",
+          "rc4": "FESTVS",
+          "bc1": "GERMANVS",
+          "bc2": "BILLOSVS",
+          "bc3": "CONSTANS",
+          "bc4": "FESTAS",
+          "bc5": "ROMVLA"
+        },
+        "walks": {
+          "spine_vertical": [
+            "hub_top",
+            "joint_et",
+            "hub_centre",
+            "joint_fovet",
+            "hub_bottom",
+            "joint_aust"
+          ],
+          "spine_horizontal": [
+            "hub_left",
+            "hub_centre",
+            "hub_right"
+          ],
+          "ring_top": [
+            "tc1",
+            "tc2",
+            "tc3",
+            "tc4",
+            "tc5"
+          ],
+          "ring_left": [
+            "lc1",
+            "lc2",
+            "lc3",
+            "lc4",
+            "lc5",
+            "lc6"
+          ],
+          "ring_bottom": [
+            "bc1",
+            "bc2",
+            "bc3",
+            "bc4",
+            "bc5"
+          ]
+        },
+        "walk_confidence": {
+          "spine_vertical": "high",
+          "spine_horizontal": "high",
+          "ring_top": "med",
+          "ring_left": "med",
+          "ring_bottom": "med"
+        },
+        "node_confidence": {
+          "hub_top": "high",
+          "hub_left": "high",
+          "hub_centre": "high",
+          "hub_right": "high",
+          "hub_bottom": "high",
+          "joint_et": "high",
+          "joint_fovet": "high",
+          "joint_aust": "high"
+        },
+        "emblem_layer_note": "Two bishops (mitres) flank a crucifix medallion (left) and a stork medallion (right); central scroll reads ET / fovet / AVSTRIACOS."
+      },
+      "calibration_role": "SUPREME adversarial calibration target: asserted |Σ| ~ 9.6e15 (quadrillions). If the synthetic-ambiguity detector saturates here, it is behaving correctly — legitimate but maximally inflated."
+    },
+    "XVIII": {
+      "tabula": "XVIII",
+      "source": "Caramuel, Primus Calamus (1663), p.456 (scan idx 455), TAB. XVIII",
+      "image_ref": "pl_455.png",
+      "family": "carmen-cancellatum (intext/grille: large capitals A-M-A-F-A-M-A tile the lattice as a recurring acrostic; verse text fills interstitial cells)",
+      "title_diplomatic": "EXIMIUM ET CLARISS. D.D. PETRUM FRANCISCUM PASSERINUM SS. THEOLOG. PROTONOT. ET IU. DOCT. APOSTOLICUM, EQUITEM AURATUM, COMIT. PALAT. etc. — AMA FAMA. Sic jubent Monsserratenses Studiosi, eius virtutum Praecones, et doctrinae Discipuli.",
+      "title_translation": "To the distinguished and most renowned Peter Francis Passerinus, doctor of sacred theology, apostolic protonotary and doctor of law, golden knight, count palatine, etc. — LOVE FAME. So bid the students of Montserrat, heralds of his virtues and disciples of his doctrine.",
+      "grille_text": "AMA FAMA",
+      "topology_note": "The grille letters A M A F A M A recur across rows and down columns, forming the cancellatum frame; the embedded verse is read by tracing the non-capital cells. A classic intext where the highlighted letters spell the motto in many directions.",
+      "confidence": "mixed (grille high, interstitial text med/low)",
+      "flags": [
+        "cancellatum-grille",
+        "interstitial-verse-dense",
+        "portrait-header"
+      ],
+      "author_combinatorial_claim": {
+        "diplomatic": "(no single numeral; multiplicity from grille-path permutation)",
+        "note": "AMA FAMA readable along many lattice paths"
+      },
+      "figure": {
+        "tokens": {
+          "g00": "A",
+          "g01": "M",
+          "g02": "A",
+          "g03": "F",
+          "g04": "A",
+          "g05": "M",
+          "g06": "A",
+          "t_aurea": "AVREA",
+          "t_redeunt": "REDEVNT",
+          "t_florent": "FLORENT",
+          "t_phoenix": "INTVM_PHOENIX",
+          "t_ciscus": "PISCISCVS",
+          "t_gloria": "PRVDENSIS_GLORIA_GENTIS",
+          "t_melos": "ORE_MELOS",
+          "t_secund": "FECVNDA",
+          "t_lucianus": "HIC_LINGVA_LVCIANVS",
+          "t_schol": "MITTVNT_SCHOLAE",
+          "t_angelico": "ANGELICO",
+          "t_lauro": "LAVRO",
+          "t_virtutis": "VIRTVTIS",
+          "t_amaperit": "AMA_PERIT"
+        },
+        "walks": {
+          "grille_row0": [
+            "g00",
+            "g01",
+            "g02",
+            "g03",
+            "g04",
+            "g05",
+            "g06"
+          ],
+          "motto_diag": [
+            "g00",
+            "g01",
+            "g02",
+            "g03"
+          ],
+          "verse_sample": [
+            "t_aurea",
+            "t_redeunt",
+            "t_florent",
+            "t_phoenix",
+            "t_melos"
+          ]
+        },
+        "walk_confidence": {
+          "grille_row0": "high",
+          "motto_diag": "high",
+          "verse_sample": "low"
+        },
+        "node_confidence": {
+          "g00": "high",
+          "g01": "high",
+          "g02": "high",
+          "g03": "high",
+          "g04": "high",
+          "g05": "high",
+          "g06": "high",
+          "t_aurea": "med",
+          "t_redeunt": "med",
+          "t_phoenix": "med"
+        }
+      },
+      "calibration_role": "First true CANCELLATUM (grille/intext) — exercises the recognizer on a plate whose meaning lives in highlighted-cell paths, not full-row reading. The grille letters AMA FAMA recurring across many directions is a bounded, verifiable |Σ|."
+    },
+    "XIX": {
+      "tabula": "XIX",
+      "source": "Caramuel, Primus Calamus (1663), p.458 (scan idx 457), TABVLA XIX",
+      "image_ref": "pl_457.png",
+      "family": "carmen-figuratum (horizontal verse lines overlaid by an emblematic letter-figure spelling the motto; chalice/monstrance silhouette)",
+      "title_diplomatic": "Hoc Rmo Domino G. Lemens Abb. Vlrbacensis Ordinis S. Benedicti — DE AVGVSTISSIMO EUCHARISTIAE SACRAMENTO ΕΠΙΓΡΑΜΜΑ. Amplissimo et Reverendissimo Domino Dno PETRO FRANCISCO PASSERINO, Protonotario Apostolico, Philosophiae Iuris utriusque ac SS. Theologiae Doctori, Collegae S. Inquisitionis Placentinae Consultori dignissimo etc. Calendis Ianuarii Anni CIↃIↃC LIX Xeny et Observantiae gratia offerebat D. Dominicus Platus.",
+      "title_translation": "An EPIGRAM on the most august Sacrament of the Eucharist ... offered by D. Dominicus Platus on the Kalends of January 1659.",
+      "signature_diplomatic": "Construxi Pe(G)ma hoc VATES iuvenis (L)ibus annis Salutis 1588 Aetatis 23. Sculptum Lovanii anno 1627 et iterum Pragae anno 1659.",
+      "note": "A carmen figuratum: the verse is read line-by-line (horizontal) while a superimposed figure of large display letters traces the Eucharistic emblem (chalice/host). The embedded capitals spell the dedicatory motto. Composed by Dominicus Platus at 23 (1588), engraved Louvain 1627, re-engraved Prague 1659 — Caramuel reproduces a famous earlier pattern-poem.",
+      "confidence": "mixed (first lines high, figure-woven cells low)",
+      "flags": [
+        "figuratum-overlay",
+        "greek-title",
+        "reproduced-historical-poem"
+      ],
+      "figure": {
+        "tokens": {
+          "l1a": "CORPVS_VIRGINEA_MATER",
+          "l1b": "A_QVOD_TRAXIT_AB_ALIO",
+          "l2a": "AETHEREI_QVONDAM",
+          "l2b": "IN_SOBOLE_SANCTISSIMA_PATRIS",
+          "l3a": "NVNC_CASTO",
+          "l3b": "OSTIA_SACRA_REPOSITVM",
+          "l4a": "EXIMIO_SEMPER",
+          "l4b": "DECORAND",
+          "l4c": "RVM",
+          "fig_E": "E",
+          "fig_T": "T",
+          "fig_H": "H",
+          "fig_O": "O",
+          "fig_S": "S"
+        },
+        "walks": {
+          "line1": [
+            "l1a",
+            "l1b"
+          ],
+          "line2": [
+            "l2a",
+            "l2b"
+          ],
+          "line3": [
+            "l3a",
+            "l3b"
+          ],
+          "figure_letters": [
+            "fig_E",
+            "fig_T",
+            "fig_H",
+            "fig_O",
+            "fig_S"
+          ]
+        },
+        "walk_confidence": {
+          "line1": "high",
+          "line2": "high",
+          "line3": "med",
+          "figure_letters": "low"
+        },
+        "node_confidence": {
+          "l1a": "high",
+          "l1b": "high",
+          "l2a": "high",
+          "l2b": "high",
+          "l3a": "med",
+          "l3b": "med"
+        }
+      },
+      "calibration_role": "First carmen FIGURATUM (text overlaid by emblem-figure) and first reproduced historical pattern-poem — tests that the engine handles a substrate where a horizontal reading and a figural reading coexist over the same cells."
+    },
+    "XX": {
+      "tabula": "XX",
+      "source": "Caramuel, Primus Calamus (1663), p.460 (scan idx 459), TABVLA XX",
+      "image_ref": "pl_459.png",
+      "family": "compendium (18 numbered sub-figures: rebus, music, 3D cube, sphere, letter-grids; plus a multilingual logogriph key)",
+      "title_diplomatic": "TABVLA XX — Figura prima ... Figura decima octava; CVBVS METAMETRICVS; LOGOGRIPHORVM EXPOSITIO",
+      "note": "The richest single plate. Contains the CUBVS METAMETRICVS (a 3D wireframe cube lettered A-E for tri-axial spatial reading) and a spherical metametric labyrinth (Figura 18: a globe of lettered great-circles with central value-key A-vu / B-uu / C / D / E / F / G-vu / H). Figures I-XIV are rebuses decoded by the LOGOGRIPHORVM EXPOSITIO key, which is MULTILINGUAL (Latin, Spanish, French).",
+      "logogriph_key": {
+        "I": "Emendez-vous qu'attendez-vous la mort",
+        "II": "Mort la mis la mort",
+        "III": "Consuelate Corazon, si has passion y espira, que el Mundo rueda",
+        "IV": "Lauro y corona a las letras",
+        "V": "De mi amor o de mi vida sera fin",
+        "VI": "Et libri et gladii errores carpebimus orbis",
+        "VII": "Il faut disner comme souper",
+        "XIV": "Soles (Sol es) coronare inter corona soles"
+      },
+      "languages": [
+        "Latin",
+        "Spanish",
+        "French"
+      ],
+      "confidence": "mixed (key high, sub-grids med, 3D/sphere structural)",
+      "flags": [
+        "compendium-18-figures",
+        "3D-cube-topology",
+        "spherical-topology",
+        "multilingual-logogriphs",
+        "music-notation-cells"
+      ],
+      "figure": {
+        "tokens": {
+          "cube_A": "A",
+          "cube_B": "B",
+          "cube_C": "C",
+          "cube_D": "D",
+          "cube_E": "E",
+          "sph_center": "METAMETRICVS_THESAVRVS_VALOR",
+          "key_Avu": "A_VV",
+          "key_E": "E",
+          "key_Buu": "B_VV",
+          "key_F": "F",
+          "key_C": "C",
+          "key_Gvu": "G_VV",
+          "key_D": "D",
+          "key_H": "H",
+          "log5": "DE_MI_AMOR_O_DE_MI_VIDA_SERA_FIN",
+          "log7": "IL_FAUT_DISNER_COMME_SOUPER",
+          "log3": "CONSUELATE_CORAZON_SI_HAS_PASSION_Y_ESPIRA_QUE_EL_MUNDO_RUEDA",
+          "log6": "ET_LIBRI_ET_GLADII_ERRORES_CARPEBIMUS_ORBIS",
+          "us1": "SVSVS",
+          "us2": "VSESV",
+          "us3": "SEIES"
+        },
+        "walks": {
+          "cube_x_axis": [
+            "cube_A",
+            "cube_B",
+            "cube_C"
+          ],
+          "cube_y_axis": [
+            "cube_A",
+            "cube_D",
+            "cube_E"
+          ],
+          "sphere_value_key": [
+            "key_Avu",
+            "key_Buu",
+            "key_C",
+            "key_D",
+            "key_E",
+            "key_F",
+            "key_Gvu",
+            "key_H"
+          ],
+          "grid_undecima_diag": [
+            "us1",
+            "us2",
+            "us3"
+          ]
+        },
+        "walk_confidence": {
+          "cube_x_axis": "med",
+          "cube_y_axis": "med",
+          "sphere_value_key": "high",
+          "grid_undecima_diag": "med"
+        },
+        "node_confidence": {
+          "cube_A": "high",
+          "cube_B": "high",
+          "cube_C": "high",
+          "cube_D": "high",
+          "cube_E": "high",
+          "sph_center": "high",
+          "log5": "high",
+          "log7": "high"
+        }
+      },
+      "calibration_role": "The capstone topology plate: CUBVS METAMETRICVS gives a genuine 3D substrate (tri-axial reading) and the spherical labyrinth a 2-sphere substrate (great-circle reading). Multilingual logogriphs test the Language-atlas concept directly: the SAME rebus reads in Latin, Spanish, or French depending on chart."
+    },
+    "XXI": {
+      "tabula": "XXI",
+      "source": "Caramuel, Primus Calamus (1663), p.462 (scan idx 461), TABVLA XXI",
+      "image_ref": "pl_461.png",
+      "family": "carmen-cancellatum (ornamental S/V capitals tile the lattice as a grille; corners=S; interstitial verse in small cells)",
+      "title_diplomatic": "Reverendo adm. et Eximio D. Magistro nostro D.D. IOSEPHO COSTALTAE honores dignitates promotiones, quas habebat aut etiam sperare poterat in Alma Vniversitate in Aula Pontificia etc. ut in Sublacensi Sanctuario Deo et sibi vacans posset dicere, ALTERIUS NON SIT QVI SVVS ESSE POTEST. relinquenti, ineuntis anni foelix auspicium apprecantur, et hunc Labyrinthum Panegyricum dedicant. Monsserratenses studiosi.",
+      "title_translation": "To our reverend and distinguished master Joseph Costalta ... that, free for God and himself in the Sanctuary of Subiaco, he might say: LET NO ONE BE ANOTHER'S WHO CAN BE HIS OWN. ... they dedicate this panegyric labyrinth.",
+      "grille_text": "SVVS (the ornamental S and V capitals tile the field; corners are S)",
+      "motto": "ALTERIUS NON SIT QVI SVVS ESSE POTEST",
+      "confidence": "mixed (grille high, interstitial low)",
+      "flags": [
+        "cancellatum-grille",
+        "ornamental-capitals-SV",
+        "interstitial-verse-dense"
+      ],
+      "figure": {
+        "tokens": {
+          "c_tl": "S",
+          "c_tr": "S",
+          "c_bl": "S",
+          "c_br": "S",
+          "v01": "V",
+          "v02": "V",
+          "v03": "V",
+          "v04": "V",
+          "v05": "V",
+          "v06": "V",
+          "v07": "V",
+          "v08": "V",
+          "v09": "V",
+          "v10": "V",
+          "v11": "V",
+          "v12": "V",
+          "centre_s": "S",
+          "t_uspici": "VSPICI",
+          "t_ulgo": "VLGO",
+          "t_blimes": "BLIMES",
+          "t_lumina": "LVMINA",
+          "t_dicat": "DICAT"
+        },
+        "walks": {
+          "diag_main": [
+            "c_tl",
+            "v01",
+            "centre_s",
+            "v12",
+            "c_br"
+          ],
+          "anti_diag": [
+            "c_tr",
+            "v05",
+            "centre_s",
+            "v08",
+            "c_bl"
+          ],
+          "top_grille": [
+            "c_tl",
+            "v01",
+            "v02",
+            "v03",
+            "c_tr"
+          ]
+        },
+        "walk_confidence": {
+          "diag_main": "high",
+          "anti_diag": "high",
+          "top_grille": "high"
+        },
+        "node_confidence": {
+          "c_tl": "high",
+          "c_tr": "high",
+          "c_bl": "high",
+          "c_br": "high",
+          "centre_s": "high"
+        }
+      },
+      "calibration_role": "Second cancellatum: ornamental S/V grille spelling SVVS across diagonals — a bounded multi-path |Σ| over a recurring two-letter motto frame."
+    },
+    "XXII": {
+      "tabula": "XXII",
+      "source": "Caramuel, Primus Calamus (1663), p.464 (scan idx 463), printed 'TABVLA XXI' at foot",
+      "image_ref": "pl_463.png",
+      "family": "carmen-cancellatum (dense grille: capitals I-V-R-E-M-E-R-V-I tile the whole field in alternating black/white ornamental blocks; interstitial verse)",
+      "engraver_note": "Foot reads 'TABVLA XXI' but this is the engraver's MISPRINT — content/sequence place it as XXII (it follows the true XXI Costalta plate). Recorded as anomaly per zero-correction rule; numbering here = XXII by position.",
+      "title_diplomatic": "Ob expugnatas Gentes Ethnicas, confutatos veteres, et futuros errores, reformatos mores Christiani Populi; nec non ob vitae puritatem, Doctrinae securitatem, rationumque pondus, et efficaciam. ANGELICI DOCTORIS Cognomentum IVRE MERVI.",
+      "title_translation": "For having vanquished the heathen nations, refuted the ancients, reformed future errors and the morals of the Christian people; and for purity of life, security of doctrine, weight and efficacy of reasoning — the title of ANGELIC DOCTOR he has EARNED BY RIGHT.",
+      "dedication_diplomatic": "Illustrissimo et Reverendissimo D.D. Iosepho Ciantes Marsicensium Episc. etc. Domino suo Colendissimo. D. Michael Weyms C.D.Q.",
+      "grille_text": "IVRE MERVI (palindromic motto: I-V-R-E-M-E-R-V-I)",
+      "note": "The grille is a PALINDROME (IVRE MERVI reads identically reversed), so the cancellatum reads the motto identically along forward and retrograde lattice paths — a built-in recurrens symmetry.",
+      "confidence": "mixed (grille high, interstitial low)",
+      "flags": [
+        "cancellatum-grille",
+        "palindromic-motto",
+        "engraver-misprint-XXI-for-XXII",
+        "interstitial-verse-very-dense"
+      ],
+      "figure": {
+        "tokens": {
+          "g0": "I",
+          "g1": "V",
+          "g2": "R",
+          "g3": "E",
+          "g4": "M",
+          "g5": "E",
+          "g6": "R",
+          "g7": "V",
+          "g8": "I",
+          "t_iure": "IVRE",
+          "t_laud": "LAVD",
+          "t_praelia": "PRAELIA",
+          "t_doctor": "DOCTO",
+          "t_labyrinth": "LABYRINTH"
+        },
+        "walks": {
+          "grille_motto": [
+            "g0",
+            "g1",
+            "g2",
+            "g3",
+            "g4",
+            "g5",
+            "g6",
+            "g7",
+            "g8"
+          ],
+          "grille_retro": [
+            "g8",
+            "g7",
+            "g6",
+            "g5",
+            "g4",
+            "g3",
+            "g2",
+            "g1",
+            "g0"
+          ]
+        },
+        "walk_confidence": {
+          "grille_motto": "high",
+          "grille_retro": "high"
+        },
+        "node_confidence": {
+          "g0": "high",
+          "g1": "high",
+          "g2": "high",
+          "g3": "high",
+          "g4": "high",
+          "g5": "high",
+          "g6": "high",
+          "g7": "high",
+          "g8": "high"
+        }
+      },
+      "calibration_role": "Palindromic-grille cancellatum: forward and retrograde readings of IVRE MERVI are identical, an exact recurrens fixpoint (echo). Tests op_is_echo at the motto level and confirms the grille's symmetry collapses |Σ| in a measurable way."
+    },
+    "XXIII": {
+      "tabula": "XXIII",
+      "source": "Caramuel, Primus Calamus (1663), p.466 (scan idx 465), TABVLA XXIII",
+      "image_ref": "pl_465.png",
+      "family": "carmen-cancellatum (ornamental capitals A-E-R-I tile the field; central column emblem; Greek labyrinthon subtitle)",
+      "title_diplomatic": "BREVEM HVNC DE SANCTI BASILII MAGNI LAVDIB. ΛΑΒΥΡΙΝΘΟΝ — Quemadmodum Reverendo et Eruditissimo Viro P. Basilio de AEREA Capucino etc. in festo Patroni observantiae ergo consecrabat. Anno aerae Christianae CIↃIↃCLVIII. D. Claudius Clemens Monsserr. Religiosus. (emblem: TALIS EST M. BASILIVS)",
+      "title_translation": "This brief LABYRINTH on the praises of St. Basil the Great ... consecrated to the most reverend and learned Fr. Basil de Aerea, Capuchin, on his patron's feast, 1658, by Br. Claudius Clemens of Montserrat.",
+      "greek_subtitle": "ΛΑΒΥΡΙΝΘΟΝ (labyrinthon)",
+      "emblem_motto": "TALIS EST M. BASILIVS (a flaming column)",
+      "grille_text": "A E R I E R I A (ornamental capitals tiling the lattice; note AEREA = the dedicatee's name woven into the grille)",
+      "note": "The grille letters spell AEREA — the dedicatee Fr. Basil de AEREA — so the cancellatum frame IS the honorand's name, recurring across the field. A name-grille (onomastic cancellatum).",
+      "confidence": "mixed (grille high, interstitial low)",
+      "flags": [
+        "cancellatum-grille",
+        "onomastic-grille-AEREA",
+        "greek-subtitle",
+        "central-column-emblem"
+      ],
+      "figure": {
+        "tokens": {
+          "c_tl": "A",
+          "c_tr": "A",
+          "c_bl": "A",
+          "c_br": "A",
+          "g_e1": "E",
+          "g_r1": "R",
+          "g_i1": "I",
+          "g_e2": "E",
+          "g_r2": "R",
+          "g_i2": "I",
+          "emblem": "TALIS_EST_M_BASILIVS",
+          "t_augustum": "AVGVSTVM",
+          "t_corpus": "CORPVS",
+          "t_columna": "SIMILE_ESSE_COLUMNA",
+          "t_miracula": "IN_MIRACVLA_CHRISTI",
+          "t_magister": "MAGISTER",
+          "t_gloria": "NIX_LAVS_GLORIA_NORM"
+        },
+        "walks": {
+          "grille_diag": [
+            "c_tl",
+            "g_e1",
+            "g_r1",
+            "g_i1",
+            "g_e2",
+            "c_br"
+          ],
+          "name_aerea": [
+            "c_tl",
+            "g_e1",
+            "g_r1",
+            "g_e2",
+            "c_tr"
+          ],
+          "verse_sample": [
+            "t_augustum",
+            "t_corpus",
+            "t_columna",
+            "t_magister"
+          ]
+        },
+        "walk_confidence": {
+          "grille_diag": "high",
+          "name_aerea": "med",
+          "verse_sample": "low"
+        },
+        "node_confidence": {
+          "c_tl": "high",
+          "c_tr": "high",
+          "c_bl": "high",
+          "c_br": "high",
+          "emblem": "high"
+        }
+      },
+      "calibration_role": "Onomastic cancellatum (the grille spells the honorand's name AEREA). Greek subtitle confirms the labyrinthon genre label. Tests grille-as-name recognition."
+    },
+    "XXIV": {
+      "tabula": "XXIV",
+      "source": "Caramuel, Primus Calamus (1663), p.468 (scan idx 467), printed 'TABVLA XXIII' at foot",
+      "image_ref": "pl_467.png",
+      "family": "carmen-cancellatum (ornamental S-V-A-I capitals tile the field; corners=S; central S medallion; interstitial verse)",
+      "engraver_note": "Foot reads 'TABVLA XXIII' but the true XXIII is the St. Basil plate (p.466). This is the SECOND consecutive engraver misprint (XXII printed as XXI, XXIV printed as XXIII). Recorded as anomaly; numbering = XXIV by position. Pattern of misprints itself is data: the engraver's series ran one behind for these plates.",
+      "title_diplomatic": "REVERENDISSIMO AMPLISSIMO ET EXIMIO D.D. BENEDICTO CELEBERRIMI MONASTERII ALTENBURGENSIS PRAELATO MERITISSimo, S.C.M. CONSILIARIO, STATUUM AUSTRIAE DEPUTATO etc. Foelicia anni ineuntis auspicia apprecans, hanc PANEGYRIN LABYRINTICAM dedicabat F. Claudius Clemens Monsserratensis studiosus.",
+      "title_translation": "To the most reverend, ample and distinguished lord Benedict, most deserving prelate of the celebrated monastery of Altenburg, councillor of His Sacred Caesarean Majesty, deputy of the Estates of Austria, etc. ... Br. Claudius Clemens of Montserrat dedicated this panegyric labyrinth.",
+      "grille_text": "S V A I A V S (ornamental capitals; corners and centre = S)",
+      "confidence": "mixed (grille high, interstitial low)",
+      "flags": [
+        "cancellatum-grille",
+        "engraver-misprint-XXIII-for-XXIV",
+        "consecutive-misprint-pattern",
+        "central-S-medallion"
+      ],
+      "figure": {
+        "tokens": {
+          "c_tl": "S",
+          "c_tr": "S",
+          "c_bl": "S",
+          "c_br": "S",
+          "centre": "S",
+          "g_v1": "V",
+          "g_a1": "A",
+          "g_i1": "I",
+          "g_a2": "A",
+          "g_v2": "V",
+          "t_summa": "SVMMA",
+          "t_virtu": "VIRTV",
+          "t_cor": "COR",
+          "t_radios": "RADIOS",
+          "t_magni": "MAGNI",
+          "t_decor": "DECOR",
+          "t_unus": "VNVS"
+        },
+        "walks": {
+          "grille_diag": [
+            "c_tl",
+            "g_v1",
+            "g_a1",
+            "centre",
+            "g_a2",
+            "g_v2",
+            "c_br"
+          ],
+          "grille_top": [
+            "c_tl",
+            "g_v1",
+            "g_a1",
+            "g_i1",
+            "c_tr"
+          ],
+          "verse_sample": [
+            "t_summa",
+            "t_virtu",
+            "t_cor",
+            "t_radios"
+          ]
+        },
+        "walk_confidence": {
+          "grille_diag": "high",
+          "grille_top": "high",
+          "verse_sample": "low"
+        },
+        "node_confidence": {
+          "c_tl": "high",
+          "c_tr": "high",
+          "c_bl": "high",
+          "c_br": "high",
+          "centre": "high"
+        }
+      },
+      "calibration_role": "Third cancellatum in the dedicatory series; the consecutive engraver misprints (XXII->XXI, XXIV->XXIII) are themselves an ANOMALY the zero-correction transcription preserves — exactly the 'measure the anomaly, don't fix the typo' discipline."
+    },
+    "XXV": {
+      "tabula": "XXV",
+      "source": "Caramuel, Primus Calamus (1663), p.470 (scan idx 469), TABULA XXIV at foot (misprint; =XXV by position)",
+      "image_ref": "pl_469.png",
+      "family": "labyrinthus-sinensis (a grid of CHINESE CHARACTERS read as heptastichs 16 ways, with a Latin transliteration table and a romanization key)",
+      "engraver_note": "Foot prints 'TABVLA XXIV' — third consecutive misprint in the series. Numbering = XXV by position.",
+      "title_diplomatic": "IESU TIE CIAM — Societas Iesu, Sinensibus expressa Heptastichis quae XVI leguntur. Admodum Rdo et Eruditissimo P. Athanasio Kirchero, Orientalium omnium linguarum peritissimo, Philosopho et Theologo profundissimo D.C.Q. TABULA XXIV.",
+      "title_translation": "JESUS ... The Society of Jesus, expressed for the Chinese in heptastichs that may be read 16 ways. To the most reverend and learned Fr. Athanasius Kircher, most skilled of all in Oriental languages, profound philosopher and theologian, dedicated.",
+      "cross_linguistic_note": "THIS PLATE IS THE LITERAL SOURCE PROOF of the engine's Language-as-atlas principle. A grid of Chinese characters is read as Latin verse via a transliteration table; a romanization key maps character-pairs to syllables (VV->te, NN->mai, FF->lo, YY->kie, PP->tim, etc.). The SAME grid yields meaning in Chinese and in Latin — two charts over one substrate. Dedicated, fittingly, to Kircher.",
+      "rebus_acrostic": "The left and right margins reveal IESU / MARIA / G. NACIO via initial letters (Caramuel notes: 'ad illorum labium MALIA est MARIA').",
+      "romanization_key_sample": {
+        "VV": "te",
+        "NN": "mai",
+        "FF": "lo",
+        "YY": "kie",
+        "PP": "tim",
+        "HH": "se",
+        "AA": "ma",
+        "RR": "tao",
+        "KK": "chum",
+        "DD": "chue",
+        "LL": "piao",
+        "MM": "lim",
+        "EE": "yen",
+        "XX": "hia",
+        "QQ": "yeu",
+        "ZZ": "siu",
+        "TT": "nie"
+      },
+      "claimed_readings": 16,
+      "confidence": "mixed (Latin table high, Chinese glyphs recorded as positions not transcribed)",
+      "flags": [
+        "chinese-characters-not-transcribed-as-text",
+        "cross-linguistic-atlas-proof",
+        "romanization-key-present",
+        "kircher-dedication",
+        "heptastich-16-ways"
+      ],
+      "figure": {
+        "tokens": {
+          "key_VV": "TE",
+          "key_NN": "MAI",
+          "key_FF": "LO",
+          "key_YY": "KIE",
+          "key_PP": "TIM",
+          "key_HH": "SE",
+          "key_AA": "MA",
+          "key_RR": "TAO",
+          "key_ZZ": "SIU",
+          "key_TT": "NIE",
+          "acro_iesu": "IESV",
+          "acro_maria": "MARIA",
+          "acro_nacio": "G_NACIO",
+          "lat1": "PHALANX_AVXILIANS",
+          "lat2": "DIADEMA_PVLCRA",
+          "lat3": "DIVA_PVLCRA",
+          "lat4": "MVNDI_GAVDIA_CONTEMNENS",
+          "lat5": "ARMA_CONTRA_HOSTES_FVGANS"
+        },
+        "walks": {
+          "romanization_key": [
+            "key_VV",
+            "key_NN",
+            "key_FF",
+            "key_YY",
+            "key_PP",
+            "key_HH",
+            "key_AA",
+            "key_RR",
+            "key_ZZ",
+            "key_TT"
+          ],
+          "acrostic_margin": [
+            "acro_iesu",
+            "acro_maria",
+            "acro_nacio"
+          ],
+          "latin_column": [
+            "lat1",
+            "lat2",
+            "lat3",
+            "lat4",
+            "lat5"
+          ]
+        },
+        "walk_confidence": {
+          "romanization_key": "high",
+          "acrostic_margin": "med",
+          "latin_column": "med"
+        },
+        "node_confidence": {
+          "key_VV": "high",
+          "key_NN": "high",
+          "key_FF": "high",
+          "key_YY": "high",
+          "acro_iesu": "high",
+          "acro_maria": "high"
+        }
+      },
+      "calibration_role": "THE atlas plate: one Chinese-character substrate read in two languages via an explicit transliteration chart. Direct source-grounded vindication of infer_basis / chart_transition_cost — the same object, different charts, different readings, measurable loss between them."
+    },
+    "XXVI": {
+      "tabula": "XXVI",
+      "source": "Caramuel, Primus Calamus (1663), p.472 (scan idx 471), TAB XXVI",
+      "image_ref": "pl_471.png",
+      "family": "labyrinthus-radialis-magnus (giant concentric-ring wheel, ~14 rings x dozens of spokes; centre IHS/CHRISTI medallion)",
+      "title_diplomatic": "IESUS SOL LAUDATUS HOC LABYRINTHO CONTINENTE. Disticha retrograda 69,902,227,5[..]040, hoc est versus simplices 279,608,910,057,308,160. Ideam [scansion: u u - u-u] ... dedit I. Caramuel anno 1656. Voces R.P. Nicolaus Lucensis Capucinus, Theologus, Concionator, Vir eruditissimus, anno 1649. NOBILISSIMO ET REVERENDISSIMO D.D. PATRI RAYMUNDO CAPISUCCO, ORD. PRAEDIC. SACRI APOSTOLICI PALATII MAGISTRO etc. ... Observantiae ergo Sabrianenses Alumni consecrabant anno MDCLXII.",
+      "title_translation": "JESUS THE SUN, praised by this enclosing labyrinth. Retrograde distichs 69,902,227,5..,040 — that is, 279,608,910,057,308,160 simple verses. Caramuel gave the design (1656); the words by Fr. Nicolaus of Lucca, Capuchin (1649); consecrated by the alumni of Sabria, 1662.",
+      "author_combinatorial_claim": {
+        "diplomatic": "Disticha retrograda 69,902,227,5..,040 ... versus simplices 279,608,910,057,308,160",
+        "claimed_simple_verses": 279608910057308160,
+        "note": "~279 QUINTILLION simple verses — the largest numeral in the book, exceeding even TAB. XVII's quadrillions. A giant radial wheel. The explicit metrical pattern (u u - u - u, dactylo-trochaic shorthand) is printed in the subtitle, giving the meter the verses must satisfy."
+      },
+      "metrical_pattern_stated": "u u - u-u (breve-breve-longum shorthand printed in the dedication — the meter constraint)",
+      "centre": "IHS / CHRISTI",
+      "confidence": "mixed (centre + numerals high, ring cells low)",
+      "flags": [
+        "polar-magnus",
+        "largest-claim-in-book",
+        "explicit-meter-printed",
+        "rings-very-dense-degraded"
+      ],
+      "figure": {
+        "tokens": {
+          "hub": "IHS_CHRISTI",
+          "i1": "IESVS",
+          "i2": "SOL",
+          "i3": "AMOR",
+          "i4": "NOMEN",
+          "i5": "FLOS",
+          "i6": "REX",
+          "r_iesus": "IESVS_HERVLE",
+          "r_maria": "SANCTA_MARIA",
+          "r_nomen": "NOMEN_AMATOR_AMAT",
+          "r_laudat": "LAVDAT_ET_OFFERT_CARMINE_MATERNI",
+          "r_cantat": "CANTAT_OFFERT_FLAMINE_STELLATVM"
+        },
+        "walks": {
+          "spoke_iesus": [
+            "hub",
+            "i1",
+            "r_iesus"
+          ],
+          "spoke_maria": [
+            "hub",
+            "i4",
+            "r_maria"
+          ],
+          "ring_inner": [
+            "i1",
+            "i2",
+            "i3",
+            "i4",
+            "i5",
+            "i6"
+          ],
+          "ring_outer_sample": [
+            "r_iesus",
+            "r_maria",
+            "r_nomen",
+            "r_laudat",
+            "r_cantat"
+          ]
+        },
+        "walk_confidence": {
+          "spoke_iesus": "med",
+          "spoke_maria": "med",
+          "ring_inner": "med",
+          "ring_outer_sample": "low"
+        },
+        "node_confidence": {
+          "hub": "high",
+          "i1": "high",
+          "i2": "high",
+          "i4": "high"
+        }
+      },
+      "calibration_role": "Maximal-claim polar plate (~2.8e17). The printed metrical pattern means the native scanner has, for the first time, an EXPLICIT target meter stated by the author — a direct test of scans-as-meter against a 1663 declared constraint."
+    },
+    "XXVII": {
+      "tabula": "XXVII",
+      "source": "Caramuel, Primus Calamus (1663), p.474 (scan idx 473), TAB XXVII",
+      "image_ref": "pl_473.png",
+      "family": "labyrinthus-radialis-magnus (giant concentric-ring wheel; centre MARIA medallion; Marian twin of TAB XXVI)",
+      "title_diplomatic": "MARIA STELLA CELEBRATA LABYRINTHO CONTINENTE. Disticha retrograda 69,902,227,514,327,040 ad est versus simplices 279,608,910,057,308,160. Ideam [scansion] invenit I. Caramuel anno 1656. Voces addidit R.P. Nicolaus Lucensis Capucinus, Theologus, Concionator, Vir eruditissimus anno 1649. R.P. HIPPOLYTO MARRACCIO LUCENSI E CONGR. CLER. REGULARIUM MATRIS DEI PARTHENIARUM LAUDUM ENCOMIASTAE etc. Observantiae gratia Satrianenses Alumni consecrabant anno 1662.",
+      "title_translation": "MARY THE STAR, celebrated by this enclosing labyrinth. Retrograde distichs 69,902,227,514,327,040 — that is, 279,608,910,057,308,160 simple verses. Design by Caramuel (1656), words by Nicolaus of Lucca (1649); consecrated to Fr. Hippolytus Marraccio, encomiast of the praises of the Virgin Mother of God, by the alumni of Satriano, 1662.",
+      "author_combinatorial_claim": {
+        "diplomatic": "Disticha retrograda 69,902,227,514,327,040 ... versus simplices 279,608,910,057,308,160",
+        "claimed_retrograde_distichs": 69902227514327040,
+        "claimed_simple_verses": 279608910057308160,
+        "note": "Identical magnitude to TAB XXVI — the two form a Christ/Mary pair (IESVS SOL / MARIA STELLA), same design, same ~2.8e17 count. The retrograde-distich figure is now fully legible here: 69,902,227,514,327,040."
+      },
+      "centre": "MARIA",
+      "confidence": "mixed (centre + numerals high, ring cells low)",
+      "flags": [
+        "polar-magnus",
+        "marian-twin-of-XXVI",
+        "rings-very-dense-degraded",
+        "retrograde-distich-count-legible"
+      ],
+      "figure": {
+        "tokens": {
+          "hub": "MARIA",
+          "i1": "STELLA",
+          "i2": "VIRGO",
+          "i3": "MATER",
+          "i4": "FLOS",
+          "i5": "LVNA",
+          "i6": "REGINA",
+          "r_maria": "VIRGA_MARIA",
+          "r_stella": "STELLA_BREVIS",
+          "r_virgo": "VIRGINEAMQVE_DECVS",
+          "r_dulcis": "DVLCIS_IESVS_AMAT",
+          "r_sidereo": "SIDEREO_SIGNA_SIMVL"
+        },
+        "walks": {
+          "spoke_stella": [
+            "hub",
+            "i1",
+            "r_stella"
+          ],
+          "spoke_virgo": [
+            "hub",
+            "i2",
+            "r_virgo"
+          ],
+          "ring_inner": [
+            "i1",
+            "i2",
+            "i3",
+            "i4",
+            "i5",
+            "i6"
+          ],
+          "ring_outer_sample": [
+            "r_maria",
+            "r_stella",
+            "r_virgo",
+            "r_dulcis",
+            "r_sidereo"
+          ]
+        },
+        "walk_confidence": {
+          "spoke_stella": "med",
+          "spoke_virgo": "med",
+          "ring_inner": "med",
+          "ring_outer_sample": "low"
+        },
+        "node_confidence": {
+          "hub": "high",
+          "i1": "high",
+          "i2": "high",
+          "i3": "high"
+        }
+      },
+      "calibration_role": "Twin polar plate to XXVI. The Christ/Mary pairing with identical combinatorial design tests the ORIGIN-SIGNATURE engine: two plates by the same generator (Caramuel design + Lucensis words) should produce near-identical ambiguity signatures (low JSD) — a built-in same-author validation set."
+    },
+    "XXVIII": {
+      "tabula": "XXVIII",
+      "source": "Caramuel, Primus Calamus (1663), p.476 (scan idx 475), labeled FIGURA XXVI",
+      "image_ref": "pl_475.png",
+      "family": "labyrinthus-quadratus-bipartitus (rectangular grid; each cell split by a diagonal into two triangular half-cells, each carrying text — a bipartite-cell lattice)",
+      "numbering_note": "Header reads 'FIGURA XXVI'; this is the figure-count, which now diverges from the tabula-count (tabula XXVIII by position). Both numbering systems run in parallel in the late plates. Recorded as observed.",
+      "title_diplomatic": "LABYRINTHUS de laudibus PHILIPPI Magni, huius nominis IV, Hispaniarum Regis Catholici, Indiarum Monarchae, etc. ... Illustrissimo et Reverendissimo D.D. Antonio del Yerro, Militaris Ord. de Alcantara Equiti, Priori de Burgitabus Abbati de Sancta Catherina etc. D. Bernardus Weyms D.C.",
+      "title_translation": "A LABYRINTH on the praises of Philip the Great, fourth of this name, Catholic King of the Spains, Monarch of the Indies, etc. ... to Lord Antonio del Yerro, knight of the Military Order of Alcantara, prior of Burgos, abbot of St. Catherine.",
+      "political_note": "First explicitly POLITICAL labyrinth (praising a living monarch, Philip IV) rather than a saint — a panegyric to secular power. Cells reference naval victory, the Indies, rebels subdued (Bellum, classes, regiones).",
+      "confidence": "mixed (first rows high, lower rows med)",
+      "flags": [
+        "bipartite-diagonal-cells",
+        "political-panegyric",
+        "figura-vs-tabula-numbering-diverge"
+      ],
+      "figure": {
+        "tokens": {
+          "r1c1a": "BOREAS_GENTES",
+          "r1c1b": "MAVRVS_DEBELLASTI",
+          "r1c2": "INSOLENTES_AVDACES",
+          "r1c3": "AVSTRALES_SPLENDORES",
+          "r1c4": "PERCVSSIS_REGIONES",
+          "r1c5": "DVX_FVRORES",
+          "r1c6": "ACCEPISTI_LAVDES",
+          "r1c7": "CVM_CANDIDOS",
+          "r1c8": "REBELLI_NECEM",
+          "r2c1": "EVERTENTES_SVBIECTAS",
+          "r2c2": "EMINENTES_DESTRVCTAS",
+          "r2c3": "DAS_HONORES",
+          "r2c4": "REDVXISTI_DVXAD",
+          "r2c5": "FOVES_FLORES",
+          "r2c6": "COMPOSVISTI",
+          "last1": "PHILIPPI_CESHIMVS_REGIERVNT",
+          "last2": "PLORAVERVNT_CHRISTALLI",
+          "last3": "VICTA_SOR_MIRANTVR",
+          "last4": "NVNC_PERIBIT",
+          "last5": "MVLTIPLICAT_GORIONES",
+          "last6": "FAMA_SCRIBIT_MVSA",
+          "last7": "VIRVM_FOR_NASIA",
+          "last8": "QVI_LAVDE_AETERNA"
+        },
+        "walks": {
+          "row1": [
+            "r1c1a",
+            "r1c2",
+            "r1c3",
+            "r1c4",
+            "r1c5",
+            "r1c6",
+            "r1c7",
+            "r1c8"
+          ],
+          "row1_lower_triangles": [
+            "r1c1b",
+            "r1c2",
+            "r1c3",
+            "r1c4"
+          ],
+          "row2": [
+            "r2c1",
+            "r2c2",
+            "r2c3",
+            "r2c4",
+            "r2c5",
+            "r2c6"
+          ],
+          "last_row": [
+            "last1",
+            "last2",
+            "last3",
+            "last4",
+            "last5",
+            "last6",
+            "last7",
+            "last8"
+          ]
+        },
+        "walk_confidence": {
+          "row1": "high",
+          "row1_lower_triangles": "med",
+          "row2": "high",
+          "last_row": "med"
+        },
+        "node_confidence": {
+          "r1c1a": "high",
+          "r1c2": "high",
+          "r1c3": "high",
+          "r2c1": "high",
+          "r2c2": "high"
+        }
+      },
+      "calibration_role": "First political panegyric and first BIPARTITE-CELL lattice (diagonal-split cells, each half a distinct token). Tests the substrate model on cells that carry TWO tokens — a refinement the FigureGraph handles by giving each half-cell its own node id."
+    },
+    "XXIX": {
+      "tabula": "XXIX",
+      "source": "Caramuel, Primus Calamus (1663), p.478 (scan idx 477), TAB XXIX",
+      "image_ref": "pl_477.png",
+      "family": "emblema-graecum + micro-labyrinthus (Greek monosyllable-cartouche with Latin gloss; below, a small grille VITA/SATA + vine emblem)",
+      "title_diplomatic": "ΣΥ ΝΟΥΣ, ΒΟΥΣ, ΛΙΣ, ΛΥΓΞ: ΠΥΡ, ΦΛΟΞ ΦΩΣ: ΔΡΥΣ, ΔΟΡΥ, ΛΑΣ, ΣΕΙΡ. — Tu Mens, Bos, Leo, Lynx, Ignisque et Flammula, Lumen, Quercus et Hasta, Lapis, Sol quoque clarus eris.",
+      "title_translation": "You are Mind, Ox, Lion, Lynx, and Fire and Flame, Light, Oak and Spear, Stone, and you shall be the bright Sun too. (a chain of Greek monosyllables, each glossed by a Latin word — a bilingual lexical labyrinth)",
+      "micro_motto": "AI! STA VI. et cur? VIS VITA VITI",
+      "micro_grille": "S A / VITA / A I (the small framed grille spells VITA bounded by S-A / A-I, a vine/VITIS pun: VITA VITI = 'life of the vine')",
+      "note": "Two devices on one plate: (1) a Greek-to-Latin monosyllable cartouche where each tiny Greek word maps to a Latin word — a pure lexical atlas; (2) a vine emblem with a micro-grille spelling VITA and the palindromic-punning motto AI STA VI ... VIS VITA VITI (read both directions on the VITA/VITIS root).",
+      "confidence": "high (both devices small and legible)",
+      "flags": [
+        "greek-latin-lexical-atlas",
+        "vine-emblem",
+        "micro-grille",
+        "palindromic-pun"
+      ],
+      "figure": {
+        "tokens": {
+          "gk1": "NOVS",
+          "gk2": "BOVS",
+          "gk3": "LIS",
+          "gk4": "LYNX",
+          "gk5": "PYR",
+          "gk6": "PHLOX",
+          "gk7": "PHOS",
+          "gk8": "DRYS",
+          "gk9": "DORY",
+          "gk10": "LAS",
+          "gk11": "SEIR",
+          "lat1": "MENS",
+          "lat2": "BOS",
+          "lat3": "LEO",
+          "lat4": "LYNX",
+          "lat5": "IGNIS",
+          "lat6": "FLAMMVLA",
+          "lat7": "LVMEN",
+          "lat8": "QVERCVS",
+          "lat9": "HASTA",
+          "lat10": "LAPIS",
+          "lat11": "SOL",
+          "m_s": "S",
+          "m_a1": "A",
+          "m_vita": "VITA",
+          "m_a2": "A",
+          "m_i": "I",
+          "m_vi": "VI"
+        },
+        "walks": {
+          "greek_chain": [
+            "gk1",
+            "gk2",
+            "gk3",
+            "gk4",
+            "gk5",
+            "gk6",
+            "gk7",
+            "gk8",
+            "gk9",
+            "gk10",
+            "gk11"
+          ],
+          "latin_gloss": [
+            "lat1",
+            "lat2",
+            "lat3",
+            "lat4",
+            "lat5",
+            "lat6",
+            "lat7",
+            "lat8",
+            "lat9",
+            "lat10",
+            "lat11"
+          ],
+          "vita_grille": [
+            "m_s",
+            "m_a1",
+            "m_vita",
+            "m_a2",
+            "m_i"
+          ]
+        },
+        "walk_confidence": {
+          "greek_chain": "high",
+          "latin_gloss": "high",
+          "vita_grille": "high"
+        },
+        "node_confidence": {
+          "lat1": "high",
+          "lat2": "high",
+          "lat3": "high",
+          "lat11": "high",
+          "m_vita": "high"
+        }
+      },
+      "calibration_role": "A clean, fully-legible bilingual ATLAS in miniature: Greek chain <-> Latin gloss is an explicit one-to-one chart map (perfect for chart_transition_cost: zero loss, a bijection). The VITA grille is a small exact-palindrome echo test."
+    },
+    "XXX": {
+      "tabula": "XXX",
+      "source": "Caramuel, Primus Calamus (1663), p.480 (scan idx 479), TAB XXX",
+      "image_ref": "pl_479.png",
+      "family": "labyrinthus-hispanicus-bipartitus (Spanish/Castilian verse in a diagonal-split bipartite-cell rectangular grid)",
+      "language": "Spanish (Castilian)",
+      "title_diplomatic": "EN ALABANZA DEL ILL.mo Y REVEND.mo SEÑOR DON ANGEL MANRIQUE DE LARA, Catredatico de Prima de la Universidad de Salamanca etc., General de la Orden de Cister etc., Obispo da Badaxos etc., mi Maestro. LABYRINTHO.",
+      "title_translation": "In praise of the most illustrious and reverend lord Don Angel Manrique de Lara, prime professor of the University of Salamanca, General of the Cistercian Order, Bishop of Badajoz, etc., my Master. A LABYRINTH.",
+      "footer_diplomatic": "Illustrissimum scripsi Iuvenis sub annum MDCXXIV, dum noster ipse Philosophicum Collegium usitaret, et quia etiamnum gratissima mihi est tanti Viri memoria, ut noster adversus illum innotescat affectus, edi in lucem cui animus, anno MDCLXII. [Se decim modis legi potest.]",
+      "claimed_readings": 16,
+      "note": "First fully VERNACULAR SPANISH labyrinth — the verse cells are Castilian ('las dulces flores y claueles', 'Coronado de palmas y laureles', 'Los reyes coronados'). Bipartite diagonal cells as in TAB XXVIII. Confirms the genre is language-agnostic in the source itself: Latin, Greek, Chinese, and now Spanish labyrinths all coexist.",
+      "confidence": "mixed (Spanish text largely legible)",
+      "flags": [
+        "spanish-vernacular",
+        "bipartite-diagonal-cells",
+        "readable-16-ways",
+        "author-youthful-1624-work"
+      ],
+      "figure": {
+        "tokens": {
+          "r1c1": "A_MANRIQVE_LA_GLORIA",
+          "r1c2": "SACRIFIQVE_PALMAS_Y_LAVRELES",
+          "r1c3": "LAS_DVLCES_FLORES",
+          "r1c4": "CORONADOS_DE_FLORES_Y_CLAVELES",
+          "r1c5": "ESTIENDAN_POR_LOS_DELICADOS",
+          "r1c6": "LOS_REYES_CORONADOS",
+          "r1c7": "MVLTIPLICO_LOS_ACENTOS_CANCIONES",
+          "r1c8": "VENERA_ROMPE_SVBLADOS",
+          "r2c1": "SACRIFIQVE_LAVRE_Y_CORONAS",
+          "r2c2": "EN_NOMBRE_DE_MAGVE",
+          "r2c3": "LOS_ACONTOS_DE_MARTE",
+          "r2c4": "DESTERRADOS_DEL_ORIZONTE",
+          "r2c5": "LOS_LAVROS_AVRIENS_CORONAS",
+          "last1": "LOS_BLASONES_TARAN_PROSTRADOS",
+          "last2": "CON_CANCIONES_TIPLICA_DE_ACENTOS",
+          "last3": "DE_CYBELES_LOS_LABIOS_ESMALTADOS",
+          "last4": "DELICADOS_DE_RAMEN",
+          "last5": "DEFLORESY_CLAVELES_CORONADOS",
+          "last6": "BIEN_TEMPLADOS_DVLCES_INSTRVMENTOS",
+          "last7": "MIL_PALMAS_Y_LAVRELES_SIGVE",
+          "last8": "LA_GLORIA_DE_ESTOS_A_MANRIQVE"
+        },
+        "walks": {
+          "row1": [
+            "r1c1",
+            "r1c2",
+            "r1c3",
+            "r1c4",
+            "r1c5",
+            "r1c6",
+            "r1c7",
+            "r1c8"
+          ],
+          "row2": [
+            "r2c1",
+            "r2c2",
+            "r2c3",
+            "r2c4",
+            "r2c5"
+          ],
+          "last_row": [
+            "last1",
+            "last2",
+            "last3",
+            "last4",
+            "last5",
+            "last6",
+            "last7",
+            "last8"
+          ],
+          "col1": [
+            "r1c1",
+            "r2c1",
+            "last1"
+          ]
+        },
+        "walk_confidence": {
+          "row1": "high",
+          "row2": "high",
+          "last_row": "med",
+          "col1": "med"
+        },
+        "node_confidence": {
+          "r1c1": "high",
+          "r1c2": "high",
+          "r1c3": "high",
+          "r1c4": "high",
+          "last8": "high"
+        }
+      },
+      "calibration_role": "Spanish-vernacular plate — forces the Language gate to be language-agnostic (the wordform gate already is). Together with the Latin/Greek/Chinese plates, the corpus now spans FOUR languages over one engine, the strongest possible demonstration of Language-as-swappable-parameter."
+    },
+    "XXXI": {
+      "tabula": "XXXI",
+      "source": "Caramuel, Primus Calamus (1663), p.482 (scan idx 481), TAB XXXI",
+      "image_ref": "pl_481.png",
+      "family": "rebus-cancellatum (13x13 grid; ornamental capitals A/M/F as grille, interleaved with emblem-cells decoded by a numbered key)",
+      "title_diplomatic": "(key row) 1 dicit perfectionem, 2 praemium, 3 pietatem, 4 ut ornatum, ADAMAN[tem], 5 AMETHystus, 6 alba fama, 7 super amoris ... (foot) 8 flos amoris et fecunditas estem clara",
+      "note": "A pictorial rebus labyrinth: the recurring capitals A, M, F tile the lattice (likely AMor / Fama / Maria triads), while each EMBLEM (heart=amor, palm=victory, chalice, lamp=lumen, pyramid, eagle, amethyst) is a token decoded by the numbered legend. The verse is assembled by substituting emblem->word per the key and reading the grille letters. The most purely IMAGE-CODED plate.",
+      "rebus_key": {
+        "1": "perfectionem",
+        "2": "praemium",
+        "3": "pietatem",
+        "4": "ornatum (ADAMANtem)",
+        "5": "AMETHystus",
+        "6": "alba fama",
+        "7": "super amoris",
+        "8": "flos amoris et fecunditas"
+      },
+      "confidence": "mixed (grille letters + key high, emblem-to-cell mapping med)",
+      "flags": [
+        "pure-rebus",
+        "emblem-tokens",
+        "numbered-decode-key",
+        "AMF-grille",
+        "13x13"
+      ],
+      "figure": {
+        "tokens": {
+          "c_tl": "A",
+          "c_tr": "A",
+          "c_bl": "A",
+          "c_br": "A",
+          "g_m1": "M",
+          "g_f1": "F",
+          "g_a1": "A",
+          "g_m2": "M",
+          "g_f2": "F",
+          "emb_heart": "AMOR",
+          "emb_palm": "VICTORIA",
+          "emb_chalice": "GRATIA",
+          "emb_lamp": "LVMEN",
+          "emb_pyramid": "GLORIA",
+          "emb_eagle": "AQVILA",
+          "emb_amethyst": "AMETHYSTVS"
+        },
+        "walks": {
+          "grille_diag": [
+            "c_tl",
+            "g_m1",
+            "g_f1",
+            "g_a1",
+            "g_m2",
+            "c_br"
+          ],
+          "rebus_row": [
+            "c_tl",
+            "emb_heart",
+            "g_m1",
+            "emb_palm",
+            "g_f1",
+            "emb_chalice",
+            "c_tr"
+          ],
+          "decode_chain": [
+            "emb_heart",
+            "emb_palm",
+            "emb_lamp",
+            "emb_pyramid",
+            "emb_eagle"
+          ]
+        },
+        "walk_confidence": {
+          "grille_diag": "high",
+          "rebus_row": "med",
+          "decode_chain": "med"
+        },
+        "node_confidence": {
+          "c_tl": "high",
+          "c_tr": "high",
+          "emb_heart": "med",
+          "emb_amethyst": "high"
+        }
+      },
+      "calibration_role": "Most purely PICTORIAL plate — the meaning lives in an emblem->word substitution key, the clearest case of a non-textual Language (the decode key IS a Language whose admits() maps emblems to lexemes). Tests that the engine treats a pictorial code as just another chart."
+    },
+    "XXXII": {
+      "tabula": "XXXII",
+      "source": "Caramuel, Primus Calamus (1663), p.484 (scan idx 483), TAB XXXII",
+      "image_ref": "pl_483.png",
+      "family": "labyrinthus-musicus-emblematicus (13x13 grid of rebus emblems — rose, crescent, full-moon/ring, MUSICAL STAVES with notes; palindromic border acrostic)",
+      "title_diplomatic": "SANCTUS Monachorum Occidentalium Pater et Dux BENEDICTUS, Homo vere Parthenius, speciali Benedictae favore fuit.",
+      "title_translation": "Saint Benedict, father and leader of the Western monks, a truly virginal man, enjoyed the special favour of the Blessed (Virgin).",
+      "border_acrostic": "ROSA COR VI NVLLA VI COR ROSA",
+      "border_note": "The top border reads ROSA COR VI NVLLA VI COR ROSA — a PALINDROME (reads identically forward and reversed). The same words anchor the four sides; corners carry rose emblems. The palindromic border is the recurrens spine of the whole plate.",
+      "dedication_diplomatic": "ILLVSTRISSIMO D.D. EMANVELI DEL YERRO, EQVITI MILITARIS ORDINIS de Alcantara, nec non D. Sebastiano et D. Augustino eiusdem Fratribus ... (note on St. Benedict resisting the Demon's temptation by rolling in thorns — the Rose-among-thorns emblem) ... humillimus servus Rotherus Scala Satrianus.",
+      "music_note": "Many cells contain actual MUSICAL NOTATION (four-line staves with neumes/notes) — the plate encodes a melody as one of its readable ductus. A genuinely multi-modal labyrinth: text-border + emblem-grid + music-cells.",
+      "confidence": "mixed (border high, emblem/music cells structural)",
+      "flags": [
+        "palindromic-border",
+        "musical-notation-cells",
+        "emblem-grid",
+        "rose-among-thorns-theme",
+        "multimodal"
+      ],
+      "figure": {
+        "tokens": {
+          "b_rosa1": "ROSA",
+          "b_cor1": "COR",
+          "b_vi1": "VI",
+          "b_nulla": "NVLLA",
+          "b_vi2": "VI",
+          "b_cor2": "COR",
+          "b_rosa2": "ROSA",
+          "emb_rose": "ROSA",
+          "emb_crescent": "LVNA_CRESCENS",
+          "emb_fullmoon": "LVNA_PLENA",
+          "emb_music": "MELOS",
+          "emb_thorn": "SPINA"
+        },
+        "walks": {
+          "border_currens": [
+            "b_rosa1",
+            "b_cor1",
+            "b_vi1",
+            "b_nulla",
+            "b_vi2",
+            "b_cor2",
+            "b_rosa2"
+          ],
+          "border_recurrens": [
+            "b_rosa2",
+            "b_cor2",
+            "b_vi2",
+            "b_nulla",
+            "b_vi1",
+            "b_cor1",
+            "b_rosa1"
+          ],
+          "emblem_diag": [
+            "emb_rose",
+            "emb_crescent",
+            "emb_music",
+            "emb_fullmoon",
+            "emb_thorn"
+          ]
+        },
+        "walk_confidence": {
+          "border_currens": "high",
+          "border_recurrens": "high",
+          "emblem_diag": "med"
+        },
+        "node_confidence": {
+          "b_rosa1": "high",
+          "b_cor1": "high",
+          "b_vi1": "high",
+          "b_nulla": "high",
+          "b_rosa2": "high"
+        }
+      },
+      "calibration_role": "Multimodal palindrome plate: ROSA COR VI NVLLA VI COR ROSA is an exact word-palindrome (currens == recurrens), the definitive echo/op_is_echo test at verse level, while the music-notation cells prove the substrate model holds for a non-linguistic (melodic) ductus."
+    },
+    "XXXIII": {
+      "tabula": "XXXIII",
+      "source": "Caramuel, Primus Calamus (1663), p.486 (scan idx 485), TAB XXXIII",
+      "image_ref": "pl_485.png",
+      "family": "epitaphium-musicum (text set on musical staves where NOTE VALUES encode words; an enharmonic cipher with explicit prose decode)",
+      "title_diplomatic": "DEO OPT. MAX. DIES XVIII MAII, UT NATALITIVS SIC FATALIS FVIT ANNO MDLXXIII, NATALI SUDORIO, EXIMIO MUSICO, MORIBUS ET VITA.",
+      "title_translation": "To God the Best and Greatest. The 18th of May, as it was his birthday so it was his death-day, in the year 1573, to Natalis Sudorius, distinguished musician in character and life.",
+      "subject_diplomatic": "Obiit Natalis Sudorius (Gallice Noel Sueur) Cantor Excellentissimus, et Musicae et Chori Magister, et ut ipsummet marmor lachrymas enarmonice postularet, aut exorqueret veris, Officialis Langrensis, Vir quidem doctus et ingeniosus, hoc insculpi Epitaphium curavit.",
+      "cipher_note": "THE MUSIC IS THE TEXT. Each musical note value (longa, breve, semibreve, minima) encodes a word or syllable; Caramuel reprints it 'diverso expressis charactere vocibus, quae notis enharmonicis designabuntur' — i.e. he gives BOTH the notation AND the decoded words, an explicit cipher key. The enarmonic note->word mapping is a Language whose chart is musical duration, not letters.",
+      "decoded_prose_diplomatic": "D.O.M. Dies 18 Maii, ut natalitius sic et fatalis fuit anno 1573. Natali Sudorio Eximio Musico moribus et vita gravi. Hic post annorum 72 vitae spatia completa, nos exigua paula superstites, suspiriis et semisuspiriis cantum verum desiderans, reliquit longamque memoriam in hoc Templo. Faxit Deus ut maximas Misericordiae largitiones sentiat: et fusis hostibus breves, semibreves, et minimas poenas sustineat, atque, falso loco Purgatorii liberatus, nostrarum precum tenore, earumque frequenti repetitione adiutus, Coelum conscendat superius, Divinas cum Angelis laudes decantaturus sine fine. Amen.",
+      "wordplay_note": "The epitaph PUNS on note-names as Latin words: 'breves, semibreves, et minimas poenas' (short, half-short, and minimal punishments) literally names note durations while meaning 'brief punishments' — the cipher and the sense are the same words. A perfect ambiguity specimen: one token string, two simultaneous valid readings (musical + semantic).",
+      "confidence": "high (both notation and full prose decode printed and legible)",
+      "flags": [
+        "music-as-cipher",
+        "explicit-decode-key",
+        "note-name-puns",
+        "epitaph",
+        "dual-reading-music-and-sense"
+      ],
+      "figure": {
+        "tokens": {
+          "n_longa": "BREVES",
+          "n_breve": "SEMIBREVES",
+          "n_minima": "MINIMAS",
+          "w_poenas": "POENAS",
+          "w_cantum": "CANTVM_VERVM",
+          "w_memoria": "LONGAM_MEMORIAM",
+          "w_coelum": "COELVM_CONSCENDAT",
+          "w_amen": "AMEN"
+        },
+        "walks": {
+          "musical_reading": [
+            "n_longa",
+            "n_breve",
+            "n_minima"
+          ],
+          "semantic_reading": [
+            "w_poenas",
+            "w_cantum",
+            "w_memoria",
+            "w_coelum",
+            "w_amen"
+          ],
+          "pun_overlay": [
+            "n_longa",
+            "w_poenas"
+          ]
+        },
+        "walk_confidence": {
+          "musical_reading": "high",
+          "semantic_reading": "high",
+          "pun_overlay": "high"
+        },
+        "node_confidence": {
+          "n_longa": "high",
+          "n_breve": "high",
+          "n_minima": "high",
+          "w_poenas": "high",
+          "w_amen": "high"
+        }
+      },
+      "calibration_role": "The PUREST ambiguity specimen in the book: the SAME tokens (breves, semibreves, minimas) are simultaneously a musical-notation reading AND a semantic Latin reading — a single substrate admitting two charts with NON-zero, fully-legible readings in both. The definitive test of two charts over one cell-set with measurable, real |Σ| in each."
+    }
+  }
+}

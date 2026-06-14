@@ -1,0 +1,29 @@
+{
+  "tabula": "XVI",
+  "source": "Caramuel, Primus Calamus (1663), p.452 (scan idx 451), TABVLA XVI",
+  "image_ref": "pl_451.png (full embedded resolution)",
+  "family": "labyrinthus-radialis (polar wheel: concentric rings x radial spokes; cartouche COELVM LILIVET DENSE; centre hub 'Lilia PHOEB. amat')",
+  "title_diplomatic": "COELVM LILIVET DENSE — Lilia PHOEBVS amat",
+  "topology_note": "First POLAR plate. Readings run two ways: SPOKE (hub -> rim along one radius) and RING (circumferentially within one ring). Verse forms as the reader spirals/rotates. ~36 spokes x ~6 rings; only inner-ring anchors transcribed with confidence, outer rings flagged.",
+  "confidence": "mixed (inner high, outer low)",
+  "flags": ["polar-topology", "outer-rings-degraded", "anchor-cells-only-transcribed"],
+  "author_combinatorial_claim": {"diplomatic": "(no explicit numeral legible on this plate)", "note": "radial labyrinth; multiplicity arises from spoke x ring permutation"},
+  "figure": {
+    "tokens": {
+      "hub": "LILIA_PHOEBVS_AMAT",
+      "i1": "APOLLO", "i2": "OLYMPVS", "i3": "CANTAT", "i4": "CANIT", "i5": "PHOEBVS", "i6": "PHOEBO",
+      "r1": "CARMINA_APOLLO_CANIT", "r2": "PEGASIDES_PERENNES", "r3": "CASTALIDES_COLVNT", "r4": "DVLCIS_APOLLO_CANIT",
+      "s1": "LILIA", "s2": "FLORA", "s3": "SIDERA", "s4": "LVMINA", "s5": "NVMEN", "s6": "FAMA"
+    },
+    "walks": {
+      "spoke_apollo": ["hub", "i1", "r1"],
+      "spoke_olympus": ["hub", "i2", "r2"],
+      "ring_inner": ["i1", "i2", "i3", "i4", "i5", "i6"],
+      "ring_outer_sample": ["r1", "r2", "r3", "r4"]
+    },
+    "walk_confidence": {"spoke_apollo": "med", "spoke_olympus": "med", "ring_inner": "med", "ring_outer_sample": "low"},
+    "node_confidence": {"hub": "high", "i1": "high", "i2": "high", "i3": "high", "i4": "high", "i5": "high", "r1": "med", "r2": "low", "r3": "low", "r4": "med"},
+    "emblem_layer_note": "Surrounded by a star-field and four planetary-orbit roundels (Copernican/Ptolemaic diagrams) in the corners; mitres and arms in the cartouche header."
+  },
+  "calibration_role": "First polar-topology plate — exercises the FigureGraph on non-rectangular, non-triangular geometry (rings+spokes). Tests that DETECT/ductus handle a substrate whose 'rows' are curved."
+}

@@ -1,0 +1,28 @@
+{
+  "tabula": "XXI",
+  "source": "Caramuel, Primus Calamus (1663), p.462 (scan idx 461), TABVLA XXI",
+  "image_ref": "pl_461.png",
+  "family": "carmen-cancellatum (ornamental S/V capitals tile the lattice as a grille; corners=S; interstitial verse in small cells)",
+  "title_diplomatic": "Reverendo adm. et Eximio D. Magistro nostro D.D. IOSEPHO COSTALTAE honores dignitates promotiones, quas habebat aut etiam sperare poterat in Alma Vniversitate in Aula Pontificia etc. ut in Sublacensi Sanctuario Deo et sibi vacans posset dicere, ALTERIUS NON SIT QVI SVVS ESSE POTEST. relinquenti, ineuntis anni foelix auspicium apprecantur, et hunc Labyrinthum Panegyricum dedicant. Monsserratenses studiosi.",
+  "title_translation": "To our reverend and distinguished master Joseph Costalta ... that, free for God and himself in the Sanctuary of Subiaco, he might say: LET NO ONE BE ANOTHER'S WHO CAN BE HIS OWN. ... they dedicate this panegyric labyrinth.",
+  "grille_text": "SVVS (the ornamental S and V capitals tile the field; corners are S)",
+  "motto": "ALTERIUS NON SIT QVI SVVS ESSE POTEST",
+  "confidence": "mixed (grille high, interstitial low)",
+  "flags": ["cancellatum-grille", "ornamental-capitals-SV", "interstitial-verse-dense"],
+  "figure": {
+    "tokens": {
+      "c_tl": "S", "c_tr": "S", "c_bl": "S", "c_br": "S",
+      "v01": "V", "v02": "V", "v03": "V", "v04": "V", "v05": "V", "v06": "V", "v07": "V",
+      "v08": "V", "v09": "V", "v10": "V", "v11": "V", "v12": "V", "centre_s": "S",
+      "t_uspici": "VSPICI", "t_ulgo": "VLGO", "t_blimes": "BLIMES", "t_lumina": "LVMINA", "t_dicat": "DICAT"
+    },
+    "walks": {
+      "diag_main": ["c_tl", "v01", "centre_s", "v12", "c_br"],
+      "anti_diag": ["c_tr", "v05", "centre_s", "v08", "c_bl"],
+      "top_grille": ["c_tl", "v01", "v02", "v03", "c_tr"]
+    },
+    "walk_confidence": {"diag_main": "high", "anti_diag": "high", "top_grille": "high"},
+    "node_confidence": {"c_tl": "high", "c_tr": "high", "c_bl": "high", "c_br": "high", "centre_s": "high"}
+  },
+  "calibration_role": "Second cancellatum: ornamental S/V grille spelling SVVS across diagonals — a bounded multi-path |Σ| over a recurring two-letter motto frame."
+}

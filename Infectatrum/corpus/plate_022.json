@@ -1,0 +1,27 @@
+{
+  "tabula": "XXII",
+  "source": "Caramuel, Primus Calamus (1663), p.464 (scan idx 463), printed 'TABVLA XXI' at foot",
+  "image_ref": "pl_463.png",
+  "family": "carmen-cancellatum (dense grille: capitals I-V-R-E-M-E-R-V-I tile the whole field in alternating black/white ornamental blocks; interstitial verse)",
+  "engraver_note": "Foot reads 'TABVLA XXI' but this is the engraver's MISPRINT — content/sequence place it as XXII (it follows the true XXI Costalta plate). Recorded as anomaly per zero-correction rule; numbering here = XXII by position.",
+  "title_diplomatic": "Ob expugnatas Gentes Ethnicas, confutatos veteres, et futuros errores, reformatos mores Christiani Populi; nec non ob vitae puritatem, Doctrinae securitatem, rationumque pondus, et efficaciam. ANGELICI DOCTORIS Cognomentum IVRE MERVI.",
+  "title_translation": "For having vanquished the heathen nations, refuted the ancients, reformed future errors and the morals of the Christian people; and for purity of life, security of doctrine, weight and efficacy of reasoning — the title of ANGELIC DOCTOR he has EARNED BY RIGHT.",
+  "dedication_diplomatic": "Illustrissimo et Reverendissimo D.D. Iosepho Ciantes Marsicensium Episc. etc. Domino suo Colendissimo. D. Michael Weyms C.D.Q.",
+  "grille_text": "IVRE MERVI (palindromic motto: I-V-R-E-M-E-R-V-I)",
+  "note": "The grille is a PALINDROME (IVRE MERVI reads identically reversed), so the cancellatum reads the motto identically along forward and retrograde lattice paths — a built-in recurrens symmetry.",
+  "confidence": "mixed (grille high, interstitial low)",
+  "flags": ["cancellatum-grille", "palindromic-motto", "engraver-misprint-XXI-for-XXII", "interstitial-verse-very-dense"],
+  "figure": {
+    "tokens": {
+      "g0": "I", "g1": "V", "g2": "R", "g3": "E", "g4": "M", "g5": "E", "g6": "R", "g7": "V", "g8": "I",
+      "t_iure": "IVRE", "t_laud": "LAVD", "t_praelia": "PRAELIA", "t_doctor": "DOCTO", "t_labyrinth": "LABYRINTH"
+    },
+    "walks": {
+      "grille_motto": ["g0", "g1", "g2", "g3", "g4", "g5", "g6", "g7", "g8"],
+      "grille_retro": ["g8", "g7", "g6", "g5", "g4", "g3", "g2", "g1", "g0"]
+    },
+    "walk_confidence": {"grille_motto": "high", "grille_retro": "high"},
+    "node_confidence": {"g0": "high", "g1": "high", "g2": "high", "g3": "high", "g4": "high", "g5": "high", "g6": "high", "g7": "high", "g8": "high"}
+  },
+  "calibration_role": "Palindromic-grille cancellatum: forward and retrograde readings of IVRE MERVI are identical, an exact recurrens fixpoint (echo). Tests op_is_echo at the motto level and confirms the grille's symmetry collapses |Σ| in a measurable way."
+}

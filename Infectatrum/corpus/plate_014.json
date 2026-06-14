@@ -1,0 +1,61 @@
+{
+  "tabula": "XIV",
+  "source": "Caramuel, Primus Calamus (1663), p.448 (scan idx 447), TAB. XIV",
+  "image_ref": "plate_p448.png (1034x1600, full embedded resolution)",
+  "family": "quadratum-rebus (diamond lattice rotated 45deg, word-cells interleaved with astral emblems)",
+  "title_diplomatic": "S. THOMAE AQVINATI Doctori Angelico Praeceptori Virgineo, Literary Orbis Soli, Naturae Oculo, Academiae Phoenici: Scholarum Stellae et Gymnasiorum Lauro et Palmae.",
+  "title_translation": "To St. Thomas Aquinas, Angelic Doctor, Virginal Teacher, Sun of the literary world, Eye of nature, Phoenix of the Academy, Star of the schools and Laurel and Palm of the gymnasia.",
+  "author_combinatorial_claim": {
+    "diplomatic": "Hoc Retrogradum Distichon et in ipso 9,823,275 Disticha recurrentia, adeoque 39,293,100 simplicia carmina, devotionis gratia consecrabat I. Caramuel Salmanticae Anno Dni 1629.",
+    "claimed_recurrent_distichs": 9823275,
+    "claimed_simple_verses": 39293100,
+    "note": "Caramuel ASSERTS this single retrograde distich yields 9,823,275 recurrent distichs / 39,293,100 simple verses. This is the author's own |Σ| claim — a calibration target for the adversarial/synthetic-ambiguity detector: an astronomically high asserted multiplicity from a compact lattice.",
+    "margin_product_ladder_diplomatic": ["3", "per 9", "15", "per 7", "105", "per 9", "945", "per 11", "10,395", "per 9", "93,555", "per 7", "654,885", "per 5", "3,274,425", "per 3", "9,823,275"],
+    "ladder_confidence": "med (margin partially cropped/degraded; values read top-to-bottom)"
+  },
+  "confidence": "mixed (per-node below)",
+  "flags": ["rebus-emblem-cells-not-textual", "margin-ladder-partially-degraded", "lattice-only-spine-transcribed"],
+  "operating_manual": "two-pass; diplomatic preserved verbatim; emblem cells recorded as <EMBLEM:type> not invented words; zero normalization in diplomatic layer",
+  "figure": {
+    "tokens": {
+      "apex_top": "HORIZON",
+      "r1a": "DECLAMAT", "r1b": "OLIVA", "r1c": "CUSTODIS",
+      "r2a": "METRO", "r2b": "COMMENDAT", "r2c": "AMICA", "r2d": "DELPHINUS", "r2e": "PALMAS",
+      "r3a": "IAM", "r3b": "NUMERIS", "r3c": "DECANTAT", "r3d": "ACHATES", "r3e": "MAGNETIS", "r3f": "PLAUSUS", "r3g": "HUIC",
+      "r4a": "TUBA", "r4b": "SI", "r4c": "MODULIS", "r4d": "DEMONSTRAT", "r4e": "HONORA", "r4f": "SPLENDORIS", "r4g": "CATHEDRAS", "r4h": "HIC", "r4i": "DICAT",
+      "r5a": "VNGVENTVM", "r5b": "SCHOLA", "r5c": "VSVAE", "r5d": "THOMAM", "r5e": "DILAUDAT", "r5f": "OLYMPVS", "r5g": "DOCTORIS", "r5h": "LAURVS", "r5i": "ET", "r5j": "DEDIT", "r5k": "ANGELIS",
+      "r6a": "TOGA", "r6b": "DVM", "r6c": "VERSV", "r6d": "PERLVSTRAT", "r6e": "HONESTA", "r6f": "PHOENICIS", "r6g": "MORES", "r6h": "AC", "r6i": "SACRAT",
+      "r7a": "CVM", "r7b": "PVLCHRE", "r7c": "PROPUGNAT", "r7d": "ADAVCTA", "r7e": "TORRENTIS", "r7f": "RADIOS", "r7g": "EN",
+      "r8a": "DOCTE", "r8b": "DESCRIBIT", "r8c": "AMANDA", "r8d": "MOTORIS", "r8e": "LAVDES",
+      "r9a": "DEFENDIT", "r9b": "OPTIMA", "r9c": "RECTORIS",
+      "apex_bot": "AQVINVM"
+    },
+    "walks": {
+      "currens_spine": ["apex_top", "r2b", "r3c", "r4d", "r5d", "r6d", "r7c", "r8b", "apex_bot"],
+      "row5_currens": ["r5a", "r5b", "r5c", "r5d", "r5e", "r5f", "r5g", "r5h", "r5i", "r5j", "r5k"],
+      "row5_recurrens": ["r5k", "r5j", "r5i", "r5h", "r5g", "r5f", "r5e", "r5d", "r5c", "r5b", "r5a"],
+      "row4_currens": ["r4a", "r4b", "r4c", "r4d", "r4e", "r4f", "r4g", "r4h", "r4i"],
+      "row6_currens": ["r6a", "r6b", "r6c", "r6d", "r6e", "r6f", "r6g", "r6h", "r6i"]
+    },
+    "walk_confidence": {
+      "currens_spine": "med", "row5_currens": "med", "row5_recurrens": "med",
+      "row4_currens": "high", "row6_currens": "med"
+    },
+    "node_confidence": {
+      "apex_top": "high", "apex_bot": "med",
+      "r2a": "high", "r2b": "high", "r2c": "high", "r2d": "med", "r2e": "high",
+      "r3b": "high", "r3c": "high", "r3d": "med", "r3e": "high", "r3f": "med", "r3g": "high",
+      "r4c": "high", "r4d": "high", "r4e": "high", "r4f": "med", "r4g": "high", "r4i": "high",
+      "r5d": "high", "r5e": "med", "r5f": "med", "r5g": "high", "r5h": "high", "r5k": "med",
+      "r5a": "low", "r5c": "low",
+      "r6d": "high", "r6f": "med", "r7c": "med", "r7d": "low", "r8b": "med", "r9a": "high"
+    },
+    "emblem_layer_note": "Between word-cells the lattice carries astral emblems (sun, crescent moon, eye, six-pointed star, column, altar). These are a parallel rebus ductus, recorded as structure but NOT transcribed as words (zero-hallucination rule). They are why the plate's true |Σ| is enormous: each emblem-cell is a substitutable token."
+  },
+  "verses_normalized": [
+    {"line": "Vngventvm schola vsvae Thomam dilaudat Olympus doctoris laurus et dedit Angelis", "confidence": "med",
+     "translation": "(spine row, conjectural ordering) The school ... praises Thomas; Olympus gave the doctor's laurel to the angels.",
+     "flag": "row5 ordering and r5a/r5c low-confidence"}
+  ],
+  "calibration_role": "TAB. XIV is the FOG-OF-WAR / ADVERSARIAL calibration plate: its author asserts |Σ| ~ 9.8M-39.3M from a single compact lattice. Run through adversarial_score(), a near-saturated, low-negative-space spectrum of this asserted magnitude is exactly the synthetic-inflation signature the detector is built to flag — here it is LEGITIMATE (Caramuel really can generate them), which makes it the ideal true-positive-for-structure / false-positive-for-threat test."
+}

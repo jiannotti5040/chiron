@@ -1,0 +1,29 @@
+{
+  "tabula": "XXXIII",
+  "source": "Caramuel, Primus Calamus (1663), p.486 (scan idx 485), TAB XXXIII",
+  "image_ref": "pl_485.png",
+  "family": "epitaphium-musicum (text set on musical staves where NOTE VALUES encode words; an enharmonic cipher with explicit prose decode)",
+  "title_diplomatic": "DEO OPT. MAX. DIES XVIII MAII, UT NATALITIVS SIC FATALIS FVIT ANNO MDLXXIII, NATALI SUDORIO, EXIMIO MUSICO, MORIBUS ET VITA.",
+  "title_translation": "To God the Best and Greatest. The 18th of May, as it was his birthday so it was his death-day, in the year 1573, to Natalis Sudorius, distinguished musician in character and life.",
+  "subject_diplomatic": "Obiit Natalis Sudorius (Gallice Noel Sueur) Cantor Excellentissimus, et Musicae et Chori Magister, et ut ipsummet marmor lachrymas enarmonice postularet, aut exorqueret veris, Officialis Langrensis, Vir quidem doctus et ingeniosus, hoc insculpi Epitaphium curavit.",
+  "cipher_note": "THE MUSIC IS THE TEXT. Each musical note value (longa, breve, semibreve, minima) encodes a word or syllable; Caramuel reprints it 'diverso expressis charactere vocibus, quae notis enharmonicis designabuntur' — i.e. he gives BOTH the notation AND the decoded words, an explicit cipher key. The enarmonic note->word mapping is a Language whose chart is musical duration, not letters.",
+  "decoded_prose_diplomatic": "D.O.M. Dies 18 Maii, ut natalitius sic et fatalis fuit anno 1573. Natali Sudorio Eximio Musico moribus et vita gravi. Hic post annorum 72 vitae spatia completa, nos exigua paula superstites, suspiriis et semisuspiriis cantum verum desiderans, reliquit longamque memoriam in hoc Templo. Faxit Deus ut maximas Misericordiae largitiones sentiat: et fusis hostibus breves, semibreves, et minimas poenas sustineat, atque, falso loco Purgatorii liberatus, nostrarum precum tenore, earumque frequenti repetitione adiutus, Coelum conscendat superius, Divinas cum Angelis laudes decantaturus sine fine. Amen.",
+  "wordplay_note": "The epitaph PUNS on note-names as Latin words: 'breves, semibreves, et minimas poenas' (short, half-short, and minimal punishments) literally names note durations while meaning 'brief punishments' — the cipher and the sense are the same words. A perfect ambiguity specimen: one token string, two simultaneous valid readings (musical + semantic).",
+  "confidence": "high (both notation and full prose decode printed and legible)",
+  "flags": ["music-as-cipher", "explicit-decode-key", "note-name-puns", "epitaph", "dual-reading-music-and-sense"],
+  "figure": {
+    "tokens": {
+      "n_longa": "BREVES", "n_breve": "SEMIBREVES", "n_minima": "MINIMAS",
+      "w_poenas": "POENAS", "w_cantum": "CANTVM_VERVM", "w_memoria": "LONGAM_MEMORIAM",
+      "w_coelum": "COELVM_CONSCENDAT", "w_amen": "AMEN"
+    },
+    "walks": {
+      "musical_reading": ["n_longa", "n_breve", "n_minima"],
+      "semantic_reading": ["w_poenas", "w_cantum", "w_memoria", "w_coelum", "w_amen"],
+      "pun_overlay": ["n_longa", "w_poenas"]
+    },
+    "walk_confidence": {"musical_reading": "high", "semantic_reading": "high", "pun_overlay": "high"},
+    "node_confidence": {"n_longa": "high", "n_breve": "high", "n_minima": "high", "w_poenas": "high", "w_amen": "high"}
+  },
+  "calibration_role": "The PUREST ambiguity specimen in the book: the SAME tokens (breves, semibreves, minimas) are simultaneously a musical-notation reading AND a semantic Latin reading — a single substrate admitting two charts with NON-zero, fully-legible readings in both. The definitive test of two charts over one cell-set with measurable, real |Σ| in each."
+}

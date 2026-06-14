@@ -1,0 +1,33 @@
+{
+  "congress_path": "chiron_memory.json",
+  "resume_state": "chiron_grow_state.json",
+
+  "topics": [
+    "law", "programming", "computation", "physics", "electronics",
+    "mathematics", "statistics", "linguistics", "language", "communication",
+    "semantics", "heuristics", "psychology", "artificial intelligence",
+    "chemistry", "biology", "technology", "government", "medicine",
+    "philosophy", "debate", "rhetoric", "art", "music", "economics",
+    "humanities", "poetry", "literature"
+  ],
+
+  "articles_per_topic": 100,
+  "links_per_article": 25,
+  "frontier_per_pass": 600,
+  "frontier_max": 40000,
+  "random_when_idle": 10,
+  "push_when_mb": 5.0,
+  "max_congress_mb": 50.0,
+  "rate_limit_seconds": 1.0,
+  "author": "Wikipedia contributors",
+
+  "source": {
+    "name": "wikipedia",
+    "api_url": "https://en.wikipedia.org/w/api.php",
+    "user_agent": "Chiron-Crescere/1.0 (operator: Jacob Iannotti; contact: YOUR_EMAIL_HERE)",
+    "verify_ssl": true,
+    "api_key": ""
+  },
+
+  "git": { "push": true, "pull_first": true, "branch": "main" }
+}

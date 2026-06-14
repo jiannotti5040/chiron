@@ -1,0 +1,35 @@
+{
+  "tabula": "XVII",
+  "source": "Caramuel, Primus Calamus (1663), p.454 (scan idx 453), TABULA XVII",
+  "image_ref": "pl_453.png",
+  "family": "labyrinthus-radialis-quincunx (FIVE connected polar wheels in a cross/quincunx, joined by ET / fovet / AVSTRIACOS scroll)",
+  "title_diplomatic": "Reverendissimo & Eximio D. Mag. mo D. MICHAELI ... dignissimo apud S. Crucem Abbati Cisterciensis Ordinis Visitatori et Vicario Generali, S. Theol. Doctori ... anno MDCLIII ... Monsserratenses (Claustra Sancta Crucis) Studiosi.",
+  "author_combinatorial_claim": {
+    "diplomatic": "novies mille sexcenta et quadraginta quatuor billiones (seu millionum milliones) centies decies septies mille & quadringenti triginta duo milliones, septingenta quindecim millia sexcenta et octo carmina",
+    "claimed_verses": 9644117432715608,
+    "note": "~9.644 QUADRILLION carmina — the LARGEST asserted multiplicity in the entire book. Five wheels whose joint permutation yields the figure. The supreme adversarial/synthetic-ambiguity calibration target."
+  },
+  "confidence": "mixed (hubs high, rings low)",
+  "flags": ["five-wheel-polar", "rings-dense-degraded", "hubs-and-joints-transcribed"],
+  "figure": {
+    "tokens": {
+      "hub_top": "ET_AUGET", "hub_left": "ET_ORNAT", "hub_centre": "SACRA_CRUX", "hub_right": "OLYMPVS", "hub_bottom": "LAUDAT",
+      "joint_et": "ET", "joint_fovet": "FOVET", "joint_aust": "AVSTRIACOS",
+      "tc1": "RAPHAEL", "tc2": "MICHAEL", "tc3": "VRBS", "tc4": "FLORVS", "tc5": "MAVRVS",
+      "lc1": "BERNARDVS", "lc2": "ROBERTVS", "lc3": "IVSTINVS", "lc4": "DONATVS", "lc5": "IOSEPHVS", "lc6": "MATTHIAS",
+      "rc1": "CAELESTIS", "rc2": "DILECTVS", "rc3": "FACVNDVS", "rc4": "FESTVS",
+      "bc1": "GERMANVS", "bc2": "BILLOSVS", "bc3": "CONSTANS", "bc4": "FESTAS", "bc5": "ROMVLA"
+    },
+    "walks": {
+      "spine_vertical": ["hub_top", "joint_et", "hub_centre", "joint_fovet", "hub_bottom", "joint_aust"],
+      "spine_horizontal": ["hub_left", "hub_centre", "hub_right"],
+      "ring_top": ["tc1", "tc2", "tc3", "tc4", "tc5"],
+      "ring_left": ["lc1", "lc2", "lc3", "lc4", "lc5", "lc6"],
+      "ring_bottom": ["bc1", "bc2", "bc3", "bc4", "bc5"]
+    },
+    "walk_confidence": {"spine_vertical": "high", "spine_horizontal": "high", "ring_top": "med", "ring_left": "med", "ring_bottom": "med"},
+    "node_confidence": {"hub_top": "high", "hub_left": "high", "hub_centre": "high", "hub_right": "high", "hub_bottom": "high", "joint_et": "high", "joint_fovet": "high", "joint_aust": "high"},
+    "emblem_layer_note": "Two bishops (mitres) flank a crucifix medallion (left) and a stork medallion (right); central scroll reads ET / fovet / AVSTRIACOS."
+  },
+  "calibration_role": "SUPREME adversarial calibration target: asserted |Σ| ~ 9.6e15 (quadrillions). If the synthetic-ambiguity detector saturates here, it is behaving correctly — legitimate but maximally inflated."
+}

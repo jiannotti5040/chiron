@@ -1,0 +1,34 @@
+{
+  "tabula": "XXVI",
+  "source": "Caramuel, Primus Calamus (1663), p.472 (scan idx 471), TAB XXVI",
+  "image_ref": "pl_471.png",
+  "family": "labyrinthus-radialis-magnus (giant concentric-ring wheel, ~14 rings x dozens of spokes; centre IHS/CHRISTI medallion)",
+  "title_diplomatic": "IESUS SOL LAUDATUS HOC LABYRINTHO CONTINENTE. Disticha retrograda 69,902,227,5[..]040, hoc est versus simplices 279,608,910,057,308,160. Ideam [scansion: u u - u-u] ... dedit I. Caramuel anno 1656. Voces R.P. Nicolaus Lucensis Capucinus, Theologus, Concionator, Vir eruditissimus, anno 1649. NOBILISSIMO ET REVERENDISSIMO D.D. PATRI RAYMUNDO CAPISUCCO, ORD. PRAEDIC. SACRI APOSTOLICI PALATII MAGISTRO etc. ... Observantiae ergo Sabrianenses Alumni consecrabant anno MDCLXII.",
+  "title_translation": "JESUS THE SUN, praised by this enclosing labyrinth. Retrograde distichs 69,902,227,5..,040 — that is, 279,608,910,057,308,160 simple verses. Caramuel gave the design (1656); the words by Fr. Nicolaus of Lucca, Capuchin (1649); consecrated by the alumni of Sabria, 1662.",
+  "author_combinatorial_claim": {
+    "diplomatic": "Disticha retrograda 69,902,227,5..,040 ... versus simplices 279,608,910,057,308,160",
+    "claimed_simple_verses": 279608910057308160,
+    "note": "~279 QUINTILLION simple verses — the largest numeral in the book, exceeding even TAB. XVII's quadrillions. A giant radial wheel. The explicit metrical pattern (u u - u - u, dactylo-trochaic shorthand) is printed in the subtitle, giving the meter the verses must satisfy."
+  },
+  "metrical_pattern_stated": "u u - u-u (breve-breve-longum shorthand printed in the dedication — the meter constraint)",
+  "centre": "IHS / CHRISTI",
+  "confidence": "mixed (centre + numerals high, ring cells low)",
+  "flags": ["polar-magnus", "largest-claim-in-book", "explicit-meter-printed", "rings-very-dense-degraded"],
+  "figure": {
+    "tokens": {
+      "hub": "IHS_CHRISTI",
+      "i1": "IESVS", "i2": "SOL", "i3": "AMOR", "i4": "NOMEN", "i5": "FLOS", "i6": "REX",
+      "r_iesus": "IESVS_HERVLE", "r_maria": "SANCTA_MARIA", "r_nomen": "NOMEN_AMATOR_AMAT",
+      "r_laudat": "LAVDAT_ET_OFFERT_CARMINE_MATERNI", "r_cantat": "CANTAT_OFFERT_FLAMINE_STELLATVM"
+    },
+    "walks": {
+      "spoke_iesus": ["hub", "i1", "r_iesus"],
+      "spoke_maria": ["hub", "i4", "r_maria"],
+      "ring_inner": ["i1", "i2", "i3", "i4", "i5", "i6"],
+      "ring_outer_sample": ["r_iesus", "r_maria", "r_nomen", "r_laudat", "r_cantat"]
+    },
+    "walk_confidence": {"spoke_iesus": "med", "spoke_maria": "med", "ring_inner": "med", "ring_outer_sample": "low"},
+    "node_confidence": {"hub": "high", "i1": "high", "i2": "high", "i4": "high"}
+  },
+  "calibration_role": "Maximal-claim polar plate (~2.8e17). The printed metrical pattern means the native scanner has, for the first time, an EXPLICIT target meter stated by the author — a direct test of scans-as-meter against a 1663 declared constraint."
+}

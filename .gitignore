@@ -1,0 +1,21 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+president_ledger.jsonl
+*_pres*.jsonl
+veritas_laws.jsonl
+Veritas/
+chiron.key
+*.sealed
+Creative Works/
+chiron_checkpoint_*.json
+grow.log
+nohup.out
+chiron_fastops.so
+*.so
+proposals/
+Resume_Jacob_Iannotti.md
+Resume*.md
+Resume*.pdf
+Resume*.docx

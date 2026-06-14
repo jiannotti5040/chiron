@@ -1,0 +1,20 @@
+# CHIRON — runtime dependencies (Python 3.8+)
+#
+# Chiron runs with ZERO installs on a typical macOS/Linux Python. The engine,
+# the operator console (`serve`), ingestion, and the full gate suite work on the
+# standard library + numpy. scipy is OPTIONAL — if it is absent, Chiron uses an
+# exact pure-Python fallback automatically (you do NOT need to install scipy).
+#
+# numpy is the one library Chiron uses directly, and it is preinstalled on most
+# systems (it is on stock macOS dev setups). You only need this file if numpy is
+# missing. On macOS you may hit the PEP 668 "externally-managed-environment"
+# error; install with EITHER:
+#
+#     python3 -m pip install --user --break-system-packages numpy
+#
+# or, cleaner, in a virtual environment:
+#
+#     python3 -m venv .venv && source .venv/bin/activate && pip install numpy
+#
+numpy>=1.21
+# scipy>=1.7   # OPTIONAL accelerator only — Chiron runs fine without it
