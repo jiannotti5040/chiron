@@ -295,7 +295,7 @@ async function loadCongress(){try{const c=await call('/api/congress');
   const o=c.organisms||[];$('#organisms').innerHTML=o.length?o.map(x=>'<div class="kv"><b>'+(x.name||x.action||'unit')+'</b><span>'+(x.action||x.kind||'')+'</span></div>').join(''):'<div class="empty">None yet — Chiron mints one only when it meets structure its charts can\'t read and the candidate passes the gate.</div>';
   }catch(e){$('#domains').innerHTML='<span class=err>'+e.message+'</span>';}}
 async function loadGrowth(){try{const g=await call('/api/growth'),l=await call('/api/ledger');
-  const cards=[['Integral laws',g.integral],['General knowledge',g.general],['Cross-domain transfers',g.cross_domain],['Laws reused (feedback)',g.reuse??0]];
+  const cards=[['Proven laws',g.integral],['Yield (proven %)',(g.yield_pct!=null?g.yield_pct+'%':'—')],['General knowledge',g.general],['Cross-domain transfers',g.cross_domain],['Laws reused',g.reuse??0]];
   $('#gstats').innerHTML=cards.map(x=>'<div class="stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join('');
   drawCurve(g.history||[]);
   const t=g.tiers||{},tm=Math.max(1,t.raw||0,t.compressed||0,t.invariant||0,t.generator||0);

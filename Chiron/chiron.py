@@ -27137,9 +27137,11 @@ def _serve_dashboard(argv):
                         "laws": len(gw["laws"]), "congress_path": congress_path}
             if path == "/api/growth":
                 org = _fresh(); gw = org._growth_state()
+                _tot = gw["integral"] + gw["general"]
                 return {"history": gw["history"], "tiers": org.memory_tiers(),
                         "integral": gw["integral"], "general": gw["general"],
                         "cross_domain": gw["cross_domain"], "reuse": gw.get("reuse", 0),
+                        "yield_pct": round(100.0 * gw["integral"] / _tot, 1) if _tot else 0.0,
                         "laws_count": len(gw["laws"]), "membranes": getattr(org, "membranes", {})}
             if path == "/api/self-growth":
                 org = _fresh()
@@ -27364,6 +27366,11 @@ def main(argv=None):  # noqa: F811  (extend the CLI with invariant + dashboard v
         return _serve_dashboard(args[1:])
     if args and args[0] == "bench-native":
         return _native_cli(args[1:])
+    if args and args[0] == "solve":
+        import json as _j
+        if len(args) < 2:
+            print('usage: chiron.py solve "<ciphertext>"'); return 2
+        print(_j.dumps(solve_cipher(" ".join(args[1:])), indent=2)); return 0
     if args and args[0] in ("seal", "unseal"):
         return _crypto_cli(args)
     if args and args[0] in ("gauntlet", "merge", "checkpoint", "compact", "self-growth",
@@ -28224,6 +28231,95 @@ def collapse_transform(a: str, b: str) -> Invariant:
                       "verified": True}, len(mapping) * 5 + 2,
                      len(a) * math.log2(max(2, len(set(a + b)))), [], True, True, 1.0, 0.0,
                      f"Monoalphabetic substitution over {len(mapping)} symbols.")
+
+
+# ===========================================================================
+#  CIPHERTEXT-ONLY SOLVER — give it just the code, it recovers the plaintext.
+#  Deterministic decoders + Caesar brute force, ranked by English-likeness.
+# ===========================================================================
+_EN_WORDS = set((
+    "the be to of and a in that have it for not on with he as you do at this but his by from "
+    "they we say her she or an will my one all would there their what so up out if about who "
+    "get which go me when make can like time no just him know take into year your good some "
+    "them see other then now look only come over think back after use two how work first well "
+    "way new want because any day most us is are was were attack dawn meet secret message code "
+    "cipher key hello world victory retreat enemy north south east west").split())
+_MORSE = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G",
+          "....": "H", "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N",
+          "---": "O", ".--.": "P", "--.-": "Q", ".-.": "R", "...": "S", "-": "T", "..-": "U",
+          "...-": "V", ".--": "W", "-..-": "X", "-.--": "Y", "--..": "Z",
+          "-----": "0", ".----": "1", "..---": "2", "...--": "3", "....-": "4", ".....": "5",
+          "-....": "6", "--...": "7", "---..": "8", "----.": "9"}
+
+
+def _english_score(s):
+    if not s:
+        return 0.0
+    words = re.findall(r"[a-z]+", s.lower())
+    if not words:
+        return 0.0
+    hits = sum(1 for w in words if w in _EN_WORDS)
+    vowels = sum(s.lower().count(v) for v in "aeiou")
+    letters = sum(c.isalpha() for c in s) or 1
+    printable = sum(1 for c in s if 32 <= ord(c) < 127) / max(1, len(s))
+    return hits / len(words) + 0.3 * (vowels / letters) + 0.2 * printable
+
+
+def solve_cipher(text):
+    """Take a raw ciphertext and recover the most English-like plaintext, naming the
+    method. Tries Atbash, ROT13, all Caesar shifts, A1Z26, base64, hex, binary, Morse,
+    and reversal, and ranks by an English-likeness score."""
+    text = str(text).strip()
+    A = ord('A')
+    cands = []  # (score, method, plaintext)
+
+    ab = "".join(chr(A + 25 - (ord(c.upper()) - A)) if c.isalpha() else c for c in text)
+    cands.append((_english_score(ab), "atbash", ab))
+    for k in range(26):
+        d = "".join(chr((ord(c.upper()) - A - k) % 26 + A) if c.isalpha() else c for c in text)
+        cands.append((_english_score(d), ("rot13" if k == 13 else "caesar_shift_%d" % k), d))
+    toks = re.findall(r"\d+", text)
+    if len(toks) >= 2 and all(1 <= int(t) <= 26 for t in toks):
+        a1 = "".join(chr(A + int(t) - 1) for t in toks)
+        cands.append((_english_score(a1) + 0.4, "a1z26", a1))
+    try:
+        import base64 as _b64
+        pad = text + "=" * ((-len(text)) % 4)
+        bd = _b64.b64decode(pad, validate=False).decode("utf-8", "replace")
+        if sum(c.isprintable() for c in bd) > 0.8 * max(1, len(bd)):
+            cands.append((_english_score(bd), "base64", bd))
+    except Exception:
+        pass
+    try:
+        h = re.sub(r"[^0-9a-fA-F]", "", text)
+        if len(h) >= 4 and len(h) % 2 == 0:
+            hb = bytes.fromhex(h).decode("utf-8", "replace")
+            cands.append((_english_score(hb), "hex", hb))
+    except Exception:
+        pass
+    bits = re.findall(r"[01]{8}", text)
+    if len(bits) >= 2:
+        try:
+            bb = "".join(chr(int(x, 2)) for x in bits)
+            cands.append((_english_score(bb), "binary", bb))
+        except Exception:
+            pass
+    if set(text) <= set(".-/ \n\t"):
+        try:
+            dec = " ".join("".join(_MORSE.get(sym, "") for sym in w.split())
+                           for w in re.split(r"\s*/\s*", text.strip()))
+            if dec.strip():
+                cands.append((_english_score(dec) + 0.3, "morse", dec))
+        except Exception:
+            pass
+    rev = text[::-1]
+    cands.append((_english_score(rev), "reverse", rev))
+
+    cands.sort(key=lambda x: x[0], reverse=True)
+    best = cands[0]
+    return {"method": best[1], "plaintext": best[2], "confidence": round(best[0], 3),
+            "candidates_tried": len(cands),
+            "runners_up": [{"method": m, "plaintext": p[:60]} for _, m, p in cands[1:4]]}
 
 
 # ===========================================================================

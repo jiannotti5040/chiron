@@ -10,7 +10,10 @@
     "humanities", "poetry", "literature"
   ],
 
-  "articles_per_topic": 100,
+  "articles_per_topic": 25,
+  "links_per_article": 12,
+  "frontier_per_pass": 300,
+  "max_chars_per_item": 8000,
   "push_when_mb": 5.0,
   "max_congress_mb": 25.0,
   "rate_limit_seconds": 1.0,

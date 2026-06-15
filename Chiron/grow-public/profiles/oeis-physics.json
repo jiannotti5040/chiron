@@ -1,6 +1,6 @@
 {
   "congress_path": "../chiron_memory.json",
-  "resume_state": "oeis_state.json",
+  "resume_state": "oeis_physics_state.json",
 
   "topics": [],
   "articles_per_topic": 0,
@@ -17,9 +17,9 @@
   "source": {
     "name": "oeis",
     "search_url": "https://oeis.org/search",
-    "query": "keyword:core",
-    "domain_label": "mathematics",
-    "user_agent": "Chiron-Grow-Public/1.0 (OEIS profile; contact: maintainer)",
+    "query": "physics",
+    "domain_label": "physics",
+    "user_agent": "Chiron-Grow-Public/1.0 (OEIS physics profile; contact: maintainer)",
     "verify_ssl": true
   },
 

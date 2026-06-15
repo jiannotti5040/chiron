@@ -537,7 +537,10 @@ def main(argv=None):
             #    web: the configured seed URLs.  api: a list endpoint. All three
             #    then feed the same self-extending frontier in step 2.
             if args.dry_run or smode == "wikipedia":
-                for topic in topics:
+                # rotate the starting topic each pass so EVERY subject gets covered
+                # even if a pass is interrupted (otherwise it always restarts at topic 0)
+                _rot = ((state["passes"] - 1) % len(topics)) if topics else 0
+                for topic in (topics[_rot:] + topics[:_rot]):
                     got = 0; off = int(offsets.get(topic, 0))
                     while got < per:
                         try:
@@ -579,8 +582,12 @@ def main(argv=None):
                     rows = oeis_page(search_url, query, off, ua)
                 except Exception as e:
                     print("  [oeis error: %s] backing off 30s" % str(e)[:80]); rows = []; time.sleep(30)
+                # OEIS keywords are PROPERTIES (nonn, easy, core…), not subjects, so
+                # don't file by them (that collapses everything into one domain and
+                # kills cross-domain transfer). File under a real subject instead.
+                oeis_dom = src.get("domain_label", "mathematics")
                 for sid, data, kw in rows:
-                    new_this_pass += consider(sid, text=data, domain="oeis:" + (kw[0] if kw else "sequence"))
+                    new_this_pass += consider(sid, text=data, domain=oeis_dom)
                 offsets["oeis"] = (off + len(rows)) if rows else 0   # loop back when exhausted
                 save_state()
             # 2) drain the self-built frontier — this is the continuous expansion
