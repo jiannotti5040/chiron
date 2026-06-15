@@ -17,13 +17,16 @@ the engine travels in a single file; the rest are storage, the console, and docs
 ```
 Chiron/
   chiron.py              the whole organism — one self-contained file
-  chiron_grow.py         shared grower — any source (Wikipedia / website / API), continuous, self-resuming
+  chiron_grow.py         shared grower — any source (Wikipedia / website / API / OEIS), continuous, self-resuming
+  chiron_ciphers.py      cipher/code/crypto solver — seeds a 'cryptography' basis
   chiron_memory.json     default Congress for the CLI (ships as a CLEAN seed)
   chiron_memory_clean.json   pristine seed — the reset point
   dashboard.html         the offline operator console (served by `chiron.py serve`)
-  grow-public/           open, Pull-Request-contributable grow (its own config + memory)
+  grow-public/           open, Pull-Request-contributable grow (config + memory + profiles/)
+    profiles/            ready feeds: oeis.json, oeis-physics.json, regulatory.json
   grow-private/          operator-only grow — the true crescere
   parameters.json        default grower config (topics, source, thresholds)
+  tests/                 test_chiron.py · test_grow.py (run by CI)
   requirements.txt       numpy required; scipy optional (pure-Python fallback)
   README.md  ·  GROW.md  this document · the grower guide
   cells.svg  ·  system.svg  ·  journey.svg   diagrams
@@ -96,6 +99,7 @@ python3 chiron.py collapse 1 1 2 3 5 8 13     # recover + prove a generator
 python3 chiron.py topk 1 4 9 16 25            # ranked competing hypotheses
 python3 chiron.py explain 2 4 8 16 32         # machine view + human view
 python3 chiron.py articulate 1 1 2 3 5 8 13   # speak it back UP through its invariant (the codec)
+python3 chiron.py solve "WKLV LV D WHVW"      # crack a cipher/code ciphertext-only (Caesar/ROT/Atbash/base64/hex/binary/Morse)
 python3 chiron.py audit "Obviously it works." # candor (anti-patronization) audit
 python3 chiron.py same-origin "1 2 3" :: "9 18 27"   # provable twins
 python3 chiron.py twins                       # the quintillion-scale twin proof
@@ -129,12 +133,16 @@ Run with no arguments for the banner plus a self-test summary.
 ## The operator console (`serve`)
 
 `python3 chiron.py serve` starts a local, **offline** web console (bound to
-`127.0.0.1`, no network egress) backed by the unified engine and the Congress.
-Open `http://127.0.0.1:8765`. From it an operator can collapse / audit / explain
-any input, ingest material into the Congress and read the system's findings and
-recommendations, test same-origin across surfaces, navigate the Congress
-(engines, domains, languages, growth), and run the gate suite. The interface is
-`dashboard.html`; everything it does runs locally.
+`127.0.0.1`, no network egress) backed by the unified engine and the Congress;
+it auto-opens `http://127.0.0.1:8765`. Tabs: **Analyze** (collapse/ingest any
+input, with the certificate and the codec's "spoken back"), **What it knows**
+(domains, laws, items), **Growth** (proven vs general, **yield %**, cross-domain
+transfers, live curve, tiered memory, the law ledger), **Feed** (redirect what
+the grower consumes — Wikipedia / website / API / OEIS — picked up on its next
+pass), **Self-growth** (grown concepts), **System** (run the gate suite + native
+benchmark), and **Glossary**. It reads the live Congress (reloads are rate-limited
+so it stays responsive even while a grow writes to the file). Run it on its own,
+or together with a crawl in one command: `python3 chiron_grow.py --serve`.
 
 ## Keyed storage (the Congress, sealed)
 
@@ -196,11 +204,13 @@ It drives any folder via `--params`. Two grows ship configured:
 ```bash
 # the public, Pull-Request-contributable grow
 python3 chiron_grow.py --params grow-public/parameters.json
+# OEIS integer sequences — STRUCTURED data, ~100% law yield (the engine's strength)
+python3 chiron_grow.py --params grow-public/profiles/oeis.json --once
 # regulatory & governmental law into a 'regulation' domain
 python3 chiron_grow.py --params grow-public/profiles/regulatory.json --once
 
-# the private grow — the operator's true crescere
-python3 chiron_grow.py --params grow-private/parameters.json
+# the private grow — the operator's true crescere (one command = crawl + live dashboard)
+python3 chiron_grow.py --params grow-private/parameters.json --serve
 nohup python3 chiron_grow.py --params grow-private/parameters.json > grow.log 2>&1 &   # background; tail -f grow.log
 
 # flags (any profile)
@@ -214,6 +224,18 @@ configured under `source` in each `parameters.json`. Outside contributors grow
 `grow-public/` and open a Pull Request; the private grow and the rest of the repo
 are operated only by the owner. See **GROW.md**, **grow-public/README.md**, and
 **grow-private/README.md** for the full guides.
+
+## Ciphers, codes & crypto
+
+Decoding is squarely the engine's home turf — recovering a transform is the same
+move as recovering a generator. Given a plaintext/ciphertext pair,
+`collapse(a, b)` recovers the key (Caesar shift or substitution map); given just
+the ciphertext, `chiron.py solve "<text>"` cracks it (Atbash, ROT13, all Caesar
+shifts, A1Z26, base64, hex, binary, Morse, reversal), ranked by English-likeness.
+`python3 chiron_ciphers.py` solves a whole corpus and seeds a **cryptography**
+basis into the Congress — recovered transforms recorded as verified laws — a
+strong foundation to grow on. It writes only the Congress, never the crawl cursor,
+so the Wikipedia crawl resumes untouched afterward.
 
 The symbolic organism runs on **bare Python 3** with no third-party packages.
 The field-cognition layer uses **numpy** and **scipy** as mathematical

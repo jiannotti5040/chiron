@@ -27026,20 +27026,30 @@ def _serve_dashboard(argv):
     org_box = {"org": (Chiron.load_memory(congress_path)
                        if congress_path and _os.path.exists(congress_path) else Chiron()),
                "mtime": (_os.path.getmtime(congress_path)
-                         if congress_path and _os.path.exists(congress_path) else 0)}
+                         if congress_path and _os.path.exists(congress_path) else 0),
+               "checked": 0.0}
     gate_cache = {}
+    _RELOAD_MIN_SECS = 5.0   # never reparse the (large) Congress more than this often
 
     def _fresh():
-        """Reload the Congress from disk if a grower has written to it — so the
-        console reflects live progress without restarting the server."""
+        """Return the in-memory Congress, reloading from disk only if a grower has
+        written to it AND we haven't reloaded very recently. Reparsing a multi-MB
+        Congress on every click would freeze the UI and race the grower's writes,
+        so reloads are rate-limited — the console still refreshes within a few seconds."""
+        import time as _t
         if not (congress_path and _os.path.exists(congress_path)):
             return org_box["org"]
+        now = _t.time()
+        if now - org_box["checked"] < _RELOAD_MIN_SECS:
+            return org_box["org"]                       # serve the cached copy — fast, no disk
+        org_box["checked"] = now
         try:
             m = _os.path.getmtime(congress_path)
             if m != org_box["mtime"]:
-                org_box["org"] = Chiron.load_memory(congress_path); org_box["mtime"] = m
+                org_box["org"] = Chiron.load_memory(congress_path)
+                org_box["mtime"] = m
         except Exception:
-            pass
+            pass                                        # keep the last good copy on any read race
         return org_box["org"]
 
     def _seq(s):
