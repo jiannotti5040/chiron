@@ -4,6 +4,36 @@ In practice I am a semantic brutalist. In computational language I am a nascent.
 
 ***
 
++About+
+
+My name is Jacob Iannotti. One year ago I was not a programmer.
+
+I became concerned with a problem I could not ignore: increasingly capable AI systems were becoming increasingly persuasive, while remaining fundamentally probabilistic. As these systems began influencing human decisions, I became less interested in making them smarter and more interested in understanding what would make them trustworthy.
+
+What followed became the body of work contained in this repository.
+
+I am not primarily an engineer, researcher, or mathematician. I am a systems architect. My work begins with structure: how knowledge is represented, how decisions are justified, how provenance is preserved, how ambiguity is measured, and what obligations a persuasive machine should owe the humans affected by its outputs.
+
+The projects collected here represent a year of continuous development toward that goal. At the center is Chiron, a deterministic cognitive architecture designed to recover underlying structure from ambiguous codified surfaces, certify its conclusions, preserve lineage, and grow knowledge under governance rather than unchecked accumulation.
+
+Surrounding Chiron are the systems that became its organs:
+
+- **JDICert** — certification and decision assurance for high-stakes environments.
+- **Veritas** — invariant discovery, generator recovery, and exact-arithmetic reasoning.
+- **Candor** — anti-patronization, transparency, and epistemic accountability.
+- **Infectatrum** — ambiguity analysis, information-loss measurement, and semantic transformation.
+- **President** — bounded executive judgment operating under explicit governance constraints.
+
+Beneath them sit the theoretical foundations that informed their development: Holographic Continuity Theory, Projection Calculus, SoCPM (Standard of Care for Persuasive Machines), LexGuard, UMA, and related works exploring identity, provenance, governance, and decision systems.
+
+I do not believe the primary challenge facing artificial intelligence is capability. I believe it is trust.
+
+The question that motivates this repository is simple: **what must a machine prove before it deserves influence over human decisions?**
+
+Everything here is an attempt to answer that question.
+
+***
+
 Each work below stands on its own in its folder, with its own README; together they form one lineage that culminates in Chiron. They are listed in descending order of current relevance and maturity — the flagship first, then its organs, then the theory and the early work that fed them.
 
 **Chiron — the flagship.** One portable, offline, deterministic, self-certifying organism, and the ascension of everything below it. Its purpose is the work nobody has automated: take an ambiguous, uncooperative, codified surface and recover the immutable rule beneath it — not match it, *recover* it, and then prove the recovery. The core law is three operations: *collapse* a surface to its minimal generator, test whether two surfaces *share* one hidden generator across any disguise, and *cast* that generator into a new domain. The same move cracks ciphers and codes — give it a ciphertext and it recovers the cipher (Caesar, substitution, and the common encodings) the way it recovers a sequence. It runs on a two-part Minimum Description Length criterion in exact fractional arithmetic, so "verified" means a held-out prediction matched on the nose — equality, not tolerance — and whatever it cannot compress is handed back as a classified residual rather than swept under confidence. It is a single self-contained file: the invariant engine, the wisdom layer, the certification core, the field substrate, and the executive unified in one monolith, offline and owner-signed end to end. And it *grows* — it ingests files, datasets, code, and entire systems and assimilates them into a persistent **Congress** of organisms it can navigate, certify, and reuse, kept portable and private behind a movable cryptographic key. It ships with an offline operator console (`serve`) and returns, on every run, an auditable certificate of what was discovered and what to do with it. Built for the messiest problem there is: chaotic data, a lost specification, domains that don't speak, and a decision that still has to be staked on the structure underneath. It is also a **codec** — `articulate` runs *collapse* in reverse, speaking a recovered rule back out (regenerating, extending, or re-voicing it) and carrying the digested work's own author. And it grows continuously, on a leash: one shared grower feeds it from Wikipedia, any website, or any API into a **public** Congress anyone can extend by pull request and a **private** Congress only I run; it grows its own cross-domain concepts from proof, and can even propose changes to its own source — applied only if a reversible backup is taken first and its full self-test stays green, so it can improve itself but never take anything away.
