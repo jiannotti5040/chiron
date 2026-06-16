@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHIRON — Operator Console</title>
+<style>
+  :root{
+    --bg:#080b11;--bg2:#0c111a;--panel:#10151f;--panel2:#151b28;--line:#212b3b;--line2:#2c3850;
+    --ink:#eef2f8;--ink2:#c4cedd;--dim:#8593a8;--acc:#5cc8ff;--acc2:#7ee0b8;--violet:#b69cff;
+    --warn:#ffcf86;--bad:#ff8090;--good:#7ee0b8;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--r:14px;--r2:10px;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:radial-gradient(1200px 600px at 70% -10%,#11203010,transparent),var(--bg);color:var(--ink);
+       font-family:var(--sans);font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  header{display:flex;align-items:center;gap:16px;padding:16px 26px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#0d1320,#080b11)}
+  .mark{font-family:var(--mono);font-weight:700;letter-spacing:4px;color:var(--acc);font-size:19px}
+  .tag{color:var(--dim);font-size:12.5px;max-width:560px}
+  .grow{flex:1}
+  .pill{font-family:var(--mono);font-size:11px;padding:5px 11px;border-radius:999px;background:#0e1420;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .pill.on{color:var(--good);border-color:#2b5444;background:#0e1a16}.pill.bad{color:var(--bad);border-color:#5a2a32;background:#1c1013}
+  #offline{display:none;padding:14px 26px;background:linear-gradient(90deg,#241318,#1a0f13);border-bottom:1px solid #5a2a32;color:#ffd9de}
+  #offline code{background:#0c0f16;border:1px solid var(--line2);border-radius:6px;padding:2px 8px;color:var(--acc2);font-family:var(--mono)}
+  nav{display:flex;gap:6px;padding:12px 22px;border-bottom:1px solid var(--line);background:var(--bg2);flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid transparent;color:var(--dim);padding:9px 18px;border-radius:10px;cursor:pointer;font-size:13.5px;font-weight:600}
+  nav button:hover{color:var(--ink);background:#0f1622}nav button.active{background:var(--panel2);color:var(--acc);border-color:var(--line2)}
+  main{padding:26px 22px;max-width:1120px;margin:0 auto}
+  .tab{display:none;animation:fade .25s ease}.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:18px}
+  .card h3{margin:0 0 4px;font-size:15.5px}.card .lead{margin:0 0 16px;color:var(--dim);font-size:13.5px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:860px){.grid2,.grid4{grid-template-columns:1fr}}
+  label{display:block;font-size:11.5px;color:var(--dim);margin:0 0 7px;text-transform:uppercase;letter-spacing:.6px}
+  input[type=text],textarea{width:100%;background:#0a0e16;color:var(--ink);border:1px solid var(--line2);border-radius:var(--r2);padding:12px;font-family:var(--mono);font-size:13px}
+  input:focus,textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px #5cc8ff22}
+  textarea{min-height:128px;resize:vertical}
+  .btn{background:linear-gradient(180deg,#6fcfff,#3aa9ee);color:#04121c;border:none;padding:11px 18px;border-radius:var(--r2);font-weight:700;cursor:pointer;font-size:13.5px;margin-top:12px}
+  .btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--line2)}.btn:disabled{opacity:.4;cursor:not-allowed}.btn:hover:not(:disabled){filter:brightness(1.07)}
+  .result{margin-top:20px;display:none}
+  .block{border-radius:var(--r2);padding:15px 16px;margin-bottom:12px;border:1px solid var(--line)}
+  .block .h{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:7px;font-weight:700}
+  .b-found{background:linear-gradient(180deg,#0e1a17,#0c1512);border-color:#2b5444}.b-found .h{color:var(--acc2)}
+  .b-rel{background:#0d1320}.b-rel .h{color:var(--acc)}.b-rec{background:#16130c}.b-rec .h{color:var(--warn)}
+  .badge{display:inline-block;font-family:var(--mono);font-size:11px;padding:3px 9px;border-radius:6px;margin-left:8px}
+  .badge.int{background:#0e1a16;color:var(--acc2);border:1px solid #2b5444}.badge.gen{background:#11161f;color:var(--dim);border:1px solid var(--line2)}
+  details{background:#0a0e16;border:1px solid var(--line);border-radius:var(--r2);padding:11px 15px}
+  details summary{cursor:pointer;color:var(--dim);font-size:13px}
+  pre{background:transparent;border:0;padding:10px 0 0;overflow:auto;font-family:var(--mono);font-size:12px;color:#c0ccdd;max-height:320px;white-space:pre-wrap}
+  .stat{background:linear-gradient(180deg,var(--panel2),var(--bg2));border:1px solid var(--line);border-radius:var(--r2);padding:16px}
+  .stat .n{font-family:var(--mono);font-size:30px;color:var(--acc);line-height:1}.stat .l{color:var(--dim);font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;margin-top:8px}
+  .dom{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line)}.dom:last-child{border:0}
+  .dom .nm{font-weight:600;min-width:180px}.dom .charts{color:var(--dim);font-size:12px;font-family:var(--mono)}
+  .bar{flex:1;height:8px;background:#0c121c;border-radius:6px;overflow:hidden;min-width:80px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+  .cnt{font-family:var(--mono);color:var(--ink2);min-width:74px;text-align:right;font-size:12.5px}
+  .tier{display:flex;align-items:center;gap:12px;margin:9px 0}.tier .tl{min-width:120px;color:var(--dim);font-size:12.5px}
+  .tier .tb{flex:1;height:14px;background:#0c121c;border-radius:7px;overflow:hidden}.tier .tb i{display:block;height:100%}
+  .empty{color:var(--dim);font-size:13.5px;padding:8px 0}
+  .kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px dashed var(--line)}.kv:last-child{border:0}.kv b{color:var(--dim);font-weight:600}.kv span{font-family:var(--mono)}
+  .steps{counter-reset:s;margin:0;padding:0;list-style:none}.steps li{counter-increment:s;padding:9px 0 9px 40px;position:relative;border-bottom:1px dashed var(--line);font-size:14px}.steps li:last-child{border:0}
+  .steps li:before{content:counter(s);position:absolute;left:0;top:7px;width:26px;height:26px;border-radius:50%;background:#0e1622;border:1px solid var(--line2);color:var(--acc);text-align:center;line-height:26px;font-family:var(--mono);font-size:12px}
+  code{background:#0a0e16;border:1px solid var(--line2);border-radius:6px;padding:2px 7px;color:var(--acc2);font-family:var(--mono);font-size:12.5px}
+  .led{font-family:var(--mono);font-size:12.5px;padding:9px 0;border-bottom:1px dashed var(--line)}.led:last-child{border:0}
+  .led .d{color:var(--acc2)}.led .m{color:var(--ink)}.led .s{color:var(--dim)}
+  .muted{color:var(--dim)}.err{color:var(--bad)}.ok{color:var(--good)}.note{font-size:12px;color:var(--dim);margin-top:8px}
+  canvas{width:100%;height:200px;display:block;background:#0a0e16;border:1px solid var(--line);border-radius:var(--r2)}
+  .leg{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--dim)}.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  footer{color:var(--dim);font-size:11.5px;text-align:center;padding:22px;border-top:1px solid var(--line);margin-top:8px}
+</style>
+</head>
+<body>
+<header>
+  <div style="display:flex;align-items:baseline;gap:12px"><div class="mark">CHIRON</div>
+    <div class="tag">Operator console — reads your data, recovers the structure beneath it, and grows a Congress of what it learns. Fully offline.</div></div>
+  <div class="grow"></div><span id="status" class="pill">checking engine…</span>
+</header>
+<div id="offline">⚠ <b>The Chiron engine isn't running.</b> Open a terminal in the Chiron folder and run <code>python3 chiron.py serve</code>, then reload.</div>
+<nav>
+  <button data-tab="analyze" class="active">Analyze</button>
+  <button data-tab="congress">What it knows</button>
+  <button data-tab="growth">Growth</button>
+  <button data-tab="feed">Feed</button>
+  <button data-tab="self">Self-growth</button>
+  <button data-tab="system">Status &amp; how it grows</button>
+  <button data-tab="gloss">Glossary</button>
+</nav>
+<main>
+  <!-- ANALYZE -->
+  <section id="analyze" class="tab active">
+    <div class="card">
+      <h3>Analyze your data</h3>
+      <p class="lead">Point Chiron at files on this machine, or paste content. It reads the material, recovers any
+        hidden rule, sorts it into the Congress, tells you where it now stands, and issues a certificate you can keep.</p>
+      <div class="grid2">
+        <div><label>A folder or file path on this machine</label>
+          <input type="text" id="path" placeholder="/Users/you/Desktop/some-folder   (or one file)">
+          <button class="btn" id="btnPath" onclick="analyzePath()">Read &amp; analyze that path</button></div>
+        <div><label>…or paste content / a number sequence</label>
+          <textarea id="text" placeholder="Paste text, data, code, or a sequence like  1 1 2 3 5 8 13"></textarea>
+          <button class="btn" id="btnText" onclick="analyzeText()">Analyze this</button></div>
+      </div>
+      <div class="result" id="result">
+        <div class="block b-found"><div class="h">What Chiron found <span id="cls"></span></div><div class="b" id="found">—</div></div>
+        <div class="block b-rel"><div class="h">Spoken back — through its own invariant (the codec)</div><div class="b" id="spoke">—</div></div>
+        <div class="block b-rel"><div class="h">Where it stands in the Congress</div><div class="b" id="rel">—</div></div>
+        <div class="block b-rec"><div class="h">Recommendation</div><div class="b" id="rec">—</div></div>
+        <details><summary>The certificate — executive headline + engineer appendix</summary>
+          <pre id="cert">—</pre><button class="btn ghost" onclick="downloadCert()">Download certificate (.md)</button></details>
+      </div>
+    </div>
+  </section>
+  <!-- CONGRESS -->
+  <section id="congress" class="tab">
+    <div class="card"><h3>The Congress — Chiron's growing library of knowledge</h3>
+      <p class="lead">Everything ingested is sorted into domains here and persists. Browse what Chiron has learned.</p>
+      <div class="grid4" id="cstats"></div>
+      <div style="margin-top:8px"><button class="btn ghost" onclick="loadCongress()">Refresh</button>
+        <span id="cpath" class="muted" style="margin-left:10px"></span></div></div>
+    <div class="card"><h3>Knowledge domains</h3>
+      <p class="lead">Each domain is a kind of material Chiron has internalized. The bar shows how many examples it holds.</p>
+      <div id="domains"><div class="empty">Loading…</div></div></div>
+    <div class="card"><h3>Minted organisms</h3>
+      <p class="lead">New capabilities Chiron grew for itself — each gated before going live.</p>
+      <div id="organisms"><div class="empty">—</div></div></div>
+  </section>
+  <!-- GROWTH -->
+  <section id="growth" class="tab">
+    <div class="card"><h3>Growth Engine</h3>
+      <p class="lead">Verified, reusable findings are <b>integral</b> (they extend the law library); the rest is
+        <b>general</b> knowledge. When the same generator turns up in a different domain, that's a cross-domain transfer.</p>
+      <div class="grid4" id="gstats"></div></div>
+    <div class="card"><h3>Growth over time</h3>
+      <canvas id="curve" width="1000" height="200"></canvas>
+      <div class="leg"><span><i style="background:#7ee0b8"></i>integral laws</span><span><i style="background:#5cc8ff"></i>general knowledge</span><span><i style="background:#b69cff"></i>domains</span></div></div>
+    <div class="card"><h3>Tiered memory</h3>
+      <p class="lead">Raw items compress into reusable parts, then into verified invariants, then into unique generators — so the Congress stays portable as it grows.</p>
+      <div id="tiers"></div></div>
+    <div class="card"><h3>Discovery ledger</h3>
+      <p class="lead">The reusable laws Chiron has earned, newest last — a permanent, replayable research journal.</p>
+      <div id="ledger"><div class="empty">—</div></div></div>
+    <div class="card"><h3>Benchmark gauntlet</h3>
+      <p class="lead">A labeled set across families — recover the known generators with zero false-verify on controls.</p>
+      <button class="btn ghost" onclick="runGauntlet()">Run the gauntlet</button>
+      <div id="gauntlet" style="margin-top:12px"></div></div>
+  </section>
+  <!-- SYSTEM -->
+  <section id="system" class="tab">
+    <div class="card"><h3>How to run Chiron</h3>
+      <ol class="steps">
+        <li>Put <code>chiron.py</code> in any folder (it can sit beside the data you want it to read).</li>
+        <li>Start this console: <code>python3 chiron.py serve</code> — open <code>http://127.0.0.1:8765</code>. No installs needed.</li>
+        <li>To save memory as a JSON file in that folder: <code>python3 chiron.py serve --congress chiron_memory.json</code>.</li>
+        <li>Headless: <code>python3 chiron.py run</code> reads the whole current folder; <code>run /path</code> reads any folder.</li>
+      </ol></div>
+    <div class="card"><h3>How Chiron grows — the exact points</h3>
+      <div class="kv"><b>A new DOMAIN is born</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">the first time a structurally-distinct kind of material is seen (numbers vs text vs code vs graph). The same kind extends it.</span></div>
+      <div class="kv"><b>A new ORGANISM is minted</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">when a reasoning cycle meets structure its charts can't cleanly read and the proposed capability passes the gate: non-colliding, runnable, still able to reject.</span></div>
+      <div class="kv"><b>Integral vs general</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">a verified, reusable generator is integral and joins the law library; everything else is retained as knowledge. The gate is the discernment.</span></div></div>
+    <div class="card"><h3>Health</h3>
+      <div class="kv"><b>Engine</b><span id="sEngine">—</span></div>
+      <div class="kv"><b>Network</b><span>off — operator-directed only</span></div>
+      <div class="kv"><b>Self-test</b><span id="sGates">not run</span></div>
+      <button class="btn ghost" onclick="runGates()">Run the full self-test</button></div>
+  </section>
+  <!-- FEED -->
+  <section id="feed" class="tab">
+    <div class="card"><h3>Feed — redirect what Chiron consumes</h3>
+      <p class="lead">Point the running grower at a different source. The change is picked up on its next pass (the grower must be running, e.g. <code>python3 chiron_grow.py --serve</code>).</p>
+      <div class="kv"><b>Currently consuming</b><span id="curSrc" class="mono">…</span></div>
+      <div class="grid2" style="margin-top:14px">
+        <div><label>Source</label>
+          <select id="srcType" onchange="srcHint()">
+            <option value="wikipedia">Wikipedia (uses the topic list)</option>
+            <option value="web">Website — crawl from seed URL(s)</option>
+            <option value="api">JSON API — list endpoint</option>
+            <option value="oeis">OEIS — integer sequences (best for laws)</option>
+          </select></div>
+        <div><label id="srcLabel">Value</label>
+          <input type="text" id="srcVal" placeholder="(Wikipedia uses parameters.json topics)">
+          <button class="btn" onclick="setFeed()">Redirect consumption</button></div>
+      </div>
+      <div id="feedMsg" class="note"></div>
+    </div>
+  </section>
+  <!-- SELF-GROWTH -->
+  <section id="self" class="tab">
+    <div class="card"><h3>Self-growth — on a leash</h3>
+      <p class="lead">Chiron can grow itself in three steps, each one safe to undo. It can get smarter, but by construction it cannot take anything away.</p>
+      <div class="kv"><b>1 · New concepts, from proof only</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">When the same proven rule shows up in two or more subjects, Chiron names it a concept — an idea it earned. It never invents concepts it hasn't proven, so it can't drift.</span></div>
+      <div class="kv"><b>2 · Proposed code changes, quarantined</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">It can write a change to its own source, but the change is parked in a <code>proposals/</code> folder and is never applied on its own.</span></div>
+      <div class="kv"><b>3 · Applied only if it stays sound</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">A change is applied only after a reversible backup is taken and the changed version still passes the full self-test. Otherwise it's refused. Unattended self-edit must be explicitly switched on (<code>CHIRON_ALLOW_SELF_EDIT=1</code>); off by default.</span></div>
+    </div>
+    <div class="card"><h3>Concepts it has grown</h3>
+      <p class="lead">Cross-domain ideas — the same proven rule recurring across subjects.</p>
+      <div style="margin-bottom:8px"><button class="btn ghost" onclick="loadSelf()">Refresh</button></div>
+      <div id="concepts"><div class="empty">Loading…</div></div></div>
+  </section>
+  <!-- GLOSSARY -->
+  <section id="gloss" class="tab">
+    <div class="card"><h3>Glossary</h3>
+      <p class="lead">Plain definitions for the words used across this console.</p>
+      <div class="kv"><b>collapse</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">Take a surface (anything codified) and recover the smallest rule that reproduces it. The core move.</span></div>
+      <div class="kv"><b>surface</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">Any input with structure: a number sequence, a cipher, code, a grid of letters, text with figures in it.</span></div>
+      <div class="kv"><b>invariant / generator</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">The rule underneath a surface — the thing that stays true and can regenerate it. The generator is the exact recovered rule.</span></div>
+      <div class="kv"><b>verified</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">The rule was checked by predicting parts of the input it was never shown, and got them exactly right. A proof, not a guess.</span></div>
+      <div class="kv"><b>integral vs general</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">Integral: a verified, reusable rule — it joins the law library. General: kept as knowledge, but no proven rule was found.</span></div>
+      <div class="kv"><b>domain</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">A subject Chiron sorts material into (mathematics, law, biology…), so its memory is organized rather than one big pile.</span></div>
+      <div class="kv"><b>Congress</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">Chiron's whole memory: its domains, its law library, and its provenance record, bound by one signed root.</span></div>
+      <div class="kv"><b>articulate</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">The reverse of collapse: take a recovered rule and speak it back — regenerate or extend the original, or re-voice it in a new vocabulary.</span></div>
+      <div class="kv"><b>cross-domain transfer</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">The same rule appearing in a second subject — evidence the knowledge generalizes.</span></div>
+      <div class="kv"><b>concept</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">A rule proven in two or more subjects, named and kept as an idea Chiron earned.</span></div>
+      <div class="kv"><b>membrane</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">A gate on a domain. A sealed domain won't let its rules leak outward — selectivity by design.</span></div>
+      <div class="kv"><b>certificate</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">The plain report Chiron issues for a finding: what it found, why it believes it, and what would prove it wrong.</span></div>
+    </div>
+  </section>
+</main>
+<footer>CHIRON · everything on this page runs locally through the engine and the Congress — nothing leaves the host.</footer>
+<script>
+const $=s=>document.querySelector(s);let lastRes=null;
+async function call(p,d){const r=d?await fetch(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}):await fetch(p);if(!r.ok)throw new Error('engine error '+r.status);return r.json();}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$('#'+b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='congress')loadCongress(); if(b.dataset.tab==='growth')loadGrowth();
+  if(b.dataset.tab==='self')loadSelf(); if(b.dataset.tab==='feed')loadFeed();
+});
+const _SRCHINT={wikipedia:"(Wikipedia uses parameters.json topics)",
+  web:"seed URL(s), comma/space separated — it crawls and follows links",
+  api:"the JSON list endpoint URL",
+  oeis:"an OEIS query, e.g. keyword:core  or  keyword:nice"};
+function srcHint(){const t=$('#srcType').value;
+  $('#srcVal').placeholder=_SRCHINT[t]||'';
+  $('#srcLabel').textContent={wikipedia:'Topics (from config)',web:'Seed URL(s)',api:'List endpoint URL',oeis:'OEIS query'}[t]||'Value';}
+async function loadFeed(){try{const d=await call('/api/source');
+  const s=d.current; $('#curSrc').textContent = s ? (s.name+' '+(s.seeds?s.seeds.join(', '):s.query||s.list_url||'')) : 'default (from parameters.json)';
+  }catch(e){$('#curSrc').textContent='—';} srcHint();}
+async function setFeed(){const name=$('#srcType').value,value=$('#srcVal').value.trim();
+  $('#feedMsg').textContent='Setting…';
+  try{const r=await call('/api/source',{name,value});
+    if(r.error){$('#feedMsg').innerHTML='<span class=err>'+r.error+'</span>';return;}
+    $('#feedMsg').innerHTML='<span class=ok>Now feeding: '+r.source.name+'</span> — '+(r.note||'');
+    loadFeed();
+  }catch(e){$('#feedMsg').innerHTML='<span class=err>'+e.message+'</span>';}}
+async function loadSelf(){try{const d=await call('/api/self-growth');const c=d.concepts||[];
+  $('#concepts').innerHTML=c.length?('<table style="width:100%;border-collapse:collapse"><tr><th style="text-align:left;color:var(--dim);font-size:12px;padding:6px 8px">Concept</th><th style="text-align:left;color:var(--dim);font-size:12px;padding:6px 8px">Rule</th><th style="text-align:left;color:var(--dim);font-size:12px;padding:6px 8px">Subjects</th></tr>'+c.map(x=>'<tr><td style="padding:6px 8px;font-family:var(--mono)">'+(x.name||'concept')+'</td><td style="padding:6px 8px;font-family:var(--mono);color:var(--dim)">'+(x.model_class||'—')+'</td><td style="padding:6px 8px">'+((x.domains||[]).join(', '))+'</td></tr>').join('')+'</table>'):'<div class="empty">No cross-domain concepts yet — one appears the moment a proven rule recurs in a second subject.</div>';
+  }catch(e){$('#concepts').innerHTML='<span class=err>'+e.message+'</span>';}}
+function setOnline(ok){$('#status').textContent=ok?'● engine online':'● engine offline';$('#status').className='pill '+(ok?'on':'bad');
+  $('#offline').style.display=ok?'none':'block';$('#sEngine').textContent=ok?'online · offline-only':'not running';
+  ['btnPath','btnText'].forEach(id=>$('#'+id).disabled=!ok);}
+function plainModel(mc){if(!mc)return'a structure';const m=mc.toLowerCase();
+  if(m==='constant')return'a constant value';if(m==='arithmetic')return'a steady step — each value changes by a fixed amount';
+  if(m==='geometric')return'a constant ratio — each value is the one before it times a fixed factor';
+  if(m.startsWith('polynomial')){const d=(m.match(/\d+/)||[''])[0];return'a polynomial trend'+(d?(' (degree '+d+')'):'');}
+  if(m.startsWith('linear_recurrence'))return'a recurrence — each value built from the ones before it (Fibonacci-like)';
+  if(m==='periodic')return'a repeating cycle';if(m.includes('factorial')||m.includes('multiplicative'))return'a factorial-style product rule';
+  if(m==='alternating')return'an alternating pattern';if(m.includes('holonomic')||m.includes('recursive'))return'a deep recursive rule (Catalan-type)';
+  if(m.includes('interleav'))return'several independent patterns interleaved together';return'a rule ('+mc.replace(/_/g,' ')+')';}
+function plainFinding(h){const inv=(h&&h.machine_view)||{};const mc=inv.model_class;
+  if(mc&&mc!=='too_short'&&mc!=='incompressible')return 'Chiron found '+plainModel(mc)+'.';
+  if(h&&h.human_view&&h.human_view.what)return h.human_view.what;
+  return 'No simple rule fit this — Chiron kept it as knowledge rather than guess at structure.';}
+function set(id,html){const el=$('#'+id);if(el)el.innerHTML=html;}
+function cls(c){if(!c){$('#cls').innerHTML='';return;}$('#cls').innerHTML='<span class="badge '+(c==='integral'?'int':'gen')+'">'+c.toUpperCase()+'</span>';}
+async function analyzeText(){const text=$('#text').value.trim();if(!text)return;
+  $('#result').style.display='block';set('found','analyzing…');set('rel','');set('rec','');cls('');
+  try{const r=await call('/api/ingest',{text});if(r.error)throw new Error(r.error);lastRes=r;
+    set('found',r.human?plainFinding(r.human):'Ingested.');cls(r.classification);
+    const a=r.articulation;
+    if(a&&a.spoken){const sp=Array.isArray(a.spoken)?a.spoken.slice(0,14).join(', '):JSON.stringify(a.spoken).slice(0,180);
+      set('spoke',(a.mode||'spoken back')+': <span style="font-family:var(--mono);color:#cdd7e6">'+sp+'</span>'+
+        (r.source_author&&r.source_author!=='unknown'?(' &middot; author: <b>'+r.source_author+'</b>'):''));}
+    else set('spoke','<span class="muted">not runnable for this surface</span>');
+    set('rel',r.relation||'');set('rec',r.recommendation||'');
+    $('#cert').textContent=r.certificate_text||JSON.stringify(r,null,2);
+  }catch(e){set('found','<span class=err>'+e.message+'</span>');}}
+async function analyzePath(){const path=$('#path').value.trim();if(!path)return;
+  $('#result').style.display='block';set('found','reading '+path+' …');set('rel','');set('rec','');cls('');
+  try{const r=await call('/api/ingest_path',{path});if(r.error)throw new Error(r.error);lastRes=r;
+    set('found','Read <b>'+r.files_ingested+'</b> file(s); skipped '+r.files_skipped+' binary/unreadable.');set('spoke','—');
+    set('rel',(r.congress&&('The Congress now holds '+r.congress.domains+' domain(s) and '+r.congress.items+' item(s).'))||'');
+    set('rec',r.recommendation||'');$('#cert').textContent=JSON.stringify(r,null,2);loadCongress();
+  }catch(e){set('found','<span class=err>'+e.message+'</span>');}}
+function downloadCert(){if(!lastRes)return;const md=lastRes.certificate_text;
+  const body=md||JSON.stringify(lastRes,null,2);const ext=md?'md':'json';
+  const b=new Blob([body],{type:'text/'+(md?'markdown':'plain')});const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='chiron_certificate_'+Date.now()+'.'+ext;a.click();}
+async function loadCongress(){try{const c=await call('/api/congress');
+  $('#cpath').textContent=c.congress_path?('saved to '+c.congress_path):'(not persisted — start serve with --congress)';
+  const cards=[['Domains',(c.domains||[]).length],['Items learned',c.vault_items??'—'],['Integral laws',c.laws??0],['Organisms',(c.organisms||[]).length]];
+  $('#cstats').innerHTML=cards.map(x=>'<div class="stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join('');
+  const d=c.domains||[],mx=Math.max(1,...d.map(x=>x.exemplars||0));
+  $('#domains').innerHTML=d.length?d.map(x=>'<div class="dom"><div class="nm">'+x.name+'</div><div class="bar"><i style="width:'+Math.round(100*(x.exemplars||0)/mx)+'%"></i></div><div class="cnt">'+(x.exemplars||0)+' ex.</div><div class="charts">'+(x.charts||[]).join(', ')+'</div></div>').join(''):'<div class="empty">No domains yet — analyze something and a domain will be born.</div>';
+  const o=c.organisms||[];$('#organisms').innerHTML=o.length?o.map(x=>'<div class="kv"><b>'+(x.name||x.action||'unit')+'</b><span>'+(x.action||x.kind||'')+'</span></div>').join(''):'<div class="empty">None yet — Chiron mints one only when it meets structure its charts can\'t read and the candidate passes the gate.</div>';
+  }catch(e){$('#domains').innerHTML='<span class=err>'+e.message+'</span>';}}
+async function loadGrowth(){try{const g=await call('/api/growth'),l=await call('/api/ledger');
+  const cards=[['Proven laws',g.integral],['Yield (proven %)',(g.yield_pct!=null?g.yield_pct+'%':'—')],['General knowledge',g.general],['Cross-domain transfers',g.cross_domain],['Laws reused',g.reuse??0]];
+  $('#gstats').innerHTML=cards.map(x=>'<div class="stat"><div class="n">'+x[1]+'</div><div class="l">'+x[0]+'</div></div>').join('');
+  drawCurve(g.history||[]);
+  const t=g.tiers||{},tm=Math.max(1,t.raw||0,t.compressed||0,t.invariant||0,t.generator||0);
+  const tier=(nm,v,col)=>'<div class="tier"><div class="tl">'+nm+'</div><div class="tb"><i style="width:'+Math.round(100*(v||0)/tm)+'%;background:'+col+'"></i></div><div class="cnt">'+(v||0)+'</div></div>';
+  $('#tiers').innerHTML=tier('raw items',t.raw,'#5cc8ff')+tier('compressed',t.compressed,'#7ee0b8')+tier('invariant (verified)',t.invariant,'#b69cff')+tier('generators',t.generator,'#ffcf86');
+  const laws=l.laws||[];$('#ledger').innerHTML=laws.length?laws.slice().reverse().map((x,i)=>'<div class="led"><span class="d">#'+(laws.length-i)+'</span> <span class="m">'+plainModel(x.model_class)+'</span> · <span class="s">'+x.domain+' · gen '+x.generator+' · from '+x.source+'</span></div>').join(''):'<div class="empty">No laws yet — verified, reusable findings will be journaled here.</div>';
+  }catch(e){$('#gstats').innerHTML='<span class=err>'+e.message+'</span>';}}
+function drawCurve(h){const c=$('#curve');if(!c)return;const ctx=c.getContext('2d');const W=c.width,H=c.height;ctx.clearRect(0,0,W,H);
+  if(!h.length){ctx.fillStyle='#8593a8';ctx.font='13px system-ui';ctx.fillText('No history yet — analyze inputs to grow the curve.',16,28);return;}
+  const pad=24,mx=Math.max(1,...h.map(s=>Math.max(s.integral,s.general,s.domains)));
+  const X=i=>pad+(W-2*pad)*(h.length<2?0:i/(h.length-1)),Y=v=>H-pad-(H-2*pad)*(v/mx);
+  ctx.strokeStyle='#1a2230';ctx.lineWidth=1;for(let k=0;k<=4;k++){const y=pad+(H-2*pad)*k/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();}
+  const line=(key,col)=>{ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();h.forEach((s,i)=>{const x=X(i),y=Y(s[key]||0);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();};
+  line('general','#5cc8ff');line('domains','#b69cff');line('integral','#7ee0b8');}
+async function runGates(){$('#sGates').textContent='running…';try{const r=await call('/api/selftest');$('#sGates').innerHTML=r.green?'<span class=ok>all gates GREEN</span>':'<span class=err>FAILED</span>';}catch(e){$('#sGates').textContent=''+e.message;}}
+async function runGauntlet(){$('#gauntlet').innerHTML='running…';
+  try{const r=(await call('/api/gauntlet')).gauntlet;
+    $('#gauntlet').innerHTML='<div class="kv"><b>Recovery</b><span>'+r.recovered+'/'+r.recoverable_tested+' ('+Math.round(r.recovery_rate*100)+'%)</span></div>'+
+      '<div class="kv"><b>False-verify on controls</b><span>'+r.false_verify+'</span></div>'+
+      '<div class="kv"><b>Verdict</b><span class="'+(r.verdict==='PASS'?'ok':'err')+'">'+r.verdict+'</span></div>';
+  }catch(e){$('#gauntlet').innerHTML='<span class=err>'+e.message+'</span>';}}
+(async function(){try{await call('/api/meta');setOnline(true);loadCongress();}catch(e){setOnline(false);}})();
+</script>
+</body>
+</html>
