@@ -1,7 +1,5 @@
 ++Jacob Iannotti's Portfolio++
 
-In practice I am a semantic brutalist. In computational language I am a nascent. In discovery I am unrelenting. In inner song I am a son, an intimate, and a countryman. This is the year-long span and real-time progress of my systems building. This repository contains the core body of my technical and theoretical work. It is presented in descending order of current relevance and maturity.
-
 ***
 
 +About+
