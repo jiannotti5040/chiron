@@ -100,6 +100,15 @@
           <textarea id="text" placeholder="Paste text, data, code, or a sequence like  1 1 2 3 5 8 13"></textarea>
           <button class="btn" id="btnText" onclick="analyzeText()">Analyze this</button></div>
       </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+        <label>Directed recovery — steer the search</label>
+        <div class="grid2">
+          <input type="text" id="gexpect" placeholder="expected next terms, e.g.  21 34  (the answer you're after)">
+          <input type="text" id="gprefer" placeholder="prefer a class: geometric / periodic / linear_recurrence (optional)">
+        </div>
+        <button class="btn ghost" onclick="guide()">Find the rule consistent with that</button>
+        <div class="b" id="gout" style="margin-top:10px"></div>
+      </div>
       <div class="result" id="result">
         <div class="block b-found"><div class="h">What Chiron found <span id="cls"></span></div><div class="b" id="found">—</div></div>
         <div class="block b-rel"><div class="h">Spoken back — through its own invariant (the codec)</div><div class="b" id="spoke">—</div></div>
@@ -282,6 +291,15 @@ async function analyzePath(){const path=$('#path').value.trim();if(!path)return;
     set('rel',(r.congress&&('The Congress now holds '+r.congress.domains+' domain(s) and '+r.congress.items+' item(s).'))||'');
     set('rec',r.recommendation||'');$('#cert').textContent=JSON.stringify(r,null,2);loadCongress();
   }catch(e){set('found','<span class=err>'+e.message+'</span>');}}
+async function guide(){const surface=$('#text').value.trim();
+  if(!surface){set('gout','<span class=muted>Put a sequence in the box above first.</span>');return;}
+  const expect=$('#gexpect').value.trim(),prefer=$('#gprefer').value.trim();set('gout','working…');
+  try{const r=await call('/api/guide',{surface,expect,prefer});let h='';
+    if('consistent_with_expectation' in r){h+='<div class="'+(r.consistent_with_expectation?'ok':'err')+'">'+(r.explanation||'')+'</div>';}
+    if(r.preferred_match){h+='<div style="margin-top:6px">Preferred <b>'+(r.preferred_class||'')+'</b>: '+(r.preferred_match.model_class||r.preferred_match.note||'')+'</div>';}
+    if(r.error)h='<span class=err>'+r.error+'</span>'; if(!h)h='<span class=muted>Enter an expected continuation or a preferred class.</span>';
+    set('gout',h);
+  }catch(e){set('gout','<span class=err>'+e.message+'</span>');}}
 function downloadCert(){if(!lastRes)return;const md=lastRes.certificate_text;
   const body=md||JSON.stringify(lastRes,null,2);const ext=md?'md':'json';
   const b=new Blob([body],{type:'text/'+(md?'markdown':'plain')});const a=document.createElement('a');
