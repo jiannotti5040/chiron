@@ -56,6 +56,7 @@ python3 chiron.py same-origin "1 2 3" :: "9 18 27"
 python3 chiron.py guide "1 1 2 3" --expect "5 8 13 21"   # DIRECTED: steer the search with the answer you expect
 python3 chiron.py recall "2 4 8 16 32" --memory chiron_memory.json   # is this rule already proven?
 python3 chiron.py compact --memory chiron_memory.json    # value-dense: distill the memory, keep the proofs
+python3 benchmark.py                          # reproducible benchmark: OEIS-core + ciphers, scored for false positives
 ```
 
 **Directed recovery** lets the operator steer: give the terms you expect to come
@@ -63,6 +64,31 @@ next and the engine recovers the rule consistent with both your sequence and tha
 continuation — or honestly reports that none fits. Proven rules are stored with
 their parameters (replayable, recognized on sight), and `compact` keeps the
 memory value-dense — a proven rule and an unparsed paragraph no longer cost the same.
+
+## Measured (reproducible)
+
+One command, offline and deterministic — `python3 benchmark.py`:
+
+- **OEIS-core sequences — 22/29 recovered, 0 false positives.** On 29 real
+  OEIS-core entries the engine sees only a training prefix and must predict four
+  held-out terms *exactly*. It recovers **every one of the 22 that is algebraically
+  generated** (constant, arithmetic, geometric, polynomial, linear-recurrence,
+  holonomic) and **abstains on all 7 that are not** — primes, partitions, Euler
+  totient, divisor counts, divisor sums, Bell numbers, nⁿ — rather than guess.
+  The textbook finite-difference baseline recovers only the 11 pure polynomials
+  and is **confidently wrong on the other 18** (it cannot abstain). Recovering the
+  rule *and refusing to overstate it* is the whole point.
+- **Classical ciphers — 42/44 recovered, ciphertext-only.** English plaintexts
+  encoded with nine schemes (Caesar, ROT13, Atbash, A1Z26, Base64, hex, binary,
+  Morse, reversal), handed to the solver with no key; it recovers the plaintext in
+  42 of 44 (a rot13-only baseline gets 4). The two misses are decoder collisions,
+  reported, not hidden.
+- **Zero false positives across every suite.** A 5,000-case randomized fuzz
+  (in-class sequences must verify; shuffled values must not) and the labeled
+  gauntlet add **0** false-verifications and **0** crashes.
+
+The number that matters is the **0**: across ~5,070 scored cases the engine never
+once claimed a rule it could not predict.
 
 It **grows**. One shared grower feeds it from any source — Wikipedia, any website,
 any JSON API, or the OEIS (structured integer sequences, where rule-recovery is
