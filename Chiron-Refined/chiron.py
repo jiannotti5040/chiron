@@ -23537,6 +23537,27 @@ class Chiron:
         self._growth_state()
         return self._law_by_gen.get(str(generator_fp)[:16])
 
+    def recognize(self, surface) -> Dict[str, Any]:
+        """Recognition: has this surface's rule already been proven? Recover its
+        generator, then look it up in the learned law library (O(1)). Because laws
+        now carry their parameters, a recognized rule is a fully replayable record —
+        the feedback loop made first-class, and the substrate for composing learned
+        rules into new ones."""
+        self._growth_state()
+        try:
+            inv = self._engine_read(surface)
+        except Exception as e:
+            return {"error": str(e)}
+        gen = inv.generator_fingerprint[:16]
+        known = self._law_by_gen.get(gen)
+        verified = bool(getattr(inv, "verified", False))
+        return {"recovered": inv.model_class, "verified": verified,
+                "generator": gen, "known": bool(known), "law": known,
+                "library_size": len(self._law_by_gen),
+                "note": ("recognized — already in the library, reused not re-earned" if known
+                         else "new — would be added to the library on ingest" if verified
+                         else "no verified rule in this surface to recognize")}
+
     def set_membrane(self, domain: str, policy: str = "sealed") -> Dict[str, Any]:
         """Knowledge-gating: a SEALED domain will not let its laws transfer outward.
         Selectivity is structure — the system earns generalization rather than leaking it."""
@@ -23562,7 +23583,8 @@ class Chiron:
             else:
                 self._gen_seen.add(gen)
                 law = {"generator": gen, "family": fam, "domain": domain,
-                       "model_class": inv.model_class, "source": source, "author": author}
+                       "model_class": inv.model_class, "source": source, "author": author,
+                       "params": _jsonable(getattr(inv, "params", {}))}   # replayable, not just a fingerprint
                 g["laws"].append(law); self._law_by_gen[gen] = law
             prev = self._fam_domains.get(fam)
             # cross-domain transfer only if the source domain's membrane is open
@@ -23607,17 +23629,41 @@ class Chiron:
         return {"checkpoint": path, "root": root}
 
     def compact(self, max_vault: int = 2000, max_ledger: int = 4000,
-                max_history: int = 400, max_crystal_cells: int = 2000) -> Dict[str, Any]:
+                max_history: int = 400, max_crystal_cells: int = 2000,
+                max_bytes: int = 1200) -> Dict[str, Any]:
         """Distill the Congress so it can grow forever without bloating: trim the
-        RAW bulk (oldest vault items, ledger entries, crystal deposits, history)
-        while KEEPING the durable core — every integral generator/law, the domain
-        summaries, the bank balances, and the owner-signed provenance root."""
+        RAW bulk (oldest vault items, ledger entries, crystal deposits, history) and
+        replace bulky per-line node scaffolding with a digest, while KEEPING the
+        durable core — every integral generator/law, the domain summaries, the bank
+        balances, and the owner-signed provenance root."""
         g = self._growth_state(); before = self.memory_tiers()
-        trimmed = {"vault": 0, "ledger": 0, "crystal_cells": 0, "history": 0}
+        trimmed = {"vault": 0, "ledger": 0, "crystal_cells": 0, "history": 0, "node_graphs_pruned": 0}
         v = getattr(self.congress, "vault", {})
         if isinstance(v, dict) and len(v) > max_vault:
             keep = dict(list(v.items())[-max_vault:]); trimmed["vault"] = len(v) - len(keep)
             self.congress.vault = keep
+        # value-dense: a proven rule and an unparsed paragraph should NOT cost the
+        # same. In bulky raw entries, replace heavy fields (reading spectra, node
+        # lists, scansion) with a digest while keeping the lightweight summary +
+        # provenance. Laws, generators and domain summaries live elsewhere — untouched.
+        import json as _vj
+        if isinstance(getattr(self.congress, "vault", None), dict):
+            for h, payload in list(self.congress.vault.items()):
+                if not isinstance(payload, dict):
+                    continue
+                if len(_vj.dumps(payload, default=str)) <= max_bytes:
+                    continue
+                newp, pruned_any = {}, False
+                for k, val in payload.items():
+                    if isinstance(val, (list, dict)) and len(_vj.dumps(val, default=str)) > 200:
+                        newp[k] = {"digest": org_sha(val)[:16],
+                                   "n": (len(val) if hasattr(val, "__len__") else 0), "pruned": True}
+                        pruned_any = True
+                    else:
+                        newp[k] = val
+                if pruned_any:
+                    self.congress.vault[h] = newp
+                    trimmed["node_graphs_pruned"] += 1
         bl = getattr(self.congress.bank, "ledger", [])
         if isinstance(bl, list) and len(bl) > max_ledger:
             trimmed["ledger"] = len(bl) - max_ledger; self.congress.bank.ledger = bl[-max_ledger:]
@@ -24068,7 +24114,7 @@ def _gate_invariants(g: _Gate) -> None:
     art_b = Artifact.make("test", {"x": 1}, [("Infectatrum", "leader", 1.0)],
                           human_facing=False)
     g.check("L2 human-facing -> well", art_h.destination() == WELL)
-    g.check("L2 non-human -> Congress", art_b.destination() == CONGRESS)
+    g.check("L2 non-human -> memory", art_b.destination() == CONGRESS)
 
     # --- L1 membrane: only human-facing artifacts can be staged at the well ---
     tank = HoldingTank()
@@ -24260,7 +24306,7 @@ def _gate_organism(g: _Gate) -> None:
     g.check("at least one cycle ran", out["cycles_run"] >= 1)
     reports = org.pull_reports()
     g.check("a human-facing report was published and pulled", len(reports) >= 1)
-    g.check("only JDICert authored the published report",
+    g.check("only the certifier authored the published report",
             all(r["kind"].startswith("JDICert") for r in reports))
 
     # the cycle rotates leadership by orientation (not fixed rank)
@@ -24347,14 +24393,14 @@ def _gate_urf_and_field(g: _Gate) -> None:
         fc = result.get("field_cognition")
         g.check("field cognition returns a structured result", isinstance(fc, dict))
         if isinstance(fc, dict):
-            g.check("field reports both faces of Omega",
+            g.check("field reports both faces of the origin",
                     "friction_closed" in fc and "einstein_satisfied" in fc)
             g.check("field sphere geometry is Bessel-exact (j01=pi)",
                     abs(fc["sphere_geometry"]["bessel_zero"] - math.pi) < 1e-9)
             g.check("field cognition is deterministic (same text -> same closure)",
                     org.field.pipeline.run("x").omega ==
                     org.field.pipeline.run("x").omega)
-        g.check("congress records memory pressure from cognition",
+        g.check("memory records pressure from cognition",
                 org.congress.memory_saturation >= 0.0)
     else:
         g.check("field layer absent -> honest unavailable marker",
@@ -26076,7 +26122,7 @@ def run_selftest(verbose: bool = True) -> bool:  # noqa: F811 (unified gate)
     buf = _io.StringIO()
     with _contextlib.redirect_stdout(buf):
         pc, tc = jdicert_run_tests()
-    extra.append((f"JDICert integrated suite green ({pc}/{tc})", pc == tc, ""))
+    extra.append((f"certifier suite green ({pc}/{tc})", pc == tc, ""))
 
     buf = _io.StringIO()
     try:
@@ -26102,14 +26148,14 @@ def run_selftest(verbose: bool = True) -> bool:  # noqa: F811 (unified gate)
         cert = _jdicert_certify_case(None, "Proposal: automated approval of a "
                                      "high-impact community decision with "
                                      "incomplete evidence.")
-        extra.append(("organism JDICert delegates to real certify()",
+        extra.append(("organism certifier delegates to real certify()",
                       cert.verdict.value in ("ESCALATE_HUMAN", "REJECT_INPUT",
                                              "CERTIFIED_GO"),
                       cert.verdict.value))
         extra.append(("real certify() escalates under incomplete evidence",
                       cert.verdict.value != "CERTIFIED_GO", cert.verdict.value))
     except Exception as e:  # pragma: no cover
-        extra.append(("organism JDICert delegates to real certify()", False, str(e)))
+        extra.append(("organism certifier delegates to real certify()", False, str(e)))
         extra.append(("real certify() escalates under incomplete evidence", False, str(e)))
 
     ep, et = 0, len(extra)
@@ -26961,6 +27007,10 @@ def _growth_cli(argv):
         print(_j.dumps(org.checkpoint(rest[0] if rest else "."), indent=2)); return 0
     if verb == "compact":
         print(_j.dumps(org.compact(), indent=2)); return 0
+    if verb == "recall":
+        if not rest:
+            print('usage: chiron.py recall "<surface>" --memory chiron_memory.json'); return 2
+        print(_j.dumps(org.recognize(" ".join(rest)), indent=2)); return 0
     if verb == "self-growth":
         print(_j.dumps(org.self_growth_state(), indent=2)); return 0
     if verb == "grow-concepts":
@@ -27087,6 +27137,10 @@ def _serve_dashboard(argv):
                     return {"error": str(e)}
             if path == "/api/topk":
                 return {"candidates": top_generators(_seq(payload.get("surface", "")) or [])}
+            if path == "/api/guide":
+                return collapse_guided(payload.get("surface", ""),
+                                       expect=(payload.get("expect") or None),
+                                       prefer=(payload.get("prefer") or None))
             if path == "/api/audit":
                 return {"audit": audit(payload.get("text", "")).to_dict()}
             if path == "/api/same-origin":
@@ -27381,11 +27435,27 @@ def main(argv=None):  # noqa: F811  (extend the CLI with invariant + dashboard v
         if len(args) < 2:
             print('usage: chiron.py solve "<ciphertext>"'); return 2
         print(_j.dumps(solve_cipher(" ".join(args[1:])), indent=2)); return 0
+    if args and args[0] == "guide":
+        import json as _j
+        rest = args[1:]
+        expect = prefer = None
+        for flag, attr in (("--expect", "expect"), ("--prefer", "prefer")):
+            if flag in rest:
+                i = rest.index(flag)
+                val = rest[i + 1] if i + 1 < len(rest) else ""
+                if attr == "expect":
+                    expect = val
+                else:
+                    prefer = val
+                del rest[i:i + 2]
+        if not rest:
+            print('usage: chiron.py guide "<surface>" [--expect "<terms>"] [--prefer <class>]'); return 2
+        print(_j.dumps(collapse_guided(" ".join(rest), expect=expect, prefer=prefer), indent=2)); return 0
     if args and args[0] in ("seal", "unseal"):
         return _crypto_cli(args)
     if args and args[0] in ("gauntlet", "merge", "checkpoint", "compact", "self-growth",
                             "grow-concepts", "proposals", "propose", "apply-proposal",
-                            "rollback-proposal"):
+                            "rollback-proposal", "recall"):
         return _growth_cli(args)
     return _pre_collapse_main(argv)
 
@@ -29097,6 +29167,59 @@ def top_generators(seq, k: int = 3) -> List[Dict[str, Any]]:
     return out
 
 
+def _as_num_list(surface):
+    """Parse a surface into a list of numbers, or None if it isn't numeric."""
+    parts = list(surface) if isinstance(surface, (list, tuple)) else str(surface).replace(",", " ").split()
+    try:
+        vals = [float(x) for x in parts]
+    except (ValueError, TypeError):
+        return None
+    return [int(v) if float(v).is_integer() else v for v in vals]
+
+
+def collapse_guided(surface, expect=None, prefer=None) -> Dict[str, Any]:
+    """Operator-directed invariant recovery — let the operator steer the search.
+
+      expect : terms the operator believes come next (the answer they are after). The
+               engine recovers the rule consistent with BOTH the surface AND that
+               continuation, or honestly reports that none fits — turning intuition
+               into evidence instead of an unconstrained guess.
+      prefer : a model family to favor (e.g. 'periodic', 'geometric',
+               'linear_recurrence'); returns the best-ranked candidate of that class
+               even if MDL would otherwise pick another, with the cost stated plainly.
+    """
+    base = collapse(surface)
+    out = {"directed": bool(expect or prefer),
+           "unguided": {"model_class": base.model_class, "verified": bool(base.verified)}}
+
+    if expect is not None:
+        exp = _as_num_list(expect)
+        seq = _as_num_list(surface)
+        if seq is not None and exp:
+            guided = collapse(seq + exp)
+            ok = bool(guided.verified)
+            out["expectation"] = exp
+            out["consistent_with_expectation"] = ok
+            out["rule"] = guided.model_class
+            out["invariant"] = guided.to_dict()
+            out["explanation"] = (
+                "A '%s' rule reproduces your sequence AND continues into %s exactly — "
+                "your expected answer is consistent, and that is the recovered invariant."
+                % (guided.model_class, exp) if ok else
+                "No exact rule reproduces your sequence together with %s — the expected "
+                "continuation is inconsistent with any model in the class (honest negative)." % exp)
+        else:
+            out["error"] = "expect-directed recovery needs a numeric surface and numeric expected terms"
+
+    if prefer:
+        cands = top_generators(surface, k=8)
+        match = next((c for c in cands if str(c.get("model_class", "")).startswith(prefer)), None)
+        out["preferred_class"] = prefer
+        out["preferred_match"] = match or {"note": "no candidate in that class fit this surface"}
+
+    return out
+
+
 _RESIDUAL_TAXONOMY = ("none", "noise", "corruption", "ambiguity",
                       "competing_generator", "unknown_structure")
 
@@ -30018,20 +30141,20 @@ def run_selftest(verbose=True):  # noqa: F811 — extend the unified suite
     g.check("chiron: EXACT verified recovery embedded", inv.exact and inv.verified)
     g.check("chiron: predicts 89 exactly (==)", inv.predict(11)[-1] == 89)
     g.check("chiron: Catalan via general holonomic fitter", veritas.collapse([1,1,2,5,14,42,132,429,1430,4862]).verified)
-    g.check("chiron: candor flags over-assertion", veritas.audit("Obviously this definitely works without a doubt.").candor_score < 0.6)
+    g.check("chiron: honesty layer flags over-assertion", veritas.audit("Obviously this definitely works without a doubt.").candor_score < 0.6)
     g.check("chiron: multi-hypothesis top_generators ranks", veritas.top_generators([1,1,2,3,5,8,13,21])[0]["is_winner"])
     g.check("chiron: human translation layer (two views)", "machine_view" in veritas.human_report(inv) and "human_view" in veritas.human_report(inv))
     g.check("chiron: the three Centauriad trials hold", veritas.centauriad_trials()["all_passed"])
     g.check("chiron: adversarial never verified-wrong", veritas.adversarial_test()["verified_wrong"] == 0)
     pres = president.President(agency_budget=1, ledger_path="/tmp/_chiron_pres.jsonl")
     good = president.Option("pilot", "We pilot on one team for two weeks because the reversible cost is low and we measure the result directly.", reversible=True, scores={t[0]: 0.9 for t in president.TENETS})
-    g.check("chiron: president allows candid reversible decision", pres.decide([good]).allowed)
-    g.check("chiron: president escalates unsafe action by construction", pres.act("delete_everything", {})["escalated"])
+    g.check("chiron: executive allows candid reversible decision", pres.decide([good]).allowed)
+    g.check("chiron: executive escalates unsafe action by construction", pres.act("delete_everything", {})["escalated"])
     g.check("chiron: interleaved composite recovered + verified",
             veritas.collapse([x for i in range(10) for x in ((i * i), (2 ** i))]).model_class.startswith("interleaved") and
             veritas.collapse([x for i in range(10) for x in ((i * i), (2 ** i))]).verified)
     # veritas + president are natively integrated above (real AST, no exec-of-string).
-    g.check("chiron: veritas + president natively integrated (no exec-of-string)",
+    g.check("chiron: invariant engine + executive natively integrated (no exec-of-string)",
             callable(getattr(veritas, "collapse", None))
             and callable(getattr(veritas, "audit", None))
             and hasattr(president, "President"))

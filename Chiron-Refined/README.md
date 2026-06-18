@@ -53,7 +53,16 @@ python3 chiron.py collapse 1 1 2 3 5 8 13     # recover + prove a rule
 python3 chiron.py articulate 1 1 2 3 5 8 13   # speak it back up (the codec)
 python3 chiron.py solve "WKLV LV D WHVW"      # crack a cipher / code, ciphertext-only
 python3 chiron.py same-origin "1 2 3" :: "9 18 27"
+python3 chiron.py guide "1 1 2 3" --expect "5 8 13 21"   # DIRECTED: steer the search with the answer you expect
+python3 chiron.py recall "2 4 8 16 32" --memory chiron_memory.json   # is this rule already proven?
+python3 chiron.py compact --memory chiron_memory.json    # value-dense: distill the memory, keep the proofs
 ```
+
+**Directed recovery** lets the operator steer: give the terms you expect to come
+next and the engine recovers the rule consistent with both your sequence and that
+continuation — or honestly reports that none fits. Proven rules are stored with
+their parameters (replayable, recognized on sight), and `compact` keeps the
+memory value-dense — a proven rule and an unparsed paragraph no longer cost the same.
 
 It **grows**. One shared grower feeds it from any source — Wikipedia, any website,
 any JSON API, or the OEIS (structured integer sequences, where rule-recovery is
