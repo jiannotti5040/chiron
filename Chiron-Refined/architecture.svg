@@ -1,0 +1,86 @@
+<svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6470"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="880" height="540" fill="#ffffff"/>
+  <text x="440" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#1b1f24">Chiron — one engine, one file</text>
+  <text x="440" y="54" text-anchor="middle" font-size="12" fill="#5b6470">offline by default · deterministic · zero-dependency core · owner-signed end to end</text>
+
+  <!-- sources -->
+  <rect x="28" y="84" width="156" height="150" rx="8" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="106" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#1b1f24">Sources</text>
+  <text x="106" y="128" text-anchor="middle" font-size="12" fill="#3a4149">Wikipedia</text>
+  <text x="106" y="150" text-anchor="middle" font-size="12" fill="#3a4149">any website</text>
+  <text x="106" y="172" text-anchor="middle" font-size="12" fill="#3a4149">any JSON API</text>
+  <text x="106" y="194" text-anchor="middle" font-size="12" fill="#3a4149">OEIS</text>
+  <text x="106" y="218" text-anchor="middle" font-size="11" fill="#8a9099">(operator-directed)</text>
+
+  <!-- grower -->
+  <rect x="28" y="280" width="156" height="56" rx="8" fill="#eef3fb" stroke="#1f6feb"/>
+  <text x="106" y="304" text-anchor="middle" font-size="13" font-weight="700" fill="#1f4fa3">chiron_grow.py</text>
+  <text x="106" y="323" text-anchor="middle" font-size="11" fill="#3a4149">continuous · self-resuming</text>
+
+  <!-- monolith -->
+  <rect x="232" y="76" width="408" height="312" rx="10" fill="#eef3fb" stroke="#1f6feb" stroke-width="2"/>
+  <text x="436" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#1f4fa3">chiron.py</text>
+
+  <g font-size="12" fill="#1b1f24">
+    <rect x="248" y="116" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="337" y="140" text-anchor="middle" font-weight="700">Invariant engine</text>
+    <text x="337" y="159" text-anchor="middle" font-size="11" fill="#3a4149">collapse · MDL · residual</text>
+
+    <rect x="446" y="116" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="535" y="140" text-anchor="middle" font-weight="700">Certifier</text>
+    <text x="535" y="159" text-anchor="middle" font-size="11" fill="#3a4149">evidence · provenance</text>
+
+    <rect x="248" y="186" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="337" y="210" text-anchor="middle" font-weight="700">Wisdom layer</text>
+    <text x="337" y="229" text-anchor="middle" font-size="11" fill="#3a4149">anti-patronization</text>
+
+    <rect x="446" y="186" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="535" y="210" text-anchor="middle" font-weight="700">Twin / transfer</text>
+    <text x="535" y="229" text-anchor="middle" font-size="11" fill="#3a4149">cross-domain rules</text>
+
+    <rect x="248" y="256" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="337" y="280" text-anchor="middle" font-weight="700">Executive</text>
+    <text x="337" y="299" text-anchor="middle" font-size="11" fill="#3a4149">bounded · escalates</text>
+
+    <rect x="446" y="256" width="178" height="58" rx="6" fill="#ffffff" stroke="#5b6470"/>
+    <text x="535" y="280" text-anchor="middle" font-weight="700">Memory access</text>
+    <text x="535" y="299" text-anchor="middle" font-size="11" fill="#3a4149">assimilate · recall</text>
+  </g>
+  <text x="436" y="372" text-anchor="middle" font-size="11" fill="#8a9099">six concerns, one native source — no exec-of-string, no second engine</text>
+
+  <!-- congress -->
+  <rect x="232" y="410" width="408" height="56" rx="8" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="436" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#1b1f24">Congress — chiron_memory.json</text>
+  <text x="436" y="453" text-anchor="middle" font-size="11" fill="#3a4149">verified laws · domains · provenance · Merkle root</text>
+
+  <!-- outputs -->
+  <rect x="688" y="92" width="164" height="50" rx="8" fill="#eaf6ee" stroke="#2ea043"/>
+  <text x="770" y="114" text-anchor="middle" font-size="13" font-weight="700" fill="#1a7f37">Certificate</text>
+  <text x="770" y="131" text-anchor="middle" font-size="11" fill="#3a4149">found / why / falsify</text>
+
+  <rect x="688" y="170" width="164" height="50" rx="8" fill="#eaf6ee" stroke="#2ea043"/>
+  <text x="770" y="192" text-anchor="middle" font-size="13" font-weight="700" fill="#1a7f37">Console (serve)</text>
+  <text x="770" y="209" text-anchor="middle" font-size="11" fill="#3a4149">offline dashboard</text>
+
+  <rect x="688" y="248" width="164" height="66" rx="8" fill="#eaf6ee" stroke="#2ea043"/>
+  <text x="770" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#1a7f37">Evaluation tools</text>
+  <text x="770" y="287" text-anchor="middle" font-size="11" fill="#3a4149">benchmark · compare</text>
+  <text x="770" y="303" text-anchor="middle" font-size="11" fill="#3a4149">trace · verify · profile</text>
+
+  <!-- arrows -->
+  <line x1="106" y1="234" x2="106" y2="278" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="184" y1="308" x2="230" y2="240" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="436" y1="388" x2="436" y2="408" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="436" y1="466" x2="436" y2="488" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="640" y1="150" x2="686" y2="120" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="640" y1="200" x2="686" y2="196" stroke="#5b6470" marker-end="url(#arrow)"/>
+  <line x1="640" y1="250" x2="686" y2="276" stroke="#5b6470" marker-end="url(#arrow)"/>
+
+  <text x="440" y="506" text-anchor="middle" font-size="12" fill="#3a4149">surface → collapse → verify on held-out terms → classify → Congress → certificate</text>
+  <text x="440" y="524" text-anchor="middle" font-size="11" fill="#8a9099">the only network is the operator-directed grower, and only when you run it</text>
+</svg>

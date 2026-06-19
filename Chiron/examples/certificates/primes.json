@@ -1,0 +1,21 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "machine_view": {
+    "domain": "numeric",
+    "model_class": "incompressible",
+    "family_fingerprint": "51c6aef49669b32d",
+    "generator_fingerprint": "790127759810edf2",
+    "mdl_margin_bits": 0.0,
+    "surface_bits": 108.9,
+    "model_bits": 108.9,
+    "residual_kind": "competing_generator"
+  },
+  "human_view": {
+    "what_was_discovered": "CHIRON found no generator it could verify; it declines, honestly.",
+    "why_believed": "No exact model in the hypothesis class reproduces this sequence (honest negative).",
+    "what_would_falsify": "Any simple rule that predicts the unseen continuation would refute the decline.",
+    "residual": "generator explains ~29%, residual ~71% (competing_generator).",
+    "confidence": "n/a (declined)"
+  }
+}

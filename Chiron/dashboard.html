@@ -143,6 +143,15 @@
       <p class="lead">A labeled set across families — recover the known generators with zero false-verify on controls.</p>
       <button class="btn ghost" onclick="runGauntlet()">Run the gauntlet</button>
       <div id="gauntlet" style="margin-top:12px"></div></div>
+    <div class="card"><h3>Evaluation — measured, reproducible</h3>
+      <p class="lead">Offline, deterministic, scored for the only failure that counts: claiming a rule it cannot predict.</p>
+      <div class="kv"><b>OEIS-core recovered</b><span>22 / 29 · 0 false positives</span></div>
+      <div class="kv"><b>Classical ciphers</b><span>42 / 44 ciphertext-only</span></div>
+      <div class="kv"><b>Adversarial + fuzz</b><span>corrupted inputs abstain · 0 false-verify across ~5,070 cases</span></div>
+      <pre style="white-space:pre-wrap;font-size:12px;opacity:.85;margin-top:10px">python3 benchmark.py
+python3 compare.py
+python3 trace.py "1 1 2 3 5 8 13"
+python3 verify.py</pre></div>
   </section>
   <!-- SYSTEM -->
   <section id="system" class="tab">

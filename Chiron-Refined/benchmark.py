@@ -335,6 +335,69 @@ def run_ciphers():
     }
 
 
+def run_robustness():
+    """Adversarial inputs. The trust test is the false-positive count: corrupted
+    or noisy sequences must ABSTAIN, never claim a wrong rule; prose must not be
+    coerced into a numeric law; code collapses to its structural skeleton."""
+    rows = []
+    fp = abstained = recovered = 0
+    sq = [i * i for i in range(14)]
+    fib = _fib(14, 0, 1)
+    geo = [3 * 2 ** i for i in range(14)]
+
+    def corrupt(s, idx, delta):
+        c = s[:]
+        c[idx] += delta
+        return c
+
+    adversarial = [
+        ("squares, one term flipped", corrupt(sq, 6, 1)),
+        ("Fibonacci, one term flipped", corrupt(fib, 7, 2)),
+        ("geometric, one term flipped", corrupt(geo, 5, -1)),
+        ("squares, two terms noised", corrupt(corrupt(sq, 3, 1), 9, -2)),
+    ]
+    for name, s in adversarial:
+        held, train = s[-HOLDOUT:], s[:-HOLDOUT]
+        verified, predicted = False, None
+        try:
+            inv = collapse(train)
+            verified = bool(inv.verified)
+            if verified:
+                predicted = list(inv.predict(len(s))[-HOLDOUT:])
+        except Exception:
+            verified = False
+        if verified and predicted is not None and all(
+                _terms_equal(p, h) for p, h in zip(predicted, held)):
+            recovered += 1
+            outcome = "recovered (the perturbed input was itself exact)"
+        elif verified:
+            fp += 1
+            outcome = "FALSE_POSITIVE"
+        else:
+            abstained += 1
+            outcome = "abstained (correct — refused to fit corruption)"
+        rows.append({"case": name, "outcome": outcome})
+
+    prose = ("The quick brown fox jumps over the lazy dog and then naps in the "
+             "warm afternoon sun while the river drifts slowly past the mill.")
+    pinv = collapse(prose)
+    prose_ok = (pinv.domain != "numeric")
+    rows.append({"case": "english prose",
+                 "outcome": "structure '%s' — %s" % (
+                     pinv.model_class, "not coerced into a numeric law"
+                     if prose_ok else "WARNING: numeric law claimed")})
+
+    src = "def f(x):\n    y = x + 1\n    return y * 2\n"
+    cinv = collapse({"code": src})
+    rows.append({"case": "python source",
+                 "outcome": "structure '%s', verified=%s (relabel-invariant skeleton)" % (
+                     cinv.model_class, bool(cinv.verified))})
+
+    return {"adversarial_false_positives": fp, "abstained": abstained,
+            "recovered_as_exact": recovered, "prose_held_as_nonnumeric": bool(prose_ok),
+            "rows": rows}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--json", action="store_true", help="machine-readable output")
@@ -343,16 +406,18 @@ def main():
 
     seqs = run_sequences()
     ciphers = run_ciphers()
+    robustness = run_robustness()
     gauntlet = run_gauntlet()
     fuzz = fuzz_test(args.fuzz, seed=1) if args.fuzz else None
 
     false_positives = (
         seqs["chiron"]["false_positive"]
+        + robustness["adversarial_false_positives"]
         + gauntlet["false_verify"]
         + (fuzz["false_verify_shuffled"] if fuzz else 0)
     )
     report = {
-        "sequences": seqs, "ciphers": ciphers,
+        "sequences": seqs, "ciphers": ciphers, "robustness": robustness,
         "gauntlet": gauntlet, "fuzz": fuzz,
         "false_positives_total": false_positives,
         "verdict": "PASS" if false_positives == 0 else "FALSE_POSITIVE_DETECTED",
@@ -389,6 +454,13 @@ def main():
         "%s %d/%d" % (m, v["cracked"], v["of"]) for m, v in c["by_method"].items()))
     if miss:
         print("  (incomplete schemes: %s)" % ", ".join(miss))
+
+    r = robustness
+    print("\nADVERSARIAL / ROBUSTNESS  (corrupted must abstain; prose/code handled honestly)")
+    print("  corrupted/noisy sequences: %d abstained, %d false positives"
+          % (r["abstained"], r["adversarial_false_positives"]))
+    for row in r["rows"]:
+        print("    - %-28s %s" % (row["case"], row["outcome"]))
 
     print("\nCORROBORATION (embedded in the engine)")
     g = gauntlet

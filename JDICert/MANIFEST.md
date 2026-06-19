@@ -36,7 +36,7 @@ Total deliverable: 15,467 lines across 7 files.
 |--------|-------|
 | Total articles | 150 |
 | Substantive predicate families | 7 (distinction, proportionality, precaution, authority, evidentiary, protected_objects, actuators_specific) |
-| Coverage areas | High-stakes autonomy core IHL/LOAC, US UCMJ/MEJA/High-stakes operation Crimes Act/JAG/CCM, ICC Elements, Lieber Code, San Remo Maritime, HPCR Air/Actuator, AFI 11-202V3, AFI 13-1AOC V3, AFDP 3-60, JP 3-60, JP 3-09, NWP 3-32, NATOPS, AR 27-1, FM 27-10, full Geneva quartet + protocols, CCW Protocols I-V, UNCLOS, full ICRC CIHL Rules 1-71/158, ICJ Nuclear Opinion, ICTY Tadic, ICTR Akayesu, FISA, FRE 401/403/702/803(6)/803(8)/901/902/1002, FRCP 26(a)(2)(B), Tallinn Manual 2.0, Outer Space Treaty, EO 14179, OMB M-24-10, ICCPR Art 6, High-stakes operation Powers Resolution, DoD Manual 5240.01, SROE CJCSI 3121.01B, EU AI Act, NIST AI RMF, NIST AI 100-2 and 600-1, ISO/IEC 42001 and 23894, IEEE 7000 and 7001, plus regional AI frameworks |
+| Coverage areas | High-stakes autonomy core IHL/LOAC, US UCMJ/MEJA/sector compliance regulation/JAG/CCM, ICC Elements, Lieber Code, San Remo Maritime, HPCR Air/Actuator, AFI 11-202V3, AFI 13-1AOC V3, AFDP 3-60, JP 3-60, JP 3-09, NWP 3-32, NATOPS, AR 27-1, FM 27-10, full Geneva quartet + protocols, CCW Protocols I-V, UNCLOS, full ICRC CIHL Rules 1-71/158, ICJ Nuclear Opinion, ICTY Tadic, ICTR Akayesu, FISA, FRE 401/403/702/803(6)/803(8)/901/902/1002, FRCP 26(a)(2)(B), Tallinn Manual 2.0, Outer Space Treaty, EO 14179, OMB M-24-10, ICCPR Art 6, High-stakes operation Powers Resolution, DoD Manual 5240.01, Soperating policy CJCSI 3121.01B, EU AI Act, NIST AI RMF, NIST AI 100-2 and 600-1, ISO/IEC 42001 and 23894, IEEE 7000 and 7001, plus regional AI frameworks |
 
 ---
 
