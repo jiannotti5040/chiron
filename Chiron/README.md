@@ -2,6 +2,13 @@
 
 **Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
 
+![offline](https://img.shields.io/badge/network-offline%20by%20default-1f6feb)
+![core deps](https://img.shields.io/badge/core-zero%20dependencies-2ea043)
+![python](https://img.shields.io/badge/python-3.8%2B-3776ab)
+![self-test](https://img.shields.io/badge/self--test-green-2ea043)
+![false positives](https://img.shields.io/badge/false%20positives-0%20%2F%20~5070-2ea043)
+![license](https://img.shields.io/badge/license-proprietary-cf222e)
+
 Chiron is one portable, offline, deterministic, self-certifying organism whose
 entire purpose is the work nobody has automated: taking an ambiguous,
 uncooperative, codified surface and recovering the immutable rule beneath it —
@@ -84,6 +91,20 @@ own language, or re-voicing the same generator into a new vocabulary — and rep
 round-trip fidelity. Each digested work carries its **author** through the codec,
 distinct from the owner who signs the artifact: Chiron speaks in the language of
 what it consumed, and knows whose language it is.
+
+## In 60 seconds
+
+```bash
+python3 chiron.py collapse 1 2 4 8 16 32 64   # -> geometric (ratio 2), verified; predicts 128, 256, ...
+python3 chiron.py solve "WKLV LV D VHFUHW"    # -> caesar_shift_3: THIS IS A SECRET
+python3 trace.py "1 1 2 3 5 8 13"             # -> the ranked candidates, the winner, the proof
+```
+
+**Why not just fit a curve, or run gzip?** A curve-fit never says "I don't know" —
+it returns a confident wrong answer on anything it cannot actually model; gzip
+shrinks the bytes but cannot tell you the rule or predict the next term. Chiron
+returns the **exact** generator with a held-out proof, or an honest abstention —
+compared head-to-head in `compare.py`, explained in [WHY_CHIRON.md](WHY_CHIRON.md).
 
 ## Running it
 
@@ -309,6 +330,28 @@ L5 no network / no external inference (the core is scanned to prove it; only the
 President submodule is network-capable, by design and off by default) · L6
 determinism · L7 unbroken provenance · L8 bounded self-modification. A gate also
 confirms Veritas and President are natively integrated with no exec-of-string.
+
+## Evaluation & honest limits
+
+Beyond `selftest`, three reproducible, offline tools let anyone check the claims:
+
+```bash
+python3 benchmark.py      # OEIS-core + ciphers + adversarial, scored for FALSE POSITIVES
+python3 compare.py        # head-to-head vs gzip / bz2 / lzma (structure recovery vs byte compression)
+python3 trace.py "1 1 2 3 5 8 13"   # the full ranked-candidate reasoning path, with verification
+python3 discover.py                  # cross-domain twins: one proven rule across domains
+python3 formal_check.py             # property-based soundness check (see FORMAL.md)
+python3 mine_code.py                # code mining: structural skeletons + clones
+```
+
+Measured: **22/29** OEIS-core sequences recovered (all 22 in-scope), **42/44**
+classical ciphers cracked ciphertext-only, and **0 false positives** across
+~5,070 scored cases — corrupted inputs abstain rather than fabricate a rule, and
+the naive polynomial baseline that cannot abstain is confidently wrong on 18 of
+the same 29. Where the engine stops — prose yield, non-closed-form sequences,
+what "verified" does and does not mean, and what is not externally audited — is
+documented plainly in **[WHY_CHIRON.md](WHY_CHIRON.md)** and
+**[KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md)**.
 
 ## Verifying
 

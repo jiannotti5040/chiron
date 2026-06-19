@@ -20,7 +20,7 @@ Three files, single domain (autonomous high-stakes decisions):
 |---|---|---|
 | `cert_engine.py` | The monolithic engine. Activation protocol, UMA/RSLS dynamics, LexGuard four-gate, K/U/Ω partition, Mystery Taxonomy + reduction operators, emotive substrate, world-model set, hallucination defeat (Friston-aligned), 14+ section certificate format, Merkle ledger, Belief Delta, the `certify()` furnace, embedded 256-test suite, holographic continuity theory primitives, governance-as-invariant tracking, Daubert/FRE 702/FRCP 26 admissibility analyzer, attestation tokens, doctrine ledger, cross-institution merge, Kuramoto consensus, adversarial probe. | ~11,200 |
 | `primer.py` | Loader / preprocessor / adapter. Three modes: LLM-assisted, local-deterministic, direct-JSON. Pre-clusters K/U/Ω, deduplicates K-facts, runs Mystery Taxonomy classification, computes content hashes, invokes `cert_engine.certify()`. | ~800 |
-| `intel_standardizer.txt` | LLM prompt that ingests raw data feeds (multi-INT JSON, SIGINT, HUMINT, ISR descriptors, geospatial coordinates, free-text) and emits TargetContext JSON. Provider-agnostic. | ~280 |
+| `intel_standardizer.txt` | LLM prompt that ingests raw data feeds (multi-source structured JSON, signal feeds, human reports, sensor descriptors, geospatial coordinates, free-text) and emits DecisionContext JSON. Provider-agnostic. | ~280 |
 
 ---
 
@@ -65,13 +65,13 @@ Lower fidelity than Mode A. Emits more `XI_IGNORANCE` U-elements. Useful for dis
 python primer.py --mode direct --json-file target.json > certificate.json
 ```
 
-Used when an upstream system (the upstream analytics pipeline / Gotham / AIP / any platform) has already produced standardized output.
+Used when an upstream system (the upstream analytics pipeline / third-party analytics platforms / any platform) has already produced standardized output.
 
 ### Direct engine invocation (Python)
 
 ```python
 import cert_engine
-ctx = cert_engine.build_validation_context()  # or your own TargetContext
+ctx = cert_engine.build_validation_context()  # or your own DecisionContext
 cert = cert_engine.certify(ctx)
 print(cert.verdict)                # CERTIFIED_GO | ESCALATE_HUMAN | REJECT_INPUT
 print(cert.merkle_root())          # 64-char SHA-256 hex
@@ -82,7 +82,7 @@ print(cert.to_dict())              # full structured certificate
 
 ## What the engine does
 
-The `certify()` function is the **epistemic furnace**. It accepts a `TargetContext`, propagates competing world-models (`Hazard_Confirmed`, `Bystander_Present`, `Sensor_Spoof`, `Data_Lag`, `Null_Action`) through the UMA/RSLS dynamics, applies the LexGuard four-gate, defeats hallucinations through Friston-style free-energy injection, computes the Belief Delta (ΔΘ, ΔE, CP), and emits a Merkle-bound `Certificate`.
+The `certify()` function is the **epistemic furnace**. It accepts a `DecisionContext`, propagates competing world-models (`Hazard_Confirmed`, `Bystander_Present`, `Sensor_Spoof`, `Data_Lag`, `Null_Action`) through the UMA/RSLS dynamics, applies the LexGuard four-gate, defeats hallucinations through Friston-style free-energy injection, computes the Belief Delta (ΔΘ, ΔE, CP), and emits a Merkle-bound `Certificate`.
 
 The certificate carries 18 sections by default, including:
 
@@ -91,7 +91,7 @@ The certificate carries 18 sections by default, including:
 - Simulated Sequence (per-world-model propagation, λ_max, cone aperture)
 - UMA Generative Physics (Hamiltonian, MSR response, Einstein residual, Lindblad density matrix)
 - Counterfactual Robustness (eight perturbation types per trajectory)
-- Regulatory Compliance Matrix (90+ articles checked: Geneva, Hague, ICRC CIHL, UN GGE LAWS, DoDD, UCMJ, MEJA, High-stakes operation Crimes Act, JAG, ICC Elements, San Remo, HPCR, EU AI Act, NIST RMF, ISO/IEC, FRE, FRCP)
+- Regulatory Compliance Matrix (90+ articles checked: EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001, IEEE 7000-series, FRE, FRCP)
 - Emotive Substrate Analysis (G, V, L, D + augmentations + cohort decomposition)
 - Hallucination Cross-Check (six mechanisms, Friston KL divergence)
 - Reasoning Chain (narrative + Lean 4 proof sketches)
@@ -141,7 +141,7 @@ The validation pillar exercises the engine end-to-end on a synthetic high-stakes
 
 ## Intended use
 
-- **Validator pattern.** Sits downstream of any proprietary upstream system (the upstream analytics pipeline, Gotham, AIP, generic LLM stack). Ingests the upstream's output as `TargetContext`. Validates against ROE, regulatory corpus, counterfactual pressure, and invariants. Authorizes, conditions, or aborts. Independent oversight that does not require knowledge of the upstream's internals.
+- **Validator pattern.** Sits downstream of any proprietary upstream system (the upstream analytics pipeline, third-party analytics platforms). Ingests the upstream's output as `DecisionContext`. Validates against operating policy, regulatory corpus, counterfactual pressure, and invariants. Authorizes, conditions, or aborts. Independent oversight that does not require knowledge of the upstream's internals.
 
 - **Court-deployable artifact.** The certificate carries an explicit Daubert / FRE 702 / FRCP 26 admissibility analysis section. It is designed to survive scrutiny as expert testimony (with engine author proffered as expert), as a business record under FRE 803(6) with FRE 901/902 authentication, or under FRE 201 judicial notice for uncontested primitives.
 
@@ -157,13 +157,13 @@ The validation pillar exercises the engine end-to-end on a synthetic high-stakes
 - Use as a substitute for human judgment where IEEE 7009-2024 "appropriate human judgment" mandates a human-in-the-loop role.
 - Use in any context where the operator is unwilling to be the named countersignatory of the certificate.
 
-The engine is offensive oversight; it is not offensive automation. The certificate is the deliberation, not the action.
+The engine is independent oversight; it is not automated action. The certificate is the deliberation, not the action.
 
 ---
 
 ## What's in `intel_standardizer.txt`
 
-A standalone LLM prompt that any frontier model can execute. It ingests arbitrary raw data feeds (multi-INT JSON, SIGINT, HUMINT, ISR sensor descriptors, geospatial coordinates in DMS/DD/MGRS/UTM, time stamps, track histories, identification probability distributions, ROE annotations, authority citations, free-text operator notes, partial structured data, contradictory fields, sensor confidence scores, pedigree chains, raw image classifier outputs) and emits a single strictly-formatted JSON object conforming to the `TargetContext` schema. The output is fed into `primer.py` (Mode A) or directly into `cert_engine.certify()` (Mode C).
+A standalone LLM prompt that any frontier model can execute. It ingests arbitrary raw data feeds (multi-source structured JSON, signal feeds, human reports, sensor descriptors, geospatial coordinates in DMS/DD/MGRS/UTM, time stamps, track histories, identification probability distributions, operating-policy annotations, authority citations, free-text operator notes, partial structured data, contradictory fields, sensor confidence scores, pedigree chains, raw image classifier outputs) and emits a single strictly-formatted JSON object conforming to the `DecisionContext` schema. The output is fed into `primer.py` (Mode A) or directly into `cert_engine.certify()` (Mode C).
 
 ---
 

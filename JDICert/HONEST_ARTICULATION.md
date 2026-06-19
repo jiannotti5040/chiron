@@ -46,7 +46,7 @@ A 12,911-line Python certification engine for high-stakes autonomous detect–de
 
 **Not a fully shippable enterprise deployment.** It is a single-developer artifact facilitated by a frontier LLM. The stripped-down three-file architecture is by design (the developer's intent and the legal model). To be enterprise-ready it would need: persistent doctrine ledger storage, multi-tenant authorization, telemetry pipeline integration, hardened secret management (Hashicorp Vault / Azure Key Vault for the attestation HMAC key, escalating to HSM-backed ECDSA for production), CI/CD with security scanning, formal verification of the load-bearing primitives in Lean or Coq, integration test harness with actual the upstream analytics pipeline/Gotham/AIP downstream test fixtures, and adversarial red team in a non-synthetic environment. The artifact is the prototype of a production system, not the production system.
 
-**Not a replacement for human judgment.** It is a sharpening instrument under time pressure. The operator countersignature is what completes the certification cycle. The engine is offensive oversight; it does not authorize automation.
+**Not a replacement for human judgment.** It is a sharpening instrument under time pressure. The operator countersignature is what completes the certification cycle. The engine is independent oversight; it does not authorize automation.
 
 **Not a moral authority.** It checks against a regulatory corpus that encodes what humans have decided counts as compliance. The engine evaluates the proposed action against that corpus. The engine does not invent ethics.
 

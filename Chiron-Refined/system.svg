@@ -1,97 +1,72 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 660" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+<svg viewBox="0 0 920 460" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
   <defs>
-    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0L10 5L0 10z" fill="#5cc8ff"/>
-    </marker>
-    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0d1320"/><stop offset="1" stop-color="#080b11"/>
-    </linearGradient>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5b6470"/></marker>
+    <marker id="ag" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#1a7f37"/></marker>
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#9a6700"/></marker>
   </defs>
-  <rect x="0" y="0" width="1060" height="660" rx="18" fill="url(#g1)"/>
-  <text x="32" y="42" fill="#5cc8ff" font-size="22" font-weight="700" letter-spacing="3">CHIRON — system</text>
-  <text x="32" y="66" fill="#8593a8" font-size="13">Reads anything codified → recovers the exact rule → proves it → files it into a memory that keeps growing. One file. Offline core.</text>
+  <rect width="920" height="460" fill="#ffffff"/>
+  <text x="460" y="32" text-anchor="middle" font-size="21" font-weight="700" fill="#1b1f24">How Chiron works</text>
+  <text x="460" y="53" text-anchor="middle" font-size="12.5" fill="#5b6470">recover the exact rule beneath a surface — prove it, or abstain. Offline · deterministic · exact arithmetic</text>
 
-  <!-- SOURCES -->
-  <rect x="32" y="92" width="300" height="96" rx="12" fill="#10151f" stroke="#212b3b"/>
-  <text x="48" y="116" fill="#c4cedd" font-size="13" font-weight="700">SOURCES (operator-directed)</text>
-  <text x="48" y="140" fill="#8593a8" font-size="12.5">• Wikipedia (keyless)</text>
-  <text x="48" y="160" fill="#8593a8" font-size="12.5">• any website  (HTML → text, follows links)</text>
-  <text x="48" y="180" fill="#8593a8" font-size="12.5">• any JSON API  (configurable)</text>
+  <rect x="24" y="92" width="158" height="120" rx="9" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="103" y="114" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1b1f24">1 · Surface</text>
+  <text x="103" y="137" text-anchor="middle" font-size="11.5" fill="#3a4149">integer sequence</text>
+  <text x="103" y="155" text-anchor="middle" font-size="11.5" fill="#3a4149">ciphertext · string</text>
+  <text x="103" y="173" text-anchor="middle" font-size="11.5" fill="#3a4149">graph · code</text>
+  <text x="103" y="195" text-anchor="middle" font-size="11" fill="#8a9099">anything codified</text>
 
-  <!-- GROWER -->
-  <rect x="380" y="82" width="300" height="116" rx="12" fill="#0e1a16" stroke="#2b5444"/>
-  <text x="396" y="106" fill="#7ee0b8" font-size="13" font-weight="700">GROWER · chiron_grow.py</text>
-  <text x="396" y="128" fill="#a9b6c8" font-size="12.5">shared engine, drives any folder</text>
-  <rect x="396" y="140" width="128" height="44" rx="8" fill="#10151f" stroke="#243248"/>
-  <text x="408" y="160" fill="#c4cedd" font-size="12" font-weight="700">grow-public</text>
-  <text x="408" y="176" fill="#8593a8" font-size="11">open · via Pull Request</text>
-  <rect x="536" y="140" width="128" height="44" rx="8" fill="#10151f" stroke="#243248"/>
-  <text x="548" y="160" fill="#c4cedd" font-size="12" font-weight="700">grow-private</text>
-  <text x="548" y="176" fill="#8593a8" font-size="11">operator only · crescere</text>
+  <rect x="214" y="92" width="170" height="120" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+  <text x="299" y="114" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1f4fa3">2 · Collapse</text>
+  <text x="299" y="137" text-anchor="middle" font-size="11.5" fill="#3a4149">search hypothesis</text>
+  <text x="299" y="155" text-anchor="middle" font-size="11.5" fill="#3a4149">classes; pick the</text>
+  <text x="299" y="173" text-anchor="middle" font-size="11.5" fill="#3a4149">minimal rule (MDL)</text>
+  <text x="299" y="195" text-anchor="middle" font-size="11" fill="#8a9099">exact fractions</text>
 
-  <!-- CORE -->
-  <rect x="728" y="92" width="300" height="200" rx="12" fill="#10151f" stroke="#5cc8ff" stroke-opacity="0.5"/>
-  <text x="744" y="116" fill="#5cc8ff" font-size="13" font-weight="700">CHIRON MONOLITH · chiron.py</text>
-  <text x="744" y="136" fill="#8593a8" font-size="11.5">offline · deterministic · one file</text>
-  <rect x="744" y="148" width="268" height="30" rx="7" fill="#0e1a16" stroke="#2b5444"/>
-  <text x="756" y="168" fill="#7ee0b8" font-size="12">collapse  → the rule beneath a surface</text>
-  <rect x="744" y="182" width="268" height="30" rx="7" fill="#0d1320" stroke="#243248"/>
-  <text x="756" y="202" fill="#9ad8ff" font-size="12">articulate → speak the rule back up (codec)</text>
-  <rect x="744" y="216" width="268" height="30" rx="7" fill="#0d1320" stroke="#243248"/>
-  <text x="756" y="236" fill="#c4cedd" font-size="11.5">JDICert · Candor · Twin/Transfer · President</text>
-  <rect x="744" y="250" width="268" height="30" rx="7" fill="#16130c" stroke="#5a4a26"/>
-  <text x="756" y="270" fill="#ffcf86" font-size="11.5">verify on held-out terms — exact, or rejected</text>
+  <rect x="416" y="92" width="170" height="120" rx="9" fill="#eef3fb" stroke="#1f6feb" stroke-width="2"/>
+  <text x="501" y="114" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1f4fa3">3 · Verify</text>
+  <text x="501" y="139" text-anchor="middle" font-size="11.5" fill="#3a4149">predict held-out</text>
+  <text x="501" y="157" text-anchor="middle" font-size="11.5" fill="#3a4149">terms it never saw</text>
+  <text x="501" y="179" text-anchor="middle" font-size="11" fill="#8a9099">exact equality,</text>
+  <text x="501" y="194" text-anchor="middle" font-size="11" fill="#8a9099">not tolerance</text>
 
-  <!-- CONGRESS -->
-  <rect x="380" y="300" width="648" height="150" rx="12" fill="#10151f" stroke="#212b3b"/>
-  <text x="396" y="324" fill="#b69cff" font-size="13" font-weight="700">CONGRESS — the growing memory  (chiron_memory.json)</text>
-  <rect x="396" y="338" width="196" height="96" rx="8" fill="#0d1320" stroke="#243248"/>
-  <text x="408" y="360" fill="#c4cedd" font-size="12" font-weight="700">domains (by subject)</text>
-  <text x="408" y="380" fill="#8593a8" font-size="11.5">mathematics · law · biology…</text>
-  <text x="408" y="402" fill="#8593a8" font-size="11.5">tiered: raw → compressed →</text>
-  <text x="408" y="418" fill="#8593a8" font-size="11.5">invariant → generator</text>
-  <rect x="604" y="338" width="196" height="96" rx="8" fill="#0e1a16" stroke="#2b5444"/>
-  <text x="616" y="360" fill="#7ee0b8" font-size="12" font-weight="700">law library (integral)</text>
-  <text x="616" y="380" fill="#8593a8" font-size="11.5">verified, reusable rules</text>
-  <text x="616" y="402" fill="#8593a8" font-size="11.5">+ concepts (cross-domain)</text>
-  <text x="616" y="418" fill="#8593a8" font-size="11.5">pool across nodes (idempotent)</text>
-  <rect x="812" y="338" width="200" height="96" rx="8" fill="#0d1320" stroke="#243248"/>
-  <text x="824" y="360" fill="#c4cedd" font-size="12" font-weight="700">provenance</text>
-  <text x="824" y="380" fill="#8593a8" font-size="11.5">ingested-sources ledger</text>
-  <text x="824" y="402" fill="#8593a8" font-size="11.5">owner-signed Merkle root</text>
-  <text x="824" y="418" fill="#8593a8" font-size="11.5">auto-compacts, stays portable</text>
+  <rect x="636" y="60" width="172" height="86" rx="9" fill="#eaf6ee" stroke="#2ea043"/>
+  <text x="722" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#1a7f37">4 · Certify &amp; file</text>
+  <text x="722" y="103" text-anchor="middle" font-size="11.5" fill="#3a4149">signed certificate;</text>
+  <text x="722" y="120" text-anchor="middle" font-size="11.5" fill="#3a4149">integral law / general</text>
+  <text x="722" y="137" text-anchor="middle" font-size="11.5" fill="#3a4149">knowledge, by subject</text>
 
-  <!-- SELF-GROWTH -->
-  <rect x="32" y="300" width="300" height="150" rx="12" fill="#16101f" stroke="#3a2b58"/>
-  <text x="48" y="324" fill="#b69cff" font-size="13" font-weight="700">SELF-GROWTH (bounded)</text>
-  <text x="48" y="348" fill="#8593a8" font-size="12">1 · grow concepts — from proof only</text>
-  <text x="48" y="370" fill="#8593a8" font-size="12">2 · propose code change — quarantined</text>
-  <text x="48" y="392" fill="#8593a8" font-size="12">3 · apply only if backup taken AND</text>
-  <text x="62" y="409" fill="#8593a8" font-size="12">selftest stays GREEN — else refused</text>
-  <text x="48" y="433" fill="#7ee0b8" font-size="11.5">grows itself; cannot take anything away</text>
+  <rect x="636" y="160" width="172" height="64" rx="9" fill="#fdf3e6" stroke="#bf8700"/>
+  <text x="722" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="#9a6700">Abstain</text>
+  <text x="722" y="205" text-anchor="middle" font-size="11.5" fill="#3a4149">classified residual —</text>
+  <text x="722" y="220" text-anchor="middle" font-size="11.5" fill="#3a4149">no rule fabricated</text>
 
-  <!-- OUTPUTS -->
-  <rect x="32" y="492" width="996" height="128" rx="12" fill="#0c111a" stroke="#212b3b"/>
-  <text x="48" y="516" fill="#c4cedd" font-size="13" font-weight="700">OUTPUTS</text>
-  <rect x="48" y="528" width="300" height="76" rx="8" fill="#10151f" stroke="#243248"/>
-  <text x="62" y="550" fill="#9ad8ff" font-size="12" font-weight="700">offline operator console</text>
-  <text x="62" y="570" fill="#8593a8" font-size="11.5">python3 chiron.py serve</text>
-  <text x="62" y="588" fill="#8593a8" font-size="11.5">analyze · browse · growth · glossary</text>
-  <rect x="364" y="528" width="300" height="76" rx="8" fill="#10151f" stroke="#243248"/>
-  <text x="378" y="550" fill="#7ee0b8" font-size="12" font-weight="700">stakeholder certificate</text>
-  <text x="378" y="570" fill="#8593a8" font-size="11.5">what was found · why believed</text>
-  <text x="378" y="588" fill="#8593a8" font-size="11.5">· what would falsify it</text>
-  <rect x="680" y="528" width="332" height="76" rx="8" fill="#10151f" stroke="#243248"/>
-  <text x="694" y="550" fill="#c4cedd" font-size="12" font-weight="700">persisted Congress</text>
-  <text x="694" y="570" fill="#8593a8" font-size="11.5">GitHub (public grow) + local (private)</text>
-  <text x="694" y="588" fill="#8593a8" font-size="11.5">saved locally AND pushed each fill</text>
+  <rect x="214" y="300" width="372" height="74" rx="9" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="400" y="325" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1b1f24">5 · Congress — growable memory</text>
+  <text x="400" y="346" text-anchor="middle" font-size="11.5" fill="#3a4149">verified laws · domains · provenance · owner-signed Merkle root</text>
+  <text x="400" y="363" text-anchor="middle" font-size="11" fill="#8a9099">pools across instances without trust · compacts to stay portable</text>
 
-  <!-- arrows -->
-  <line x1="332" y1="140" x2="378" y2="140" stroke="#5cc8ff" stroke-width="2" marker-end="url(#ar)"/>
-  <line x1="680" y1="140" x2="726" y2="140" stroke="#5cc8ff" stroke-width="2" marker-end="url(#ar)"/>
-  <line x1="878" y1="292" x2="760" y2="338" stroke="#5cc8ff" stroke-width="2" marker-end="url(#ar)"/>
-  <line x1="530" y1="198" x2="600" y2="300" stroke="#5cc8ff" stroke-width="2" marker-end="url(#ar)"/>
-  <line x1="332" y1="375" x2="378" y2="375" stroke="#b69cff" stroke-width="2" marker-end="url(#ar)"/>
-  <line x1="700" y1="450" x2="700" y2="490" stroke="#5cc8ff" stroke-width="2" marker-end="url(#ar)"/>
-  <text x="540" y="270" fill="#5cc8ff" font-size="10.5" opacity="0.8">assimilate</text>
+  <rect x="636" y="300" width="172" height="74" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+  <text x="722" y="325" text-anchor="middle" font-size="13" font-weight="700" fill="#1f4fa3">6 · Reuse &amp; grow</text>
+  <text x="722" y="346" text-anchor="middle" font-size="11.5" fill="#3a4149">recognize on sight,</text>
+  <text x="722" y="362" text-anchor="middle" font-size="11.5" fill="#3a4149">articulate, cross-domain</text>
+
+  <line x1="182" y1="152" x2="212" y2="152" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="384" y1="152" x2="414" y2="152" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="586" y1="130" x2="634" y2="103" stroke="#1a7f37" stroke-width="1.5" marker-end="url(#ag)"/>
+  <text x="612" y="112" font-size="10.5" fill="#1a7f37" font-weight="700">verified</text>
+  <line x1="586" y1="172" x2="634" y2="190" stroke="#9a6700" stroke-width="1.5" marker-end="url(#ar)"/>
+  <text x="598" y="184" font-size="10.5" fill="#9a6700" font-weight="700">no proof</text>
+
+  <line x1="722" y1="146" x2="722" y2="232" stroke="#5b6470" stroke-width="1.5"/>
+  <line x1="722" y1="232" x2="588" y2="232" stroke="#5b6470" stroke-width="1.5"/>
+  <line x1="430" y1="232" x2="430" y2="298" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="500" y="248" text-anchor="middle" font-size="10.5" fill="#8a9099">filed</text>
+  <line x1="586" y1="337" x2="634" y2="337" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="722" y1="298" x2="722" y2="270" stroke="#1f6feb" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="722" y1="270" x2="299" y2="270" stroke="#1f6feb" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="299" y1="270" x2="299" y2="214" stroke="#1f6feb" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#a)"/>
+  <text x="430" y="265" text-anchor="middle" font-size="10" fill="#1f6feb">known rules recognized, not re-earned</text>
+
+  <text x="460" y="420" text-anchor="middle" font-size="12.5" fill="#1b1f24" font-weight="700">Measured: 22/29 OEIS-core recovered · 42/44 ciphers · 0 false positives across ~5,070 cases</text>
+  <text x="460" y="440" text-anchor="middle" font-size="11" fill="#8a9099">the only network is the operator-directed grower, and only when you run it</text>
 </svg>

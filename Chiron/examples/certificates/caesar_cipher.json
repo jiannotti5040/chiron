@@ -1,0 +1,41 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "machine_view": {
+    "domain": "string",
+    "model_class": "incompressible",
+    "family_fingerprint": "afe3213705f04dd5",
+    "generator_fingerprint": "322152b9e9a92920",
+    "mdl_margin_bits": 0.0,
+    "surface_bits": 93.38,
+    "model_bits": 93.38,
+    "residual_kind": "competing_generator"
+  },
+  "human_view": {
+    "what_was_discovered": "CHIRON found no generator it could verify; it declines, honestly.",
+    "why_believed": "No structural model found (honest negative).",
+    "what_would_falsify": "Any simple rule that predicts the unseen continuation would refute the decline.",
+    "residual": "generator explains ~14%, residual ~86% (competing_generator).",
+    "confidence": "n/a (declined)"
+  },
+  "decoding": {
+    "method": "caesar_shift_3",
+    "plaintext": "THIS IS A SECRET MESSAGE",
+    "confidence": 1.32,
+    "candidates_tried": 29,
+    "runners_up": [
+      {
+        "method": "caesar_shift_7",
+        "plaintext": "PDEO EO W OAYNAP IAOOWCA"
+      },
+      {
+        "method": "rot13",
+        "plaintext": "JXYI YI Q IUSHUJ CUIIQWU"
+      },
+      {
+        "method": "caesar_shift_21",
+        "plaintext": "BPQA QA I AMKZMB UMAAIOM"
+      }
+    ]
+  }
+}

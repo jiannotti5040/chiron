@@ -12,6 +12,8 @@ chiron_checkpoint_*.json
 grow.log
 nohup.out
 chiron_control.json
+chiron_grow_state.json
+*_grow_state.json
 chiron_fastops.so
 *.so
 proposals/

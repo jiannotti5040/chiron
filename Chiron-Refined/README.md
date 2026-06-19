@@ -2,6 +2,13 @@
 
 **Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
 
+![offline](https://img.shields.io/badge/network-offline%20by%20default-1f6feb)
+![core deps](https://img.shields.io/badge/core-zero%20dependencies-2ea043)
+![python](https://img.shields.io/badge/python-3.8%2B-3776ab)
+![self-test](https://img.shields.io/badge/self--test-green-2ea043)
+![false positives](https://img.shields.io/badge/false%20positives-0%20%2F%20~5070-2ea043)
+![license](https://img.shields.io/badge/license-proprietary-cf222e)
+
 One portable, offline, deterministic, self-certifying engine that does the work
 nobody has automated: take an ambiguous, codified surface and **recover the exact
 rule beneath it** — not match it, recover it — then **prove** the recovery and
@@ -26,6 +33,20 @@ Description Length** criterion, in **exact** `fractions.Fraction` arithmetic, an
 **verifies** it by predicting held-out terms exactly — equality, not tolerance.
 Whatever it cannot compress is returned as a **classified residual**, never hidden.
 Decoding is the same move: given a ciphertext, it recovers the cipher.
+
+## In 60 seconds
+
+```bash
+python3 chiron.py collapse 1 2 4 8 16 32 64   # -> geometric (ratio 2), verified; predicts 128, 256, ...
+python3 chiron.py solve "WKLV LV D VHFUHW"    # -> caesar_shift_3: THIS IS A SECRET
+python3 trace.py "1 1 2 3 5 8 13"             # -> the ranked candidates, the winner, the proof
+```
+
+**Why not just fit a curve, or run gzip?** A curve-fit never says "I don't know" —
+it returns a confident wrong answer on anything it cannot actually model; gzip
+shrinks the bytes but cannot tell you the rule or predict the next term. Chiron
+returns the **exact** generator with a held-out proof, or an honest abstention.
+See `compare.py` and [WHY_CHIRON.md](WHY_CHIRON.md).
 
 ## What it's made of (function, not names)
 
@@ -56,7 +77,12 @@ python3 chiron.py same-origin "1 2 3" :: "9 18 27"
 python3 chiron.py guide "1 1 2 3" --expect "5 8 13 21"   # DIRECTED: steer the search with the answer you expect
 python3 chiron.py recall "2 4 8 16 32" --memory chiron_memory.json   # is this rule already proven?
 python3 chiron.py compact --memory chiron_memory.json    # value-dense: distill the memory, keep the proofs
-python3 benchmark.py                          # reproducible benchmark: OEIS-core + ciphers, scored for false positives
+python3 benchmark.py                          # reproducible benchmark: OEIS-core + ciphers + adversarial, scored for false positives
+python3 compare.py                            # head-to-head vs gzip / bz2 / lzma
+python3 trace.py "1 1 2 3 5 8 13"             # the full ranked-candidate reasoning path
+python3 discover.py                           # cross-domain twins: one rule across numeric + string
+python3 mine_code.py                          # structural skeletons + clone detection over a codebase
+python3 formal_check.py                       # property-based soundness check (see FORMAL.md)
 ```
 
 **Directed recovery** lets the operator steer: give the terms you expect to come
@@ -89,6 +115,11 @@ One command, offline and deterministic — `python3 benchmark.py`:
 
 The number that matters is the **0**: across ~5,070 scored cases the engine never
 once claimed a rule it could not predict.
+
+Why it is built this way, and exactly where it stops — including the cases it
+fails — is in [WHY_CHIRON.md](WHY_CHIRON.md) and [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md).
+A comparison to conventional compression is in `compare.py`; the full reasoning
+path for any surface is in `trace.py`.
 
 It **grows**. One shared grower feeds it from any source — Wikipedia, any website,
 any JSON API, or the OEIS (structured integer sequences, where rule-recovery is

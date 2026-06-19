@@ -1,0 +1,21 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "machine_view": {
+    "domain": "numeric",
+    "model_class": "geometric",
+    "family_fingerprint": "cf5d4d8d97d4644e",
+    "generator_fingerprint": "b790e3ba50d3d3cc",
+    "mdl_margin_bits": 4.25,
+    "surface_bits": 108.96,
+    "model_bits": 13.01,
+    "residual_kind": "none"
+  },
+  "human_view": {
+    "what_was_discovered": "CHIRON recovered a 'geometric' generator and PROVED it by predicting held-out terms it never saw \u2014 exact equality, not a tolerance.",
+    "why_believed": "VERIFIED generator 'geometric'. Recovered in EXACT arithmetic from the first 7 terms, this rule reproduces every term and predicts all 2 held-out terms exactly (== , not a tolerance). Compresses 109 bits to 13; MDL margin to the next model is 4 bits.",
+    "what_would_falsify": "A single held-out term it failed to predict would break this.",
+    "residual": "the generator reproduces the surface exactly; no residual.",
+    "confidence": "high (held-out verified, exact)"
+  }
+}

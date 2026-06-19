@@ -1,0 +1,21 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "machine_view": {
+    "domain": "code",
+    "model_class": "ast_skeleton",
+    "family_fingerprint": "be1a1517801d50d8",
+    "generator_fingerprint": "feef780aa63b5dad",
+    "mdl_margin_bits": 0.0,
+    "surface_bits": 178.0,
+    "model_bits": 42.0,
+    "residual_kind": "none"
+  },
+  "human_view": {
+    "what_was_discovered": "CHIRON recovered a 'ast_skeleton' generator and PROVED it by predicting held-out terms it never saw \u2014 exact equality, not a tolerance.",
+    "why_believed": "Structure-only AST skeleton: 28 nodes (identifiers/literals abstracted). Same skeleton => clone through renaming/reformatting.",
+    "what_would_falsify": "A single held-out term it failed to predict would break this.",
+    "residual": "the generator reproduces the surface exactly; no residual.",
+    "confidence": "high (held-out verified, exact)"
+  }
+}

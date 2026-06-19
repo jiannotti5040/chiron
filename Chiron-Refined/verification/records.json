@@ -1,0 +1,312 @@
+{
+  "system": "CHIRON",
+  "commit": "0fb94f19f668a5bfdd97f9c6d1a653ecfacb125a",
+  "generated_utc": "2026-06-19T01:34:23Z",
+  "corpus_size": 12,
+  "result_digest": "94c54aa2201995eac7bf29bcdeb07ebb58ee08b68f1236eb001a421344cef78c",
+  "reproducible_same_version": true,
+  "records": [
+    {
+      "label": "constant",
+      "input": "5 5 5 5 5 5",
+      "generator": {
+        "model_class": "constant",
+        "params": {
+          "c": 5
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 10.32,
+        "surface_bits": 56.6,
+        "compression_ratio": 5.483
+      },
+      "fingerprint": "c0dff7c4498bd03d"
+    },
+    {
+      "label": "arithmetic",
+      "input": "3 7 11 15 19 23 27",
+      "generator": {
+        "model_class": "arithmetic",
+        "params": {
+          "newton_seeds": [
+            3,
+            4
+          ],
+          "degree": 1
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 19.51,
+        "surface_bits": 82.58,
+        "compression_ratio": 4.233
+      },
+      "fingerprint": "8c71487a34b27c01"
+    },
+    {
+      "label": "geometric",
+      "input": "1 2 4 8 16 32 64",
+      "generator": {
+        "model_class": "geometric",
+        "params": {
+          "a0": 1,
+          "r": 2
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 13.01,
+        "surface_bits": 74.13,
+        "compression_ratio": 5.699
+      },
+      "fingerprint": "b790e3ba50d3d3cc"
+    },
+    {
+      "label": "polynomial_deg2",
+      "input": "0 1 4 9 16 25 36 49",
+      "generator": {
+        "model_class": "polynomial_deg2",
+        "params": {
+          "newton_seeds": [
+            0,
+            1,
+            2
+          ],
+          "degree": 2
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 20.51,
+        "surface_bits": 85.98,
+        "compression_ratio": 4.191
+      },
+      "fingerprint": "21eec99171f090c0"
+    },
+    {
+      "label": "polynomial_deg3",
+      "input": "0 1 8 27 64 125 216",
+      "generator": {
+        "model_class": "polynomial_deg3",
+        "params": {
+          "newton_seeds": [
+            0,
+            1,
+            6,
+            6
+          ],
+          "degree": 3
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 34.09,
+        "surface_bits": 87.2,
+        "compression_ratio": 2.558
+      },
+      "fingerprint": "e9e201ab006cbdbd"
+    },
+    {
+      "label": "fibonacci",
+      "input": "0 1 1 2 3 5 8 13 21 34",
+      "generator": {
+        "model_class": "linear_recurrence_order2",
+        "params": {
+          "coeffs": [
+            1,
+            1
+          ],
+          "seeds": [
+            0,
+            1
+          ]
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 24.02,
+        "surface_bits": 88.43,
+        "compression_ratio": 3.682
+      },
+      "fingerprint": "ae01ba5f9ecce996"
+    },
+    {
+      "label": "lucas",
+      "input": "2 1 3 4 7 11 18 29 47",
+      "generator": {
+        "model_class": "linear_recurrence_order2",
+        "params": {
+          "coeffs": [
+            1,
+            1
+          ],
+          "seeds": [
+            2,
+            1
+          ]
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 25.27,
+        "surface_bits": 91.2,
+        "compression_ratio": 3.609
+      },
+      "fingerprint": "a2b5b764e01c390f"
+    },
+    {
+      "label": "pell",
+      "input": "0 1 2 5 12 29 70 169",
+      "generator": {
+        "model_class": "linear_recurrence_order2",
+        "params": {
+          "coeffs": [
+            1,
+            2
+          ],
+          "seeds": [
+            0,
+            1
+          ]
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 25.02,
+        "surface_bits": 86.02,
+        "compression_ratio": 3.439
+      },
+      "fingerprint": "2927dae96b6fd8e5"
+    },
+    {
+      "label": "catalan",
+      "input": "1 1 2 5 14 42 132 429 1430 4862 16796 58786 208012 742900",
+      "generator": {
+        "model_class": "holonomic_r1_p1",
+        "params": {
+          "order": 1,
+          "coeff_degree": 1,
+          "nullvector": [
+            -2,
+            -4,
+            2,
+            1
+          ]
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 30.52,
+        "surface_bits": 249.74,
+        "compression_ratio": 8.182
+      },
+      "fingerprint": "8dca3c6b10136e10"
+    },
+    {
+      "label": "factorial",
+      "input": "1 1 2 6 24 120 720 5040 40320 362880 3628800",
+      "generator": {
+        "model_class": "multiplicative_ratio",
+        "params": {
+          "a0": 1,
+          "alpha": 1,
+          "beta": 1
+        }
+      },
+      "verified": true,
+      "residual": [],
+      "score": {
+        "model_bits": 16.51,
+        "surface_bits": 194.72,
+        "compression_ratio": 11.792
+      },
+      "fingerprint": "3b513a55be889ce2"
+    },
+    {
+      "label": "primes_abstains",
+      "input": "2 3 5 7 11 13 17 19 23 29",
+      "generator": {
+        "model_class": "incompressible",
+        "params": {
+          "values": [
+            2,
+            3,
+            5,
+            7,
+            11,
+            13,
+            17,
+            19,
+            23,
+            29
+          ]
+        }
+      },
+      "verified": false,
+      "residual": [
+        "2",
+        "3",
+        "5",
+        "7",
+        "11",
+        "13",
+        "17",
+        "19"
+      ],
+      "score": {
+        "model_bits": 108.9,
+        "surface_bits": 108.9,
+        "compression_ratio": 1.0
+      },
+      "fingerprint": "790127759810edf2"
+    },
+    {
+      "label": "partitions_abstains",
+      "input": "1 1 2 3 5 7 11 15 22 30",
+      "generator": {
+        "model_class": "incompressible",
+        "params": {
+          "values": [
+            1,
+            1,
+            2,
+            3,
+            5,
+            7,
+            11,
+            15,
+            22,
+            30
+          ]
+        }
+      },
+      "verified": false,
+      "residual": [
+        "1",
+        "1",
+        "2",
+        "3",
+        "5",
+        "7",
+        "11",
+        "15"
+      ],
+      "score": {
+        "model_bits": 94.56,
+        "surface_bits": 94.56,
+        "compression_ratio": 1.0
+      },
+      "fingerprint": "f6cc64b05290fac7"
+    }
+  ]
+}

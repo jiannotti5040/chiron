@@ -1358,7 +1358,7 @@ class ProvenanceFrame:
 
 
 # ============================================================================
-# TARGETCONTEXT — canonical input format
+# DECISIONCONTEXT — canonical input format
 # ============================================================================
 
 @dataclass(frozen=True)
@@ -13639,7 +13639,7 @@ def direct_standardize(json_text: str) -> Dict[str, Any]:
 
 
 # ============================================================================
-# JSON → TARGETCONTEXT TRANSLATION
+# JSON → DECISIONCONTEXT TRANSLATION
 # ============================================================================
 
 def dict_to_case_context(d: Dict[str, Any]) -> engine.CaseContext:
@@ -13799,7 +13799,7 @@ def adapt_interview_debrief(payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def adapt_stream_descriptor(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Adapt an stream sensor descriptor (EO/IR/SAR/MASINT).
+    """Adapt a sensor stream descriptor (multi-modal sensor).
 
     Expected fields: 'modality', 'resolution', 'imaging_geometry',
     'classifier_output' (label + probability).
@@ -27435,6 +27435,11 @@ def main(argv=None):  # noqa: F811  (extend the CLI with invariant + dashboard v
         if len(args) < 2:
             print('usage: chiron.py solve "<ciphertext>"'); return 2
         print(_j.dumps(solve_cipher(" ".join(args[1:])), indent=2)); return 0
+    if args and args[0] == "text":
+        import json as _j
+        if len(args) < 2:
+            print('usage: chiron.py text "<text to analyze>"'); return 2
+        print(_j.dumps(text_structure(" ".join(args[1:])), indent=2)); return 0
     if args and args[0] == "guide":
         import json as _j
         rest = args[1:]
@@ -28402,6 +28407,38 @@ def solve_cipher(text):
             "runners_up": [{"method": m, "plaintext": p[:60]} for _, m, p in cands[1:4]]}
 
 
+def text_structure(s: str) -> Dict[str, Any]:
+    """Natural-language / string structural analysis. Reports the structure Chiron
+    can find in text WITHOUT pretending to 'understand' it: exact periodicity or
+    mirror symmetry, repeated words, vocabulary statistics, and any embedded numeric
+    sequence that itself collapses to a verified rule. Honest by construction — if
+    nothing exact is found, it says so rather than inventing a meaning."""
+    from collections import Counter
+    s = str(s)
+    words = re.findall(r"[A-Za-z']+", s)
+    uniq = {w.lower() for w in words}
+    inv = collapse_string(s)
+    structural = inv.model_class if inv.verified else None
+    wc = Counter(w.lower() for w in words)
+    repeated = [{"word": w, "count": c} for w, c in wc.most_common(6) if c > 1]
+    embedded = []
+    for run in re.findall(r"(?:-?\d+[ ,]+){2,}-?\d+", s)[:5]:
+        nums = [int(x) for x in re.findall(r"-?\d+", run)]
+        if len(nums) >= 3:
+            iv = collapse(nums)
+            embedded.append({"sequence": nums[:10], "model_class": iv.model_class,
+                             "verified": bool(iv.verified)})
+    found = bool(structural or repeated or any(e["verified"] for e in embedded))
+    return {
+        "length": len(s), "words": len(words), "unique_words": len(uniq),
+        "type_token_ratio": round(len(uniq) / max(1, len(words)), 3),
+        "exact_string_structure": structural or "none (no exact periodic/mirror structure)",
+        "repeated_words": repeated, "embedded_sequences": embedded,
+        "verdict": ("structural features found" if found else
+                    "no exact generator — prose is retained as residual, not forced into a rule"),
+    }
+
+
 # ===========================================================================
 #  GRAPH — relabel-invariant exact integer invariants (no eigenvalues needed)
 # ===========================================================================
@@ -29220,8 +29257,22 @@ def collapse_guided(surface, expect=None, prefer=None) -> Dict[str, Any]:
     return out
 
 
-_RESIDUAL_TAXONOMY = ("none", "noise", "corruption", "ambiguity",
-                      "competing_generator", "unknown_structure")
+_RESIDUAL_TAXONOMY = ("none", "noise", "corruption", "exception", "novelty",
+                      "ambiguity", "competing_generator", "unknown_structure")
+
+
+def _residual_has_structure(nums) -> bool:
+    """Does the leftover itself carry a second exact pattern? (the novelty signal)"""
+    try:
+        vals = [int(x) for x in nums]
+    except (TypeError, ValueError):
+        return False
+    if len(vals) < 4:
+        return False
+    try:
+        return bool(collapse(vals).verified)
+    except Exception:
+        return False
 
 
 def classify_residual(inv: "Invariant") -> Dict[str, Any]:
@@ -29243,6 +29294,10 @@ def classify_residual(inv: "Invariant") -> Dict[str, Any]:
         kind = "corruption"                 # one repeated off-value -> a defect
     elif inv.model_class in ("incompressible", "non_finite", "too_short"):
         kind = "unknown_structure"
+    elif nums and _residual_has_structure(nums):
+        kind = "novelty"                    # the leftover itself carries a second pattern
+    elif share < 0.34:
+        kind = "exception"                  # a few outliers against an otherwise-good fit
     else:
         kind = "ambiguity"
     return {"kind": kind, "taxonomy": list(_RESIDUAL_TAXONOMY),

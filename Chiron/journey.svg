@@ -1,69 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 420" font-family="system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+<svg viewBox="0 0 940 360" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica,Arial,sans-serif">
   <defs>
-    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0 0L10 5L0 10z" fill="#5cc8ff"/>
-    </marker>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0d1320"/><stop offset="1" stop-color="#080b11"/>
-    </linearGradient>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#5b6470"/></marker>
   </defs>
-  <rect x="0" y="0" width="1060" height="420" rx="18" fill="url(#bg)"/>
-  <text x="32" y="42" fill="#5cc8ff" font-size="21" font-weight="700" letter-spacing="2">CHIRON — one input's journey</text>
-  <text x="32" y="65" fill="#8593a8" font-size="13">From a raw surface to a proven, filed, reusable rule — and the ability to speak it back.</text>
+  <rect width="940" height="360" fill="#ffffff"/>
+  <text x="470" y="30" text-anchor="middle" font-size="20" font-weight="700" fill="#1b1f24">One input's journey</text>
+  <text x="470" y="50" text-anchor="middle" font-size="12.5" fill="#5b6470">a real example: the surface 1 1 2 3 5 8 13 goes in; a proven rule comes out</text>
 
-  <!-- stage boxes -->
-  <g>
-    <rect x="32" y="96" width="150" height="74" rx="10" fill="#10151f" stroke="#243248"/>
-    <text x="46" y="124" fill="#c4cedd" font-size="13" font-weight="700">1 · Surface</text>
-    <text x="46" y="146" fill="#8593a8" font-size="11.5">sequence, cipher,</text>
-    <text x="46" y="161" fill="#8593a8" font-size="11.5">code, text, grid…</text>
+  <!-- step boxes -->
+  <rect x="20" y="80" width="150" height="74" rx="9" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="95" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b1f24">surface</text>
+  <text x="95" y="126" text-anchor="middle" font-size="12" fill="#3a4149" font-family="monospace">1 1 2 3 5 8 13</text>
+  <text x="95" y="144" text-anchor="middle" font-size="10.5" fill="#8a9099">7 terms shown</text>
 
-    <rect x="214" y="96" width="150" height="74" rx="10" fill="#0e1a16" stroke="#2b5444"/>
-    <text x="228" y="124" fill="#7ee0b8" font-size="13" font-weight="700">2 · collapse</text>
-    <text x="228" y="146" fill="#8593a8" font-size="11.5">smallest rule (MDL),</text>
-    <text x="228" y="161" fill="#8593a8" font-size="11.5">exact arithmetic</text>
+  <rect x="200" y="80" width="160" height="74" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+  <text x="280" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4fa3">collapse</text>
+  <text x="280" y="125" text-anchor="middle" font-size="11" fill="#3a4149">rank candidates by MDL;</text>
+  <text x="280" y="141" text-anchor="middle" font-size="11" fill="#3a4149">winner: recurrence aₙ=aₙ₋₁+aₙ₋₂</text>
 
-    <rect x="396" y="96" width="150" height="74" rx="10" fill="#16130c" stroke="#5a4a26"/>
-    <text x="410" y="124" fill="#ffcf86" font-size="13" font-weight="700">3 · verify</text>
-    <text x="410" y="146" fill="#8593a8" font-size="11.5">predict held-out</text>
-    <text x="410" y="161" fill="#8593a8" font-size="11.5">terms — exact?</text>
+  <rect x="390" y="80" width="160" height="74" rx="9" fill="#eef3fb" stroke="#1f6feb" stroke-width="2"/>
+  <text x="470" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4fa3">verify</text>
+  <text x="470" y="125" text-anchor="middle" font-size="11" fill="#3a4149">train on first 5, predict</text>
+  <text x="470" y="141" text-anchor="middle" font-size="11" fill="#3a4149">8, 13 — exact match ✓</text>
 
-    <rect x="578" y="60" width="170" height="64" rx="10" fill="#0e1a16" stroke="#2b5444"/>
-    <text x="592" y="86" fill="#7ee0b8" font-size="12.5" font-weight="700">INTEGRAL</text>
-    <text x="592" y="106" fill="#8593a8" font-size="11.5">verified · law library</text>
+  <rect x="580" y="80" width="160" height="74" rx="9" fill="#eaf6ee" stroke="#2ea043"/>
+  <text x="660" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1a7f37">certificate</text>
+  <text x="660" y="125" text-anchor="middle" font-size="11" fill="#3a4149">what found / why /</text>
+  <text x="660" y="141" text-anchor="middle" font-size="11" fill="#3a4149">what would falsify</text>
 
-    <rect x="578" y="142" width="170" height="64" rx="10" fill="#11161f" stroke="#2c3850"/>
-    <text x="592" y="168" fill="#c4cedd" font-size="12.5" font-weight="700">GENERAL</text>
-    <text x="592" y="188" fill="#8593a8" font-size="11.5">kept as knowledge</text>
+  <rect x="770" y="80" width="150" height="74" rx="9" fill="#f4f6f8" stroke="#5b6470"/>
+  <text x="845" y="104" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1b1f24">filed</text>
+  <text x="845" y="125" text-anchor="middle" font-size="11" fill="#3a4149">integral law, by</text>
+  <text x="845" y="141" text-anchor="middle" font-size="11" fill="#3a4149">subject, in Congress</text>
 
-    <rect x="780" y="96" width="150" height="74" rx="10" fill="#10151f" stroke="#243248"/>
-    <text x="794" y="120" fill="#c4cedd" font-size="13" font-weight="700">4 · file</text>
-    <text x="794" y="142" fill="#8593a8" font-size="11.5">sort into a domain</text>
-    <text x="794" y="157" fill="#8593a8" font-size="11.5">(by subject)</text>
+  <line x1="170" y1="117" x2="198" y2="117" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="360" y1="117" x2="388" y2="117" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="550" y1="117" x2="578" y2="117" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="740" y1="117" x2="768" y2="117" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
 
-    <rect x="780" y="236" width="248" height="64" rx="10" fill="#16101f" stroke="#3a2b58"/>
-    <text x="794" y="262" fill="#b69cff" font-size="12.5" font-weight="700">5 · grow a concept</text>
-    <text x="794" y="282" fill="#8593a8" font-size="11.5">if the rule recurs in a 2nd subject</text>
+  <!-- outputs row -->
+  <rect x="200" y="214" width="240" height="70" rx="9" fill="#eef3fb" stroke="#1f6feb"/>
+  <text x="320" y="238" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1f4fa3">articulate (the codec)</text>
+  <text x="320" y="259" text-anchor="middle" font-size="11" fill="#3a4149">run collapse in reverse — extend the</text>
+  <text x="320" y="274" text-anchor="middle" font-size="11" fill="#3a4149">rule: 21, 34, 55, … in its own language</text>
 
-    <rect x="396" y="236" width="248" height="64" rx="10" fill="#0d1320" stroke="#243248"/>
-    <text x="410" y="262" fill="#9ad8ff" font-size="12.5" font-weight="700">6 · articulate</text>
-    <text x="410" y="282" fill="#8593a8" font-size="11.5">speak the rule back: regenerate / re-voice</text>
+  <rect x="500" y="214" width="240" height="70" rx="9" fill="#fdf3e6" stroke="#bf8700"/>
+  <text x="620" y="238" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9a6700">had it NOT verified</text>
+  <text x="620" y="259" text-anchor="middle" font-size="11" fill="#3a4149">the surface returns as a classified</text>
+  <text x="620" y="274" text-anchor="middle" font-size="11" fill="#3a4149">residual — abstain, never a guess</text>
 
-    <rect x="32" y="236" width="248" height="64" rx="10" fill="#10151f" stroke="#243248"/>
-    <text x="46" y="262" fill="#7ee0b8" font-size="12.5" font-weight="700">certificate</text>
-    <text x="46" y="282" fill="#8593a8" font-size="11.5">found · why believed · what falsifies it</text>
-  </g>
+  <line x1="470" y1="154" x2="470" y2="190" stroke="#5b6470" stroke-width="1.5"/>
+  <line x1="470" y1="190" x2="320" y2="190" stroke="#5b6470" stroke-width="1.5"/>
+  <line x1="320" y1="190" x2="320" y2="212" stroke="#5b6470" stroke-width="1.5" marker-end="url(#a)"/>
+  <line x1="470" y1="190" x2="620" y2="190" stroke="#bf8700" stroke-width="1.2" stroke-dasharray="4 3"/>
+  <line x1="620" y1="190" x2="620" y2="212" stroke="#bf8700" stroke-width="1.2" stroke-dasharray="4 3" marker-end="url(#a)"/>
 
-  <!-- arrows -->
-  <line x1="182" y1="133" x2="212" y2="133" stroke="#5cc8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="364" y1="133" x2="394" y2="133" stroke="#5cc8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="546" y1="120" x2="576" y2="96" stroke="#7ee0b8" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="546" y1="146" x2="576" y2="172" stroke="#8593a8" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="748" y1="96" x2="800" y2="96" stroke="#5cc8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="748" y1="174" x2="800" y2="132" stroke="#5cc8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="855" y1="170" x2="900" y2="234" stroke="#b69cff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="780" y1="268" x2="646" y2="268" stroke="#9ad8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <line x1="396" y1="268" x2="282" y2="268" stroke="#5cc8ff" stroke-width="2" marker-end="url(#a2)"/>
-  <text x="556" y="56" fill="#7ee0b8" font-size="10.5">exact ✓</text>
-  <text x="556" y="210" fill="#8593a8" font-size="10.5">not exact</text>
+  <text x="470" y="324" text-anchor="middle" font-size="11.5" fill="#8a9099">every step is exact and offline; the certificate is reproducible byte-for-byte on the same version</text>
 </svg>

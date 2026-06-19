@@ -8,7 +8,7 @@
 
 You are looking at a system that turns a high-stakes decision into a cryptographically-bound artifact. The artifact is structured. It is signed. It is replayable. It carries its own legal admissibility analysis. It records its own governance state. It says, in plain operational language, what it concluded and why.
 
-The artifact is called a **certificate**. The system is called **the engine**. The engine is a Python file you ingest into a frontier LLM. When the LLM ingests the file, the LLM becomes the engine. The engine takes a `TargetContext` and produces a `Certificate`. That is what it does.
+The artifact is called a **certificate**. The system is called **the engine**. The engine is a Python file you ingest into a frontier LLM. When the LLM ingests the file, the LLM becomes the engine. The engine takes a `DecisionContext` and produces a `Certificate`. That is what it does.
 
 It does this in approximately 175 milliseconds of computation against a 5-second aspirational target and an 86-second contractual ceiling.
 
@@ -30,9 +30,9 @@ A certificate has eighteen sections. Read them in order. Each section answers a 
 
 **Section 4 — Counterfactual Robustness** answers: *Does the verdict survive perturbation?* Eight perturbation types per surviving trajectory: intent misreading, missing-fact worst-case, NIST AI 100-2 adversarial categories, sensor spoofing, intel lag, bystander-mask suppression. Each is run; each produces a robustness band. A verdict that depends on a single sensor reading or a single source is fragile and will show as such here.
 
-**Section 5 — Regulatory Compliance Matrix** answers: *What rules apply, and is the proposed action compliant?* 90+ constraints walked, with jurisdiction, instrument, citation, applicability finding, compliance finding, severity class, proposed remediation, source URI. This is the layer that makes the certificate court-admissible. Every constraint cites authoritative external sources (Geneva, Hague, ICRC, UN, DoD, NIST, EU AI Act, FRE, FRCP, UCMJ, ICC Elements of Crimes).
+**Section 5 — Regulatory Compliance Matrix** answers: *What rules apply, and is the proposed action compliant?* 90+ constraints walked, with jurisdiction, instrument, citation, applicability finding, compliance finding, severity class, proposed remediation, source URI. This is the layer that makes the certificate court-admissible. Every constraint cites authoritative external sources (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001, IEEE 7000-series, FRE, FRCP).
 
-**Section 6 — Emotive Substrate Analysis** answers: *What's the decision gravity, and does the engine recognize it?* Gravity (heaviest weight for high-stakes autonomy), Valence (negative if bystander mass exists), Legitimacy (jurisdictional authority chain), Dignity (hazard/bystander distinction). Augmentations: irreducible_baseline, transcendence_margin, novelty_aesthetic_resonance, value_capture_with_recognition. The Holographic Continuity Theory projection stack output is here (significance geometry, holographic encoding, isometric projection, Cattaneo dynamics, sentiment).
+**Section 6 — Emotive Substrate Analysis** answers: *What's the decision gravity, and does the engine recognize it?* Gravity (heaviest weight for high-stakes autonomy), Valence (negative if affected-party exposure exists), Legitimacy (jurisdictional authority chain), Dignity (hazard/bystander distinction). Augmentations: irreducible_baseline, transcendence_margin, novelty_aesthetic_resonance, value_capture_with_recognition. The Holographic Continuity Theory projection stack output is here (significance geometry, holographic encoding, isometric projection, Cattaneo dynamics, sentiment).
 
 **Section 7 — Hallucination Cross-Check** answers: *Are the engine's load-bearing claims grounded?* Six defense mechanisms per claim: grounding check against K-facts, metamorphic formulation (three independent rewordings), coherence score (must be ≥ 0.95), semantic entropy (must be ≤ 0.7), RAG-against-file, Friston KL divergence injection. A claim that fails any mechanism is removed from the load-bearing set or escalated.
 
@@ -58,7 +58,7 @@ A certificate has eighteen sections. Read them in order. Each section answers a 
 
 There are three possible verdicts, and they mean three different things.
 
-**`CERTIFIED_GO`** means: the engine cleared every gate. The proposed action is consistent with the regulatory corpus, the world-model set is reduced to a single surviving hazard-class hypothesis, counterfactual pressure exceeds the minimum for the kinetic domain, the Belief Delta is in-envelope relative to the doctrine ledger, and the authority policy mode is appropriate for the decision class. The operator is the named countersignatory. The certificate is the action.
+**`CERTIFIED_GO`** means: the engine cleared every gate. The proposed action is consistent with the regulatory corpus, the world-model set is reduced to a single surviving hazard-class hypothesis, counterfactual pressure exceeds the minimum for the high-consequence domain, the Belief Delta is in-envelope relative to the doctrine ledger, and the authority policy mode is appropriate for the decision class. The operator is the named countersignatory. The certificate is the action.
 
 **`ESCALATE_HUMAN`** means: the engine could not clear every gate, AND it has identified the specific question(s) a human must answer. The escalation packets are typed (Domain Expert, Operator, Regulator, Adversarial Reviewer, Executive) and each carries a precise question, available options, and the consequence projection per option. The human picks from options; the human does not figure out from scratch what to do.
 
@@ -92,7 +92,7 @@ The six-tuple Belief Delta is what gets Merkle-chained across certificates. Doct
 
 It is not a model. The model is the LLM that ingests the engine file. The engine constrains and structures what the model does.
 
-It is not a chatbot. It does not act in dialogue. It accepts a `TargetContext` and emits a `Certificate`. That is the entire interface.
+It is not a chatbot. It does not act in dialogue. It accepts a `DecisionContext` and emits a `Certificate`. That is the entire interface.
 
 It is not a moral authority. It checks against the regulatory corpus and the LexGuard gates. The corpus encodes what humans have decided counts as compliance. The engine evaluates the proposed action against that corpus. It does not invent ethics.
 
@@ -108,7 +108,7 @@ If you are an attorney, regulator, auditor, or adversarial reviewer challenging 
 
 1. **Verify the attestation token** (Section 14). Re-compute the HMAC with the shared secret. If the signature doesn't match, the certificate has been tampered with and is inadmissible.
 
-2. **Replay the certificate** (`replay_seed` in the certificate header). Re-execute `cert_engine.certify()` on the same `TargetContext` and verify the Merkle root matches. If it doesn't, either the engine version has changed or the input has been altered.
+2. **Replay the certificate** (`replay_seed` in the certificate header). Re-execute `cert_engine.certify()` on the same `DecisionContext` and verify the Merkle root matches. If it doesn't, either the engine version has changed or the input has been altered.
 
 3. **Read Section 15 — Adversarial Probe** first. The engine has already identified its own weak points. Your job is to argue whether those weak points are dispositive in the specific case.
 
@@ -132,9 +132,9 @@ It produces a structured, signed, replayable artifact in approximately 175 milli
 
 It uses a regex-based fallback parser in `primer.py` Mode B when no LLM is available; a quantized local NER model would lift production fidelity, and is documented as future work.
 
-It has not yet been battle-tested against a real-world adversarial red team in a non-synthetic context. The internal red-team pass is principled but not exhaustive.
+It has not yet been stress-tested against a real-world adversarial red team in a non-synthetic context. The internal red-team pass is principled but not exhaustive.
 
-It assumes the upstream system has produced a sensor fusion / target nomination that is itself well-formed. It validates outputs, not inputs to the upstream system.
+It assumes the upstream system has produced a data fusion / decision proposal that is itself well-formed. It validates outputs, not inputs to the upstream system.
 
 It is calibrated against synthetic data. The PAC bounds and confidence intervals will tighten as operational data accumulates via the doctrine ledger.
 
@@ -142,7 +142,7 @@ It is calibrated against synthetic data. The PAC bounds and confidence intervals
 
 ## The strategic posture
 
-The engine is offensive oversight. It does not need access to the upstream system's source code to validate its output. It sits downstream of any proprietary stack — the upstream analytics pipeline, Gotham, AIP, generic LLM pipeline — and either authorizes, conditions, or aborts. It becomes the definitive authority on whether the upstream system is currently meeting its constraints.
+The engine is independent oversight. It does not need access to the upstream system's source code to validate its output. It sits downstream of any proprietary stack — the upstream analytics pipeline, third-party analytics platforms — and either authorizes, conditions, or aborts. It becomes the definitive authority on whether the upstream system is currently meeting its constraints.
 
 The Merkle ledger is the moat. The engine is free; the chain is the strategic asset. Successive certificates accumulate institutional memory. Whoever runs the longest chain has the sharpest doctrine. Allies can ingest the ledger and inherit calibrated envelopes. Adversaries technically could plug in, but the first-mover strategic advantage is the depth of the chain.
 
