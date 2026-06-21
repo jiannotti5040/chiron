@@ -26,7 +26,7 @@ Chiron/
   chiron.py              the whole organism — one self-contained file
   chiron_grow.py         shared grower — any source (Wikipedia / website / API / OEIS), continuous, self-resuming
   chiron_ciphers.py      cipher/code/crypto solver — seeds a 'cryptography' basis
-  chiron_memory.json     default Congress for the CLI (ships as a CLEAN seed)
+  chiron_memory.json     default Congress for the CLI (ships GROWN; reset point: chiron_memory_clean.json)
   chiron_memory_clean.json   pristine seed — the reset point
   dashboard.html         the offline operator console (served by `chiron.py serve`)
   grow-public/           open, Pull-Request-contributable grow (config + memory + profiles/)
@@ -40,8 +40,10 @@ Chiron/
   chiron.key             created only on first `seal` (movable; gitignored, never pushed)
 ```
 
-Every shipped `chiron_memory.json` is a **clean seed**, so a fresh clone starts empty
-and grows its own Congress.
+The `chiron_memory.json` shipped in this folder is a **grown Congress** — the engine's
+accumulated, verified knowledge. `chiron_memory_clean.json` is the pristine seed, and
+`chiron_grow.py --reset` returns to it, so a fresh clone can also start empty and grow
+its own.
 
 ## Diagrams
 
@@ -275,8 +277,8 @@ whole record together and is owner-signed.
 - `python3 chiron.py attest --memory chiron_memory.json` loads it and prints the
   attestation manifest and root.
 
-The file shipped here is a freshly initialized, valid memory written by Chiron
-itself. To regenerate it:
+The file shipped here is a **grown** Congress written by Chiron itself. To regenerate a
+pristine clean seed instead (the reset point):
 
 ```bash
 python3 -c "import chiron; print(chiron.Chiron().save_memory('chiron_memory.json'))"
@@ -330,6 +332,32 @@ L5 no network / no external inference (the core is scanned to prove it; only the
 President submodule is network-capable, by design and off by default) · L6
 determinism · L7 unbroken provenance · L8 bounded self-modification. A gate also
 confirms Veritas and President are natively integrated with no exec-of-string.
+
+## The Primus atlas, verses & the native hot-path
+
+The two twins above are the built-in calibration; the full transcribed atlas —
+Infectatrum's 21 plates (TAB XIII–XXXIII, six languages) — runs through the same
+engine:
+
+```bash
+python3 primus_atlas.py      # collapse all 21 plates; cross-plate structural twins
+python3 primus_verses.py     # reconstruct each plate's ductus verses + proteus generation
+```
+
+All 21 collapse and verify, and `same_structure` isolates exactly the XXVI⇔XXVII
+twin. Curated non-plate items (the *Tot tibi* proteus verse; the n! permutation
+table, which `collapse` recovers) are in `primus_extra/`, hand-entered and marked as
+such. Background: `../PRIMUS_EXPLORATION.md`.
+
+An **optional** native hot-path lives in `chiron_fastops/` (a Rust crate — exact
+`poly_degree` and a hexameter foot-checker over the C ABI, plus a WASM target),
+loaded by `fastops.py`, which falls back to exact pure-Python everywhere, so nothing
+is ever required:
+
+```bash
+python3 fastops.py               # native if built (cargo), else identical pure-Python
+python3 chiron.py bench-native   # the embedded C kernel + timing
+```
 
 ## Evaluation & honest limits
 

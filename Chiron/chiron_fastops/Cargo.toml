@@ -1,0 +1,18 @@
+[package]
+name = "chiron_fastops"
+version = "0.1.0"
+edition = "2021"
+description = "Optional native hot-path for Chiron — exact kernels with a pure-Python fallback."
+license = "LicenseRef-Proprietary"
+authors = ["Jacob Iannotti"]
+
+# cdylib -> C ABI shared library loaded by fastops.py via ctypes.
+# rlib   -> usable as a normal Rust dependency / for wasm builds.
+[lib]
+name = "chiron_fastops"
+crate-type = ["cdylib", "rlib"]
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1

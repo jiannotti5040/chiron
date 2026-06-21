@@ -1,0 +1,11 @@
+{
+  "title": "Proteus verse — Tot tibi sunt dotes",
+  "verse": "Tot tibi sunt dotes, Virgo, quot sidera caelo",
+  "words": ["Tot", "tibi", "sunt", "dotes", "Virgo", "quot", "sidera", "caelo"],
+  "translation": "As many graces are yours, O Virgin, as there are stars in the sky",
+  "device": "versus proteus (proteus verse): the words may be reordered, and each admitted order still scans as a dactylic hexameter and keeps the sense",
+  "attribution": "Bernardus Bauhusius (Bernard van Bauhuijsen), early 17th c.; famously counted and debated by Erycius Puteanus and treated in Caramuel's Primus Calamus, which is centrally concerned with this permutational class of verse.",
+  "classical_counts_note": "Period hand-counts vary by scansion rule and by whether sense must be preserved (Puteanus reported 1022 valid permutations). The 'true' number is rule-dependent, which is the point: the count is a function of the meter gate.",
+  "chiron_note": "8 words => 8! = 40320 orderings before the meter gate. With a strict scanner (CLTK, or a native Rust kernel) Chiron filters to the metrically-valid set; with the coarse pure-Python fallback it reports an upper bound. Reproduce: python3 primus_verses.py --proteus \"Tot tibi sunt dotes Virgo quot sidera caelo\" --max 40320",
+  "provenance": "Curated by hand from scholarship. NOT OCR-extracted from the 1663 scan."
+}

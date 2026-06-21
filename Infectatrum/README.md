@@ -38,6 +38,20 @@ accelerators behind pure-Python fallbacks.
 - `HONEST_ARTICULATION.md` — strengths and gaps named with precision; read this first.
 - `MANIFEST.sha256` — chain of custody over the engine source and all 21 plate bundles.
 
+## Used by Chiron
+
+These 21 transcribed plates are no longer only Infectatrum's corpus — they are now
+input to Chiron's invariant engine. `Chiron/primus_atlas.py` reads each plate's
+`figure` block (tokens + ductus walks) straight into `chiron.collapse()`: **all 21
+collapse and verify** as labyrinth topologies, and Chiron's `same_structure`
+independently isolates **exactly** the TAB XXVI⇔XXVII twin (IESUS SOL / MARIA
+STELLA), leaving the other nineteen distinct. `Chiron/primus_verses.py` then runs the
+labyrinths forward — reconstructing each ductus verse and meter-checking it, with
+proteus generation. The division of labor is clean: **Infectatrum measures the
+reading spectrum; Chiron recovers and proves the generator beneath it** — two engines
+reading one shared, confidence-gated atlas from two angles. See
+`../PRIMUS_EXPLORATION.md`.
+
 ## The honest frame
 
 The engine is real and tested; the transcription is two-pass and confidence-gated, with
