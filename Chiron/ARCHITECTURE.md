@@ -65,6 +65,9 @@ can be done behind a build step rather than by fragmenting the source.
 | `mine_code.py` | code-repository mining — structural skeletons and clone detection |
 | `ingest_pdf.py` | optional PDF source adapter (text + embedded-sequence recovery) |
 | `formal_check.py` | property-based soundness check (see [FORMAL.md](FORMAL.md)) |
+| `primus_atlas.py` | collapse Caramuel's whole transcribed atlas; cross-plate twins |
+| `primus_verses.py` | run the labyrinth forward — proteus generation + native scansion |
+| `fastops.py` + `chiron_fastops/` | optional Rust native hot-path with pure-Python fallback |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## Data flow

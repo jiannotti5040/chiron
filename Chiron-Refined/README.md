@@ -83,6 +83,9 @@ python3 trace.py "1 1 2 3 5 8 13"             # the full ranked-candidate reason
 python3 discover.py                           # cross-domain twins: one rule across numeric + string
 python3 mine_code.py                          # structural skeletons + clone detection over a codebase
 python3 formal_check.py                       # property-based soundness check (see FORMAL.md)
+python3 primus_atlas.py                       # collapse Caramuel's 21 transcribed plates; cross-plate twins
+python3 primus_verses.py                      # run the labyrinth forward — verses + proteus generation
+python3 fastops.py                            # optional native hot-path (Rust) with pure-Python fallback
 ```
 
 **Directed recovery** lets the operator steer: give the terms you expect to come

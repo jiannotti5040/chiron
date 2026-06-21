@@ -16,8 +16,13 @@ chiron_grow_state.json
 *_grow_state.json
 chiron_fastops.so
 *.so
+target/
+*.dylib
+*.dll
+*.rlib
 proposals/
 Resume_Jacob_Iannotti.md
 Resume*.md
 Resume*.pdf
 Resume*.docx
+*Primus Calamus*.pdf

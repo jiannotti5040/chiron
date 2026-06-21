@@ -20,6 +20,10 @@ attribution still applies to the derived portions:
   Congress's `ingested_sources` ledger.
 - **OEIS** — the On-Line Encyclopedia of Integer Sequences, © The OEIS Foundation
   Inc. Sequence data is used with attribution under the OEIS terms of use.
+- **Caramuel, *Primus Calamus ob oculos ponens Metametricam* (Rome, 1663)** — public
+  domain. The transcribed plate atlas (`Infectatrum/corpus/`) and the curated extras
+  (`Chiron/primus_extra/`) are derived transcriptions with per-file provenance and
+  confidence; the 1663 source itself is in the public domain.
 
 The **private** grow (`Chiron/grow-private/`) and all **engine code** are proprietary
 and are not covered by the above content licenses.
