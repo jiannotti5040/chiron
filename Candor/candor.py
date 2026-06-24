@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # ============================================================================
 #  CANDOR — the anti-patronization engine
-#  PROPRIETARY — ALL RIGHTS RESERVED. Architect & sole owner: Jacob Iannotti.
-#  No license granted; no use, copy, modification, distribution, deployment,
-#  training, or derivative work without prior written permission of the owner.
+#  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.
+#  Licensed under PolyForm Noncommercial 1.0.0: noncommercial use, modification,
+#  and sharing permitted; commercial rights reserved. See LICENSE.md.
 # ============================================================================
 """
 CANDOR audits a piece of machine (or human) reasoning for the failure mode

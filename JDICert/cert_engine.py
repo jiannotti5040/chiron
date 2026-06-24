@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-# Copyright (c) 2026 Jacob Iannotti. All rights reserved.
+# Copyright (c) 2026 Jacob Iannotti.
 #
-# PROPRIETARY AND CONFIDENTIAL. No license is granted, express or
-# implied, to use, copy, modify, merge, publish, distribute, sublicense,
-# sell, deploy, integrate, fine-tune on, train on, derive from, or
-# create derivative works of this file or any part of it, in any form
-# or for any purpose, including evaluation, research, demonstration,
-# or production, without the prior written permission of the copyright
-# holder. Possession of this file confers no rights. Unauthorized
-# access, retention, or use is prohibited and may be unlawful.
+# Licensed under the PolyForm Noncommercial License 1.0.0: noncommercial use,
+# modification, and sharing are permitted free of charge; commercial use is
+# reserved to the owner. See LICENSE.md at the repository root.
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 #
 # Author: J. Iannotti, 2026.
 """
@@ -10463,12 +10459,12 @@ def _():
 
 # ---- license / activation invariants ----
 
-@test("file_has_proprietary_license_header")
+@test("file_has_license_header")
 def _():
     import inspect
     src = inspect.getsource(sys.modules[__name__])
-    _at("All rights reserved" in src)
-    _at("PROPRIETARY AND CONFIDENTIAL" in src)
+    _at("PolyForm Noncommercial" in src)
+    _at("SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0" in src)
 
 
 @test("activation_protocol_contains_keystone")

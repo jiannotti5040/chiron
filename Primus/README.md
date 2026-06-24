@@ -1,6 +1,6 @@
 # Primus — folder map
 
-**Owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 What each file is, in plain terms. Nothing here is junk. This is the origin:
 the lean engine and its proof. The full integrated program it grew into has

@@ -1,6 +1,6 @@
 # Individual Programs
 
-**Author & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 Standalone programs and theory that stand on their own, outside the main
 certification line.

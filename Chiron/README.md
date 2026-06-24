@@ -1,13 +1,13 @@
 # CHIRON — The Epistemic Organism
 
-**Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 ![offline](https://img.shields.io/badge/network-offline%20by%20default-1f6feb)
 ![core deps](https://img.shields.io/badge/core-zero%20dependencies-2ea043)
 ![python](https://img.shields.io/badge/python-3.8%2B-3776ab)
 ![self-test](https://img.shields.io/badge/self--test-green-2ea043)
 ![false positives](https://img.shields.io/badge/false%20positives-0%20%2F%20~5070-2ea043)
-![license](https://img.shields.io/badge/license-proprietary-cf222e)
+![license](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-blue)
 
 Chiron is one portable, offline, deterministic, self-certifying organism whose
 entire purpose is the work nobody has automated: taking an ambiguous,

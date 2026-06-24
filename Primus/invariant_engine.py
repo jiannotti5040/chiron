@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # ============================================================================
 #  PRIMUS — INVARIANT ENGINE (clean core, v2)
-#  PROPRIETARY — ALL RIGHTS RESERVED.  Architect & sole owner: Jacob Iannotti.
-#  No license granted; no use, copy, modification, distribution, deployment,
-#  training, or derivative work without prior written permission of the owner.
+#  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.
+#  Licensed under PolyForm Noncommercial 1.0.0: noncommercial use, modification,
+#  and sharing permitted; commercial rights reserved. See LICENSE.md.
 # ============================================================================
 """
 A domain-agnostic compression-and-invariant-discovery framework.
