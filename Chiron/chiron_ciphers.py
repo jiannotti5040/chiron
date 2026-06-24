@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# Copyright (c) 2026 Jacob Iannotti. All rights reserved. Proprietary.
+# (c) 2026 Jacob Iannotti. PolyForm Noncommercial 1.0.0 - noncommercial use permitted;
+# commercial rights reserved. See LICENSE.md. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # ============================================================================
 #  chiron_ciphers.py — seed Chiron with a CRYPTOGRAPHY basis.
 #

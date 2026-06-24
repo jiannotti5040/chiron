@@ -1,6 +1,6 @@
 # Growing Chiron — `chiron_grow.py`
 
-**Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 `chiron_grow.py` is the **shared grower**: one local, network-capable engine that
 feeds Chiron continuously. It is deliberately separate from the monolith —

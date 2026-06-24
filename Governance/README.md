@@ -1,6 +1,6 @@
 # Governance
 
-**Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 The governance frameworks that bound how an automated system is allowed to reason
 and recommend. They are specifications, not runtime code: the certification

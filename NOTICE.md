@@ -1,11 +1,17 @@
 # NOTICE
 
-## Code
+## License
 
-© 2026 Jacob Iannotti. Proprietary — all rights reserved. See the license headers in
-each source file. No license is granted to use, copy, modify, distribute, deploy,
-train on, or create derivative works of the engine code without prior written
-permission.
+This repository is licensed under the **PolyForm Noncommercial License 1.0.0** — see
+[`LICENSE.md`](LICENSE.md). You may use, copy, modify, and share everything here for
+any **noncommercial** purpose — research, study, experiment, testing, teaching, hobby
+projects, and use by noncommercial organizations — free of charge. **Commercial use is
+reserved** to the author. For a commercial license, contact jiannotti5040@gmail.com.
+
+> Required Notice: Copyright © 2026 Jacob Iannotti
+
+The author's signature is cryptographically bound into the engine's hashes and
+manifest roots; this is attribution/integrity, not an additional restriction.
 
 ## Ingested knowledge — the public grow
 
@@ -14,10 +20,9 @@ sources. Chiron stores compressed, derived representations (generators, invarian
 domain summaries) plus a provenance record for each item — not verbatim copies — but
 attribution still applies to the derived portions:
 
-- **Wikipedia** article text — © Wikipedia contributors, licensed
-  **CC BY-SA 4.0**. Derived material in `grow-public/chiron_memory.json` that
-  originates from Wikipedia inherits CC BY-SA 4.0, with provenance recorded in the
-  Congress's `ingested_sources` ledger.
+- **Wikipedia** article text — © Wikipedia contributors, licensed **CC BY-SA 4.0**.
+  Derived material that originates from Wikipedia inherits CC BY-SA 4.0, with
+  provenance recorded in the Congress's `ingested_sources` ledger.
 - **OEIS** — the On-Line Encyclopedia of Integer Sequences, © The OEIS Foundation
   Inc. Sequence data is used with attribution under the OEIS terms of use.
 - **Caramuel, *Primus Calamus ob oculos ponens Metametricam* (Rome, 1663)** — public
@@ -25,12 +30,15 @@ attribution still applies to the derived portions:
   (`Chiron/primus_extra/`) are derived transcriptions with per-file provenance and
   confidence; the 1663 source itself is in the public domain.
 
-The **private** grow (`Chiron/grow-private/`) and all **engine code** are proprietary
-and are not covered by the above content licenses.
+## The private grow
+
+The private grow (`Chiron/grow-private/`) is operated by the author and its grown
+contents are not redistributed here. The same PolyForm Noncommercial terms govern all
+code in this repository.
 
 ## Contributions
 
-Contributions to `grow-public/` are accepted via Pull Request (see
-`Chiron/grow-public/CONTRIBUTING.md`) and are offered for inclusion under the license
-of their underlying source. Contributors are responsible for the provenance and
-license compatibility of what they ingest.
+Contributions to `grow-public/` are welcome by Pull Request (see
+`Chiron/grow-public/CONTRIBUTING.md` and the root `CONTRIBUTING.md`) and are offered
+for inclusion under the license of their underlying source. Contributors are
+responsible for the provenance and license compatibility of what they ingest.

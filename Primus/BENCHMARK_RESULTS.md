@@ -1,6 +1,6 @@
 # PRIMUS — Invariant Engine: Proving Run & Capability Results
 
-**Proprietary — all rights reserved. Owner: Jacob Iannotti.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 Reproduce: `python3 benchmark.py` and `python3 test_invariant_engine.py`
 (offline, deterministic; no network).
 

@@ -70,4 +70,4 @@ What artificial intelligence lacks isn't more ontological drivers or more constr
 
 +Legal & Contact+
 
-All works within this repository are the sole property of Jacob Iannotti and cannot be used or distributed without his expressed written consent. For inquiry: jiannotti5040@gmail.com
+This repository is licensed under the **PolyForm Noncommercial License 1.0.0** (see [LICENSE.md](LICENSE.md)): you are free to use, modify, and share everything here for any **noncommercial** purpose — experiment freely — while all **commercial** rights are reserved to Jacob Iannotti. For commercial licensing or any inquiry: jiannotti5040@gmail.com

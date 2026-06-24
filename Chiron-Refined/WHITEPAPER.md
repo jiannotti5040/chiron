@@ -1,6 +1,6 @@
 # Chiron: Exact Generator Recovery with Honest Abstention
 
-**Jacob Iannotti** · proprietary, all rights reserved · draft, not peer-reviewed
+**Jacob Iannotti** · PolyForm Noncommercial 1.0.0 · draft, not peer-reviewed
 
 ## Abstract
 

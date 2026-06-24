@@ -8,7 +8,7 @@ Scope: a detect–decide–act decision chain with a `CERTIFY` phase inserted be
 
 ## License
 
-Proprietary and confidential. All rights reserved. See the `LICENSE` notice at the top of `cert_engine.py`. Possession of this file confers no rights. Unauthorized access, retention, use, copy, derivation, training, or deployment is prohibited and may be unlawful. This file is presented for personal review by named recipients only.
+Licensed under the **PolyForm Noncommercial License 1.0.0**. You may use, modify, and share this work for any noncommercial purpose — research, study, experiment — free of charge; commercial use is reserved to the author. Full text in the repository-root `LICENSE.md`.
 
 ---
 
@@ -178,7 +178,7 @@ A standalone LLM prompt that any frontier model can execute. It ingests arbitrar
 
 ## Author
 
-J. Iannotti, 2026. Proprietary and confidential.
+J. Iannotti, 2026. Licensed under PolyForm Noncommercial 1.0.0.
 
 ---
 

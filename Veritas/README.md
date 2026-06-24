@@ -1,6 +1,6 @@
 # Veritas — the knowledge-and-wisdom engine
 
-**Architect & sole owner: Jacob Iannotti. Proprietary — all rights reserved.**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
 
 Veritas is the exact-arithmetic heart of the invariant work: *collapse* a codified
 surface to its minimal generator, test whether two surfaces *share* one hidden
