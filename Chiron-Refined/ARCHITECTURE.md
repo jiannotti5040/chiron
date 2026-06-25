@@ -68,6 +68,12 @@ can be done behind a build step rather than by fragmenting the source.
 | `primus_atlas.py` | collapse Caramuel's whole transcribed atlas; cross-plate twins |
 | `primus_verses.py` | run the labyrinth forward — proteus generation + native scansion |
 | `fastops.py` + `chiron_fastops/` | optional Rust native hot-path with pure-Python fallback |
+| `infectatrum_bridge.py` | ambiguity spectrum (\|Σ\|, entropy) + origin-signature + adversarial detector |
+| `uma_bridge.py` | robustness of recovered structure under the RSLS dynamics |
+| `certify_finding.py` | full certificate (Daubert / attestation) over a collapse finding |
+| `govern.py` | SoCPM / LexGuard governance gate on any claim |
+| `intake.py` | structured-intake front door (JSON / numeric / text) |
+| `ontological.py` | V-Units + Harmony Functional scoring |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## Data flow
