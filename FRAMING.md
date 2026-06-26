@@ -16,6 +16,21 @@ national-security conversations.
 | Governance gate (`govern.py`) | AI standard-of-care / duty-of-care gate | Rules-of-engagement / policy-isolation gate with escalation |
 | Structured intake (`intake.py`) | Multi-source data standardizer | Multi-feed standardizer to a common decision schema |
 | Value/coherence (`ontological.py`) | Value & coherence scoring of evidence | Mission-value & concordance scoring across findings |
+| Actionable brief (`actionable_intelligence.py`) | Decision-ready forecast + anomaly + governed call | Forecast + exact deviation/tamper detection + governed call |
+| Operator calculus (`operator_calculus.py`) | Typed-uncertainty triage + prescribed next move | Typed-uncertainty triage with a reduction operator |
+| Projection stack (`projection_stack.py`) | Layered significance + identity-preservation check | Multi-substrate salience projection with provenance |
+| Significance (`significance.py`) | Where-to-look salience over structured data | Decision-gravity localization on a relational field |
+| Decoherence (`density_emotion.py`) | How-undecided meter + commitment dynamics | CPTP multi-hypothesis decoherence with an entropy gate |
+| Holographic recovery (`holographic.py`) | Recover the full picture from partial data | Erasure-resilient reconstruction with a recovery threshold |
+| Mathematical beauty (`aesthetics.py`) | Elegance/quality score for recovered structure | Parsimony & concordance scoring across candidate models |
+| Cross-examination (`cross_examine.py`) | Reasonable-doubt / robustness test on a rule | Adversarial alternative-hypothesis search |
+| Precedent (`stare_decisis.py`) | Decision-consistency ledger | Tamper-evident doctrine ledger; departures flagged |
+| Jurisdiction (`jurisdiction.py`) | Domain-specific duty-of-care threshold | Per-mission ROE envelope, domain-scaled escalation |
+| Candor (`candor_bridge.py`) | Honesty / anti-patronization audit of an explanation | Candor gate on machine-generated reporting |
+| Provenance (`provenance.py`) | End-to-end audit trail with root-cause tracing | Tamper-evident lineage; minimal-blame attribution |
+| Axiomatic layer (`axioms.py`) | Foundational self-check of the theory | Machine-checkable substrate-invariant assurance |
+| Language (`language.py`) | Offline prose analysis — anomaly, structure, semantics | Air-gapped text triage: injection detection, attribution |
+| Discernment (`discernment.py`) | Multi-witness confidence with a named failure point | Independent-cross-check fusion; convergence + dissent |
 
 ## How to deploy the dial
 
