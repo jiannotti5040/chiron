@@ -74,6 +74,21 @@ can be done behind a build step rather than by fragmenting the source.
 | `govern.py` | SoCPM / LexGuard governance gate on any claim |
 | `intake.py` | structured-intake front door (JSON / numeric / text) |
 | `ontological.py` | V-Units + Harmony Functional scoring |
+| `actionable_intelligence.py` | decision-ready brief: forecast + exact anomaly + governed call |
+| `operator_calculus.py` | six epistemic operators over a Mystery Vector (E-1) |
+| `projection_stack.py` | project a finding P→C→E→S, identity preserved (E-2) |
+| `significance.py` | curvature-as-significance — where meaning concentrates (O-1) |
+| `density_emotion.py` | competing hypotheses decohere, Lindblad CPTP (O-2) |
+| `holographic.py` | recover structure from an erased boundary fragment (O-3) |
+| `aesthetics.py` | mathematical beauty — elegance · symmetry · resonance (A-1) |
+| `cross_examine.py` | adversarial reasonable-doubt search (jurisprudence) |
+| `stare_decisis.py` | Merkle precedent ledger; departures flagged (jurisprudence) |
+| `jurisdiction.py` | per-domain SoCPM admissibility threshold (jurisprudence) |
+| `candor_bridge.py` | anti-patronization audit of an explanation (D-1) |
+| `provenance.py` | conserved-history DAG + minimal blame (HCT A3/T3) |
+| `axioms.py` | runs the HCT axioms A1-A8 + theorems T1-T6, executed |
+| `language.py` | offline NL: n-gram + PPMI semantics + prose brief (no API) |
+| `discernment.py` | independent witnesses; confidence by convergence (D-2) |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## Data flow
