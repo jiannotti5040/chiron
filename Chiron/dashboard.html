@@ -82,6 +82,7 @@
   <button data-tab="growth">Growth</button>
   <button data-tab="feed">Feed</button>
   <button data-tab="self">Self-growth</button>
+  <button data-tab="grow">Grow · President</button>
   <button data-tab="system">Status &amp; how it grows</button>
   <button data-tab="gloss">Glossary</button>
 </nav>
@@ -205,6 +206,29 @@ python3 verify.py</pre></div>
       <div style="margin-bottom:8px"><button class="btn ghost" onclick="loadSelf()">Refresh</button></div>
       <div id="concepts"><div class="empty">Loading…</div></div></div>
   </section>
+  <!-- GROW · PRESIDENT (compartmentalized, network-gated, LLM-assisted) -->
+  <section id="grow" class="tab">
+    <div class="card" style="border-color:#5a4a23;background:linear-gradient(180deg,#171206,#0c111a)">
+      <h3 style="color:var(--warn)">Grow — the President
+        <span class="badge gen" style="color:var(--warn);border-color:#5a4a23;margin-left:10px">COMPARTMENTALIZED</span></h3>
+      <p class="lead">The one deliberately non-deterministic, network-capable component — isolated in its own module and
+        its own service (<code>president_grow.py</code>, port 8766). It uses a free LLM to <b>propose</b> candidate
+        structures; the deterministic engine then <b>verifies</b> every one. Nothing enters the Congress without exact
+        held-out verification, so a model hallucination is <b>structurally incapable</b> of becoming a fact here.</p>
+      <div class="kv"><b>LLM proposes → Chiron disposes</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:60%">the LLM only suggests; acceptance is decided by exact recovery, never by the model's confidence</span></div>
+      <div class="kv"><b>LLM provider</b><span id="growProv" class="muted">checking…</span></div>
+      <div class="kv"><b>State</b><span id="growState" class="muted">…</span></div>
+      <div class="kv"><b>Network</b><span class="muted" style="font-family:var(--sans)">this panel only — the rest of the console stays fully offline</span></div>
+      <button class="btn" id="btnGrow" onclick="runGrowCycle()" style="margin-top:14px">Run a grow cycle</button>
+      <div id="growHint" class="note"></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3 class="ok">Accepted <span class="muted" style="font-weight:400;font-size:13px">— proposed by the LLM, verified by Chiron</span></h3>
+        <div id="growAcc"><div class="empty">Run a cycle to see verified proposals.</div></div></div>
+      <div class="card"><h3 style="color:var(--bad)">Rejected <span class="muted" style="font-weight:400;font-size:13px">— refused by the gate (hallucination-safe)</span></h3>
+        <div id="growRej"><div class="empty">Unverifiable guesses land here, never in the Congress.</div></div></div>
+    </div>
+  </section>
   <!-- GLOSSARY -->
   <section id="gloss" class="tab">
     <div class="card"><h3>Glossary</h3>
@@ -234,6 +258,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   b.classList.add('active');$('#'+b.dataset.tab).classList.add('active');
   if(b.dataset.tab==='congress')loadCongress(); if(b.dataset.tab==='growth')loadGrowth();
   if(b.dataset.tab==='self')loadSelf(); if(b.dataset.tab==='feed')loadFeed();
+  if(b.dataset.tab==='grow')loadGrow();
 });
 const _SRCHINT={wikipedia:"(Wikipedia uses parameters.json topics)",
   web:"seed URL(s), comma/space separated — it crawls and follows links",
@@ -326,6 +351,21 @@ async function runGauntlet(){$('#gauntlet').innerHTML='running…';
       '<div class="kv"><b>False-verify on controls</b><span>'+r.false_verify+'</span></div>'+
       '<div class="kv"><b>Verdict</b><span class="'+(r.verdict==='PASS'?'ok':'err')+'">'+r.verdict+'</span></div>';
   }catch(e){$('#gauntlet').innerHTML='<span class=err>'+e.message+'</span>';}}
+// --- Grow · President: the compartmentalized LLM panel (separate service, port 8766) ---
+const GROW="http://127.0.0.1:8766";
+async function growCall(p,d){const o=d?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}:{};const r=await fetch(GROW+p,o);if(!r.ok)throw new Error('grow service '+r.status);return r.json();}
+async function loadGrow(){try{const s=await growCall('/api/grow/status');
+  $('#growProv').textContent=s.provider+' · '+s.model;
+  $('#growState').innerHTML=s.enabled?'<span class=ok>ENABLED</span>':'<span class=err>disabled — no API key set</span>';
+  $('#growHint').innerHTML=s.enabled?'':'To enable: get a free key at <code>aistudio.google.com/apikey</code>, then <code>export GROW_LLM_API_KEY=…</code> and run <code>python3 president_grow.py serve</code>.';
+}catch(e){$('#growProv').textContent='grow service offline';$('#growState').innerHTML='<span class=err>not running</span>';
+  $('#growHint').innerHTML='Start it (separate from the engine, by design): <code>python3 president_grow.py serve</code> — port 8766.';}}
+async function runGrowCycle(){$('#growAcc').innerHTML='proposing + verifying…';$('#growRej').innerHTML='';
+  try{const r=await growCall('/api/grow/cycle',{n:6});
+    if(!r.enabled){$('#growAcc').innerHTML='<div class="empty">'+(r.note||'LLM disabled')+'</div>';$('#growRej').innerHTML='<div class="empty">—</div>';return;}
+    $('#growAcc').innerHTML=r.accepted.length?r.accepted.map(a=>'<div class="block b-found"><div class="h">'+plainModel(a.model_class)+'</div><div style="font-family:var(--mono);font-size:12.5px;color:#cdd7e6">'+a.surface.join(' ')+'</div><div class="muted" style="font-size:12px;margin-top:4px">→ predicts next: '+a.predict_next.join(', ')+'</div></div>').join(''):'<div class="empty">none verified this cycle</div>';
+    $('#growRej').innerHTML=r.rejected.length?r.rejected.map(a=>'<div class="block" style="border-color:#5a2a32;background:#160e11"><div style="font-family:var(--mono);font-size:12.5px;color:#cdd7e6">'+a.surface.join(' ')+'</div><div class="muted" style="font-size:12px;margin-top:4px">'+a.reason+'</div></div>').join(''):'<div class="empty">none</div>';
+  }catch(e){$('#growAcc').innerHTML='<span class=err>'+e.message+'</span> — is <code>president_grow.py serve</code> running?';$('#growRej').innerHTML='';}}
 (async function(){try{await call('/api/meta');setOnline(true);loadCongress();}catch(e){setOnline(false);}})();
 </script>
 </body>
