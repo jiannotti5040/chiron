@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-aesthetics.py — mathematical beauty as a measured, multi-signal quantity (A-1).
+aesthetics.py — mathematical beauty as a measured, multi-signal quantity.
 
 The missing axiological pillar. Ethics is covered (govern.py / SoCPM), value is covered
 (ontological.py / V-Units), but beauty was not. Dirac held mathematical beauty as a guide to

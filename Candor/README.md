@@ -9,8 +9,8 @@ One file. Offline. Deterministic. Self-auditing.
 ## What it is
 
 Every system in this vault circles one obsession: **machines must be honest
-about the limits of their own knowledge, and must not patronize.** You said it
-yourself — the danger isn't that AI hallucinates, it's *machine patronization,
+about the limits of their own knowledge, and must not patronize.** The failure
+mode that matters is not that AI hallucinates, but *machine patronization,
 non-communication, and information loss while accountability stays minimal and
 self-referential.* LexGuard gates it. JDICert certifies against it. Primus
 returns honest residuals instead of faking confidence. CANDOR is that
@@ -80,6 +80,5 @@ overclaim is not a disclaimer bolted on; it is the entire point of the tool.
 A live filter on model output; a writing tool that grades your own drafts
 before you send them; a deterministic, auditable signal in an LLM evaluation
 pipeline (it has no model dependency, so it can sit anywhere); a calibration
-target — train or prompt a model to maximize candor on held-out content. It's
-the smallest, sharpest expression of the thing you've been building the whole
-time.
+target — train or prompt a model to maximize candor on held-out content. It is
+the smallest, sharpest expression of the discipline the whole vault is built on.

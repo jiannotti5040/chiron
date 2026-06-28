@@ -172,7 +172,6 @@ A standalone LLM prompt that any frontier model can execute. It ingests arbitrar
 - `PRINCIPLES_OF_OPERATION.md` — explanatory companion describing how a serious reader should understand the engine's outputs. Between this README and the theory artifact.
 - `HOLOGRAPHIC_CONTINUITY_THEORY.md` — the formal theory artifact underlying the engine's substrate dynamics. Holographic Continuity Theory (HCT) as the scientific theory, the Projection Calculus as its formal apparatus.
 - `MANIFEST.md` — file hashes, line counts, test counts, bench timings, regulatory corpus inventory, build state markers.
-- `HONEST_ARTICULATION.md` — author's standing assessment of what's been built, world-class delta, named gaps.
 
 ---
 
