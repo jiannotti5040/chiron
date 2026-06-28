@@ -47,6 +47,9 @@ polynomials and is confidently wrong on the rest.
 
 - `python3 Chiron/compare.py` — head-to-head against gzip / bz2 / lzma; Chiron stores a
   constant-size law that regenerates terms the general compressors cannot produce.
+- `python3 Chiron/bench_suite.py` — the same recovery architecture across four independent
+  domains (integer sequences, proverb semantics, protocol/automaton inference, and governance),
+  each beating a simpler baseline and abstaining rather than guess.
 - `python3 Chiron/trace.py "1 1 2 3 5 8"` — the full ranked-candidate reasoning path: why the
   winner won and how it was verified.
 - Scope and failure modes are stated plainly in

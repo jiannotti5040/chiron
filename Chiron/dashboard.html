@@ -149,7 +149,9 @@
       <div class="kv"><b>OEIS-core recovered</b><span>22 / 29 · 0 false positives</span></div>
       <div class="kv"><b>Classical ciphers</b><span>42 / 44 ciphertext-only</span></div>
       <div class="kv"><b>Adversarial + fuzz</b><span>corrupted inputs abstain · 0 false-verify across ~5,070 cases</span></div>
-      <pre style="white-space:pre-wrap;font-size:12px;opacity:.85;margin-top:10px">python3 benchmark.py
+      <div class="kv"><b>Cross-domain suite</b><span>sequences · semantics · protocols · governance — 4/4 green</span></div>
+      <pre style="white-space:pre-wrap;font-size:12px;opacity:.85;margin-top:10px">python3 bench_suite.py     # one architecture, four domains
+python3 benchmark.py
 python3 compare.py
 python3 trace.py "1 1 2 3 5 8 13"
 python3 verify.py</pre></div>
