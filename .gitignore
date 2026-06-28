@@ -32,3 +32,11 @@ Resume*.docx
 **/.DS_Store
 Semic Dev/
 Chiron-Refined/
+modules/
+**/modules/
+
+# test caches
+.pytest_cache/
+**/.pytest_cache/
+pytest_cache/
+**/pytest_cache/
