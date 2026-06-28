@@ -2,7 +2,7 @@
 
 Framing is a dial, not a switch. Every capability below is the *same code, the same
 tests, the same numbers*; only the title changes with the audience. The public
-default is the civilian column; the contractor column is for targeted defense /
+default is the civilian column; the contractor column is for defense /
 national-security conversations.
 
 | Capability (file) | Civilian framing | Contractor / defense framing |
@@ -31,12 +31,14 @@ national-security conversations.
 | Axiomatic layer (`axioms.py`) | Foundational self-check of the theory | Machine-checkable substrate-invariant assurance |
 | Language (`language.py`) | Offline prose analysis — anomaly, structure, semantics | Air-gapped text triage: injection detection, attribution |
 | Discernment (`discernment.py`) | Multi-witness confidence with a named failure point | Independent-cross-check fusion; convergence + dissent |
+| Jurisprudence (`cross_examine.py`, `judgment.py`, `legal_corpus.py`) | Reasonable-doubt + earned-finality decision review against hardcoded law | Adversarial doubt search, Chief-Justice gating, law-of-armed-conflict corpus |
+| Semantic invariants (`semic.py`, `semic_bridge.py`) | Meaning-invariant recovery + entendre/ambiguity detection (offline) | Doctrine/phrase invariant extraction, deception/entendre detection, speech-act gating |
 
 ## How to deploy the dial
 
 - **Public README / portfolio:** civilian vocabulary (the default everywhere).
 - **Targeted outreach:** this file (or a private-grow variant) carries the contractor
-  vocabulary; nothing in the code changes — you re-title sections for the audience.
+  vocabulary; nothing in the code changes — sections are re-titled for the audience.
 
 The mechanism is genuinely dual-use, and that is an asset: a Daubert-admissible,
 ROE-aware certifier is *more* compelling to a defense contractor framed as such, and

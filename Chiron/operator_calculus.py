@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-operator_calculus.py — the six epistemic operators over a Chiron finding (E-1).
+operator_calculus.py — the six epistemic operators over a Chiron finding.
 
 HCT's Projection Calculus treats reasoning as operators acting on a Mystery Vector — the six
 species of the unknown: ignorance, paradox, transcendence, emergence, subjectivity, infinity.

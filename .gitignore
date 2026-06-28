@@ -26,3 +26,9 @@ Resume*.md
 Resume*.pdf
 Resume*.docx
 *Primus Calamus*.pdf
+
+# keep the repo home clean
+.DS_Store
+**/.DS_Store
+Semic Dev/
+Chiron-Refined/

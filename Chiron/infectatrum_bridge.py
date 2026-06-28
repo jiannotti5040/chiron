@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Infectatrum bridge — ambiguity measurement for Chiron (B-1).
+Infectatrum bridge — ambiguity measurement for Chiron.
 
 Chiron recovers the *generator* beneath a surface. Infectatrum measures the
 *ambiguity* of a surface: how many valid readings it supports, the entropy of that
@@ -125,12 +125,52 @@ def origin_signatures():
             "signatures_built": len(sigs)}
 
 
+def _selftest():
+    checks = []
+
+    def ok(name, cond):
+        checks.append((name, bool(cond)))
+
+    if not HAVE:
+        print("  infectatrum_bridge.py self-test: SKIPPED (Infectatrum not importable here)")
+        return True
+
+    rows = atlas()
+    ok("atlas measures multiple plates", len(rows) >= 5)
+    ok("plates carry a cardinality", any("cardinality" in r for r in rows))
+    ok("entropy is non-negative", all(r.get("entropy_bits", 0) >= 0 for r in rows if "entropy_bits" in r))
+
+    o = origin_signatures()
+    ok("origin signatures built", o.get("signatures_built", 0) >= 5)
+    ok("XXVI/XXVII twin JSD present", o.get("twin_XXVI_XXVII_jsd") is not None)
+    jsds = [p[2] for p in o.get("closest_pairs", [])]
+    ok("closest pairs ranked ascending", all(jsds[i] <= jsds[i + 1] for i in range(len(jsds) - 1)))
+
+    try:
+        m = measure_text("SATOR AREPO TENET OPERA ROTAS")
+        ok("measure_text returns a spectrum", isinstance(m.get("cardinality"), int))
+        ok("adversarial score present", "p_adversarial" in m.get("adversarial", {}))
+    except Exception:
+        ok("measure_text returns a spectrum", False)
+        ok("adversarial score present", False)
+
+    passed = sum(1 for _, c in checks if c)
+    for n, c in checks:
+        if not c:
+            print(f"  FAIL: {n}")
+    print(f"  infectatrum_bridge.py self-test: {passed}/{len(checks)} passed")
+    return passed == len(checks)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--text", default=None, help="measure the ambiguity of a line")
     ap.add_argument("--signatures", action="store_true", help="origin-signature JSD ranking")
+    ap.add_argument("--selftest", action="store_true", help="run the embedded self-test")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
+    if args.selftest:
+        return 0 if _selftest() else 1
     if args.signatures and HAVE:
         o = origin_signatures()
         if args.json:

@@ -85,7 +85,7 @@ text ──▶ co-occurrence graph ──▶ significance = tanh(α·Ollivier-Ri
 and `SentimentProjection` all operate on exactly this kind of graph — and a co-occurrence
 graph from local text *is* that graph. So **P→C→E→S projection, run on local
 co-occurrence, gives offline semantics + significance with no API.** The language
-solution and the HCT-bridge gameplan are the same build.
+solution and the HCT-bridge work is the same build.
 
 ## 6. Why no-API is the moat
 
@@ -124,7 +124,7 @@ The prose brief is the language version of the numeric one already running in
    pure-Python fallback) over the local corpus; expose semantic similarity with confidence.
 4. Add the **rule-based POS + relabel-invariant parse skeleton**; expose structural twins.
 5. **Bridge** `cert_engine`'s `SignificanceGeometry` / projection stack onto the
-   co-occurrence graph for significance/emotive scoring (Pillar I/II of the gameplan).
+   co-occurrence graph for significance/emotive scoring.
 6. Compose into a **prose brief** mirroring `actionable_intelligence.py`.
 7. Mirror to both folders; keep `chiron.py` byte-unchanged and GREEN; dual-frame in
    `FRAMING.md`; verify with held-out + a live demo. No phase ships red.
