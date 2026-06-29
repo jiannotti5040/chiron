@@ -12,8 +12,9 @@ machine owes the people affected by its outputs.
 
 At the center is **Chiron**, a portable, offline, deterministic engine that recovers the exact rule
 beneath a codified surface, verifies it by exact prediction, and abstains when no rule is confirmed.
-The surrounding systems extend that discipline to certification, governance, ambiguity, value, and
-meaning.
+The surrounding systems are not separate projects but the same contract — recover structure, verify
+it exactly, refuse otherwise, certify provenance — instantiated across certification, governance,
+ambiguity, value, and meaning (made explicit as one interface in `Chiron/epistemic.py`).
 
 ## Mathematical compendium
 
@@ -47,9 +48,13 @@ polynomials and is confidently wrong on the rest.
 
 - `python3 Chiron/compare.py` — head-to-head against gzip / bz2 / lzma; Chiron stores a
   constant-size law that regenerates terms the general compressors cannot produce.
-- `python3 Chiron/bench_suite.py` — the same recovery architecture across four independent
-  domains (integer sequences, proverb semantics, protocol/automaton inference, and governance),
-  each beating a simpler baseline and abstaining rather than guess.
+- `python3 Chiron/bench_suite.py` — the same recovery architecture across six tasks (integer
+  sequences, proverb semantics, protocol/automaton inference, governance, symbolic regression vs
+  polynomial regression, and authorship attribution), each beating or matching an established
+  baseline and refusing rather than guess where refusal applies.
+- `python3 Chiron/epistemic.py` — the recovery contract (Surface → Hypothesis → Constraint →
+  Verify → Certificate) as one interface, with the integer engine, the semantic calculus, the
+  governance layer, and a probabilistic (energy) layer as four instances of it.
 - `python3 Chiron/trace.py "1 1 2 3 5 8"` — the full ranked-candidate reasoning path: why the
   winner won and how it was verified.
 - Scope and failure modes are stated plainly in
@@ -66,7 +71,7 @@ Each system stands alone in its folder, with its own README; together they form 
 | **Veritas** | The exact-arithmetic core of *collapse / same-origin / cast*, with multi-hypothesis ranking, residual taxonomy, and a layer that renders every finding as *what was discovered, why it is believed, and what would falsify it.* |
 | **Candor** | An anti-patronization audit that scores reasoning across condescension, unearned confidence, evasion, and opacity, and traces each point of the score to the span that caused it. |
 | **Infectatrum** | Ambiguity and information-loss measurement over any codified object; reading-spectrum cardinality and entropy, origin signatures, and the transcribed Caramuel *Primus Calamus* (1663) atlas. |
-| **semic** | The Semantic Invariant Calculus — the Chiron recovery discipline lifted from integer sequences to meaning, exact and fully offline. |
+| **semic** | The Semantic Invariant Calculus — the Chiron recovery discipline lifted from integer sequences to meaning, exact and fully offline; with a three-level energy layer that explores approximate, explicitly *uncertified* candidates only when exact collapse refuses. |
 | **President** | A bounded executive, deliberately isolated from the deterministic core; it gathers and deliberates over public archives and escalates anything irreversible to a human. |
 
 ## Theoretical foundations

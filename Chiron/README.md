@@ -29,9 +29,14 @@ Chiron/
   chiron_memory.json     default Congress for the CLI (ships GROWN; reset point: chiron_memory_clean.json)
   chiron_memory_clean.json   pristine seed — the reset point
   dashboard.html         the offline operator console (served by `chiron.py serve`)
-  grow-public/           open, Pull-Request-contributable grow (config + memory + profiles/)
+  grow-public/           open grow data (config + memory + profiles/)
     profiles/            ready feeds: oeis.json, oeis-physics.json, regulatory.json
-  grow-private/          operator-only grow — the true crescere
+  grow_clean.py          unified clean grower — any file / Wikipedia preset / ingestion-driven, LLM-aided
+  president_grow.py      compartmentalized LLM grow service (the model proposes -> chiron verifies)
+  epistemic.py           the abstract recovery contract; chiron / semic / governance / energy as instances
+  semic_energy.py        three-level stack — exact collapse, then uncertified energy exploration on refusal
+  build.py               lossless split/recompile of chiron.py + semic.py (byte-identical gate)
+  bench_suite.py         external benchmarks — six tasks vs established baselines
   parameters.json        default grower config (topics, source, thresholds)
   tests/                 test_chiron.py · test_grow.py (run by CI)
   requirements.txt       numpy required; scipy optional (pure-Python fallback)
@@ -232,9 +237,12 @@ python3 chiron_grow.py --params grow-public/profiles/oeis.json --once
 # regulatory & governmental law into a 'regulation' domain
 python3 chiron_grow.py --params grow-public/profiles/regulatory.json --once
 
-# the private grow — the operator's true crescere (one command = crawl + live dashboard)
-python3 chiron_grow.py --params grow-private/parameters.json --serve
-nohup python3 chiron_grow.py --params grow-private/parameters.json > grow.log 2>&1 &   # background; tail -f grow.log
+# the default grow (one command = crawl + live dashboard)
+python3 chiron_grow.py --params grow-public/parameters.json --serve
+nohup python3 chiron_grow.py --params grow-public/parameters.json > grow.log 2>&1 &   # background; tail -f grow.log
+
+# or the unified clean grower — any file / Wikipedia preset / ingestion-driven, LLM-aided
+python3 grow_clean.py ingest ./material.txt --llm
 
 # flags (any profile)
 python3 chiron_grow.py --params <cfg> --dry-run   # offline demo (no network, no git)
@@ -244,9 +252,8 @@ python3 chiron_grow.py --params <cfg> --reset     # back to a clean seed + clear
 
 Wikipedia needs no API key (just a descriptive User-Agent); other sources are
 configured under `source` in each `parameters.json`. Outside contributors grow
-`grow-public/` and open a Pull Request; the private grow and the rest of the repo
-are operated only by the owner. See **GROW.md**, **grow-public/README.md**, and
-**grow-private/README.md** for the full guides.
+`grow-public/` and open a Pull Request. See **GROW.md** and **grow-public/README.md**
+for the full guides.
 
 ## Ciphers, codes & crypto
 

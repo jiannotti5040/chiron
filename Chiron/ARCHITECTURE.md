@@ -36,10 +36,11 @@ path. Inside it, six concerns are organized as clearly separated sections:
   the core to prove properties (e.g. no network in the core path).
 - **Owner-signed integrity.** Hashes and the Merkle root bind the whole record.
 
-A future internal split into modules (`collapse.py`, `residual.py`, …) is on the
-roadmap, but only **while preserving the single-file distribution option** —
-splitting is not allowed to cost the properties above, so it is deferred until it
-can be done behind a build step rather than by fragmenting the source.
+The single-file distribution stays canonical, but a modular **view** is now
+available behind a build step: `build.py` losslessly splits `chiron.py` (and
+`semic.py`) into section modules and recompiles them with a **byte-identical**
+round-trip gate, so the file can be navigated and edited as modules without ever
+costing the properties above (`python3 build.py verify-all`).
 
 ## The companions (storage and interface, not dependencies)
 
@@ -56,6 +57,7 @@ can be done behind a build step rather than by fragmenting the source.
 | file | answers |
 |---|---|
 | `benchmark.py` | does it work? (OEIS-core + ciphers + adversarial, scored for false positives) |
+| `bench_suite.py` | does it generalize? — six tasks vs established baselines (sequences, semantics, protocols, governance, symbolic regression, authorship) |
 | `compare.py` | compared to what? (vs gzip / bz2 / lzma) |
 | `trace.py` | why does it work? (ranked candidates → winner → verification → residual) |
 | `verify.py` | can I reproduce it? (records + determinism digest) |
@@ -91,7 +93,13 @@ can be done behind a build step rather than by fragmenting the source.
 | `discernment.py` | independent witnesses; confidence by convergence |
 | `cross_examine.py` + `judgment.py` | jurisprudence suite: adversarial doubt + Earned-Finality Chief Justice |
 | `legal_corpus.py` | hardcoded law/regulation/treaty/order corpus (67 provisions) |
-| `semic.py` + `semic_bridge.py` | Semantic Invariant Calculus — collapse lifted to meaning (pure-stdlib, 48/48 gates) |
+| `semic.py` + `semic_bridge.py` | Semantic Invariant Calculus — collapse lifted to meaning (pure-stdlib, 56/56 gates; exact O(N·m) separable solver, typed classes H1–H5, constraint discovery) |
+| `semic_energy.py` | the three-level stack — exact collapse, then Gibbs energy exploration on refusal (explicitly uncertified) |
+| `epistemic.py` | the abstract primitive — Surface→Hypothesis→Constraint→Verify→Certificate, with chiron / semic / governance / energy as instances |
+| `grow_clean.py` | unified grower over any file, the Wikipedia preset, or ingestion-driven search; LLM-aided (propose→verify) |
+| `president_grow.py` | the compartmentalized LLM grow service — the model proposes, chiron verifies; nothing enters unverified |
+| `build.py` | lossless split/recompile of the single-file engines, byte-identical round-trip gate |
+| `intake_salvage.py` | fault-tolerant ingestion over strict `intake.py` (never overwrites a good parse) |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## Data flow

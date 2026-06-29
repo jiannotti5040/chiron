@@ -30,12 +30,6 @@ attribution still applies to the derived portions:
   (`Chiron/primus_extra/`) are derived transcriptions with per-file provenance and
   confidence; the 1663 source itself is in the public domain.
 
-## The private grow
-
-The private grow (`Chiron/grow-private/`) is operated by the author and its grown
-contents are not redistributed here. The same PolyForm Noncommercial terms govern all
-code in this repository.
-
 ## Contributions
 
 Contributions to `grow-public/` are welcome by Pull Request (see
