@@ -78,6 +78,7 @@
 <div id="offline">⚠ <b>The Chiron engine isn't running.</b> Open a terminal in the Chiron folder and run <code>python3 chiron.py serve</code>, then reload.</div>
 <nav>
   <button data-tab="analyze" class="active">Analyze</button>
+  <button data-tab="run">Run</button>
   <button data-tab="congress">What it knows</button>
   <button data-tab="growth">Growth</button>
   <button data-tab="feed">Feed</button>
@@ -109,6 +110,24 @@
         <details><summary>The certificate — executive headline + engineer appendix</summary>
           <pre id="cert">—</pre><button class="btn ghost" onclick="downloadCert()">Download certificate (.md)</button></details>
       </div>
+    </div>
+  </section>
+  <!-- RUN -->
+  <section id="run" class="tab">
+    <div class="card" style="border-color:#2b5444;background:linear-gradient(180deg,#0e1a16,#0c1512)">
+      <h3 class="ok">Run Chiron — quick start</h3>
+      <p class="lead">Everything is plain <code>python3</code>, no install. From the <code>Chiron/</code> folder, start what you need:</p>
+      <pre style="white-space:pre-wrap;font-size:12.5px;margin:0">python3 chiron.py serve          # this console             :8765
+python3 console_server.py serve  # the launcher below        :8768
+python3 grow_control.py serve    # start / stop / point grow :8767
+python3 president_grow.py serve  # LLM grow (free key)        :8766</pre>
+      <p class="note">Full guide: <code>Chiron/RUNNING.md</code>. The launcher below runs any function live once <code>console_server.py serve</code> is up.</p>
+    </div>
+    <div id="runOut"></div>
+    <div class="card"><h3>Launcher — run any function or engine</h3>
+      <p class="lead">Every engine and subfunction, runnable here; output appears at the top.
+        <button class="btn ghost" style="padding:5px 12px" onclick="loadCatalog()">Refresh</button></p>
+      <div id="runCat"><div class="empty">Loading… start <code>python3 console_server.py serve</code> (port 8768), then Refresh.</div></div>
     </div>
   </section>
   <!-- CONGRESS -->
@@ -270,6 +289,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');$('#'+b.dataset.tab).classList.add('active');
+  if(b.dataset.tab==='run')loadCatalog();
   if(b.dataset.tab==='congress')loadCongress(); if(b.dataset.tab==='growth')loadGrowth();
   if(b.dataset.tab==='self')loadSelf(); if(b.dataset.tab==='feed'){loadFeed();loadGrowCtl();}
   if(b.dataset.tab==='grow')loadGrow();
@@ -390,6 +410,23 @@ async function runGrowCycle(){$('#growAcc').innerHTML='proposing + verifying…'
     $('#growAcc').innerHTML=r.accepted.length?r.accepted.map(a=>'<div class="block b-found"><div class="h">'+plainModel(a.model_class)+'</div><div style="font-family:var(--mono);font-size:12.5px;color:#cdd7e6">'+a.surface.join(' ')+'</div><div class="muted" style="font-size:12px;margin-top:4px">→ predicts next: '+a.predict_next.join(', ')+'</div></div>').join(''):'<div class="empty">none verified this cycle</div>';
     $('#growRej').innerHTML=r.rejected.length?r.rejected.map(a=>'<div class="block" style="border-color:#5a2a32;background:#160e11"><div style="font-family:var(--mono);font-size:12.5px;color:#cdd7e6">'+a.surface.join(' ')+'</div><div class="muted" style="font-size:12px;margin-top:4px">'+a.reason+'</div></div>').join(''):'<div class="empty">none</div>';
   }catch(e){$('#growAcc').innerHTML='<span class=err>'+e.message+'</span> — is <code>president_grow.py serve</code> running?';$('#growRej').innerHTML='';}}
+// --- Run tab: the launcher (console_server.py, port 8768) ---
+const CONSOLE="http://127.0.0.1:8768";
+async function consoleCall(p,d){const o=d?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)}:{};const r=await fetch(CONSOLE+p,o);if(!r.ok)throw new Error('console '+r.status);return r.json();}
+async function loadCatalog(){try{const groups=await consoleCall('/api/console/catalog');let h='';
+  for(const g of groups){h+='<div style="margin:12px 0 2px;color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.7px;font-weight:700">'+g.title+'</div>';
+    for(const it of g.items){const id='r'+Math.random().toString(36).slice(2);
+      h+='<div class="kv" id="'+id+'" data-mod="'+it.module+'" data-argv=\''+JSON.stringify(it.argv)+'\'>'+
+        '<b style="font-weight:500">'+it.label+' <span style="font-family:var(--mono);color:var(--dim);font-size:11px">'+it.module+' '+it.argv.join(' ')+'</span></b>'+
+        '<span>'+(it.args!==null?'<input type=text placeholder="'+it.args+'" style="width:150px;padding:5px;margin-right:6px"> ':'')+
+        '<button class="btn ghost" style="padding:5px 12px;margin:0" onclick="runFn(\''+id+'\')">Run</button></span></div>';}}
+  $('#runCat').innerHTML=h;
+}catch(e){$('#runCat').innerHTML='<div class="empty">Launcher offline — run <code>python3 console_server.py serve</code> (port 8768), then Refresh.</div>';}}
+async function runFn(id){const el=$('#'+id);const mod=el.dataset.mod;const argv=JSON.parse(el.dataset.argv);const inp=el.querySelector('input');const args=inp?inp.value:'';
+  $('#runOut').innerHTML='<div class="card"><pre>running '+mod+' '+argv.join(' ')+' …</pre></div>';
+  try{const r=await consoleCall('/api/console/run',{module:mod,argv:argv,args:args});
+    $('#runOut').innerHTML='<div class="card"><div class="kv"><b style="font-family:var(--mono);font-size:12px">$ '+(r.cmd||'')+'</b><span>'+(r.seconds||0)+'s · '+(r.ok?'<span class=ok>ok</span>':'<span class=err>exit '+r.returncode+'</span>')+'</span></div><pre>'+((r.output||'(no output)').replace(/</g,'&lt;'))+'</pre></div>';window.scrollTo(0,0);
+  }catch(e){$('#runOut').innerHTML='<div class="card"><pre class=err>'+e.message+' — is console_server.py serve running?</pre></div>';}}
 (async function(){try{await call('/api/meta');setOnline(true);loadCongress();}catch(e){setOnline(false);}})();
 </script>
 </body>

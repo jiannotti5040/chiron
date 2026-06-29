@@ -74,14 +74,20 @@ python3 grow_clean.py wikipedia "prime numbers"
 
 ```bash
 python3 chiron.py serve &          # engine + console        :8765
+python3 console_server.py serve &  # run any function        :8768
 python3 grow_control.py serve &    # start/stop/point grow   :8767
 python3 president_grow.py serve &  # LLM grow (if key set)    :8766
-# open http://127.0.0.1:8765
+# open http://127.0.0.1:8765  —  the Run tab launches everything below
 ```
+
+Once `console_server.py serve` is up, the console's **Run** tab lists every engine and subfunction
+(the chiron verbs, semic, the framework, governance, growth, build, and the six-task suite) and runs
+any of them live with output — no terminal needed.
 
 | Service | Port | What it is |
 |---|---|---|
 | `chiron.py serve` | 8765 | the engine + operator console (offline) |
+| `console_server.py serve` | 8768 | the launcher — run any function across all engines (the console's Run tab) |
 | `grow_control.py serve` | 8767 | start / stop / point the continuous grower |
 | `president_grow.py serve` | 8766 | LLM-assisted growth (propose → verify) |
 
