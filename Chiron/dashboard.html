@@ -200,6 +200,13 @@ python3 verify.py</pre></div>
         <li>To save memory as a JSON file in that folder: <code>python3 chiron.py serve --congress chiron_memory.json</code>.</li>
         <li>Headless: <code>python3 chiron.py run</code> reads the whole current folder; <code>run /path</code> reads any folder.</li>
       </ol></div>
+    <div class="card"><h3>The whole spine in one file</h3>
+      <p class="muted" style="font-family:var(--sans)">All 62 Chiron modules are also folded, byte-identical, into a single file in <code>Chiron&nbsp;Monolith/</code> — every cross-import resolves internally, so any module runs from the one file.</p>
+      <ol class="steps">
+        <li><code>python3 "Chiron Monolith/chiron_monolith.py" --list</code> — every embedded module.</li>
+        <li><code>python3 "Chiron Monolith/chiron_monolith.py" chiron selftest</code> — CHIRON GREEN, from one file.</li>
+        <li><code>python3 "Chiron Monolith/chiron_monolith.py" --selftest</code> — the core engines, through the fold.</li>
+      </ol></div>
     <div class="card"><h3>How Chiron grows — the exact points</h3>
       <div class="kv"><b>A new DOMAIN is born</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">the first time a structurally-distinct kind of material is seen (numbers vs text vs code vs graph). The same kind extends it.</span></div>
       <div class="kv"><b>A new ORGANISM is minted</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">when a reasoning cycle meets structure its charts can't cleanly read and the proposed capability passes the gate: non-colliding, runnable, still able to reject.</span></div>

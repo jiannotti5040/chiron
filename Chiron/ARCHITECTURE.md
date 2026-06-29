@@ -110,6 +110,18 @@ costing the properties above (`python3 build.py verify-all`).
 | `vault_dashboard.html` | the certificate browser — one tile per script: its claim and what would falsify it |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
+## The whole spine in one file (`Chiron Monolith/`)
+
+The single-file property of `chiron.py` is extended to the **entire spine**: the sibling
+`Chiron Monolith/` folder holds `chiron_monolith.py`, which embeds the byte-identical source of
+all 62 Chiron modules and wraps them in a `sys.meta_path` loader so every cross-import
+(`import chiron`, `import semic`, …) resolves to the embedded copy. Any module runs from the one
+file — `python3 chiron_monolith.py <module> [args]` — and `--selftest` proves it: the core engine
+battery and 43/43 selftest-bearing modules pass identically to the standalone scripts. It is a
+**lossless fold** (round-trip asserted at build by `build_monolith.py`), not a rewrite, and adds no
+logic; each module's `__file__` points back at the real `../Chiron/<name>.py` so self-source scans
+and data files resolve exactly as they do standalone.
+
 ## Data flow
 
 ```
