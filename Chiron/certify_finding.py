@@ -104,6 +104,10 @@ def certify_finding(surface, domain="general", context=None):
         "replay_seed": replay_seed,
         "court_deployable": bool(daubert["overall_assessment"].startswith("ADMISSIBLE")
                                  and not gov["verdict"].startswith("REJECT")),
+        "legal_status": ("Court-READY input, not a legal determination. The Daubert/FRE 702 section "
+                         "is the system's self-assessment of reliability factors; admissibility is "
+                         "decided by a court, and a qualified expert must sponsor and authenticate the "
+                         "finding. The method is not peer-reviewed (disclosed above). Not legal advice."),
     }
 
 
@@ -113,7 +117,8 @@ def render(c):
         L.append(f"  {s['title']}: {s['content']}")
     L.append(f"  controlling law: {', '.join(c['controlling_law'][:4])}…")
     L.append(f"  admissibility .. {c['admissibility']}")
-    L.append(f"  court-deployable {c['court_deployable']}")
+    L.append(f"  court-deployable {c['court_deployable']}  (self-assessment — a court decides admissibility)")
+    L.append(f"  legal status ... {c.get('legal_status', '')}")
     L.append("=" * 64)
     return "\n".join(L)
 
