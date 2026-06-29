@@ -79,6 +79,7 @@
 <nav>
   <button data-tab="analyze" class="active">Analyze</button>
   <button data-tab="run">Run</button>
+  <button data-tab="chat">Chat</button>
   <button data-tab="congress">What it knows</button>
   <button data-tab="growth">Growth</button>
   <button data-tab="feed">Feed</button>
@@ -128,6 +129,21 @@ python3 president_grow.py serve  # LLM grow (free key)        :8766</pre>
       <p class="lead">Every engine and subfunction, runnable here; output appears at the top.
         <button class="btn ghost" style="padding:5px 12px" onclick="loadCatalog()">Refresh</button></p>
       <div id="runCat"><div class="empty">Loading… start <code>python3 console_server.py serve</code> (port 8768), then Refresh.</div></div>
+    </div>
+  </section>
+  <!-- CHAT -->
+  <section id="chat" class="tab">
+    <div class="card">
+      <h3>Assistant — tell it what you want</h3>
+      <p class="lead">Natural language over the engine and the Congress. It reads your intent and runs the real,
+        deterministic functions — recover a rule, speak it back, search or summarize the memory, run any engine.
+        The model directs; the engine does the work, so every result is exact. <span id="chatStat" class="pill">checking…</span></p>
+      <div id="chatLog" style="min-height:240px;margin:10px 0"></div>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="chatIn" placeholder="e.g. what rule is behind 1 1 2 3 5 8 13?  ·  how big is the memory?  ·  run the benchmark suite" style="flex:1" onkeydown="if(event.key==='Enter')chatSend()">
+        <button class="btn" onclick="chatSend()">Send</button>
+      </div>
+      <p class="note">Needs the assistant service + a free LLM key: <code>export GROW_LLM_API_KEY=…</code> then <code>python3 assistant_server.py serve</code>.</p>
     </div>
   </section>
   <!-- CONGRESS -->
@@ -289,7 +305,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');$('#'+b.dataset.tab).classList.add('active');
-  if(b.dataset.tab==='run')loadCatalog();
+  if(b.dataset.tab==='run')loadCatalog(); if(b.dataset.tab==='chat')chatStatus();
   if(b.dataset.tab==='congress')loadCongress(); if(b.dataset.tab==='growth')loadGrowth();
   if(b.dataset.tab==='self')loadSelf(); if(b.dataset.tab==='feed'){loadFeed();loadGrowCtl();}
   if(b.dataset.tab==='grow')loadGrow();
@@ -342,14 +358,15 @@ function plainFinding(h){const inv=(h&&h.machine_view)||{};const mc=inv.model_cl
 function set(id,html){const el=$('#'+id);if(el)el.innerHTML=html;}
 function cls(c){if(!c){$('#cls').innerHTML='';return;}$('#cls').innerHTML='<span class="badge '+(c==='integral'?'int':'gen')+'">'+c.toUpperCase()+'</span>';}
 async function analyzeText(){const text=$('#text').value.trim();if(!text)return;
-  $('#result').style.display='block';set('found','analyzing…');set('rel','');set('rec','');cls('');
+  $('#result').style.display='block';set('found','analyzing…');set('spoke','…');set('rel','');set('rec','');cls('');
   try{const r=await call('/api/ingest',{text});if(r.error)throw new Error(r.error);lastRes=r;
     set('found',r.human?plainFinding(r.human):'Ingested.');cls(r.classification);
-    const a=r.articulation;
-    if(a&&a.spoken){const sp=Array.isArray(a.spoken)?a.spoken.slice(0,14).join(', '):JSON.stringify(a.spoken).slice(0,180);
-      set('spoke',(a.mode||'spoken back')+': <span style="font-family:var(--mono);color:#cdd7e6">'+sp+'</span>'+
-        (r.source_author&&r.source_author!=='unknown'?(' &middot; author: <b>'+r.source_author+'</b>'):''));}
-    else set('spoke','<span class="muted">not runnable for this surface</span>');
+    // spoken back: ask the engine to re-voice the recovered rule through its own invariant (the codec)
+    try{const a=(await call('/api/articulate',{surface:text,n:12})).articulation;
+      if(a&&a.spoken){const sp=Array.isArray(a.spoken)?a.spoken.slice(0,16).join(', '):String(a.spoken).slice(0,200);
+        set('spoke',(a.mode||'spoken back')+': <span style="font-family:var(--mono);color:#cdd7e6">'+sp+'</span>'+(a.verified?' &middot; <span class=ok>verified</span>':''));}
+      else set('spoke','<span class="muted">not runnable for this surface — no exact generator to speak back</span>');
+    }catch(e){set('spoke','<span class="muted">not runnable for this surface</span>');}
     set('rel',r.relation||'');set('rec',r.recommendation||'');
     $('#cert').textContent=r.certificate_text||JSON.stringify(r,null,2);
   }catch(e){set('found','<span class=err>'+e.message+'</span>');}}
@@ -427,6 +444,17 @@ async function runFn(id){const el=$('#'+id);const mod=el.dataset.mod;const argv=
   try{const r=await consoleCall('/api/console/run',{module:mod,argv:argv,args:args});
     $('#runOut').innerHTML='<div class="card"><div class="kv"><b style="font-family:var(--mono);font-size:12px">$ '+(r.cmd||'')+'</b><span>'+(r.seconds||0)+'s · '+(r.ok?'<span class=ok>ok</span>':'<span class=err>exit '+r.returncode+'</span>')+'</span></div><pre>'+((r.output||'(no output)').replace(/</g,'&lt;'))+'</pre></div>';window.scrollTo(0,0);
   }catch(e){$('#runOut').innerHTML='<div class="card"><pre class=err>'+e.message+' — is console_server.py serve running?</pre></div>';}}
+// --- Chat tab: the LLM assistant (assistant_server.py, port 8769) ---
+const ASSIST="http://127.0.0.1:8769";let chatHist=[];
+function chatAdd(role,html){const d=document.createElement('div');d.style.cssText='padding:10px 12px;border-radius:10px;margin:8px 0;max-width:88%;'+(role==='user'?'background:#15233a;margin-left:auto':'background:#0f1622;border:1px solid var(--line)');d.innerHTML=html;$('#chatLog').appendChild(d);d.scrollIntoView();return d;}
+async function chatStatus(){try{const s=await fetch(ASSIST+'/api/assistant/status').then(r=>r.json());$('#chatStat').innerHTML=s.enabled?'<span class=ok>'+s.provider+' · ready</span>':'<span class=err>no API key — export GROW_LLM_API_KEY</span>';}catch(e){$('#chatStat').innerHTML='<span class=err>assistant offline — run assistant_server.py serve</span>';}}
+async function chatSend(){const i=$('#chatIn');const t=i.value.trim();if(!t)return;i.value='';chatAdd('user',t.replace(/</g,'&lt;'));chatHist.push({role:'user',content:t});const ph=chatAdd('assistant','…');
+  try{const r=await fetch(ASSIST+'/api/assistant/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,history:chatHist})}).then(x=>x.json());
+    let h=(r.reply||'').replace(/</g,'&lt;');
+    if(r.result)h+='<pre style="background:#0a0e16;border:1px solid var(--line);border-radius:8px;padding:10px;white-space:pre-wrap;font-size:12px;max-height:300px;overflow:auto;margin-top:8px">'+JSON.stringify(r.result,null,2).replace(/</g,'&lt;')+'</pre>';
+    if(r.action&&r.action!=='answer')h+='<div class="note" style="margin-top:4px">ran: '+r.action+'</div>';
+    ph.innerHTML=h;chatHist.push({role:'assistant',content:r.reply||''});
+  }catch(e){ph.innerHTML='<span class=err>'+e.message+'</span> — is <code>assistant_server.py serve</code> running?';}}
 (async function(){try{await call('/api/meta');setOnline(true);loadCongress();}catch(e){setOnline(false);}})();
 </script>
 </body>
