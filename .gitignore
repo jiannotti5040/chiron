@@ -90,3 +90,6 @@ dist/
 transcribe_hf_token
 **/transcribe_hf_token
 *_temp_audio.wav
+
+# artifact ledger: keep latest.json, ignore the append-only timestamped run memorials
+Chiron/artifacts/*/[0-9]*.json

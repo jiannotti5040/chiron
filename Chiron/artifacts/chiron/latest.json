@@ -1,0 +1,25 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "script": "chiron",
+  "purpose": "prove the Chiron core: exact MDL invariant recovery, held-out verification, refusal, certification, and bounded agency in one file",
+  "verified": true,
+  "generated_utc": "2026-06-29T18:05:42Z",
+  "commit": "e0e45c0a07d4f47ad9c01e2f20a16db57c5b9e90",
+  "machine_view": {
+    "core_gates_total": 12,
+    "core_gates_passed": 12,
+    "arithmetic": "exact",
+    "single_file": true
+  },
+  "human_view": {
+    "purpose": "prove the Chiron core: exact MDL invariant recovery, held-out verification, refusal, certification, and bounded agency in one file",
+    "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
+    "why_believed": "12/12 core gates passed (CHIRON GREEN) in exact arithmetic with no network in the core path.",
+    "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim.",
+    "residual": "n/a",
+    "confidence": "high"
+  },
+  "self_hash": "5f9500efca3a956c"
+}
