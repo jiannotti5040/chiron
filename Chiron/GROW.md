@@ -8,6 +8,12 @@ feeds Chiron continuously. It is deliberately separate from the monolith —
 and only when you run it. The same engine drives any grow by pointing `--params` at
 that grow's folder.
 
+> **Newer growers built on the same primitive:** `grow_clean.py` unifies file / Wikipedia-preset /
+> ingestion-driven growth (LLM-aided, offline-first) into one clean interface, and
+> `president_grow.py` is the compartmentalized, network-gated LLM grow service where the model only
+> *proposes* candidate structures and chiron *verifies* every one. Both reuse the `assimilate`
+> primitive below; nothing enters the Congress unverified.
+
 Each pass it:
 
 1. (optionally) **pulls** the current Congress from GitHub,
@@ -25,18 +31,17 @@ Each pass it:
 It **auto-compacts** past `max_congress_mb`, so it runs forever without bloating the
 repo.
 
-## The two grows
+## The grow data
 
 | Grow | Folder | Who runs it | Notes |
 |---|---|---|---|
 | **Public** | `grow-public/` | anyone, via Pull Request | open contribution; see `grow-public/README.md` + `CONTRIBUTING.md` |
-| **Private** | `grow-private/` | the owner only | the true *crescere*; see `grow-private/README.md` |
 
 ```bash
 cd Chiron
-python3 chiron_grow.py --params grow-public/parameters.json            # public grow
-python3 chiron_grow.py --params grow-private/parameters.json           # private grow
+python3 chiron_grow.py --params grow-public/parameters.json            # the default grow
 python3 chiron_grow.py --params grow-public/profiles/regulatory.json --once   # laws -> 'regulation' domain
+python3 grow_clean.py file ./notes.txt                                # or the unified clean grower
 ```
 
 Flags (any profile): `--dry-run` (offline demo, no network/git), `--once` (single

@@ -4,7 +4,9 @@
 held-out prediction, refused (`INCOMPRESSIBLE`) rather than laundered — lifted from integer
 sequences to **meaning**. Pure standard library (`fractions.Fraction`, `decimal.Decimal`,
 `itertools`, `hashlib`): no numpy, fully airgappable — the "dictionary" implementation the
-architecture calls for. Engine: `semic.py` (48/48 gates). Chiron-side surface: `semic_bridge.py`.*
+architecture calls for. Engine: `semic.py` (56/56 gates; exact O(N·m) separable collapse, typed
+classes H1–H5, constraint discovery). Chiron-side surface: `semic_bridge.py`; energy layer:
+`semic_energy.py`.*
 
 ---
 
