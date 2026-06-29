@@ -57,6 +57,8 @@ polynomials and is confidently wrong on the rest.
   governance layer, and a probabilistic (energy) layer as four instances of it.
 - `python3 Chiron/trace.py "1 1 2 3 5 8"` — the full ranked-candidate reasoning path: why the
   winner won and how it was verified.
+- **How to run everything** — engine + console, starting/stopping/pointing the grower from the
+  dashboard, LLM-assisted growth, and the benchmarks — is in [RUNNING.md](Chiron/RUNNING.md).
 - Scope and failure modes are stated plainly in
   [WHY_CHIRON.md](Chiron/WHY_CHIRON.md) and [KNOWN_LIMITATIONS.md](Chiron/KNOWN_LIMITATIONS.md).
 
