@@ -37,6 +37,13 @@ Chiron/
   semic_energy.py        three-level stack — exact collapse, then uncertified energy exploration on refusal
   build.py               lossless split/recompile of chiron.py + semic.py (byte-identical gate)
   bench_suite.py         external benchmarks — six tasks vs established baselines
+  vault.py               ONE command starts every service + prints one URL (Ctrl-C stops all)
+  console_server.py      launcher service — run any function from the dashboard Run tab (:8768)
+  assistant_server.py    natural-language assistant — intent -> real engine actions (Chat tab, :8769)
+  grow_control.py        start / stop / point the grower from the dashboard (Feed tab, :8767)
+  llm_certify.py         accountability certificate over an LLM output (audit + verify its claims)
+  chiron_artifact.py     one signed-certificate emit path; build_manifest.py indexes them (artifacts/)
+  vault_dashboard.html   the certificate browser (one tile per script + what would falsify it)
   parameters.json        default grower config (topics, source, thresholds)
   tests/                 test_chiron.py · test_grow.py (run by CI)
   requirements.txt       numpy required; scipy optional (pure-Python fallback)

@@ -3,6 +3,17 @@
 Everything is plain `python3`. The core needs no install; `numpy` is only used by a couple of
 optional tools. Run these from inside the `Chiron/` folder.
 
+## 0. Run everything with one command
+
+```bash
+python3 vault.py                  # starts the engine + every service; prints one URL
+# then open http://127.0.0.1:8765 ;  Ctrl-C stops everything
+```
+
+`vault.py` launches all five local services so you never juggle ports (console :8765, launcher
+:8768, assistant :8769, grow control :8767, LLM grow :8766). `python3 vault.py --core` runs just the
+engine. The sections below cover each service if you'd rather start them individually.
+
 ## 1. The engine + operator console
 
 ```bash
@@ -104,4 +115,15 @@ python3 semic.py selftest          # semantic calculus (56/56)
 python3 bench_suite.py             # six external tasks vs established baselines
 python3 epistemic.py demo          # one contract, four instances
 python3 build.py verify-all        # chiron.py + semic.py recompile byte-identically
+python3 build_manifest.py --run    # index every script + its emitted certificate (artifacts/)
 ```
+
+## 7. Wrap an LLM output (accountability certificate)
+
+```bash
+python3 llm_certify.py "obviously 2 4 8 16 32 64 continues, and 2+2=5"
+```
+
+Audits the honesty of the text, exactly verifies the checkable claims (here: the geometric sequence
+verifies, `2+2=5` is refused), runs the governance gate, and signs it. It certifies *accountability*,
+never that a free-text answer is correct.

@@ -47,8 +47,14 @@ end, and it emits an auditable certificate on every run.
   that regenerates terms the general compressors cannot produce.
 - `python3 Chiron/trace.py "1 1 2 3 5 8"` — the full ranked-candidate reasoning path: why the winner
   won and how it was verified.
-- **Run everything** — engine + operator console, start/stop/point the grower from the dashboard,
-  LLM-assisted growth, and the benchmarks — is in **[RUNNING.md](Chiron/RUNNING.md)**.
+- `python3 Chiron/llm_certify.py "..."` — wrap a language-model output: audit its honesty, exactly
+  verify the checkable claims, refuse to call free text "correct." The discipline as an LLM wrapper.
+- **Run everything with one command:** `cd Chiron && python3 vault.py`, then open
+  http://127.0.0.1:8765 — the operator console with **Analyze**, **Run** (run any function), **Chat**
+  (natural language over the engine), and **Feed** (start/stop/point the grower). Front door:
+  **[START_HERE.md](START_HERE.md)**; full guide: **[RUNNING.md](Chiron/RUNNING.md)**.
+- Every script can leave a signed, falsifiable certificate under `Chiron/artifacts/`, indexed by
+  `build_manifest.py` and browsable in `vault_dashboard.html` — see [ARTIFACTS.md](Chiron/ARTIFACTS.md).
 - Scope and failure modes are stated plainly in [WHY_CHIRON.md](Chiron/WHY_CHIRON.md) and
   [KNOWN_LIMITATIONS.md](Chiron/KNOWN_LIMITATIONS.md).
 

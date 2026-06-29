@@ -467,6 +467,19 @@ the score weights. Provenance is a content-addressed DAG with a \emph{minimal bl
 (smallest upstream commit set producing a challenged artifact).
 \status{Proof-of-concept; self-tested.}
 
+\subsection{Certification and the LLM accountability wrapper}
+A finding certificate composes the recovered law, a Daubert / FRE~702 reliability analysis (factors
+computed from the finding), a regulatory-compliance walk of the legal corpus, and a Merkle-root
+attestation with a replay seed. Crucially it states its own \emph{legal status}: it is
+court-\textsc{ready} input, \emph{not} a legal determination --- admissibility is decided by a court,
+and the method's lack of peer review is disclosed in the analysis itself. The same discipline wraps a
+language model: given an LLM output, the wrapper audits its candor, \emph{exactly verifies the
+checkable claims} (numeric sequences via collapse, arithmetic), marking each \textsc{verified} or
+\textsc{refused}, runs the governance gate, and attests the result --- but it never certifies a
+free-text claim as true. It certifies \emph{accountability} (what is checkable, checked; the rest
+explicitly flagged unverifiable), not correctness. The model proposes; the engine disposes.
+\status{Implemented \& tested; the certificate is an assurance artifact, not a legal instrument.}
+
 %=====================================================================
 \section{Ambiguity and Origin (Infectatrum)}
 %=====================================================================
