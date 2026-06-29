@@ -18,7 +18,12 @@ python3 chiron_monolith.py semic selftest          # -> 56/56 gates passing
 python3 chiron_monolith.py chiron selftest         # -> CHIRON GREEN
 python3 chiron_monolith.py trace "1 1 2 3 5 8 13"  # -> ranked candidates -> verified rule
 python3 chiron_monolith.py --selftest              # battery across the core engines
+python3 chiron_monolith.py chiron serve            # the operator console on :8765, from the one file
 ```
+
+There is **no separate dashboard** for the monolith: it serves the same operator console as the
+spine. `chiron_monolith.py chiron serve` opens it at <http://127.0.0.1:8765>, and the aux services
+behind the other tabs run the same way (`chiron_monolith.py console_server serve`, etc.).
 
 `python3 chiron_monolith.py --selftest` runs the core engines each in a fresh subprocess of
 the monolith and reports pass/fail:
@@ -56,8 +61,11 @@ subcommand and fail identically whether folded or run standalone — i.e. the fo
 
 ## Regenerate
 
+The generator lives at the **repo root** (`build_monolith.py`) — a monolith is one file, so the
+folder holds only `chiron_monolith.py` and this README. From the repo root:
+
 ```bash
-python3 build_monolith.py            # rebuild chiron_monolith.py from Chiron/*.py
+python3 build_monolith.py            # rebuild "Chiron Monolith/chiron_monolith.py" from Chiron/*.py
 python3 build_monolith.py --verify   # rebuild, then run the engine battery through it
 ```
 
