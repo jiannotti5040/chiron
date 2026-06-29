@@ -47,7 +47,7 @@ check("Caesar shift 3 recovered", caesar.model_class == "caesar_shift" and caesa
 check("decoder inverts the cipher", caesar.params["decode"]("DWWDFNDWGDZQ") == "ATTACKATDAWN")
 
 print("\n=== STRESS 3: the TWINS (figuregraph same-structure) ===")
-CORPUS = pathlib.Path("/sessions/wizardly-lucid-gates/mnt/Jacob-s-Portfolio-Vault/Infectatrum/corpus")
+CORPUS = pathlib.Path(__file__).resolve().parent.parent / "Infectatrum" / "corpus"
 x26 = json.loads((CORPUS / "plate_026.json").read_text())
 x27 = json.loads((CORPUS / "plate_027.json").read_text())
 def pinv(p): return {"family": p["family"].split(" ")[0],
