@@ -4,12 +4,13 @@ bench_suite.py — the external-benchmark suite both reviews ranked as the #1 ne
 
 Runs the same invariant-recovery architecture
         surface -> hypothesis space -> exact search -> MDL -> held-out -> accept / refuse
-across FOUR independent domains and prints one consolidated table. Each domain beats a simpler
-baseline and abstains rather than guess. This is the evidence the reviewers asked for: not more
-formal machinery, but the same pipeline succeeding, with a refusal floor, on unrelated tasks.
+across SIX tasks --- four recovery domains plus two head-to-head comparisons against established
+methods --- and prints one consolidated table. Each beats or matches a standard baseline and
+refuses rather than guess where refusal applies. This is the evidence the reviewers asked for: not
+more formal machinery, but the same pipeline succeeding, with a refusal floor, on unrelated tasks.
 
     python3 bench_suite.py            # consolidated table
-    python3 bench_suite.py selftest   # 0/1 gate over all four domains
+    python3 bench_suite.py selftest   # 0/1 gate over all six tasks
 
 Status: implemented & tested. Each row uses the real engine for that domain.
 """
@@ -24,6 +25,8 @@ import bench_compression as BC   # noqa: E402
 import bench_proverbs as BP      # noqa: E402
 import bench_protocol as BPR     # noqa: E402
 import bench_legal as BL         # noqa: E402
+import bench_symreg as BS        # noqa: E402  comparative vs polynomial regression
+import bench_authorship as BA    # noqa: E402  comparative vs a content baseline (Burrows Delta)
 
 
 def _quiet(fn, *a):
@@ -38,9 +41,14 @@ def collect():
     trows, abst = _quiet(BPR.run)
     lrows, removed = _quiet(BL.run)
 
+    sr_rows, _, _ = _quiet(BS.run)
+    dc, bc, an, ak = _quiet(BA.run)
+
     ho_correct = sum(r[5] for r in trows)
     ho_total = sum(r[6] for r in trows)
     legal_ok = sum(1 for r in lrows if r[6])
+    sr_exact = sum(1 for r in sr_rows if r[2] == "exact")
+    sr_poly = sum(1 for r in sr_rows if r[4] == "exact")
 
     return [
         ("sequences", "recover integer generators",
@@ -55,27 +63,35 @@ def collect():
         ("governance", "recover applicable provisions",
          f"{legal_ok}/{len(BL.SCENARIOS)} scenarios, citations attached",
          "domain-blind search", "abstains off-scope"),
+        ("symbolic reg.", "recover closed-form laws",
+         f"{sr_exact}/{len(BS.CORPUS)} exact (polyfit {sr_poly}/{len(BS.CORPUS)})",
+         "polynomial regression", "refuses control"),
+        ("authorship", "attribute held-out passages",
+         f"Burrows Delta {dc}/{an} > chance ({1 / ak:.0%})",
+         "content baseline", "deterministic"),
     ]
 
 
 def run():
     rows = collect()
-    print("CHIRON external-benchmark suite — one architecture, four domains\n")
-    print("  surface -> hypothesis space -> exact search -> MDL -> held-out -> accept / refuse\n")
+    print("CHIRON external-benchmark suite — one architecture, six tasks\n")
+    print("  surface -> hypothesis space -> exact search -> MDL -> held-out -> accept / refuse")
+    print("  (four recovery domains + two comparisons against established methods)\n")
     print(f"{'domain':12}{'task':30}{'result':42}{'baseline':20}{'refusal':18}")
     print("-" * 122)
     for dom, task, result, base, refusal in rows:
         print(f"{dom:12}{task:30}{result:42}{base:20}{refusal:18}")
     print("-" * 122)
-    print("Every domain recovers exact structure where it exists, beats a simpler baseline, and")
-    print("refuses rather than fabricate. The refusal floor is the property neither curve-fitting")
-    print("nor an LLM baseline can match.")
+    print("Across these tasks the engine recovers exact structure where it exists, beats or matches")
+    print("an established baseline, and refuses rather than fabricate where refusal applies. That")
+    print("refusal floor is the property neither curve-fitting nor an LLM baseline can match.")
     return rows
 
 
 def _selftest():
     suites = [("compression", BC._selftest), ("proverbs", BP._selftest),
-              ("protocol", BPR._selftest), ("legal", BL._selftest)]
+              ("protocol", BPR._selftest), ("legal", BL._selftest),
+              ("symreg", BS._selftest), ("authorship", BA._selftest)]
     results = []
     for name, fn in suites:
         ok = _quiet(fn)
@@ -85,7 +101,7 @@ def _selftest():
     for name, ok in results:
         print(f"  [{'PASS' if ok else 'FAIL'}] {name} benchmark")
     allok = all(ok for _, ok in results)
-    print(f"\n  VERDICT: {'PASS' if allok else 'FAIL'} — {sum(ok for _, ok in results)}/{len(results)} domains green")
+    print(f"\n  VERDICT: {'PASS' if allok else 'FAIL'} — {sum(ok for _, ok in results)}/{len(results)} tasks green")
     return allok
 
 
