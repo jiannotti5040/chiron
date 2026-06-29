@@ -93,3 +93,15 @@ transcribe_hf_token
 
 # artifact ledger: keep latest.json, ignore the append-only timestamped run memorials
 Chiron/artifacts/*/[0-9]*.json
+
+# LLM provider keys — NEVER commit secrets; providers read keys from the environment only
+.env
+.env.*
+*.env
+**/.env
+**/*.env
+*_api_key*
+*_secret*
+.chiron_llm*
+llm_keys*
+secrets.json

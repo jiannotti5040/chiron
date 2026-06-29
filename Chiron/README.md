@@ -36,7 +36,7 @@ Chiron/
   epistemic.py           the abstract recovery contract; chiron / semic / governance / energy as instances
   semic_energy.py        three-level stack — exact collapse, then uncertified energy exploration on refusal
   build.py               lossless split/recompile of chiron.py + semic.py (byte-identical gate)
-  ../Chiron Monolith/    all 62 modules folded into ONE runnable file (chiron_monolith.py)
+  ../Chiron Monolith/    all 63 modules folded into ONE runnable file (chiron_monolith.py)
   bench_suite.py         external benchmarks — six tasks vs established baselines
   vault.py               ONE command starts every service + prints one URL (Ctrl-C stops all)
   console_server.py      launcher service — run any function from the dashboard Run tab (:8768)

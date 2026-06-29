@@ -98,6 +98,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `epistemic.py` | the abstract primitive — Surface→Hypothesis→Constraint→Verify→Certificate, with chiron / semic / governance / energy as instances |
 | `grow_clean.py` | unified grower over any file, the Wikipedia preset, or ingestion-driven search; LLM-aided (propose→verify) |
 | `president_grow.py` | the compartmentalized LLM grow service — the model proposes, chiron verifies; nothing enters unverified |
+| `llm_providers.py` | multi-provider LLM client — a fallback chain (gemini → openrouter → groq → openai → anthropic → perplexity), each keyed from its own env var; the proposer for the Chat assistant |
 | `build.py` | lossless split/recompile of the single-file engines, byte-identical round-trip gate |
 | `intake_salvage.py` | fault-tolerant ingestion over strict `intake.py` (never overwrites a good parse) |
 | `vault.py` | one command that starts every local service and prints one URL (Ctrl-C stops all) |
@@ -114,7 +115,7 @@ costing the properties above (`python3 build.py verify-all`).
 
 The single-file property of `chiron.py` is extended to the **entire spine**: the sibling
 `Chiron Monolith/` folder holds `chiron_monolith.py`, which embeds the byte-identical source of
-all 62 Chiron modules and wraps them in a `sys.meta_path` loader so every cross-import
+all 63 Chiron modules and wraps them in a `sys.meta_path` loader so every cross-import
 (`import chiron`, `import semic`, …) resolves to the embedded copy. Any module runs from the one
 file — `python3 chiron_monolith.py <module> [args]` — and `--selftest` proves it: the core engine
 battery and 43/43 selftest-bearing modules pass identically to the standalone scripts. It is a

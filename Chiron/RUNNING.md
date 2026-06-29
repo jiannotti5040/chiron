@@ -70,6 +70,21 @@ python3 president_grow.py serve    # at http://127.0.0.1:8766 ; also the console
 
 Without a key it stays disabled and the rest of the system is unaffected.
 
+**Many providers, one chain.** The Chat assistant (and any caller of `llm_providers.py`) tries a
+fallback chain — each provider read from its own environment variable, so setting any one is enough:
+
+```bash
+export GEMINI_API_KEY=...        # or GOOGLE_API_KEY / GROW_LLM_API_KEY
+export OPENROUTER_API_KEY=...    # unlocks Llama, Qwen, GPT, … via OpenRouter
+export GROQ_API_KEY=...          # free, fast Llama
+# also honored: OPENAI_API_KEY, ANTHROPIC_API_KEY, PERPLEXITY_API_KEY, CEREBRAS_API_KEY
+python3 llm_providers.py check --live    # which keys are set + a live ping to each
+python3 llm_providers.py ask "..."       # run the chain; it prints which provider answered
+```
+
+Order is `gemini → openrouter → groq → openai → anthropic → perplexity` (override with
+`CHIRON_LLM_CHAIN="openrouter,groq"`). Keys live only in your environment — never in the repo.
+
 ## 4. Start your own grow from a file — `grow_clean.py`
 
 For pointing a fresh grow at your own material (any file, the Wikipedia preset, or ingestion-driven
@@ -139,7 +154,7 @@ python3 chiron_monolith.py --selftest         # battery: the core engines, throu
 python3 chiron_monolith.py chiron serve       # the SAME operator console on :8765, from one file
 ```
 
-`chiron_monolith.py` is all 62 Chiron modules folded into a single file (byte-identical embedded
+`chiron_monolith.py` is all 63 Chiron modules folded into a single file (byte-identical embedded
 source + a `sys.meta_path` loader so their cross-imports resolve internally). It adds no logic; it
 runs the same gates the standalone scripts do — and it serves the same dashboard (there is no
 separate monolith console). Ship it alongside the repo's `Chiron/` directory so its data files and
