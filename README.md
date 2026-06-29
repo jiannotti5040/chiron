@@ -57,7 +57,7 @@ end, and it emits an auditable certificate on every run.
   `build_manifest.py` and browsable in `vault_dashboard.html` — see [ARTIFACTS.md](Chiron/ARTIFACTS.md).
   Four scripts (`semic`, `chiron`, `density_emotion`, `chiron_artifact`) emit as working proofs.
 - **The whole spine in one file:** `python3 "Chiron Monolith/chiron_monolith.py" --selftest` — all
-  62 Chiron modules folded, byte-identical, into a single runnable file; run any of them with
+  63 Chiron modules folded, byte-identical, into a single runnable file; run any of them with
   `python3 "Chiron Monolith/chiron_monolith.py" <module> [args]`. See
   [Chiron Monolith/README.md](Chiron%20Monolith/README.md).
 - Scope and failure modes are stated plainly in [WHY_CHIRON.md](Chiron/WHY_CHIRON.md) and

@@ -2,7 +2,7 @@
 
 **All of Chiron, folded into one file.**
 
-`chiron_monolith.py` embeds the byte-identical source of every Chiron module (62 of them,
+`chiron_monolith.py` embeds the byte-identical source of every Chiron module (63 of them,
 ~1.9 MB of code) inside a single Python file, with a small loader so the whole spine runs
 out of that one file — no `Chiron/*.py` siblings required for the *code*.
 
@@ -75,5 +75,5 @@ Re-run after changing any Chiron module so the fold stays byte-identical to the 
 
 The monolith is a faithful single-file embodiment of Chiron's code. It is not a separate
 engine and adds no logic — every behaviour, gate, and certificate is the spine's own,
-reached through one file instead of sixty-two. Licensed under PolyForm Noncommercial 1.0.0
+reached through one file instead of sixty-three. Licensed under PolyForm Noncommercial 1.0.0
 (see `../LICENSE.md`).

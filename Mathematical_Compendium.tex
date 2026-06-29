@@ -630,7 +630,7 @@ exploration around it.
 \status{The schema is the genuine, load-bearing contribution.}
 
 \subsection{The whole spine in one file}
-The code that realizes this schema across sixty-two modules is also distributed as a single file.
+The code that realizes this schema across sixty-three modules is also distributed as a single file.
 \texttt{chiron\_monolith.py} embeds the byte-identical source of every Chiron module and wraps them
 in an import hook (\texttt{sys.meta\_path}) so that each inter-module import resolves to the embedded
 copy; any module then runs from the one file (\texttt{python3 chiron\_monolith.py $\langle$module$\rangle$

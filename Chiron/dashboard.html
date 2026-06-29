@@ -143,7 +143,7 @@ python3 president_grow.py serve  # LLM grow (free key)        :8766</pre>
         <input type="text" id="chatIn" placeholder="e.g. what rule is behind 1 1 2 3 5 8 13?  ·  how big is the memory?  ·  run the benchmark suite" style="flex:1" onkeydown="if(event.key==='Enter')chatSend()">
         <button class="btn" onclick="chatSend()">Send</button>
       </div>
-      <p class="note">Needs the assistant service + a free LLM key: <code>export GROW_LLM_API_KEY=…</code> then <code>python3 assistant_server.py serve</code>.</p>
+      <p class="note">Needs the assistant service + at least one LLM key. It tries providers in a chain — set any of <code>GEMINI_API_KEY</code>, <code>OPENROUTER_API_KEY</code> (Llama/Qwen/GPT), <code>GROQ_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code> — then <code>python3 assistant_server.py serve</code>. Check keys with <code>python3 llm_providers.py check --live</code>.</p>
     </div>
   </section>
   <!-- CONGRESS -->
@@ -454,7 +454,7 @@ async function runFn(id){const el=$('#'+id);const mod=el.dataset.mod;const argv=
 // --- Chat tab: the LLM assistant (assistant_server.py, port 8769) ---
 const ASSIST="http://127.0.0.1:8769";let chatHist=[];
 function chatAdd(role,html){const d=document.createElement('div');d.style.cssText='padding:10px 12px;border-radius:10px;margin:8px 0;max-width:88%;'+(role==='user'?'background:#15233a;margin-left:auto':'background:#0f1622;border:1px solid var(--line)');d.innerHTML=html;$('#chatLog').appendChild(d);d.scrollIntoView();return d;}
-async function chatStatus(){try{const s=await fetch(ASSIST+'/api/assistant/status').then(r=>r.json());$('#chatStat').innerHTML=s.enabled?'<span class=ok>'+s.provider+' · ready</span>':'<span class=err>no API key — export GROW_LLM_API_KEY</span>';}catch(e){$('#chatStat').innerHTML='<span class=err>assistant offline — run assistant_server.py serve</span>';}}
+async function chatStatus(){try{const s=await fetch(ASSIST+'/api/assistant/status').then(r=>r.json());$('#chatStat').innerHTML=s.enabled?'<span class=ok>'+((s.providers&&s.providers.length)?s.providers.join(' → '):s.provider)+' · ready</span>':'<span class=err>no key — set GEMINI_API_KEY / OPENROUTER_API_KEY / GROQ_API_KEY / …</span>';}catch(e){$('#chatStat').innerHTML='<span class=err>assistant offline — run assistant_server.py serve</span>';}}
 async function chatSend(){const i=$('#chatIn');const t=i.value.trim();if(!t)return;i.value='';chatAdd('user',t.replace(/</g,'&lt;'));chatHist.push({role:'user',content:t});const ph=chatAdd('assistant','…');
   try{const r=await fetch(ASSIST+'/api/assistant/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,history:chatHist})}).then(x=>x.json());
     let h=(r.reply||'').replace(/</g,'&lt;');

@@ -130,19 +130,40 @@ def _extract_json(text):
         return {"action": "answer", "args": {}, "say": text.strip()[:500]}
 
 
+def _need_key():
+    return {"enabled": False, "action": None, "result": None,
+            "reply": "The assistant needs at least one LLM key. Set any of GEMINI_API_KEY, "
+                     "OPENROUTER_API_KEY, GROQ_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY "
+                     "(e.g. `export OPENROUTER_API_KEY=...`) and restart this service. Run "
+                     "`python3 llm_providers.py check` to see what's keyed. (The Run tab works "
+                     "without a key.)"}
+
+
 def chat(message, history=None, cfg=None, transport=None):
-    cfg = cfg or pg.LLMConfig.from_env()
-    if not cfg.enabled and transport is None:
-        return {"enabled": False,
-                "reply": "The assistant needs a free LLM key. Get one at "
-                         "https://aistudio.google.com/apikey, then `export GROW_LLM_API_KEY=...` and "
-                         "restart `assistant_server.py`. (The Run tab works without a key.)",
-                "action": None, "result": None}
+    """Plan an action with the LLM, then execute it on the real engine. The real path uses the
+    multi-provider chain (any keyed provider); passing an explicit cfg/transport forces the
+    single-provider path (used by the offline self-test)."""
+    import llm_providers as llm
+    explicit = cfg is not None or transport is not None
+    if explicit:
+        eff = cfg or pg.LLMConfig.from_env()
+        if not eff.enabled and transport is None:
+            return _need_key()
+    elif not llm.enabled():
+        return _need_key()
     convo = ""
     for turn in (history or [])[-6:]:
         convo += f"\n{turn.get('role', 'user')}: {turn.get('content', '')}"
     prompt = f"{SYSTEM}\n\nConversation so far:{convo}\n\nuser: {message}\n\nJSON:"
-    plan = _extract_json(pg.llm_generate(prompt, cfg, transport))
+    if explicit:
+        raw, provider = pg.llm_generate(prompt, eff, transport), eff.provider
+    else:
+        res = llm.generate(prompt)
+        raw, provider = res.get("text", ""), res.get("provider")
+        if not raw:
+            return {"enabled": False, "action": None, "result": None,
+                    "reply": "No LLM provider answered — run `python3 llm_providers.py check`."}
+    plan = _extract_json(raw)
     action = (plan.get("action") or "answer").strip()
     args = plan.get("args") or {}
     say = plan.get("say") or ""
@@ -152,7 +173,8 @@ def chat(message, history=None, cfg=None, transport=None):
             result = ACTIONS[action](args)
         except Exception as e:
             result = {"error": str(e)}
-    return {"enabled": True, "reply": say, "action": action, "args": args, "result": result}
+    return {"enabled": True, "reply": say, "action": action, "args": args,
+            "result": result, "provider": provider}
 
 
 # ---------------------------------------------------------------------
@@ -200,9 +222,15 @@ def serve(port=8769):
             if self.path in ("/", "/chat"):
                 return self._send(200, _panel(), "text/html; charset=utf-8")
             if self.path == "/api/assistant/status":
-                cfg = pg.LLMConfig.from_env()
-                return self._send(200, json.dumps({"enabled": cfg.enabled, "provider": cfg.provider,
-                                                    "model": cfg.model}))
+                import llm_providers as llm
+                avail = llm.available()  # [(name, env_var, model)]
+                provs = [a[0] for a in avail]
+                return self._send(200, json.dumps({
+                    "enabled": bool(avail),
+                    "provider": (provs[0] if provs else "none"),
+                    "providers": provs,
+                    "chain": llm.chain(),
+                    "model": (avail[0][2] if avail else "")}))
             self._send(404, json.dumps({"error": "not found"}))
 
         def do_POST(self):
