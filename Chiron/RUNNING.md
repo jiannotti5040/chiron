@@ -136,10 +136,12 @@ python3 chiron_monolith.py --list             # every embedded module
 python3 chiron_monolith.py semic selftest     # 56/56 — run any module from the one file
 python3 chiron_monolith.py chiron selftest    # CHIRON GREEN
 python3 chiron_monolith.py --selftest         # battery: the core engines, through the fold
-python3 build_monolith.py --verify            # regenerate from Chiron/*.py, then verify
+python3 chiron_monolith.py chiron serve       # the SAME operator console on :8765, from one file
 ```
 
 `chiron_monolith.py` is all 62 Chiron modules folded into a single file (byte-identical embedded
 source + a `sys.meta_path` loader so their cross-imports resolve internally). It adds no logic; it
-runs the same gates the standalone scripts do. Ship it alongside the repo's `Chiron/` directory so
-its data files and self-source scans resolve.
+runs the same gates the standalone scripts do — and it serves the same dashboard (there is no
+separate monolith console). Ship it alongside the repo's `Chiron/` directory so its data files and
+self-source scans resolve. To regenerate after editing any module, from the repo root run
+`python3 build_monolith.py --verify` (the generator lives at the root, not in the monolith folder).

@@ -24,9 +24,9 @@ import base64
 import argparse
 import subprocess
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-CHIRON = os.path.normpath(os.path.join(_HERE, os.pardir, "Chiron"))
-OUT = os.path.join(_HERE, "chiron_monolith.py")
+_HERE = os.path.dirname(os.path.abspath(__file__))          # repo root
+CHIRON = os.path.join(_HERE, "Chiron")                      # the spine to fold
+OUT = os.path.join(_HERE, "Chiron Monolith", "chiron_monolith.py")
 
 # The generated monolith's static head: SPDX + docstring + loader + dispatcher.
 # Written with no backslash escapes so it round-trips cleanly into the output file.

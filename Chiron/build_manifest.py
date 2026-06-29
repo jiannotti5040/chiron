@@ -130,14 +130,22 @@ def _artifact_summary(stem: str) -> Optional[Dict[str, Any]]:
 
 
 def _run_selftest(path: str, timeout: int) -> Dict[str, Any]:
-    cmd = [sys.executable, path, "selftest"]
     t0 = time.perf_counter()
     try:
-        proc = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
-                              timeout=timeout)
+        proc = subprocess.run([sys.executable, path, "selftest"], cwd=ROOT,
+                              capture_output=True, text=True, timeout=timeout)
+        used = "selftest"
+        # Some scripts expose the selftest as a flag (--selftest) rather than a
+        # positional subcommand; argparse rejects the wrong form with exit code 2.
+        # Fall back so the manifest reflects the real result, not the invocation.
+        if proc.returncode == 2:
+            alt = subprocess.run([sys.executable, path, "--selftest"], cwd=ROOT,
+                                 capture_output=True, text=True, timeout=timeout)
+            if alt.returncode != 2:
+                proc, used = alt, "--selftest"
         dt = (time.perf_counter() - t0) * 1000.0
         tail = "\n".join(proc.stdout.strip().splitlines()[-3:])
-        return {"command": "selftest", "exit_code": proc.returncode,
+        return {"command": used, "exit_code": proc.returncode,
                 "runtime_ms": round(dt, 1), "stdout_tail": tail}
     except subprocess.TimeoutExpired:
         return {"command": "selftest", "exit_code": None,
