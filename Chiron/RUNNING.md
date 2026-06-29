@@ -127,3 +127,19 @@ python3 llm_certify.py "obviously 2 4 8 16 32 64 continues, and 2+2=5"
 Audits the honesty of the text, exactly verifies the checkable claims (here: the geometric sequence
 verifies, `2+2=5` is refused), runs the governance gate, and signs it. It certifies *accountability*,
 never that a free-text answer is correct.
+
+## 8. Run the whole spine from one file (`Chiron Monolith/`)
+
+```bash
+cd "../Chiron Monolith"
+python3 chiron_monolith.py --list             # every embedded module
+python3 chiron_monolith.py semic selftest     # 56/56 — run any module from the one file
+python3 chiron_monolith.py chiron selftest    # CHIRON GREEN
+python3 chiron_monolith.py --selftest         # battery: the core engines, through the fold
+python3 build_monolith.py --verify            # regenerate from Chiron/*.py, then verify
+```
+
+`chiron_monolith.py` is all 62 Chiron modules folded into a single file (byte-identical embedded
+source + a `sys.meta_path` loader so their cross-imports resolve internally). It adds no logic; it
+runs the same gates the standalone scripts do. Ship it alongside the repo's `Chiron/` directory so
+its data files and self-source scans resolve.

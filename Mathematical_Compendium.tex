@@ -629,6 +629,18 @@ return an explicitly \emph{uncertified} approximation --- exact symbolic recover
 exploration around it.
 \status{The schema is the genuine, load-bearing contribution.}
 
+\subsection{The whole spine in one file}
+The code that realizes this schema across sixty-two modules is also distributed as a single file.
+\texttt{chiron\_monolith.py} embeds the byte-identical source of every Chiron module and wraps them
+in an import hook (\texttt{sys.meta\_path}) so that each inter-module import resolves to the embedded
+copy; any module then runs from the one file (\texttt{python3 chiron\_monolith.py $\langle$module$\rangle$
+\dots}). The fold is \emph{lossless}---each embedding is asserted byte-identical to its origin at
+build time---and adds no logic: the gates that pass for the standalone scripts pass unchanged when
+run through the fold (the core-engine battery and every selftest-bearing module verify identically).
+The single-file property long held by the integer engine \texttt{chiron.py} is thereby extended to
+the entire portfolio.
+\status{Implemented \& tested: a lossless single-file fold of the spine, not new mathematics.}
+
 %=====================================================================
 \section*{Notation}
 \addcontentsline{toc}{section}{Notation}

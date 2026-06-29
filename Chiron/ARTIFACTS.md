@@ -44,8 +44,10 @@ the line between applicable intelligence and authoritative-looking text.
 
 ## Propagating to the rest of the scripts
 
-Two scripts are wired as proofs (one hard: `semic.py`, one soft:
-`density_emotion.py`). To add a third, drop this at the end of its `__main__`:
+Four scripts are wired as proofs — `semic.py` (hard), `density_emotion.py` (soft),
+`chiron.py` (the core, 12/12 gates), and `invariant_engine.py` (Primus). `build_manifest.py`
+reports **4 emitting artifacts** across the Chiron tree (`chiron_artifact.py` self-emits too).
+To wire another, drop this at the end of its `__main__`:
 
 ```python
 try:
