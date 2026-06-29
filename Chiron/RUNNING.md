@@ -75,19 +75,24 @@ python3 grow_clean.py wikipedia "prime numbers"
 ```bash
 python3 chiron.py serve &          # engine + console        :8765
 python3 console_server.py serve &  # run any function        :8768
+python3 assistant_server.py serve &# chat assistant          :8769
 python3 grow_control.py serve &    # start/stop/point grow   :8767
 python3 president_grow.py serve &  # LLM grow (if key set)    :8766
-# open http://127.0.0.1:8765  —  the Run tab launches everything below
+# open http://127.0.0.1:8765  —  the Run and Chat tabs drive everything below
 ```
 
-Once `console_server.py serve` is up, the console's **Run** tab lists every engine and subfunction
-(the chiron verbs, semic, the framework, governance, growth, build, and the six-task suite) and runs
-any of them live with output — no terminal needed.
+Once those are up, the console's **Run** tab lists every engine and subfunction and runs any of them
+live; the **Chat** tab lets you say what you want in plain language — it reads your intent and runs
+the real, deterministic functions (recover a rule, speak it back, search or summarize the Congress,
+run any engine). The model directs, the engine does the work, so every result is exact. The
+assistant and `president_grow` need a free LLM key (`export GROW_LLM_API_KEY=…`; get one at
+https://aistudio.google.com/apikey); everything else runs with no key.
 
 | Service | Port | What it is |
 |---|---|---|
 | `chiron.py serve` | 8765 | the engine + operator console (offline) |
-| `console_server.py serve` | 8768 | the launcher — run any function across all engines (the console's Run tab) |
+| `console_server.py serve` | 8768 | the launcher — run any function across all engines (Run tab) |
+| `assistant_server.py serve` | 8769 | natural-language assistant over the engine + Congress (Chat tab) |
 | `grow_control.py serve` | 8767 | start / stop / point the continuous grower |
 | `president_grow.py serve` | 8766 | LLM-assisted growth (propose → verify) |
 
