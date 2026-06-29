@@ -79,3 +79,8 @@ pytest_cache/
 # grow control pid tracking
 grow_control_state.json
 **/grow_control_state.json
+
+# PyInstaller / build artifacts
+*.spec
+build/
+dist/
