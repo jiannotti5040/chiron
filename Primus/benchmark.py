@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
 PRIMUS proving run — recovery rate + reliability on a large offline bank of
 known-generator integer sequences (no network; sequences generated from known

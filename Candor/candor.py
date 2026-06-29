@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 # ============================================================================
 #  CANDOR — the anti-patronization engine
 #  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.

@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """Grower tests — HTML reduction, relevance filter, link extraction, native parity,
 OEIS parsing. Run: python Chiron/tests/test_grow.py   (or: pytest Chiron/tests)"""
 import os

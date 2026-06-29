@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """Tests for uma.semantic. Adapted to single-rep FieldPosterior."""
 from __future__ import annotations
 import numpy as np

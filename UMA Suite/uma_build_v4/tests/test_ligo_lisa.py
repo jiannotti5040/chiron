@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """tests/test_ligo_lisa.py -- ringdown waveform injection-recovery."""
 from __future__ import annotations
 import numpy as np

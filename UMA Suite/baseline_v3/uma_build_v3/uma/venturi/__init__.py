@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """uma.venturi -- 360-degree evolving Venturi for cross-domain injection."""
 from uma.venturi.operator import (
     Venturi, VenturiOperator,

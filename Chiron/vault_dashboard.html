@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHIRON — Vault Manifest</title>
+<style>
+  :root{
+    --bg:#080b11; --panel:#10151f; --panel2:#151b28; --line:#212b3b; --line2:#2c3850;
+    --ink:#eef2f8; --ink2:#c4cedd; --dim:#8593a8; --acc:#5cc8ff; --good:#7ee0b8;
+    --warn:#ffcf86; --bad:#ff8090; --violet:#b69cff;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0}
+  body{background:radial-gradient(1200px 600px at 70% -10%,#11203012,transparent),var(--bg);
+       color:var(--ink);font-family:var(--sans);font-size:14.5px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--acc);text-decoration:none}
+  header{display:flex;align-items:baseline;gap:18px;padding:20px 26px;border-bottom:1px solid var(--line);
+         background:linear-gradient(180deg,#0d1320,#080b11);flex-wrap:wrap}
+  .mark{font-family:var(--mono);font-weight:700;letter-spacing:5px;color:var(--acc);font-size:20px}
+  .sub{color:var(--dim);font-size:13px;max-width:640px}
+  .grow{flex:1}
+  .meta{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+
+  /* signature strip: the four counts that define a self-certifying vault */
+  .strip{display:flex;gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+  .stat{flex:1;background:var(--panel);padding:18px 22px;min-width:140px}
+  .stat .n{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--ink);letter-spacing:-1px}
+  .stat .n.good{color:var(--good)} .stat .n.warn{color:var(--warn)}
+  .stat .l{font-size:11.5px;color:var(--dim);text-transform:uppercase;letter-spacing:1.2px;margin-top:3px}
+
+  .controls{display:flex;gap:10px;padding:16px 26px;border-bottom:1px solid var(--line);
+            background:var(--bg);flex-wrap:wrap;align-items:center}
+  .controls input{background:var(--panel);border:1px solid var(--line2);color:var(--ink);
+                  padding:9px 13px;border-radius:9px;font-size:13.5px;font-family:var(--sans);min-width:240px}
+  .chip{font-family:var(--mono);font-size:11.5px;padding:7px 13px;border-radius:999px;
+        background:var(--panel);border:1px solid var(--line2);color:var(--dim);cursor:pointer;user-select:none}
+  .chip.on{color:var(--bg);background:var(--acc);border-color:var(--acc);font-weight:700}
+
+  main{padding:24px 26px;max-width:1240px;margin:0 auto}
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+
+  .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);
+        border-radius:14px;padding:16px 17px;display:flex;flex-direction:column;gap:10px;
+        transition:border-color .15s,transform .15s}
+  .card:hover{border-color:var(--line2);transform:translateY(-1px)}
+  .card.pass{border-left:3px solid var(--good)}
+  .card.fail{border-left:3px solid var(--bad)}
+  .card.idle{border-left:3px solid var(--line2)}
+
+  .ct{display:flex;align-items:center;gap:9px}
+  .name{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--ink);letter-spacing:.3px}
+  .badge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:6px;letter-spacing:.5px}
+  .badge.pass{background:#0e1a16;color:var(--good);border:1px solid #2b5444}
+  .badge.fail{background:#1c1013;color:var(--bad);border:1px solid #5a2a32}
+  .badge.idle{background:#11151f;color:var(--dim);border:1px solid var(--line2)}
+
+  .purpose{color:var(--ink2);font-size:13px}
+
+  /* signature element: the falsifier line. Every claim shows what breaks it. */
+  .falsify{font-size:12.5px;color:var(--ink2);background:#0c1016;border:1px solid var(--line);
+           border-left:2px solid var(--warn);border-radius:8px;padding:9px 11px}
+  .falsify .k{font-family:var(--mono);font-size:10px;color:var(--warn);text-transform:uppercase;
+              letter-spacing:1px;display:block;margin-bottom:3px}
+  .discovered{font-size:12.5px;color:var(--dim)}
+  .discovered .k{font-family:var(--mono);font-size:10px;color:var(--acc);text-transform:uppercase;
+                 letter-spacing:1px;display:block;margin-bottom:3px}
+
+  .foot{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-top:2px;
+        padding-top:10px;border-top:1px solid var(--line)}
+  .tagm{font-family:var(--mono);font-size:10.5px;color:var(--dim);padding:3px 7px;
+        border:1px solid var(--line);border-radius:6px}
+  .tagm.np{color:var(--violet);border-color:#3a3258}
+  .tagm.std{color:var(--good);border-color:#244038}
+  .tagm.ms{color:var(--ink2)}
+  .hash{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin-left:auto}
+
+  #empty{display:none;padding:60px 20px;text-align:center;color:var(--dim)}
+  #loaderr{display:none;padding:18px 26px;background:linear-gradient(90deg,#241318,#1a0f13);
+           border-bottom:1px solid #5a2a32;color:#ffd9de;font-size:13.5px}
+  #loaderr code{background:#0c0f16;border:1px solid var(--line2);border-radius:6px;padding:2px 8px;
+                color:var(--good);font-family:var(--mono)}
+  @media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <span class="mark">CHIRON</span>
+  <div>
+    <div style="font-weight:600;font-size:15px">Vault Manifest</div>
+    <div class="sub">Every script runs on its own and leaves a signed, falsifiable certificate. This is the index: what each proves, whether it passed, and the one thing that would break the claim.</div>
+  </div>
+  <div class="grow"></div>
+  <div class="meta" id="generated"></div>
+</header>
+
+<div id="loaderr">
+  No <code>manifest.json</code> found next to this page. Generate it first:
+  &nbsp;<code>python3 build_manifest.py --run</code>
+</div>
+
+<div class="strip" id="strip"></div>
+
+<div class="controls">
+  <input id="q" placeholder="Filter by name, purpose, or falsifier…" autocomplete="off">
+  <span class="chip" data-f="pass">passed</span>
+  <span class="chip" data-f="fail">failed</span>
+  <span class="chip" data-f="emits">emits certificate</span>
+  <span class="chip" data-f="numpy">needs numpy</span>
+  <span class="chip" data-f="nospdx">no header</span>
+</div>
+
+<main>
+  <div id="grid"></div>
+  <div id="empty">No scripts match the current filter.</div>
+</main>
+
+<script>
+const FILTERS = new Set();
+let DATA = null;
+
+function esc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+
+function statusOf(e){
+  const r = e.last_run;
+  if(!r || r.exit_code==null) return "idle";
+  return r.exit_code===0 ? "pass" : "fail";
+}
+
+function card(e){
+  const st = statusOf(e);
+  const art = e.artifact;
+  const badge = st==="pass" ? `<span class="badge pass">PASS</span>`
+            : st==="fail" ? `<span class="badge fail">FAIL</span>`
+            : `<span class="badge idle">not run</span>`;
+  const runtime = e.last_run && e.last_run.runtime_ms!=null
+    ? `<span class="tagm ms">${e.last_run.runtime_ms} ms</span>` : "";
+  const dep = e.stdlib_only
+    ? `<span class="tagm std">stdlib</span>`
+    : `<span class="tagm np">${esc((e.dependencies||[]).join(",")||"deps")}</span>`;
+  const spdx = e.has_spdx_header ? "" : `<span class="tagm" style="color:var(--bad);border-color:#5a2a32">no header</span>`;
+
+  // The certificate's human_view is the intelligence. Surface discovered + falsifier.
+  const discovered = art && art.what_was_discovered
+    ? `<div class="discovered"><span class="k">found</span>${esc(art.what_was_discovered)}</div>` : "";
+  const falsify = art && art.what_would_falsify
+    ? `<div class="falsify"><span class="k">what would falsify this</span>${esc(art.what_would_falsify)}</div>`
+    : `<div class="discovered" style="opacity:.7"><span class="k">no certificate yet</span>run the script to memorialize its result</div>`;
+  const hash = art && art.self_hash ? `<span class="hash">#${esc(art.self_hash)}</span>` : "";
+  const conf = art && art.confidence ? `<span class="tagm ms">${esc(art.confidence.split("(")[0].trim())}</span>` : "";
+
+  return `<div class="card ${st}">
+    <div class="ct"><span class="name">${esc(e.script)}</span>${badge}</div>
+    <div class="purpose">${esc(e.purpose||"—")}</div>
+    ${discovered}
+    ${falsify}
+    <div class="foot">${dep}${conf}${runtime}${spdx}${hash}</div>
+  </div>`;
+}
+
+function passesFilters(e){
+  const st = statusOf(e);
+  for(const f of FILTERS){
+    if(f==="pass" && st!=="pass") return false;
+    if(f==="fail" && st!=="fail") return false;
+    if(f==="emits" && !e.emits_artifact) return false;
+    if(f==="numpy" && e.stdlib_only) return false;
+    if(f==="nospdx" && e.has_spdx_header) return false;
+  }
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  if(q){
+    const hay = [e.script, e.purpose,
+      e.artifact && e.artifact.what_would_falsify,
+      e.artifact && e.artifact.what_was_discovered].join(" ").toLowerCase();
+    if(!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function render(){
+  if(!DATA) return;
+  const grid = document.getElementById("grid");
+  const shown = DATA.scripts.filter(passesFilters);
+  grid.innerHTML = shown.map(card).join("");
+  document.getElementById("empty").style.display = shown.length ? "none" : "block";
+}
+
+function strip(s){
+  const items = [
+    ["runnable_scripts","scripts run independently",""],
+    ["with_selftest","carry a selftest gate",""],
+    ["with_spdx_header","carry the license header", s.with_spdx_header===s.runnable_scripts?"good":"warn"],
+    ["emitting_artifacts","emit a signed certificate", s.emitting_artifacts>0?"good":"warn"],
+  ];
+  document.getElementById("strip").innerHTML = items.map(([k,l,cl])=>
+    `<div class="stat"><div class="n ${cl}">${s[k]}</div><div class="l">${l}</div></div>`).join("");
+}
+
+async function boot(){
+  try{
+    const res = await fetch("manifest.json", {cache:"no-store"});
+    if(!res.ok) throw new Error("no manifest");
+    DATA = await res.json();
+  }catch(err){
+    document.getElementById("loaderr").style.display = "block";
+    return;
+  }
+  document.getElementById("generated").textContent =
+    `generated ${DATA.generated_utc} · ${DATA.mode} mode · owner ${DATA.owner}`;
+  strip(DATA.summary);
+  render();
+  document.getElementById("q").addEventListener("input", render);
+  document.querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click", ()=>{
+      const f = ch.dataset.f;
+      if(FILTERS.has(f)){FILTERS.delete(f);ch.classList.remove("on");}
+      else{FILTERS.add(f);ch.classList.add("on");}
+      render();
+    });
+  });
+}
+boot();
+</script>
+</body>
+</html>

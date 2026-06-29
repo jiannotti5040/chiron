@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
 PDF source adapter (optional dependency) — extract text from a PDF and run Chiron's
 structural analysis on it, including recovery of any embedded numeric sequence.

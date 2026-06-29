@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """Hard stress tests for the clean invariant engine — 5 domains + the
 reviewer's traps (same_family vs same_generator, Occam, noise)."""
 import json, pathlib, random

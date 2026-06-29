@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """Engine tests — collapse/verify, subject organization, save/load round-trip.
 Run: python Chiron/tests/test_chiron.py   (or: pytest Chiron/tests)"""
 import os
