@@ -1,42 +1,55 @@
-# How to run the transcriber
+# transcribe_final.py — batch transcription with speaker labels
 
-You do **not** need to build anything or touch Python. There is one file to run.
+Turns the audio/video files in a folder into speaker-labeled `.docx` transcripts
+(Whisper for the words, pyannote for who-said-what).
 
-## To transcribe
+## The portable part (what lives in the repo)
 
-1. Put your audio/video files in your `transcribe_input` folder (on the Desktop, in the
-   Walter Reed Project folder).
-2. Double-click **`Transcribe.command`** in this folder.
-3. A Terminal window opens and does the work. When it says **Finished**, your `.docx`
-   transcripts are in the `transcribe_output` folder.
+- `transcribe_final.py` — the program itself
+- `requirements.txt` — the exact list of what it needs
 
-That's the whole thing.
+**That is the portable form of this tool.** Source + a requirements list is how a Python
+program travels in a repo: it's tiny, it diffs cleanly in git, and it runs on any
+Apple-Silicon Mac. It does not get "compiled" into one file — see the last section for why.
 
-## The very first time only
+## To run it
 
-The first double-click sets itself up: it installs `ffmpeg` (if needed) and builds a
-Python environment with Whisper and the speaker-labeling models. That download is a few
-gigabytes and takes 5–15 minutes. **It happens once.** Every run after is just step 1–3 above.
+In Terminal, one time, set up its environment:
 
-It will also ask, once, for a free **Hugging Face token** (used to label who is speaking):
+```
+cd "Individual Programs"
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-- Get a token at <https://huggingface.co/settings/tokens>
-- While signed in, click "Agree" on these two model pages so the token is allowed to use them:
-  - <https://huggingface.co/pyannote/speaker-diarization-3.1>
-  - <https://huggingface.co/pyannote/segmentation-3.0>
-- Paste the token when asked. It's saved privately on your Mac; you won't be asked again.
+Also make sure ffmpeg is present (reads the audio): `brew install ffmpeg`.
 
-If you skip the token, you still get a transcript — just without speaker labels.
+Then, to transcribe (this is all you repeat each time):
 
-## Why this isn't a single "app" file
+```
+cd "Individual Programs"
+source .venv/bin/activate
+export HF_TOKEN=paste_your_huggingface_token_here
+python transcribe_final.py
+```
 
-This tool uses the Mac's GPU (through PyTorch/MLX) and downloads AI models as it runs, so
-it can't be frozen into one portable file — the earlier `.exe`-style build was the wrong
-shape for it and is safe to delete. The launcher above is the normal, reliable way tools
-like this are run.
+Output `.docx` files land in the `transcribe_output` folder.
 
-## If something errors
+### The Hugging Face token (free, needed for speaker labels)
 
-Copy whatever the Terminal window shows and send it over. The most common first-time
-snags are: ffmpeg not installed (the launcher handles it if you have Homebrew), or the
-Hugging Face model terms not yet accepted (the two links above).
+1. Get a token: <https://huggingface.co/settings/tokens>
+2. While signed in, click "Agree" on both model pages so the token may use them:
+   - <https://huggingface.co/pyannote/speaker-diarization-3.1>
+   - <https://huggingface.co/pyannote/segmentation-3.0>
+
+Without a token you still get a transcript — just no speaker labels.
+
+## Why it isn't a single compiled file
+
+Each run it downloads multi-gigabyte AI models from Hugging Face, uses the Mac's GPU
+through Metal, and shells out to `ffmpeg`. None of that can be frozen into a portable
+binary — a "successful" compile would still need the internet, ffmpeg, and the token at
+run time, and would only work on one exact machine. The source above is the honest,
+durable, portable version. The earlier `.exe`-style build was the wrong shape and is safe
+to delete.
