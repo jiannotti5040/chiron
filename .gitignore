@@ -84,3 +84,9 @@ grow_control_state.json
 *.spec
 build/
 dist/
+
+# transcribe tool: local env, secret token, temp audio
+**/.transcribe_env/
+transcribe_hf_token
+**/transcribe_hf_token
+*_temp_audio.wav
