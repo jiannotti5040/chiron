@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """examples/rsls_stage6_self_consistent.py
 
 Stage 6 closure demonstration: beta^phi evolves self-consistently from

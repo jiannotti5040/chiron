@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
 examples/rsls_uma_integrated.py -- the canonical UMA pipeline run
 side-by-side with RSLS gradient-stress coupling.

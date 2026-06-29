@@ -1,0 +1,23 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "script": "chiron_artifact",
+  "purpose": "provide one signed, falsifiable emit path for every vault script",
+  "verified": true,
+  "generated_utc": "2026-06-29T13:04:21Z",
+  "commit": "44c52d39bc8cd72a75d263af3ba77150e608831a",
+  "machine_view": {
+    "required_fields": 4,
+    "honesty_gate": "falsifier_nonempty"
+  },
+  "human_view": {
+    "purpose": "provide one signed, falsifiable emit path for every vault script",
+    "what_was_discovered": "A shared dual-view certificate (machine_view + human_view) now exists; any script can memorialize its run in one call.",
+    "why_believed": "Lifts the shape already proven in examples/certificates/*.json into a reusable function that refuses claims with no stated falsifier.",
+    "what_would_falsify": "A certificate that emits despite an empty what_would_falsify field would break the honesty guarantee.",
+    "residual": "n/a",
+    "confidence": "high (gate is enforced in code, demonstrated below)"
+  },
+  "self_hash": "003641817adf3aaa"
+}

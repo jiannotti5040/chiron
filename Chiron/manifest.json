@@ -1,0 +1,1082 @@
+{
+  "system": "CHIRON",
+  "owner": "Jacob Iannotti",
+  "generated_utc": "2026-06-29T13:07:39Z",
+  "mode": "run",
+  "summary": {
+    "runnable_scripts": 64,
+    "with_selftest": 45,
+    "stdlib_only": 55,
+    "with_spdx_header": 64,
+    "emitting_artifacts": 3
+  },
+  "scripts": [
+    {
+      "script": "actionable_intelligence",
+      "path": "actionable_intelligence.py",
+      "purpose": "actionable_intelligence.py \u2014 turn a recovered law into a decision-ready brief.",
+      "lines": 233,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 640.0,
+        "stdout_tail": "actionable_intelligence.py self-test: 11/11 passed"
+      }
+    },
+    {
+      "script": "aesthetics",
+      "path": "aesthetics.py",
+      "purpose": "aesthetics.py \u2014 mathematical beauty as a measured, multi-signal quantity.",
+      "lines": 339,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 581.8,
+        "stdout_tail": "aesthetics.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "apply_license_headers",
+      "path": "apply_license_headers.py",
+      "purpose": "apply_license_headers \u2014 stamp the PolyForm Noncommercial SPDX header onto every",
+      "lines": 101,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "assistant_server",
+      "path": "assistant_server.py",
+      "purpose": "assistant_server.py \u2014 a natural-language assistant over the Chiron engine and the Congress.",
+      "lines": 286,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "axioms",
+      "path": "axioms.py",
+      "purpose": "axioms.py \u2014 the axiomatic layer, executed not asserted (HCT A1-A12 / T1-T8).",
+      "lines": 171,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 305.0,
+        "stdout_tail": "axioms.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "bench_authorship",
+      "path": "bench_authorship.py",
+      "purpose": "bench_authorship.py \u2014 authorship attribution with Burrows's Delta (an established method).",
+      "lines": 171,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 425.4,
+        "stdout_tail": "  [PASS] Burrows Delta attributes a strong majority of held-out passages\n  [PASS] attribution is deterministic (reproducible)\n  3/3 checks"
+      }
+    },
+    {
+      "script": "bench_compression",
+      "path": "bench_compression.py",
+      "purpose": "bench_compression.py \u2014 Chiron vs general-purpose compressors on a labeled sequence corpus.",
+      "lines": 116,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 396.4,
+        "stdout_tail": "  [PASS] zero false-verify on controls\n  [PASS] chiron law beats lzma on a long sequence\n  4/4 checks"
+      }
+    },
+    {
+      "script": "bench_legal",
+      "path": "bench_legal.py",
+      "purpose": "bench_legal.py \u2014 fact-pattern -> applicable-provision recovery via the real legal_corpus layer.",
+      "lines": 107,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 15.5,
+        "stdout_tail": "  [PASS] domain scoping removes cross-domain provisions the baseline included\n  [PASS] recovered sets are non-empty exactly when not abstaining\n  4/4 checks"
+      }
+    },
+    {
+      "script": "bench_protocol",
+      "path": "bench_protocol.py",
+      "purpose": "bench_protocol.py \u2014 exact finite-state-machine recovery from observed traces (new domain).",
+      "lines": 160,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 12.9,
+        "stdout_tail": "  [PASS] beats the Markov baseline on held-out\n  [PASS] abstains on contradictory traces\n  4/4 checks"
+      }
+    },
+    {
+      "script": "bench_proverbs",
+      "path": "bench_proverbs.py",
+      "purpose": "bench_proverbs.py \u2014 semic on a multi-proverb corpus, against a surface (bag-of-words) baseline.",
+      "lines": 116,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 38.8,
+        "stdout_tail": "  [PASS] all controls refused\n  [PASS] bag-of-words baseline conflates the invariants\n  5/5 checks"
+      }
+    },
+    {
+      "script": "bench_suite",
+      "path": "bench_suite.py",
+      "purpose": "bench_suite.py \u2014 the external-benchmark suite both reviews ranked as the #1 next step.",
+      "lines": 114,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 452.6,
+        "stdout_tail": "  [PASS] authorship benchmark\n\n  VERDICT: PASS \u2014 6/6 tasks green"
+      }
+    },
+    {
+      "script": "bench_symreg",
+      "path": "bench_symreg.py",
+      "purpose": "bench_symreg.py \u2014 symbolic recovery vs polynomial regression (an established baseline).",
+      "lines": 114,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 389.7,
+        "stdout_tail": "  [PASS] chiron refuses the structureless control\n  [PASS] chiron never emits a confident wrong tail\n  6/6 checks"
+      }
+    },
+    {
+      "script": "benchmark",
+      "path": "benchmark.py",
+      "purpose": "Chiron benchmark \u2014 a reproducible, offline measurement of what the engine can",
+      "lines": 485,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "build",
+      "path": "build.py",
+      "purpose": "build.py \u2014 lossless split / recompile of the single-file engines (chiron AND semic).",
+      "lines": 168,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 52.9,
+        "stdout_tail": "build.py [chiron]: PASS (7 modules, 30095 lines, byte-identical=True)\n  build.py [semic]: PASS (34 modules, 1773 lines, byte-identical=True)\n  build.py self-test: PASS (2 targets)"
+      }
+    },
+    {
+      "script": "build_manifest",
+      "path": "build_manifest.py",
+      "purpose": "build_manifest \u2014 enumerate every runnable script in the vault and capture, for",
+      "lines": 223,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "candor_bridge",
+      "path": "candor_bridge.py",
+      "purpose": "candor_bridge.py \u2014 explanation before assertion (D-1, discernment).",
+      "lines": 180,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 394.7,
+        "stdout_tail": "candor_bridge.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "certify_finding",
+      "path": "certify_finding.py",
+      "purpose": "certify_finding.py \u2014 a court-deployable certificate over a Chiron finding (B-3, hardened).",
+      "lines": 185,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 394.9,
+        "stdout_tail": "certify_finding.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "chiron",
+      "path": "chiron.py",
+      "purpose": "CHIRON \u2014 The Invariant Engine.",
+      "lines": 30095,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy",
+        "scipy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 6003.6,
+        "stdout_tail": "\n  CHIRON core gates: 12/12 passed.\n  CHIRON GREEN \u2014 exact knowledge, honest wisdom, bounded agency, one file."
+      }
+    },
+    {
+      "script": "chiron_artifact",
+      "path": "chiron_artifact.py",
+      "purpose": "chiron_artifact \u2014 one emit path for every runnable script in the vault.",
+      "lines": 223,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": {
+        "verified": true,
+        "self_hash": "003641817adf3aaa",
+        "generated_utc": "2026-06-29T13:04:21Z",
+        "confidence": "high (gate is enforced in code, demonstrated below)",
+        "what_was_discovered": "A shared dual-view certificate (machine_view + human_view) now exists; any script can memorialize its run in one call.",
+        "what_would_falsify": "A certificate that emits despite an empty what_would_falsify field would break the honesty guarantee."
+      },
+      "emits_artifact": true,
+      "last_run": null
+    },
+    {
+      "script": "chiron_ciphers",
+      "path": "chiron_ciphers.py",
+      "purpose": "",
+      "lines": 109,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "chiron_grow",
+      "path": "chiron_grow.py",
+      "purpose": "",
+      "lines": 643,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "compare",
+      "path": "compare.py",
+      "purpose": "Chiron vs. conventional compression \u2014 an honest comparison, both directions.",
+      "lines": 159,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "console_server",
+      "path": "console_server.py",
+      "purpose": "console_server.py \u2014 run any Chiron function, and reach every engine, from the dashboard.",
+      "lines": 268,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "cross_examine",
+      "path": "cross_examine.py",
+      "purpose": "cross_examine.py \u2014 The Defense Attorney (Chiron Jurisprudence Suite).",
+      "lines": 265,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 387.4,
+        "stdout_tail": "cross_examine.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "density_emotion",
+      "path": "density_emotion.py",
+      "purpose": "density_emotion.py \u2014 competing hypotheses as a decohering quantum mixture.",
+      "lines": 178,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": {
+        "verified": true,
+        "self_hash": "10bc6668f3456c10",
+        "generated_utc": "2026-06-29T13:07:31Z",
+        "confidence": "high",
+        "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
+        "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
+      },
+      "emits_artifact": true,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 445.6,
+        "stdout_tail": "density_emotion.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "discernment",
+      "path": "discernment.py",
+      "purpose": "discernment.py \u2014 confidence from convergence, not authority.",
+      "lines": 202,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 510.4,
+        "stdout_tail": "discernment.py self-test: 9/9 passed"
+      }
+    },
+    {
+      "script": "discover",
+      "path": "discover.py",
+      "purpose": "Cross-domain discovery \u2014 find surfaces that share ONE generator across different",
+      "lines": 110,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "epistemic",
+      "path": "epistemic.py",
+      "purpose": "epistemic.py \u2014 the abstract primitive the whole portfolio instantiates.",
+      "lines": 280,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 393.4,
+        "stdout_tail": "epistemic self-test\n  13/13 checks"
+      }
+    },
+    {
+      "script": "build_examples",
+      "path": "examples/build_examples.py",
+      "purpose": "Generate the worked examples and certificates in this folder from REAL engine",
+      "lines": 228,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "export_graph",
+      "path": "export_graph.py",
+      "purpose": "Knowledge-graph export \u2014 turn recovered generators into a portable graph that",
+      "lines": 137,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "fastops",
+      "path": "fastops.py",
+      "purpose": "Optional native hot-path loader, with an exact pure-Python fallback.",
+      "lines": 135,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 14.0,
+        "stdout_tail": "  hexameter_feet_ok(LSLSLSLSLSLS      ) -> False (want False)  OK\nbackend: pure-python fallback\nVERDICT: PASS"
+      }
+    },
+    {
+      "script": "formal_check",
+      "path": "formal_check.py",
+      "purpose": "Formal soundness checks (property-based).",
+      "lines": 101,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "govern",
+      "path": "govern.py",
+      "purpose": "govern.py \u2014 the governance gate, against hardcoded law (B-4, hardened).",
+      "lines": 294,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 386.8,
+        "stdout_tail": "govern.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "grow_clean",
+      "path": "grow_clean.py",
+      "purpose": "grow_clean.py \u2014 one clean growth interface over any source, LLM-aided.",
+      "lines": 250,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "grow_control",
+      "path": "grow_control.py",
+      "purpose": "grow_control.py \u2014 start / stop / point the continuous grower, from the dashboard.",
+      "lines": 283,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "holographic",
+      "path": "holographic.py",
+      "purpose": "holographic.py \u2014 distributed redundancy: recover the whole from a fragment (O-3, hardened).",
+      "lines": 199,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 406.2,
+        "stdout_tail": "holographic.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "infectatrum_bridge",
+      "path": "infectatrum_bridge.py",
+      "purpose": "Infectatrum bridge \u2014 ambiguity measurement for Chiron.",
+      "lines": 220,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 2,
+        "runtime_ms": 157.3,
+        "stdout_tail": ""
+      }
+    },
+    {
+      "script": "ingest_pdf",
+      "path": "ingest_pdf.py",
+      "purpose": "PDF source adapter (optional dependency) \u2014 extract text from a PDF and run Chiron's",
+      "lines": 75,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "intake",
+      "path": "intake.py",
+      "purpose": "intake.py \u2014 the general front door.",
+      "lines": 281,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 371.4,
+        "stdout_tail": "intake.py self-test: 12/12 passed"
+      }
+    },
+    {
+      "script": "intake_salvage",
+      "path": "intake_salvage.py",
+      "purpose": "intake_salvage.py \u2014 fault-tolerant ingestion (Review 2: input rigidity).",
+      "lines": 122,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 393.0,
+        "stdout_tail": "format=text salvaged=False collapse_ready=False primary_series=None"
+      }
+    },
+    {
+      "script": "judgment",
+      "path": "judgment.py",
+      "purpose": "judgment.py \u2014 The Chief Justice & the Principle of Earned Finality (Chiron Jurisprudence Suite).",
+      "lines": 251,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 426.8,
+        "stdout_tail": "judgment.py self-test: 12/12 passed"
+      }
+    },
+    {
+      "script": "jurisdiction",
+      "path": "jurisdiction.py",
+      "purpose": "jurisdiction.py \u2014 the boundary geometry of the admissible, per domain (A-2, hardened).",
+      "lines": 179,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 19.0,
+        "stdout_tail": "jurisdiction.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "language",
+      "path": "language.py",
+      "purpose": "language.py \u2014 natural language and prose, fully offline, no external API.",
+      "lines": 709,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 395.4,
+        "stdout_tail": "language.py self-test: 17/17 passed"
+      }
+    },
+    {
+      "script": "legal_corpus",
+      "path": "legal_corpus.py",
+      "purpose": "legal_corpus.py \u2014 the hardcoded body of law, regulation, and order.",
+      "lines": 348,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 20.5,
+        "stdout_tail": "legal_corpus.py self-test: 12/12 passed  (67 provisions)"
+      }
+    },
+    {
+      "script": "llm_certify",
+      "path": "llm_certify.py",
+      "purpose": "llm_certify.py \u2014 an accountability certificate over an LLM's output.",
+      "lines": 181,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 385.8,
+        "stdout_tail": "  [PASS] states it is not a legal determination\n  [PASS] flags the unverifiable as neither confirmed nor denied\n  9/9 checks"
+      }
+    },
+    {
+      "script": "mine_code",
+      "path": "mine_code.py",
+      "purpose": "Code-repository mining \u2014 collapse every Python source file to its relabel-invariant",
+      "lines": 83,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "ontological",
+      "path": "ontological.py",
+      "purpose": "ontological.py \u2014 value and coherence as measured quantities.",
+      "lines": 155,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 371.0,
+        "stdout_tail": "ontological.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "operator_calculus",
+      "path": "operator_calculus.py",
+      "purpose": "operator_calculus.py \u2014 the six epistemic operators over a Chiron finding.",
+      "lines": 235,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 398.3,
+        "stdout_tail": "operator_calculus.py self-test: 9/9 passed"
+      }
+    },
+    {
+      "script": "president_grow",
+      "path": "president_grow.py",
+      "purpose": "president_grow.py \u2014 the LLM-assisted grow function, fully compartmentalized.",
+      "lines": 399,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "primus_atlas",
+      "path": "primus_atlas.py",
+      "purpose": "Primus atlas \u2014 run Chiron's collapse over the whole transcribed Caramuel atlas, not",
+      "lines": 127,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "primus_verses",
+      "path": "primus_verses.py",
+      "purpose": "Primus verses \u2014 run Caramuel's machine forward.",
+      "lines": 149,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "profile",
+      "path": "profile.py",
+      "purpose": "Performance profile \u2014 where the time goes, so optimization is evidence-driven.",
+      "lines": 109,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "projection_stack",
+      "path": "projection_stack.py",
+      "purpose": "projection_stack.py \u2014 project a finding through the P -> C -> E -> S substrates.",
+      "lines": 177,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 438.0,
+        "stdout_tail": "projection_stack.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "provenance",
+      "path": "provenance.py",
+      "purpose": "provenance.py \u2014 provenance conservation and blame (HCT A3 / T3).",
+      "lines": 178,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 409.8,
+        "stdout_tail": "provenance.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "semic",
+      "path": "semic.py",
+      "purpose": "SEMIC  \u2014  Semantic Invariant Calculus (deterministic core)",
+      "lines": 1773,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": {
+        "verified": true,
+        "self_hash": "e45f4d0329695b51",
+        "generated_utc": "2026-06-29T13:07:38Z",
+        "confidence": "high",
+        "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
+        "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
+      },
+      "emits_artifact": true,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 646.5,
+        "stdout_tail": "  [PASS] G56 config defaults reproduce in-source constants\n\n  56/56 gates passing"
+      }
+    },
+    {
+      "script": "semic_bridge",
+      "path": "semic_bridge.py",
+      "purpose": "semic_bridge.py \u2014 the Semantic Invariant Calculus, wired into Chiron.",
+      "lines": 279,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 33.2,
+        "stdout_tail": "semic_bridge.py self-test: 14/14 passed"
+      }
+    },
+    {
+      "script": "semic_energy",
+      "path": "semic_energy.py",
+      "purpose": "semic_energy.py \u2014 the three-level epistemic stack over semic.",
+      "lines": 150,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 27.0,
+        "stdout_tail": "  [PASS] candidate probabilities are a descending distribution\n  [PASS] energy peak == exact collapse generator\n  8/8 checks"
+      }
+    },
+    {
+      "script": "significance",
+      "path": "significance.py",
+      "purpose": "significance.py \u2014 where meaning concentrates: curvature as significance.",
+      "lines": 169,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 406.8,
+        "stdout_tail": "significance.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "stare_decisis",
+      "path": "stare_decisis.py",
+      "purpose": "stare_decisis.py \u2014 let the decision stand, on a hardcoded body of doctrine (A-2, hardened).",
+      "lines": 211,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 384.8,
+        "stdout_tail": "stare_decisis.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "test_chiron",
+      "path": "tests/test_chiron.py",
+      "purpose": "Engine tests \u2014 collapse/verify, subject organization, save/load round-trip.",
+      "lines": 54,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "test_grow",
+      "path": "tests/test_grow.py",
+      "purpose": "Grower tests \u2014 HTML reduction, relevance filter, link extraction, native parity,",
+      "lines": 51,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "trace",
+      "path": "trace.py",
+      "purpose": "Collapse trace \u2014 show the whole reasoning path, not just the answer.",
+      "lines": 173,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    },
+    {
+      "script": "uma_bridge",
+      "path": "uma_bridge.py",
+      "purpose": "uma_bridge.py \u2014 robustness of recovered structure under the RSLS dynamics.",
+      "lines": 208,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [
+        "numpy"
+      ],
+      "stdlib_only": false,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 420.6,
+        "stdout_tail": "uma_bridge.py self-test: 10/10 passed"
+      }
+    },
+    {
+      "script": "verify",
+      "path": "verify.py",
+      "purpose": "Reproducibility harness \u2014 proves that the same input, on the same version, yields",
+      "lines": 151,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": null
+    }
+  ]
+}

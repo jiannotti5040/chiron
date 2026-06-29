@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
 examples/rsls_frame_dragging.py -- Stage 5 / 1.5-D cylindrical
 frame-dragging kernel demonstration.

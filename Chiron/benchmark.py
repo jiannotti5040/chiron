@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
 Chiron benchmark — a reproducible, offline measurement of what the engine can
 actually do, scored for the one property that matters: it never claims a rule it

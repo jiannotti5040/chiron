@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 # ============================================================================
 #  chiron_grow.py — the operator-directed grower for CHIRON
 #  Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. See LICENSE.md.
