@@ -17,7 +17,8 @@ python3 chiron_monolith.py <module> [args...]      # run any module's command li
 python3 chiron_monolith.py semic selftest          # -> 56/56 gates passing
 python3 chiron_monolith.py chiron selftest         # -> CHIRON GREEN
 python3 chiron_monolith.py trace "1 1 2 3 5 8 13"  # -> ranked candidates -> verified rule
-python3 chiron_monolith.py --selftest              # battery across the core engines
+python3 chiron_monolith.py --selftest              # FULL sweep: every selftest-bearing module
+python3 chiron_monolith.py --smoke                 # quick: just the core-engine battery
 python3 chiron_monolith.py chiron serve            # the operator console on :8765, from the one file
 ```
 
@@ -25,21 +26,21 @@ There is **no separate dashboard** for the monolith: it serves the same operator
 spine. `chiron_monolith.py chiron serve` opens it at <http://127.0.0.1:8765>, and the aux services
 behind the other tabs run the same way (`chiron_monolith.py console_server serve`, etc.).
 
-`python3 chiron_monolith.py --selftest` runs the core engines each in a fresh subprocess of
-the monolith and reports pass/fail:
+`python3 chiron_monolith.py --selftest` runs **every** selftest-bearing module through the fold —
+the same set the full build's `build_manifest --run` executes (servers and corpus mutators excluded
+identically) — and reports the count:
 
 ```
-  [PASS] semic            56/56 gates passing
-  [PASS] chiron           CHIRON GREEN — exact knowledge, honest wisdom, bounded agency
-  [PASS] density_emotion  density_emotion.py self-test: 8/8 passed
-  [PASS] semic_energy     8/8 checks
-  [PASS] epistemic        13/13 checks
-  5/5 engines green through the monolith
+  [PASS] aesthetics           ...
+  [PASS] chiron               CHIRON GREEN — exact knowledge, honest wisdom, bounded agency
+  [PASS] semic                56/56 gates passing
+  ...
+  41/41 modules green through the fold (same coverage as the full build's manifest)
 ```
 
-A broad sweep of all 45 selftest-bearing modules passes 43/43 through the fold; the two
-that don't (`build_manifest`, `infectatrum_bridge`) are tools without a `selftest`
-subcommand and fail identically whether folded or run standalone — i.e. the fold is faithful.
+This is the proof that **Chiron-full and Chiron-monolith are identical in function**: the embedded
+sources are byte-identical to `Chiron/*.py` (asserted at build), so the fold passes exactly the gates
+the spine passes. `--smoke` is the quick five-engine check.
 
 ## How it works
 

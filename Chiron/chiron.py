@@ -15941,7 +15941,7 @@ def infectatrum_run_tests() -> int:
     check("export bundle attests into MANIFEST", len(bundle["attestation"]) == 16)
     check("export bundle sets human-in-loop suggestion as a bool",
           isinstance(bundle["human_in_loop_suggested"], bool))
-    srch = MANIFEST.add_source_file("/home/claude/build/infectatrum.py")
+    srch = MANIFEST.add_source_file(__file__)
     check("MANIFEST can hash the engine source (chain of custody)",
           srch is None or len(srch) == 16)
 
@@ -26457,7 +26457,7 @@ def _gate_collapse(g) -> None:
     g.check("collapse: incompressible surface reported honestly",
             (not rnd.compressible) or rnd.fit_score < 0.6
             or rnd.model_class == "incompressible")
-    # same_family is NOT same_generator (the reviewer's trap, gated)
+    # same_family is NOT same_generator (a subtle trap, gated)
     f1 = collapse([2, 4, 6, 8]); f2 = collapse([1000, 1002, 1004, 1006])
     g.check("collapse: same MODEL CLASS recognized (arithmetic)",
             same_family(f1, f2)["same_family"])

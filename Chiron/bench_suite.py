@@ -2,14 +2,14 @@
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
 """
-bench_suite.py — the external-benchmark suite both reviews ranked as the #1 next step.
+bench_suite.py — the external-benchmark suite: one architecture across six independent tasks.
 
 Runs the same invariant-recovery architecture
         surface -> hypothesis space -> exact search -> MDL -> held-out -> accept / refuse
 across SIX tasks --- four recovery domains plus two head-to-head comparisons against established
 methods --- and prints one consolidated table. Each beats or matches a standard baseline and
-refuses rather than guess where refusal applies. This is the evidence the reviewers asked for: not
-more formal machinery, but the same pipeline succeeding, with a refusal floor, on unrelated tasks.
+refuses rather than guess where refusal applies. The evidence is not more formal machinery but the
+same pipeline succeeding, with a refusal floor, on unrelated tasks.
 
     python3 bench_suite.py            # consolidated table
     python3 bench_suite.py selftest   # 0/1 gate over all six tasks

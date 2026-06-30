@@ -53,9 +53,15 @@ end, and it emits an auditable certificate on every run.
   http://127.0.0.1:8765 — the operator console with **Analyze**, **Run** (run any function), **Chat**
   (natural language over the engine), and **Feed** (start/stop/point the grower). Full guide:
   **[RUNNING.md](Chiron/RUNNING.md)**.
+- **The Chat assistant is provider-pluggable and free.** It tries a fallback chain of LLMs — set any
+  one key (`GEMINI_API_KEY`, `OPENROUTER_API_KEY` for Llama/Qwen/GPT, `GROQ_API_KEY`, `OPENAI_API_KEY`,
+  `ANTHROPIC_API_KEY`, …) in your shell, **or paste it right in the Chat tab’s “Add your own API key”
+  panel**. The model only proposes; the exact engine still verifies. See `Chiron/llm_providers.py`.
 - Every script can leave a signed, falsifiable certificate under `Chiron/artifacts/`, indexed by
-  `build_manifest.py` and browsable in `vault_dashboard.html` — see [ARTIFACTS.md](Chiron/ARTIFACTS.md).
-  Four scripts (`semic`, `chiron`, `density_emotion`, `chiron_artifact`) emit as working proofs.
+  `build_manifest.py` and browsable in `vault_dashboard.html` — each tile names the module in Chiron
+  vocabulary and explains it **mathematically, programmatically, and conceptually**. See
+  [ARTIFACTS.md](Chiron/ARTIFACTS.md). Four scripts (`semic`, `chiron`, `density_emotion`,
+  `chiron_artifact`) emit as working proofs.
 - **The whole spine in one file:** `python3 "Chiron Monolith/chiron_monolith.py" --selftest` — all
   63 Chiron modules folded, byte-identical, into a single runnable file; run any of them with
   `python3 "Chiron Monolith/chiron_monolith.py" <module> [args]`. See

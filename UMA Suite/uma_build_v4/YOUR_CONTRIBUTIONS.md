@@ -47,7 +47,7 @@ it from the definitions in `nonlinear_gr.py` / `tensor_bridge.py`.
 
 ## pdftotext indentation repair
 
-**`/home/claude/build/clean_pdf_text.py`** — script that takes the raw
+**`clean_pdf_text.py`** — script that takes the raw
 `pdftotext` output of the corpus PDFs and re-indents method bodies
 where page-break form-feeds stripped leading whitespace. Necessary
 precondition for the build; produces the `Uma_clean/*.txt` working

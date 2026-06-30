@@ -85,6 +85,16 @@ python3 llm_providers.py ask "..."       # run the chain; it prints which provid
 Order is `gemini → openrouter → groq → openai → anthropic → perplexity` (override with
 `CHIRON_LLM_CHAIN="openrouter,groq"`). Keys live only in your environment — never in the repo.
 
+**Two ways to add your own key.**
+
+1. *In your shell* (persists): `export OPENROUTER_API_KEY=...` (or any provider above), then start
+   the service. To make it permanent, add the line to `~/.zshrc`. The provider→variable map is in
+   `Chiron/llm_providers.py` (the `REGISTRY` table, near the top of the file).
+2. *In the dashboard* (no terminal): open the **Chat** tab, expand **“Add your own API key”**, pick a
+   provider, paste the key, and click **Save key**. It is held in the running service's memory for
+   that session only — never written to disk or the repo. Verify with the status pill or
+   `python3 llm_providers.py check --live`.
+
 ## 4. Start your own grow from a file — `grow_clean.py`
 
 For pointing a fresh grow at your own material (any file, the Wikipedia preset, or ingestion-driven

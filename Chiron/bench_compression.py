@@ -4,8 +4,8 @@
 """
 bench_compression.py — Chiron vs general-purpose compressors on a labeled sequence corpus.
 
-The reviewers' #1 ask: demonstrate the surface -> search -> MDL -> held-out -> accept/refuse
-architecture against simpler baselines on a concrete task. Here the task is sequence compression
+A demonstration of the surface -> search -> MDL -> held-out -> accept/refuse architecture
+against simpler baselines on a concrete task. Here the task is sequence compression
 with a twist the baselines cannot match: PREDICTION. gzip/bz2/lzma shrink the bytes you give them;
 they cannot regenerate a term they were never shown. Chiron recovers a constant-size generator,
 verifies it by predicting held-out terms at exact equality, and abstains on the incompressible.

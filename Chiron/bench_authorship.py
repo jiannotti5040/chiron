@@ -4,8 +4,8 @@
 """
 bench_authorship.py — authorship attribution with Burrows's Delta (an established method).
 
-The reviewer asked specifically for authorship-attribution evaluation. This runs the established
-stylometric method already implemented in language.py (Burrows's Delta over function-word z-scores)
+An authorship-attribution evaluation using the established stylometric method already implemented
+in language.py (Burrows's Delta over function-word z-scores)
 on a labelled corpus: attribute each held-out passage to its author, and compare against a naive
 content-word (topic) baseline. Delta keys on function-word *style*, which is largely topic-invariant,
 so it attributes held-out passages where a content baseline is weaker.
