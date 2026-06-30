@@ -115,4 +115,4 @@ explicitly rather than blurred — that labeling is the point.
 
 Licensed under the **PolyForm Noncommercial License 1.0.0** (see [LICENSE.md](LICENSE.md)): free to
 use, modify, and share for any noncommercial purpose; all commercial rights reserved to Jacob
-Iannotti. Commercial licensing and other inquiries: jiannotti5040@gmail.com
+Iannotti. Commercial licensing and other inquiries: jiannotti1@gmail.com
