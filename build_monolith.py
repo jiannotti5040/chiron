@@ -46,9 +46,11 @@ it exists — the normal in-repo case — so behaviour is identical to running t
     python3 chiron_monolith.py <module> [args...]     # run a module's command line
     python3 chiron_monolith.py semic selftest         # -> 56/56 gates
     python3 chiron_monolith.py chiron selftest        # -> CHIRON GREEN
-    python3 chiron_monolith.py --selftest             # battery across the core engines
+    python3 chiron_monolith.py --selftest             # FULL sweep: every selftest-bearing module
+    python3 chiron_monolith.py --smoke                # quick: just the core-engine battery
 
-Regenerate with build_monolith.py. The embedded sources are a lossless fold of the spine.
+Regenerate with build_monolith.py. The embedded sources are a lossless fold of the spine —
+byte-identical to Chiron/*.py — so the fold runs exactly the gates the full build runs.
 """
 import sys
 import os
@@ -137,36 +139,49 @@ def run_module(name, argv):
             sys.modules.pop(name, None)
 
 
-_BATTERY = [("semic", ["selftest"]), ("chiron", ["selftest"]),
-            ("density_emotion", ["selftest"]), ("semic_energy", ["selftest"]),
-            ("epistemic", ["selftest"])]
+# Servers and corpus-mutating tools are not auto-run in a sweep (identical to the full
+# build's build_manifest.NO_AUTORUN), so the fold's coverage matches the spine's exactly.
+_NO_AUTORUN = {"assistant_server", "console_server", "chiron_grow", "president_grow",
+               "grow_control", "grow_clean", "build_manifest", "ingest_pdf"}
+_SMOKE = ["semic", "chiron", "density_emotion", "semic_energy", "epistemic"]
 
 
-def _selftest():
-    """Run each core engine's selftest in a fresh subprocess of THIS monolith, so the
-    fold is exercised exactly as a standalone run would be, with full isolation."""
-    import subprocess
-    rows = []
-    me = os.path.abspath(__file__)
-    for name, argv in _BATTERY:
-        if name not in _SOURCES:
-            rows.append((name, False, "not embedded"))
-            continue
-        try:
-            proc = subprocess.run([sys.executable, me, name] + argv,
-                                  capture_output=True, text=True, timeout=300)
-            ok = (proc.returncode == 0)
-            lines = [ln for ln in (proc.stdout + proc.stderr).strip().splitlines()
-                     if ln.strip()]
-            tail = (lines[-1] if lines else "")[:64]
-        except Exception as exc:
-            ok, tail = False, repr(exc)[:64]
-        rows.append((name, ok, tail))
-    print("chiron_monolith self-test (each engine run through the embedded fold)")
+def _run_self(name):
+    """Run one embedded module's selftest IN-PROCESS, capturing its output. run_module
+    registers/restores sys.modules around each run, so the whole sweep needs only one parse
+    of the fold (fast). Falls back from the positional `selftest` to the `--selftest` flag,
+    exactly as the full build's runner does, so a module's invocation style never counts as a fail."""
+    import io
+    import contextlib
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
+            rc = run_module(name, ["selftest"])
+            if rc == 2:
+                rc = run_module(name, ["--selftest"])
+        out = [ln for ln in buf.getvalue().strip().splitlines() if ln.strip()]
+        return rc == 0, (out[-1] if out else "")[:70]
+    except Exception as exc:
+        return False, repr(exc)[:70]
+
+
+def _selftest(full=True):
+    """full=True sweeps EVERY selftest-bearing embedded module (the same set the full build
+    runs); full=False runs only the core-engine smoke battery."""
+    if full:
+        names = sorted(n for n in _SOURCES
+                       if "selftest" in _decode(n) and n not in _NO_AUTORUN)
+        title = "full sweep — every selftest-bearing module, through the fold"
+    else:
+        names = [n for n in _SMOKE if n in _SOURCES]
+        title = "smoke battery — the core engines, through the fold"
+    rows = [(n, *_run_self(n)) for n in names]
+    print("chiron_monolith self-test (%s)" % title)
     for name, ok, tail in rows:
-        print("  [%s] %-16s %s" % ("PASS" if ok else "FAIL", name, tail))
+        print("  [%s] %-18s %s" % ("PASS" if ok else "FAIL", name, tail))
     passed = sum(1 for _, ok, _ in rows if ok)
-    print("  %d/%d engines green through the monolith" % (passed, len(rows)))
+    print("  %d/%d modules green through the fold "
+          "(same coverage as the full build's manifest)" % (passed, len(rows)))
     return passed == len(rows)
 
 
@@ -182,7 +197,9 @@ def main(argv=None):
         print("%d modules embedded." % len(_SOURCES))
         return 0
     if args[0] == "--selftest":
-        return 0 if _selftest() else 1
+        return 0 if _selftest(full=True) else 1
+    if args[0] == "--smoke":
+        return 0 if _selftest(full=False) else 1
     return run_module(args[0], args[1:])
 
 

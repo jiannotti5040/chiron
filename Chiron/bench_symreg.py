@@ -4,8 +4,8 @@
 """
 bench_symreg.py — symbolic recovery vs polynomial regression (an established baseline).
 
-A comparative benchmark in the reviewer's spirit: not just "does it pass internal gates" but "how
-does it compare to a standard method, and where does each fail?" The task is to recover the rule
+A comparative benchmark: not just "does it pass internal gates" but "how does it compare to a
+standard method, and where does each fail?" The task is to recover the rule
 behind a sequence from a training prefix and predict the withheld tail. Chiron recovers the exact
 generator over its hypothesis classes (or refuses); numpy.polyfit is the textbook baseline --- it
 always returns a polynomial, never abstains.

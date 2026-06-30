@@ -1,7 +1,7 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-06-29T19:00:43Z",
+  "generated_utc": "2026-06-30T00:53:55Z",
   "mode": "run",
   "summary": {
     "runnable_scripts": 66,
@@ -20,12 +20,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Decision Brief",
+      "lens": {
+        "math": "combines an exact forecast, an exact anomaly flag, and a governed recommendation.",
+        "prog": "assembles a decision-ready brief from the engine's verified outputs.",
+        "concept": "intelligence that is not just true but usable \u2014 and cleared by governance before it is offered."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 462.9,
+        "runtime_ms": 667.2,
         "stdout_tail": "actionable_intelligence.py self-test: 11/11 passed"
       }
     },
@@ -40,12 +46,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "Mathematical Beauty",
+      "lens": {
+        "math": "the score B = (E\u00b7S\u00b7R)^{1/3} over elegance, symmetry, and resonance.",
+        "prog": "a deterministic beauty metric over a recovered generator.",
+        "concept": "elegance made measurable \u2014 simple, symmetric, resonant structure scores high."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 538.8,
+        "runtime_ms": 525.4,
         "stdout_tail": "aesthetics.py self-test: 10/10 passed"
       }
     },
@@ -66,7 +78,7 @@
       "script": "assistant_server",
       "path": "assistant_server.py",
       "purpose": "assistant_server.py \u2014 a natural-language assistant over the Chiron engine and the Congress.",
-      "lines": 314,
+      "lines": 333,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -84,12 +96,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The HCT Axioms",
+      "lens": {
+        "math": "the Holographic Continuity Theory axioms A1\u2013A8 and theorems T1\u2013T6, executed as code.",
+        "prog": "each axiom and theorem runs as a checkable unit.",
+        "concept": "the theory is not just stated \u2014 it is run, so its claims are testable."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 316.1,
+        "runtime_ms": 291.3,
         "stdout_tail": "axioms.py self-test: 10/10 passed"
       }
     },
@@ -107,7 +125,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 397.3,
+        "runtime_ms": 380.5,
         "stdout_tail": "  [PASS] Burrows Delta attributes a strong majority of held-out passages\n  [PASS] attribution is deterministic (reproducible)\n  3/3 checks"
       }
     },
@@ -125,7 +143,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 400.7,
+        "runtime_ms": 388.4,
         "stdout_tail": "  [PASS] zero false-verify on controls\n  [PASS] chiron law beats lzma on a long sequence\n  4/4 checks"
       }
     },
@@ -143,7 +161,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 15.9,
+        "runtime_ms": 15.6,
         "stdout_tail": "  [PASS] domain scoping removes cross-domain provisions the baseline included\n  [PASS] recovered sets are non-empty exactly when not abstaining\n  4/4 checks"
       }
     },
@@ -161,7 +179,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 12.8,
+        "runtime_ms": 13.0,
         "stdout_tail": "  [PASS] beats the Markov baseline on held-out\n  [PASS] abstains on contradictory traces\n  4/4 checks"
       }
     },
@@ -179,25 +197,31 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 23.6,
+        "runtime_ms": 23.9,
         "stdout_tail": "  [PASS] all controls refused\n  [PASS] bag-of-words baseline conflates the invariants\n  5/5 checks"
       }
     },
     {
       "script": "bench_suite",
       "path": "bench_suite.py",
-      "purpose": "bench_suite.py \u2014 the external-benchmark suite both reviews ranked as the #1 next step.",
+      "purpose": "bench_suite.py \u2014 the external-benchmark suite: one architecture across six independent tasks.",
       "lines": 114,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Six Tasks",
+      "lens": {
+        "math": "the same architecture across six independent domains versus an established baseline in each.",
+        "prog": "a consolidated runner with a results table.",
+        "concept": "one discipline, many fields \u2014 each beating or matching a known method, refusing where refusal is right."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 452.7,
+        "runtime_ms": 427.5,
         "stdout_tail": "  [PASS] authorship benchmark\n\n  VERDICT: PASS \u2014 6/6 tasks green"
       }
     },
@@ -217,7 +241,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 400.0,
+        "runtime_ms": 378.2,
         "stdout_tail": "  [PASS] chiron refuses the structureless control\n  [PASS] chiron never emits a confident wrong tail\n  6/6 checks"
       }
     },
@@ -230,6 +254,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Proof",
+      "lens": {
+        "math": "OEIS-core recovery, classical ciphers, and a randomized adversarial gauntlet scored for false verifications.",
+        "prog": "runs the scored suite and reports the zero that matters.",
+        "concept": "the headline claim, measured: across ~5,070 cases, zero rules certified that it could not predict."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": null
@@ -248,7 +278,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 57.3,
+        "runtime_ms": 53.4,
         "stdout_tail": "build.py [chiron]: PASS (7 modules, 30120 lines, byte-identical=True)\n  build.py [semic]: PASS (34 modules, 1773 lines, byte-identical=True)\n  build.py self-test: PASS (2 targets)"
       }
     },
@@ -256,11 +286,17 @@
       "script": "build_manifest",
       "path": "build_manifest.py",
       "purpose": "build_manifest \u2014 enumerate every runnable script in the vault and capture, for",
-      "lines": 231,
+      "lines": 249,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Index",
+      "lens": {
+        "math": "a per-script feature record \u2014 runnable, self-testing, stdlib-only, header-stamped, certificate-emitting, last result.",
+        "prog": "walks the spine, runs each selftest (positional or --selftest), and writes manifest.json.",
+        "concept": "the catalog that makes the whole vault auditable at a glance."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": null
@@ -274,12 +310,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Anti-Patronization",
+      "lens": {
+        "math": "scores an explanation across condescension, unearned confidence, evasion, and opacity, tracing each point to its span.",
+        "prog": "an audit that returns the offending text, not just a number.",
+        "concept": "respect the reader \u2014 say what is known plainly and flag what is not."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 397.0,
+        "runtime_ms": 382.3,
         "stdout_tail": "candor_bridge.py self-test: 8/8 passed"
       }
     },
@@ -292,12 +334,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Certificate",
+      "lens": {
+        "math": "scores a finding against the Daubert / FRE-702 factors and binds the evidence under a Merkle root with a replay seed.",
+        "prog": "emits a structured, reproducible attestation carrying an explicit, honest legal_status.",
+        "concept": "turn a recovered fact into a court-ready, replayable record \u2014 an input a human decision can stand on, never the decision itself."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 395.3,
+        "runtime_ms": 376.7,
         "stdout_tail": "certify_finding.py self-test: 8/8 passed"
       }
     },
@@ -313,10 +361,16 @@
         "scipy"
       ],
       "stdlib_only": false,
+      "title": "The Invariant Engine",
+      "lens": {
+        "math": "argmin over typed generator classes of the two-part MDL code L(M)+L(s|M) in exact rationals, accepted only if it predicts withheld terms at exact equality; otherwise INCOMPRESSIBLE.",
+        "prog": "one self-contained file: collapse()/articulate() codec, owner-signed certificates, an offline HTTP console; no third-party deps in the core path.",
+        "concept": "recover the exact rule beneath a codified surface, prove it on data it never saw, or honestly refuse \u2014 never a confident guess."
+      },
       "artifact": {
         "verified": true,
-        "self_hash": "7b4929a7411f8886",
-        "generated_utc": "2026-06-29T19:00:31Z",
+        "self_hash": "e937510d499888b1",
+        "generated_utc": "2026-06-30T00:53:44Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -325,7 +379,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 6190.7,
+        "runtime_ms": 5925.3,
         "stdout_tail": "\n  CHIRON core gates: 12/12 passed.\n  CHIRON GREEN \u2014 exact knowledge, honest wisdom, bounded agency, one file."
       }
     },
@@ -338,6 +392,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Memorial",
+      "lens": {
+        "math": "a dual-view certificate (machine evidence + human claim) admitted only if it carries a non-empty falsifier.",
+        "prog": "quick() emits a signed record to artifacts/<script>/; refuses any claim with no stated way to break it.",
+        "concept": "every run can leave proof of what it found, why it is believed, and the one thing that would falsify it."
+      },
       "artifact": {
         "verified": true,
         "self_hash": "003641817adf3aaa",
@@ -358,6 +418,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Cipher Solver",
+      "lens": {
+        "math": "recovers a classical transform and key by inverting it under the engine's language model; a known pair recovers the key directly.",
+        "prog": "Caesar / affine / substitution / transposition / base-n / Morse, ciphertext-only; seeds a cryptography basis.",
+        "concept": "decoding is just inverse recovery \u2014 the same collapse, run backwards through a transform."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": null
@@ -384,6 +450,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Versus the Compressors",
+      "lens": {
+        "math": "head-to-head against gzip / bz2 / lzma: a constant-size law that regenerates terms general compressors cannot produce.",
+        "prog": "measures stored size and predictive power side by side.",
+        "concept": "compression that understands \u2014 it stores the rule, not just smaller bytes."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": null
@@ -410,12 +482,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Reasonable Doubt",
+      "lens": {
+        "math": "an adversarial search for a counter-reading that would defeat the finding.",
+        "prog": "stress-tests a claim by trying to break it.",
+        "concept": "a finding is only as strong as the hardest cross-examination it survives."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 388.2,
+        "runtime_ms": 399.6,
         "stdout_tail": "cross_examine.py self-test: 10/10 passed"
       }
     },
@@ -430,10 +508,16 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "The Decoherence Channel",
+      "lens": {
+        "math": "competing readings as a density matrix evolved by a Lindblad CPTP semigroup with a deterministic half-life; von Neumann entropy decays as interpretations decohere toward one.",
+        "prog": "complete-positivity and trace preservation asserted at every step; deterministic; emits a signed certificate; 8/8 selftest.",
+        "concept": "model ambiguity as physics \u2014 rival interpretations interfere and settle, with a provable, honest collapse rather than a hand-waved one."
+      },
       "artifact": {
         "verified": true,
-        "self_hash": "26f6607691428f32",
-        "generated_utc": "2026-06-29T19:00:32Z",
+        "self_hash": "acd76723bb959872",
+        "generated_utc": "2026-06-30T00:53:45Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -442,7 +526,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 476.1,
+        "runtime_ms": 608.6,
         "stdout_tail": "density_emotion.py self-test: 8/8 passed"
       }
     },
@@ -455,12 +539,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Independent Witnesses",
+      "lens": {
+        "math": "confidence by convergence of independent sources rather than by any single estimate.",
+        "prog": "aggregates witnesses and reports agreement.",
+        "concept": "belief earned by corroboration \u2014 multiple paths to the same answer, not one loud one."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 523.4,
+        "runtime_ms": 498.4,
         "stdout_tail": "discernment.py self-test: 9/9 passed"
       }
     },
@@ -486,12 +576,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Epistemic Contract",
+      "lens": {
+        "math": "the schema Surface \u2192 Hypothesis space \u2192 Constraint space \u2192 Verification \u2192 Certificate, with four engines proven to be instances of one pipeline.",
+        "prog": "a RecoveryEngine interface plus Chiron / semic / governance / energy adapters driven uniformly.",
+        "concept": "the repository is not many projects \u2014 it is one contract instantiated across integers, meaning, law, and probability."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 447.4,
+        "runtime_ms": 394.9,
         "stdout_tail": "epistemic self-test\n  13/13 checks"
       }
     },
@@ -535,7 +631,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 13.6,
+        "runtime_ms": 13.3,
         "stdout_tail": "  hexameter_feet_ok(LSLSLSLSLSLS      ) -> False (want False)  OK\nbackend: pure-python fallback\nVERDICT: PASS"
       }
     },
@@ -561,12 +657,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Governance Gate",
+      "lens": {
+        "math": "the SoCPM decision rule over a Truth-Horizon partition (Knowns / Unknowns / void) against a fixed admissibility threshold.",
+        "prog": "a LexGuard gate applied to any claim; admit, or escalate to a human.",
+        "concept": "a standard of care for persuasive machines \u2014 a claim is allowed only if it clears the bar, otherwise a person decides."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 386.4,
+        "runtime_ms": 378.8,
         "stdout_tail": "govern.py self-test: 8/8 passed"
       }
     },
@@ -607,12 +709,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "Boundary Recovery",
+      "lens": {
+        "math": "reconstructs interior structure from an erased boundary fragment (holographic error-correction analogy).",
+        "prog": "recovers a whole from a partial edge.",
+        "concept": "the rule is often legible from a fragment \u2014 the boundary already encodes the bulk."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 419.7,
+        "runtime_ms": 406.1,
         "stdout_tail": "holographic.py self-test: 8/8 passed"
       }
     },
@@ -625,12 +733,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Ambiguity Spectrum",
+      "lens": {
+        "math": "reading-spectrum cardinality |\u03a3| and Shannon entropy over interpretations, plus an origin-signature (JSD) and an adversarial detector.",
+        "prog": "measures how many ways a codified object can be read and how evenly.",
+        "concept": "quantify ambiguity and information loss \u2014 know exactly how much a surface under-determines its meaning."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "--selftest",
         "exit_code": 0,
-        "runtime_ms": 293.6,
+        "runtime_ms": 272.2,
         "stdout_tail": "infectatrum_bridge.py self-test: 8/8 passed"
       }
     },
@@ -656,12 +770,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Front Door",
+      "lens": {
+        "math": "normalizes arbitrary input (JSON / numeric / text) into the typed surfaces the engine accepts.",
+        "prog": "a strict structured-intake parser feeding collapse.",
+        "concept": "anything codified can enter \u2014 once it is a surface, the same law applies."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 391.0,
+        "runtime_ms": 381.3,
         "stdout_tail": "intake.py self-test: 12/12 passed"
       }
     },
@@ -674,12 +794,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Salvage Door",
+      "lens": {
+        "math": "a fault-tolerant parse that never overwrites a good interpretation with a worse one.",
+        "prog": "wraps strict intake so malformed input degrades gracefully instead of failing.",
+        "concept": "uncooperative material still gets read \u2014 the best available structure survives."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 387.2,
+        "runtime_ms": 379.6,
         "stdout_tail": "format=text salvaged=False collapse_ready=False primary_series=None"
       }
     },
@@ -692,12 +818,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Earned Finality",
+      "lens": {
+        "math": "a chief-justice rule that grants finality only when doubt has been exhausted.",
+        "prog": "combines the doubt search and the precedent ledger into a verdict.",
+        "concept": "closure is earned, not assumed \u2014 a decision stands only after it has withstood challenge."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 442.2,
+        "runtime_ms": 428.0,
         "stdout_tail": "judgment.py self-test: 12/12 passed"
       }
     },
@@ -715,7 +847,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 18.2,
+        "runtime_ms": 18.8,
         "stdout_tail": "jurisdiction.py self-test: 8/8 passed"
       }
     },
@@ -728,12 +860,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Offline Language",
+      "lens": {
+        "math": "n-gram statistics with PPMI semantics \u2014 no model weights, no network.",
+        "prog": "builds a prose brief and a likelihood signal entirely in stdlib.",
+        "concept": "the engine can read and weigh natural language without depending on any external model."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 391.8,
+        "runtime_ms": 386.9,
         "stdout_tail": "language.py self-test: 17/17 passed"
       }
     },
@@ -746,12 +884,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Codified Law",
+      "lens": {
+        "math": "a provision set with domain scoping; applicable(domain) \u2229 keyword retrieval recovers the governing rules.",
+        "prog": "a hardcoded corpus of statutes, regulations, treaties, and orders (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001).",
+        "concept": "the explicit law the governance layer reasons over \u2014 stated in full, not implied."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 19.7,
+        "runtime_ms": 19.3,
         "stdout_tail": "legal_corpus.py self-test: 12/12 passed  (67 provisions)"
       }
     },
@@ -764,12 +908,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Accountability Wrapper",
+      "lens": {
+        "math": "extracts the checkable claims from free text (arithmetic and numeric sequences via collapse) and reports how many of M verify exactly, under a Merkle root.",
+        "prog": "wraps any language-model output: candor audit, exact verification, governance gate; the verdict is modest by construction.",
+        "concept": "the model proposes, the engine disposes \u2014 certify what is checkable, and never call free text 'correct.'"
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 379.0,
+        "runtime_ms": 378.5,
         "stdout_tail": "  [PASS] states it is not a legal determination\n  [PASS] flags the unverifiable as neither confirmed nor denied\n  9/9 checks"
       }
     },
@@ -782,12 +932,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Proposer Chain",
+      "lens": {
+        "math": "a fallback ordering over providers returning the first non-empty answer, plus a fan-out that gathers every keyed provider's proposal for the verifier to test.",
+        "prog": "an env-keyed registry (gemini, openrouter, groq, openai, anthropic, perplexity; llama/qwen via OpenRouter), mock-testable, keys read only from the environment.",
+        "concept": "many possible proposers, one exact verifier \u2014 the proposer can be anyone; the source of truth is never the model."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 37.7,
+        "runtime_ms": 36.1,
         "stdout_tail": "  [PASS] llama via openrouter key\n  [PASS] qwen via openrouter key\n  11/11 checks"
       }
     },
@@ -813,12 +969,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Value & Harmony",
+      "lens": {
+        "math": "V-Units and a Harmony Functional scoring coherence across a structure.",
+        "prog": "a deterministic value score over a recovered object.",
+        "concept": "ask not only what a structure is, but how well its parts cohere."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 387.9,
+        "runtime_ms": 382.8,
         "stdout_tail": "ontological.py self-test: 10/10 passed"
       }
     },
@@ -833,12 +995,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "The Six Operators",
+      "lens": {
+        "math": "six epistemic operators acting on a Mystery Vector \u03be \u2208 \u211d\u2076 (six species of the unknown).",
+        "prog": "a small algebra over a typed uncertainty state.",
+        "concept": "a vocabulary for the kinds of not-knowing, so each can be handled on its own terms."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 408.1,
+        "runtime_ms": 405.4,
         "stdout_tail": "operator_calculus.py self-test: 9/9 passed"
       }
     },
@@ -905,12 +1073,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "The Projection Stack",
+      "lens": {
+        "math": "projects a finding through P\u2192C\u2192E\u2192S with identity preserved as a conservation law.",
+        "prog": "a layered transform that carries provenance through each stage.",
+        "concept": "a result can change form without losing what it is \u2014 identity persists under projection."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 436.8,
+        "runtime_ms": 433.5,
         "stdout_tail": "projection_stack.py self-test: 10/10 passed"
       }
     },
@@ -923,12 +1097,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "Conserved History",
+      "lens": {
+        "math": "a conserved-history DAG with minimal-blame attribution (HCT axioms A3/T3).",
+        "prog": "tracks where every claim came from and assigns responsibility minimally.",
+        "concept": "nothing is unsourced \u2014 history is a conserved quantity you can audit back to its origin."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 397.4,
+        "runtime_ms": 400.3,
         "stdout_tail": "provenance.py self-test: 8/8 passed"
       }
     },
@@ -941,10 +1121,16 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Semantic Invariant Calculus",
+      "lens": {
+        "math": "edge-set energy E(S)=\u03b1|S|+\u03a3|O\u1d62 \u25b3 S| is separable per edge, giving the closed-form argmin S*={e : count(e) > (n+\u03b1)/2} in O(N\u00b7m); the MDL collapse equals the T\u21920 limit of the Gibbs sampler.",
+        "prog": "pure-stdlib; surface_skeleton \u2192 collapse \u2192 certify; typed classes H1\u2013H5; exhaustive/separable/branch-and-bound solvers agree; 56/56 gates.",
+        "concept": "the recovery discipline lifted from integers to meaning: find the shared invariant of a family of texts, verify on held-out members, refuse a contaminated pool."
+      },
       "artifact": {
         "verified": true,
-        "self_hash": "f7c9bd9816148ee7",
-        "generated_utc": "2026-06-29T19:00:39Z",
+        "self_hash": "94efc8155615ecec",
+        "generated_utc": "2026-06-30T00:53:51Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -953,7 +1139,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 657.1,
+        "runtime_ms": 652.6,
         "stdout_tail": "  [PASS] G56 config defaults reproduce in-source constants\n\n  56/56 gates passing"
       }
     },
@@ -971,7 +1157,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 33.9,
+        "runtime_ms": 33.7,
         "stdout_tail": "semic_bridge.py self-test: 14/14 passed"
       }
     },
@@ -984,12 +1170,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Energy Stack",
+      "lens": {
+        "math": "three levels \u2014 exact collapse (L1), the constraint manifold (L2), and a Gibbs measure p_T(S)\u221dexp(\u2212E(S)/T) ranking (L3); landscape entropy separates a flat (ambiguous) from a peaked (decisive) basin.",
+        "prog": "builds only on semic's exact core; three_level() returns CERTIFIED or, on refusal, explicitly UNCERTIFIED energy-ranked candidates \u2014 it never certifies at L3.",
+        "concept": "stay exact wherever possible; only when exact recovery refuses do you explore approximations, always labelled uncertified."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 27.5,
+        "runtime_ms": 26.7,
         "stdout_tail": "  [PASS] candidate probabilities are a descending distribution\n  [PASS] energy peak == exact collapse generator\n  8/8 checks"
       }
     },
@@ -1004,12 +1196,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "Curvature as Significance",
+      "lens": {
+        "math": "Ollivier\u2013Ricci curvature over the structure locates where meaning concentrates; W\u2081 the underlying transport.",
+        "prog": "computes a curvature field and reports its peaks.",
+        "concept": "significance is geometric \u2014 it is where the structure bends most sharply."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 426.8,
+        "runtime_ms": 423.5,
         "stdout_tail": "significance.py self-test: 8/8 passed"
       }
     },
@@ -1022,12 +1220,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Precedent Ledger",
+      "lens": {
+        "math": "a Merkle-chained ledger of prior decisions; departures are flagged against precedent.",
+        "prog": "appends each judgment and detects deviations.",
+        "concept": "consistency over time \u2014 like cases decided alike, and any break made visible."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 388.8,
+        "runtime_ms": 385.3,
         "stdout_tail": "stare_decisis.py self-test: 10/10 passed"
       }
     },
@@ -1066,6 +1270,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The Reasoning Path",
+      "lens": {
+        "math": "exposes the ranked candidate generators, the MDL margin to the runner-up, and the held-out verification.",
+        "prog": "prints why the winner won, step by step.",
+        "concept": "the engine shows its work \u2014 the decision is legible, not a black box."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": null
@@ -1081,12 +1291,18 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "title": "The Physical Substrate",
+      "lens": {
+        "math": "tests robustness of recovered structure under the RSLS field dynamics (Lyapunov sensitivity, decoherence).",
+        "prog": "perturbs a finding through the substrate and checks it survives.",
+        "concept": "a real invariant should be stable under the physics, not an artifact of a quiet input."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 420.5,
+        "runtime_ms": 417.1,
         "stdout_tail": "uma_bridge.py self-test: 10/10 passed"
       }
     },
@@ -1099,12 +1315,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "title": "The One-Command Launcher",
+      "lens": {
+        "math": "a small service supervisor \u2014 start, wait, signal, reap \u2014 over the local processes.",
+        "prog": "one command starts every service and prints one URL; Ctrl-C stops them all.",
+        "concept": "the whole system, reachable from a single door."
+      },
       "artifact": null,
       "emits_artifact": false,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 2125.1,
+        "runtime_ms": 2118.1,
         "stdout_tail": "  [PASS] dummy services are running\n  [PASS] Ctrl-C path stops them all\n  7/7 checks"
       }
     },

@@ -155,7 +155,21 @@ def _run_selftest(path: str, timeout: int) -> Dict[str, Any]:
                 "runtime_ms": None, "stdout_tail": f"ERROR: {e}"}
 
 
+def _load_lexicon() -> Dict[str, Any]:
+    """Per-script context (Chiron-vocabulary title + math/prog/concept lenses) for the
+    dashboard. Optional: scripts not listed fall back to their docstring purpose."""
+    p = os.path.join(ROOT, "lexicon.json")
+    if os.path.isfile(p):
+        try:
+            return {k: v for k, v in json.load(open(p, encoding="utf-8")).items()
+                    if not k.startswith("_")}
+        except Exception:
+            return {}
+    return {}
+
+
 def build(run: bool, timeout: int) -> Dict[str, Any]:
+    lexicon = _load_lexicon()
     entries: List[Dict[str, Any]] = []
     for dirpath, _, files in os.walk(ROOT):
         if "artifacts" in dirpath or "__pycache__" in dirpath:
@@ -173,6 +187,10 @@ def build(run: bool, timeout: int) -> Dict[str, Any]:
                 "purpose": _purpose(path),
             }
             rec.update(_scan(path))
+            if stem in lexicon:
+                rec["title"] = lexicon[stem].get("title", "")
+                rec["lens"] = {k: lexicon[stem][k] for k in ("math", "prog", "concept")
+                               if k in lexicon[stem]}
             art = _artifact_summary(stem)
             rec["artifact"] = art
             rec["emits_artifact"] = art is not None

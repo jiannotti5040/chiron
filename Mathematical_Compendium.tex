@@ -480,6 +480,18 @@ free-text claim as true. It certifies \emph{accountability} (what is checkable, 
 explicitly flagged unverifiable), not correctness. The model proposes; the engine disposes.
 \status{Implemented \& tested; the certificate is an assurance artifact, not a legal instrument.}
 
+\subsection{The pluggable proposer and the single console}
+Because the model is only a proposer, it is interchangeable. A provider chain
+$P=(p_1,p_2,\dots)$ is tried in order, returning the first non-empty proposal, or fanned out so
+every keyed provider proposes at once and the exact verifier tests each; the set of certified
+results is invariant under the choice of $P$, since acceptance depends only on held-out exact
+prediction, never on which model spoke. Each provider's credential is read from the environment
+alone (never stored in the corpus), and may be supplied at run time. The entire contract --- ingest,
+collapse, articulate, certify, govern, and the audited proposer --- is operable from one offline
+console, where each module is presented in its own vocabulary alongside a mathematical, a
+programmatic, and a conceptual reading of what it does.
+\status{Implemented \& tested. Engineering realization of the contract; no new mathematics.}
+
 %=====================================================================
 \section{Ambiguity and Origin (Infectatrum)}
 %=====================================================================

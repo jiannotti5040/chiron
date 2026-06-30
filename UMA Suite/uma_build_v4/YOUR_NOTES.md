@@ -36,7 +36,7 @@ in several places strips leading whitespace from the first line of the
 next page. This destroyed Python indentation across page boundaries
 in roughly every fifth method.
 
-I wrote `/home/claude/build/clean_pdf_text.py` to normalize this:
+I wrote `clean_pdf_text.py` to normalize this:
 it detects orphaned `def` / `class` continuations and re-indents them
 based on the surrounding context. Every module under `Uma_clean/*.txt`
 is the post-repair output. The repair is documented inline in

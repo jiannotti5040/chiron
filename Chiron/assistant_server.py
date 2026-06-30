@@ -238,6 +238,25 @@ def serve(port=8769):
             body = json.loads(self.rfile.read(n) or b"{}") if n else {}
             if self.path == "/api/assistant/chat":
                 return self._send(200, json.dumps(chat(body.get("message", ""), body.get("history", []))))
+            if self.path == "/api/assistant/key":
+                # Set a provider's key for THIS running process only — session-scoped, held in
+                # memory, never written to disk or the repo. Restarting the service forgets it;
+                # use environment variables for anything you want to persist.
+                import llm_providers as llm
+                provider = (body.get("provider") or "").strip().lower()
+                key = (body.get("key") or "").strip()
+                if provider not in llm.REGISTRY:
+                    return self._send(400, json.dumps({"error": f"unknown provider: {provider}"}))
+                env_var = llm.REGISTRY[provider][0][0]
+                if key:
+                    os.environ[env_var] = key
+                    note = f"{provider} key set for this session (in memory only)"
+                else:
+                    os.environ.pop(env_var, None)
+                    note = f"{provider} key cleared"
+                avail = [a[0] for a in llm.available()]
+                return self._send(200, json.dumps({"ok": True, "note": note,
+                                                    "providers": avail, "chain": llm.chain()}))
             self._send(404, json.dumps({"error": "not found"}))
 
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), H)

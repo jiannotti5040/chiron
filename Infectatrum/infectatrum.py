@@ -1775,7 +1775,7 @@ def run_tests() -> int:
     check("export bundle attests into MANIFEST", len(bundle["attestation"]) == 16)
     check("export bundle sets human-in-loop suggestion as a bool",
           isinstance(bundle["human_in_loop_suggested"], bool))
-    srch = MANIFEST.add_source_file("/home/claude/build/infectatrum.py")
+    srch = MANIFEST.add_source_file(__file__)
     check("MANIFEST can hash the engine source (chain of custody)",
           srch is None or len(srch) == 16)
 

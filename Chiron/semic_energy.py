@@ -4,7 +4,7 @@
 """
 semic_energy.py — the three-level epistemic stack over semic.
 
-Per review: layer the energy formulation ABOVE exact collapse, never replacing it.
+The energy formulation layers ABOVE exact collapse, never replacing it.
 
   Level 1  EXACT SYMBOLIC RECOVERY   semic.collapse + held-out verification -> CERTIFIED / REFUSED
   Level 2  CONSTRAINT MANIFOLD       the generator space (the subset lattice over the edge universe)

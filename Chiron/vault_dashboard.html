@@ -56,7 +56,15 @@
   .badge.fail{background:#1c1013;color:var(--bad);border:1px solid #5a2a32}
   .badge.idle{background:#11151f;color:var(--dim);border:1px solid var(--line2)}
 
+  .title{font-size:12px;color:var(--acc);font-weight:600}
   .purpose{color:var(--ink2);font-size:13px}
+
+  /* three lenses: the same module read mathematically, programmatically, conceptually */
+  .lens{display:flex;flex-direction:column;gap:6px;margin:2px 0}
+  .lx{font-size:12.5px;color:var(--ink2);background:#0b0f16;border:1px solid var(--line);
+      border-left:2px solid var(--acc);border-radius:8px;padding:8px 11px}
+  .lx .k{font-family:var(--mono);font-size:10px;color:var(--acc);text-transform:uppercase;
+         letter-spacing:1px;display:block;margin-bottom:3px}
 
   /* signature element: the falsifier line. Every claim shows what breaks it. */
   .falsify{font-size:12.5px;color:var(--ink2);background:#0c1016;border:1px solid var(--line);
@@ -149,10 +157,15 @@ function card(e){
     : `<div class="discovered" style="opacity:.7"><span class="k">no certificate yet</span>run the script to memorialize its result</div>`;
   const hash = art && art.self_hash ? `<span class="hash">#${esc(art.self_hash)}</span>` : "";
   const conf = art && art.confidence ? `<span class="tagm ms">${esc(art.confidence.split("(")[0].trim())}</span>` : "";
+  const lens = e.lens ? `<div class="lens">${
+      e.lens.math ? `<div class="lx"><span class="k">mathematically</span>${esc(e.lens.math)}</div>` : ""}${
+      e.lens.prog ? `<div class="lx"><span class="k">programmatically</span>${esc(e.lens.prog)}</div>` : ""}${
+      e.lens.concept ? `<div class="lx"><span class="k">conceptually</span>${esc(e.lens.concept)}</div>` : ""}</div>` : "";
 
   return `<div class="card ${st}">
-    <div class="ct"><span class="name">${esc(e.script)}</span>${badge}</div>
+    <div class="ct"><span class="name">${esc(e.script)}</span>${e.title ? `<span class="title">${esc(e.title)}</span>` : ""}${badge}</div>
     <div class="purpose">${esc(e.purpose||"—")}</div>
+    ${lens}
     ${discovered}
     ${falsify}
     <div class="foot">${dep}${conf}${runtime}${spdx}${hash}</div>

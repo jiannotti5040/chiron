@@ -180,6 +180,13 @@ benchmark), and **Glossary**. It reads the live Congress (reloads are rate-limit
 so it stays responsive even while a grow writes to the file). Run it on its own,
 or together with a crawl in one command: `python3 chiron_grow.py --serve`.
 
+The **Chat** tab is a natural-language assistant over the engine; it is provider-pluggable, so you
+can paste your own LLM key directly into its **“Add your own API key”** panel (held in memory for the
+session only, never written to disk) or set any provider variable in your shell — see
+[`RUNNING.md`](RUNNING.md) §3 and `llm_providers.py`. The certificate browser (`vault_dashboard.html`)
+names every module in Chiron vocabulary and reads it back **mathematically, programmatically, and
+conceptually** (curated in `lexicon.json`).
+
 ## Keyed storage (the Congress, sealed)
 
 The Congress can be sealed into an authenticated container (`chiron_memory.sealed`)
