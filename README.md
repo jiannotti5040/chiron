@@ -41,6 +41,10 @@ what it exactly verifies on data it never saw. And it speaks MCP: `primus-mcp` s
 Claude Desktop, Cowork, or any MCP agent can call the gate natively.
 See [Primus/README.md](Primus/README.md).
 
+**Try it in a browser, no install:** [`playground.html`](playground.html) runs the
+*real* engine sources on CPython/WebAssembly, entirely client-side — serve the repo
+(`python3 -m http.server`) or enable GitHub Pages and open it.
+
 ## Proof first — measured and reproducible
 
 `python3 Chiron/benchmark.py`:
