@@ -12,6 +12,7 @@ run?* Yes — and it is proven by running the same selftests through the fold.
 ## Run it
 
 ```bash
+python3 chiron_monolith.py serve                   # OPEN THE DASHBOARD — operator console on :8765
 python3 chiron_monolith.py --list                 # every embedded module
 python3 chiron_monolith.py <module> [args...]      # run any module's command line
 python3 chiron_monolith.py semic selftest          # -> 56/56 gates passing
@@ -19,12 +20,15 @@ python3 chiron_monolith.py chiron selftest         # -> CHIRON GREEN
 python3 chiron_monolith.py trace "1 1 2 3 5 8 13"  # -> ranked candidates -> verified rule
 python3 chiron_monolith.py --selftest              # FULL sweep: every selftest-bearing module
 python3 chiron_monolith.py --smoke                 # quick: just the core-engine battery
-python3 chiron_monolith.py chiron serve            # the operator console on :8765, from the one file
 ```
 
-There is **no separate dashboard** for the monolith: it serves the same operator console as the
-spine. `chiron_monolith.py chiron serve` opens it at <http://127.0.0.1:8765>, and the aux services
-behind the other tabs run the same way (`chiron_monolith.py console_server serve`, etc.).
+**The dashboard.** `python3 chiron_monolith.py serve` opens the full operator console at
+<http://127.0.0.1:8765> — Analyze, Run, Chat (with the *Add your own API key* panel), Feed. It is
+the same console as the spine; there is no second dashboard to maintain. This folder is
+**self-contained**: `build_monolith.py` bundles `dashboard.html`, `vault_dashboard.html`, and the
+data it needs (`manifest.json`, `lexicon.json`, `parameters.json`, a clean Congress seed) right here,
+so the console works whether or not a sibling `Chiron/` directory is present. The aux services behind
+the other tabs run the same way (`chiron_monolith.py console_server serve`, etc.).
 
 `python3 chiron_monolith.py --selftest` runs **every** selftest-bearing module through the fold —
 the same set the full build's `build_manifest --run` executes (servers and corpus mutators excluded
@@ -62,11 +66,10 @@ the spine passes. `--smoke` is the quick five-engine check.
 
 ## Regenerate
 
-The generator lives at the **repo root** (`build_monolith.py`) — a monolith is one file, so the
-folder holds only `chiron_monolith.py` and this README. From the repo root:
+The generator (`build_monolith.py`) lives here in the folder. From this directory:
 
 ```bash
-python3 build_monolith.py            # rebuild "Chiron Monolith/chiron_monolith.py" from Chiron/*.py
+python3 build_monolith.py            # rebuild chiron_monolith.py from ../Chiron/*.py + bundle the dashboard
 python3 build_monolith.py --verify   # rebuild, then run the engine battery through it
 ```
 

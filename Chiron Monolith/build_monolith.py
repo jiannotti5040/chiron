@@ -24,9 +24,14 @@ import base64
 import argparse
 import subprocess
 
-_HERE = os.path.dirname(os.path.abspath(__file__))          # repo root
-CHIRON = os.path.join(_HERE, "Chiron")                      # the spine to fold
-OUT = os.path.join(_HERE, "Chiron Monolith", "chiron_monolith.py")
+_HERE = os.path.dirname(os.path.abspath(__file__))          # the Chiron Monolith folder
+CHIRON = os.path.normpath(os.path.join(_HERE, os.pardir, "Chiron"))   # the sibling spine to fold
+OUT = os.path.join(_HERE, "chiron_monolith.py")
+
+# Runtime files copied next to the monolith so the folder is self-contained — it can serve the
+# dashboard and run standalone even with no sibling Chiron/ directory present.
+_BUNDLE = ["dashboard.html", "vault_dashboard.html", "parameters.json",
+           "lexicon.json", "manifest.json"]
 
 # The generated monolith's static head: SPDX + docstring + loader + dispatcher.
 # Written with no backslash escapes so it round-trips cleanly into the output file.
@@ -42,6 +47,7 @@ modules work even with no Chiron/*.py files alongside. Each module's __file__ (u
 self-source scans and _HERE-relative data) points at the sibling Chiron/ directory when
 it exists — the normal in-repo case — so behaviour is identical to running the originals.
 
+    python3 chiron_monolith.py serve                 # open the operator dashboard on :8765
     python3 chiron_monolith.py --list                # list every embedded module
     python3 chiron_monolith.py <module> [args...]     # run a module's command line
     python3 chiron_monolith.py semic selftest         # -> 56/56 gates
@@ -200,6 +206,11 @@ def main(argv=None):
         return 0 if _selftest(full=True) else 1
     if args[0] == "--smoke":
         return 0 if _selftest(full=False) else 1
+    if args[0] in ("serve", "dashboard", "console"):
+        # Open the operator console from the one file. The engine finds dashboard.html next to
+        # its __file__: the sibling Chiron/ in-repo, or this folder when run standalone (the
+        # dashboard + data are bundled here), so the console works either way.
+        return run_module("chiron", ["serve"] + args[1:])
     return run_module(args[0], args[1:])
 
 
@@ -231,7 +242,25 @@ def build():
                 out.write("    %r\n" % b64[i:i + 120])
             out.write(")\n")
         out.write(TAIL)
-    return entries, total
+    bundled = _bundle()
+    return entries, total, bundled
+
+
+def _bundle():
+    """Copy the runtime UI + data next to the monolith so the folder is self-contained: it can
+    serve the dashboard and run standalone even with no sibling Chiron/ directory present."""
+    import shutil
+    copied = []
+    for fn in _BUNDLE:
+        src = os.path.join(CHIRON, fn)
+        if os.path.isfile(src):
+            shutil.copy2(src, os.path.join(_HERE, fn))
+            copied.append(fn)
+    seed = os.path.join(CHIRON, "chiron_memory_clean.json")
+    if os.path.isfile(seed):                       # a clean Congress for a standalone run
+        shutil.copy2(seed, os.path.join(_HERE, "chiron_memory.json"))
+        copied.append("chiron_memory.json")
+    return copied
 
 
 def main():
@@ -239,10 +268,12 @@ def main():
     ap.add_argument("--verify", action="store_true",
                     help="after generating, run the engine battery through the monolith")
     args = ap.parse_args()
-    entries, total = build()
+    entries, total, bundled = build()
     out_bytes = os.path.getsize(OUT)
     print("[monolith] embedded %d modules (%d source bytes) -> %s (%d bytes)"
           % (len(entries), total, os.path.relpath(OUT, _HERE), out_bytes))
+    print("[monolith] bundled %d runtime files for a self-contained dashboard: %s"
+          % (len(bundled), ", ".join(bundled)))
     if args.verify:
         print("[monolith] verifying via --selftest ...")
         rc = subprocess.run([sys.executable, OUT, "--selftest"]).returncode
