@@ -449,6 +449,148 @@ def _cand_alternating(seq, precision):
     return best
 
 
+def _cand_holonomic_exact(seq, precision, max_order=2, max_pdeg=2):
+    """Exact P-recursive recovery for integer surfaces (the float purge,
+    continued): find integer-polynomial coefficients p_j with
+
+        sum_{j=0..r} p_j(n) * a(n+j) = 0
+
+    by EXACT rational nullspace (Fraction Gaussian elimination — no SVD, no
+    thresholds), demand exact reproduction of every shown term by forward
+    iteration, and predict in exact arithmetic. This closes the boundary the
+    live-OEIS run identified: order-2 P-recurrences (Motzkin, Schröder) sit
+    one step beyond single-term rational ratios. The overdetermination
+    margin is rows >= unknowns + 1 (the float path demanded +2, which made
+    candidates unformable on holdout prefixes — the second reason Motzkin
+    could never verify); the real gate remains exact holdout prediction.
+    pdeg >= 1 by design: degree-0 coefficients ARE constant-coefficient
+    recurrences, which _cand_linear_recurrence already owns."""
+    from fractions import Fraction
+
+    n = len(seq)
+    if n < 7 or not all(float(v).is_integer() for v in seq):
+        return []
+    a = [int(v) for v in seq]
+    out = []
+    combos = sorted(((r, d) for r in range(1, max_order + 1)
+                     for d in range(1, max_pdeg + 1)),
+                    key=lambda rd: (rd[0] + 1) * (rd[1] + 1))
+    for r, pdeg in combos:
+        ncols = (r + 1) * (pdeg + 1)
+        rows = n - r
+        if rows < ncols + 1:
+            continue
+        # homogeneous system M x = 0 over Q, columns ordered (j, n-power)
+        M = [[Fraction(i ** dp) * a[i + j]
+              for j in range(r + 1) for dp in range(pdeg + 1)]
+             for i in range(rows)]
+        # exact Gaussian elimination to row-echelon form
+        pivots, prow = [], 0
+        for col in range(ncols):
+            piv = next((k for k in range(prow, rows) if M[k][col] != 0), None)
+            if piv is None:
+                continue
+            M[prow], M[piv] = M[piv], M[prow]
+            inv = M[prow][col]
+            M[prow] = [v / inv for v in M[prow]]
+            for k in range(rows):
+                if k != prow and M[k][col] != 0:
+                    f = M[k][col]
+                    M[k] = [vk - f * vp for vk, vp in zip(M[k], M[prow])]
+            pivots.append(col)
+            prow += 1
+            if prow == rows:
+                break
+        free = [c for c in range(ncols) if c not in pivots]
+        if not free:
+            continue                        # trivial nullspace only
+
+        def _basis_vector(fv):
+            x = [Fraction(0)] * ncols
+            x[fv] = Fraction(1)
+            for k, col in enumerate(pivots):
+                x[col] = -sum(M[k][c] * x[c] for c in free)
+            mult = 1
+            for v in x:
+                mult = mult * v.denominator // math.gcd(mult, v.denominator)
+            ix = [int(v * mult) for v in x]
+            g = 0
+            for v in ix:
+                g = math.gcd(g, abs(v))
+            return [v // g for v in ix] if g > 1 else ix
+
+        def _rank_one(polys_):
+            """True if all p_j are pairwise proportional — then the
+            recurrence is a polynomial multiple of a CONSTANT-coefficient
+            one, which _cand_linear_recurrence canonically owns. Without
+            this exclusion the solver dresses Fibonacci up as holonomic."""
+            vecs = [p for p in polys_ if any(c != 0 for c in p)]
+            for a_ in range(len(vecs)):
+                for b_ in range(a_ + 1, len(vecs)):
+                    u, w = vecs[a_], vecs[b_]
+                    for i1 in range(len(u)):
+                        for i2 in range(i1 + 1, len(u)):
+                            if u[i1] * w[i2] != u[i2] * w[i1]:
+                                return False
+            return True
+
+        polys = None
+        for fv in free:                     # first genuinely-polynomial basis vector
+            ix = _basis_vector(fv)
+            cand_polys = [ix[j * (pdeg + 1):(j + 1) * (pdeg + 1)]
+                          for j in range(r + 1)]
+            if all(c == 0 for c in cand_polys[r]):
+                continue                    # leading coefficient must live
+            if _rank_one(cand_polys):
+                continue                    # constant-coefficient in disguise
+            polys = cand_polys
+            break
+        if polys is None:
+            continue
+
+        def pval(p, x_):
+            return sum(p[dp] * (x_ ** dp) for dp in range(len(p)))
+
+        # exact reproduction of every shown term, or no candidate at all
+        gen = [Fraction(v) for v in a[:r]]
+        ok = True
+        for i in range(0, n - r):
+            lead = pval(polys[r], i)
+            if lead == 0:
+                ok = False
+                break
+            nxt = -Fraction(sum(pval(polys[j], i) * gen[i + j]
+                                for j in range(r)), 1) / lead
+            if nxt != a[i + r]:
+                ok = False
+                break
+            gen.append(nxt)
+        if not ok:
+            continue
+
+        def predict(m, _a=a[:r], _polys=[list(p) for p in polys], _r=r):
+            o = [Fraction(v) for v in _a]
+            i = 0
+            while len(o) < m:
+                lead = pval(_polys[_r], i)
+                if lead == 0:
+                    raise InvariantError("leading polynomial vanishes; "
+                                         "prediction refused")
+                o.append(-sum(pval(_polys[j], i) * o[i + j]
+                              for j in range(_r)) / lead)
+                i += 1
+            return [int(v) if v.denominator == 1 else float(v) for v in o[:m]]
+
+        pred = np.array([float(v) for v in a], dtype=float)  # exact by construction
+        mb, rb, res = _score_numeric(seq, pred, ncols,
+                                     [float(c) for c in ix], precision)
+        out.append((f"holonomic_r{r}_p{pdeg}",
+                    {"poly_coeffs": polys, "order": r, "pdeg": pdeg, "exact": True},
+                    {"family": "holonomic", "order": r, "pdeg": pdeg},
+                    mb, rb, res, predict))
+    return out
+
+
 def _cand_holonomic(seq, precision, max_order=3, max_pdeg=2):
     """P-recursive / holonomic recovery: find a recurrence whose COEFFICIENTS
     are polynomials in n —  sum_{j=0..r} p_j(n) * a_{n+j} = 0.  This is the big
@@ -546,8 +688,15 @@ def _best_numeric_model(arr: np.ndarray, precision: float) -> Optional[Tuple]:
         cands.append(g)
     cands += _cand_linear_recurrence(arr, precision)
     cands += _cand_periodic(arr, precision)
+    try:
+        hx = _cand_holonomic_exact(arr, precision)
+    except Exception:
+        hx = []
+    cands += hx
+    # exact holonomic supersedes the float/SVD path on integer surfaces
+    _holo_fns = () if hx else (_cand_holonomic,)
     for fn in (_cand_factorial_products, _cand_alternating, _cand_power_law,
-               _cand_holonomic):
+               *_holo_fns):
         try:
             r = fn(arr, precision)
         except Exception:

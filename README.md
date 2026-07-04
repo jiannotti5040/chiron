@@ -50,7 +50,7 @@ See [Primus/README.md](Primus/README.md).
 | OEIS-core sequences | 22 / 22 algebraically-generated recovered (held-out predicted exactly); 7 / 7 non-closed-form correctly abstained |
 | Classical ciphers | 42 / 44 plaintexts recovered ciphertext-only |
 | Randomized fuzz + labeled gauntlet | ~5,070 scored cases — **0 false verifications**, 0 crashes |
-| **Live OEIS (external data)** | `python3 Primus/oeis_live.py` — 24 sequences fetched from oeis.org: **16 verified, all externally correct; 0 false stamps; 8 honest refusals** ([results + miss list](Primus/EXTERNAL_VALIDATION.md)) |
+| **Live OEIS (external data)** | `python3 Primus/oeis_live.py` — 25 sequences fetched from oeis.org: **18 verified, all externally correct; 0 false stamps; 6 honest refusals** — incl. Motzkin and Schröder via the exact order-2 P-recursion solver, with Bell correctly refusing ([results + miss list](Primus/EXTERNAL_VALIDATION.md)) |
 | **vs. symbolic regression** | Same live protocol vs gplearn GP: Primus 16 exact / **0 wrong** / 8 refused; the regressor 2 exact / 22 wrong ([details](Primus/SYMREG_RESULTS.md)) |
 
 The number that matters is the zero — and it is now an *externally tested* zero. The first

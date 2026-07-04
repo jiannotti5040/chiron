@@ -61,14 +61,17 @@ Notes on the refusals — the honest miss list:
   hypothesis classes; refusal is the designed behavior and every refusal was
   externally correct (the engine's tentative continuations were indeed
   wrong, and it did not stamp them).
-- **Motzkin (A001006)** is the interesting boundary miss: it is P-recursive
-  of order 2 (`(n+2)·M(n) = (2n+1)·M(n−1) + 3(n−1)·M(n−2)`), one step beyond
-  the current holonomic family (`holonomic_r1_*`, single-term rational
-  ratios, which is why Catalan and central binomial verify but Motzkin does
-  not). Extending the holonomic search to order-2 P-recurrences is the
-  single clearest capability edge this run identified. The same extension
-  would plausibly cover Schröder numbers; Bell would remain (correctly)
-  out of reach.
+- **Motzkin (A001006)** was the interesting boundary miss: P-recursive of
+  order 2, one step beyond the then-current holonomic family. **Addendum,
+  same day (v0.4.0):** the edge is closed. An exact-rational P-recursion
+  solver (Fraction nullspace, no floats, exact reproduction required)
+  recovers Motzkin's classical recurrence
+  `(n+4)·M(n+2) = (2n+5)·M(n+1) + 3(n+1)·M(n)` from 12 terms and verifies
+  it on the held-out OEIS values. As a fresh out-of-development probe, the
+  large Schröder numbers (A006318) were then fetched live and verified on
+  first contact. Bell numbers still refuse — they are not P-recursive, and
+  the control holding is as important as the recoveries. The battery now
+  stands at **18 / 25 verified, 0 false stamps, 6 honest refusals**.
 - **Quarter-squares verified** via `holonomic_r2_p1` — a boundary probe the
   engine passed.
 

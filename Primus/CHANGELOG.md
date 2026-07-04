@@ -2,6 +2,32 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.4.0 — 2026-07-04
+
+**The capability edge the live-OEIS run identified is closed.** New exact
+P-recursive solver (`_cand_holonomic_exact`): recurrences with polynomial
+coefficients, order ≤ 2, degree ≤ 2, found by exact Fraction nullspace —
+no SVD, no thresholds — with exact reproduction of every shown term
+required before a candidate exists, and exact-arithmetic prediction after.
+
+- Motzkin (A001006) now VERIFIED with the classical recurrence
+  (n+4)M(n+2) = (2n+5)M(n+1) + 3(n+1)M(n), recovered from 12 terms.
+- Large Schröder numbers (A006318), fetched live from OEIS *after* the
+  solver was written, verified on first contact — a genuine out-of-
+  development probe.
+- Bell numbers still refuse (they are not P-recursive) — the control holds.
+- Live-OEIS battery is now 18 / 25 verified, all externally correct,
+  zero false stamps, 6 honest refusals.
+- The rank-1 exclusion keeps canonical families canonical: a polynomial
+  multiple of a constant-coefficient recurrence is rejected (without it,
+  Fibonacci could be dressed up as holonomic — caught by the 48-gate
+  stress suite before shipping).
+- The drift detector did its first real job: the new capability turned the
+  build RED as SEED-ONLY until ledgered with a dated reason (Chiron's
+  float/SVD holonomic path cannot form order-2 candidates on holdout
+  prefixes). Two ledger entries added; porting the exact solver to Chiron
+  clears them.
+
 ## 0.3.0 — 2026-07-04
 
 **Certificate layer (schema `primus.certificate/1` → `/2`; contract now
