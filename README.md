@@ -13,6 +13,31 @@ verify exactly → refuse otherwise → certify provenance** — instantiated ac
 ambiguity, value, and certification, and made explicit as one interface in
 [`Chiron/epistemic.py`](Chiron/epistemic.py).
 
+## The front door: a verifier that refuses, as a package
+
+The discipline is installable. In the agent era, the missing primitive is not a model
+that answers — it is a gate that separates what an answer *proves* from what it merely
+*asserts*. That gate is the `primus` package (the seed engine plus its certificate layer):
+
+```bash
+pip install ./Primus
+```
+
+```python
+from primus import certify
+cert = certify(model_output)          # any LLM/agent answer
+cert["counts"]                        # every checkable claim: VERIFIED / REFUTED / REFUSED
+cert["unverifiable_remainder"]        # free text is reported honestly, never blessed
+```
+
+```bash
+echo "<model output>" | primus certify - --gate    # exit 1 if any claim is REFUTED
+primus collapse "1 1 2 3 5 8 13 21"                # the engine itself, one command
+```
+
+It refuses to call free text "correct," refutes what is exactly false, and stamps only
+what it exactly verifies on data it never saw. See [Primus/README.md](Primus/README.md).
+
 ## Proof first — measured and reproducible
 
 `python3 Chiron/benchmark.py`:
@@ -22,9 +47,14 @@ ambiguity, value, and certification, and made explicit as one interface in
 | OEIS-core sequences | 22 / 22 algebraically-generated recovered (held-out predicted exactly); 7 / 7 non-closed-form correctly abstained |
 | Classical ciphers | 42 / 44 plaintexts recovered ciphertext-only |
 | Randomized fuzz + labeled gauntlet | ~5,070 scored cases — **0 false verifications**, 0 crashes |
+| **Live OEIS (external data)** | `python3 Primus/oeis_live.py` — 24 sequences fetched from oeis.org: **16 verified, all externally correct; 0 false stamps; 8 honest refusals** ([results + miss list](Primus/EXTERNAL_VALIDATION.md)) |
+| **vs. symbolic regression** | Same live protocol vs gplearn GP: Primus 16 exact / **0 wrong** / 8 refused; the regressor 2 exact / 22 wrong ([details](Primus/SYMREG_RESULTS.md)) |
 
-The number that matters is the zero: across roughly 5,070 scored cases the engine never certified a
-rule it could not predict.
+The number that matters is the zero — and it is now an *externally tested* zero. The first
+live-OEIS run caught a false verification the ~5,070 internal cases never surfaced (float
+drift in the recurrence path, fixed with exact rational arithmetic; the full story is told,
+not buried, in [EXTERNAL_VALIDATION.md](Primus/EXTERNAL_VALIDATION.md)). The claim is
+stronger for having been falsified and repaired in the open.
 
 `python3 Chiron/bench_suite.py` runs the same architecture across **six independent tasks** — integer
 sequences, proverb semantics, protocol/automaton inference, governance, symbolic regression (vs
@@ -77,6 +107,7 @@ different domains.
 
 | System | Role |
 |---|---|
+| **Primus** | The installable seed: `pip install ./Primus` gives `collapse` (exact recovery with held-out proof) and `certify` (the accountability certificate over LLM/agent output) as a package, CLI, and agent tool-call. Externally validated against the live OEIS. |
 | **Chiron** | Deterministic invariant recovery, certification, and bounded growth under governance — the flagship. |
 | **semic** | The Semantic Invariant Calculus — the recovery discipline lifted from integer sequences to meaning, exact and fully offline, with a three-level energy layer that explores explicitly *uncertified* approximations only when exact collapse refuses. |
 | **JDICert** | High-stakes decision certification: regulatory and governance gates (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001), a free-energy filter against unsupported conclusions, and cryptographically-signed, Merkle-chained certificates. |
