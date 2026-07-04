@@ -45,10 +45,14 @@ TOOLS = [
             "answer). Each claim is exactly checked: VERIFIED (holds), "
             "REFUTED (exactly false), or REFUSED (no exact proof either "
             "way); free text is reported as unverifiable, never blessed. "
-            "Gate on counts.refuted == 0 and treat the unverifiable "
-            "remainder as unverified. Checkable kinds: integer/rational "
-            "arithmetic, percentages, integer-sequence continuations, "
-            "integer runs."
+            "Gate on counts.refuted == 0, treat the unverifiable remainder "
+            "as unverified, and read `coverage` — a pass means only that "
+            "nothing checkable was refuted. Checkable kinds: integer/"
+            "rational arithmetic incl. powers, percentages, primality, "
+            "binomial coefficients, gcd/lcm, modular arithmetic, date "
+            "arithmetic, sums/averages of listed numbers, integer-sequence "
+            "continuations, integer runs. Contract: SCHEMA.md "
+            "(primus.certificate/2)."
         ),
         "inputSchema": {
             "type": "object",
