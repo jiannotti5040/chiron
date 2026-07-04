@@ -1,5 +1,9 @@
 name: Chiron CI
 
+# Every gate here is offline and deterministic. The OEIS step runs against the
+# committed live-fetched corpus cache; run `Primus/oeis_live.py --live` locally
+# to re-verify against today's OEIS.
+
 on:
   push:
     branches: [main]
@@ -9,13 +13,25 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
-        run: pip install numpy
+      - name: Install the primus package (pulls numpy)
+        run: pip install ./Primus
+      - name: Primus stress tests (48 gates, via the compatibility shim)
+        working-directory: Primus
+        run: python test_invariant_engine.py
+      - name: Primus internal benchmark (zero false confidence required)
+        working-directory: Primus
+        run: python benchmark.py
+      - name: Primus package selftest (engine + certify gates)
+        run: primus selftest
+      - name: External validation — live-OEIS corpus (zero false stamps required)
+        working-directory: Primus
+        run: python oeis_live.py
       - name: Engine self-test (full embedded gate suite)
         run: python Chiron/chiron.py selftest
       - name: Grower offline dry-run
@@ -24,3 +40,6 @@ jobs:
         run: |
           python Chiron/tests/test_chiron.py
           python Chiron/tests/test_grow.py
+      - name: Monolith smoke (the fold still runs)
+        working-directory: Chiron Monolith
+        run: python chiron_monolith.py --smoke
