@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "primus-intelligence"
+version = "0.1.0"
+description = "Exact invariant recovery with held-out verification and refusal — collapse codified surfaces to their minimal generators, and certify the checkable claims in LLM/agent output."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "PolyForm-Noncommercial-1.0.0" }
+authors = [{ name = "Jacob Iannotti", email = "jiannotti5040@gmail.com" }]
+keywords = [
+  "verification", "mdl", "minimum-description-length", "symbolic-regression",
+  "sequence-induction", "llm-verification", "hallucination-gating",
+  "abstention", "certification", "exact-arithmetic",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Mathematics",
+]
+dependencies = ["numpy>=1.22"]
+
+[project.scripts]
+primus = "primus.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault"
+
+[tool.setuptools.packages.find]
+where = ["src"]
