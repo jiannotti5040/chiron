@@ -50,7 +50,7 @@ try:
     from importlib.metadata import version as _pkg_version
     __version__ = _pkg_version("primus-intelligence")
 except Exception:  # not installed (e.g. sys.path use via the shim)
-    __version__ = "0.2.0+source"
+    __version__ = "0.3.0+source"
 
 __all__ = [
     "collapse", "same_family", "same_generator", "same_structure", "cast",

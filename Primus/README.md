@@ -29,8 +29,12 @@ inv.explanation     # what was recovered, why it is believed
 **`certify`** — the front door for the agent era: feed it a model's output,
 and every checkable claim comes back **VERIFIED**, **REFUTED**, or
 **REFUSED**; the free-text remainder is reported as unverifiable, never
-blessed. Gate an agent on `refuted == 0` and treat everything unverified as
-exactly that.
+blessed. Checkable kinds (schema `primus.certificate/2`, contract in
+[SCHEMA.md](SCHEMA.md)): exact arithmetic incl. powers, percentages,
+primality, binomials, gcd/lcm, modular and date arithmetic, sums/averages,
+sequence continuations, and integer runs. Gate an agent on `refuted == 0`,
+then read `coverage` before trusting the pass — a passing gate means
+*nothing checkable was refuted*, never *the output is true*.
 
 ```python
 from primus import certify
@@ -110,8 +114,21 @@ Results and the honest miss list in
 [EXTERNAL_VALIDATION.md](EXTERNAL_VALIDATION.md).
 
 **`bench_symreg_external.py` / `bench_pysr.py`** — head-to-head against
-established symbolic-regression baselines (gplearn now; PySR harness included,
-runs wherever PySR is installed).
+established symbolic-regression baselines (gplearn results in
+[SYMREG_RESULTS.md](SYMREG_RESULTS.md); PySR harness included, runs wherever
+PySR is installed).
+
+**`test_certify_fuzz.py`** — adversarial gates: hostile input must crash
+nothing, respect every work bound, and never flip a planted verdict. The
+fuzzer has already earned its keep twice (a sequence-flood DoS and a
+quadratic scan cost, both found and fixed — see [CHANGELOG.md](CHANGELOG.md)).
+
+**`test_mcp_server.py`** — the MCP protocol handshake against the live
+subprocess.
+
+**`drift_check.py`** — differential testing against `../Chiron/chiron.py`:
+contradictions between the seed and the monolith fail the build; deliberate
+capability differences must be ledgered with a dated reason.
 
 ## The background
 

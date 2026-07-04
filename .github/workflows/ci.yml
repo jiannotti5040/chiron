@@ -11,15 +11,21 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+  # The packaged seed: matrixed across OS and the supported Python span.
+  primus:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.9", "3.13"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Install the primus package (pulls numpy)
+          python-version: ${{ matrix.python }}
+      - name: Install the primus package
         run: pip install ./Primus
       - name: Primus stress tests (48 gates, via the compatibility shim)
         working-directory: Primus
@@ -27,14 +33,35 @@ jobs:
       - name: Primus internal benchmark (zero false confidence required)
         working-directory: Primus
         run: python benchmark.py
-      - name: Primus package selftest (engine + certify gates)
+      - name: Package selftest (engine + certify gates)
         run: primus selftest
-      - name: MCP server handshake (10 protocol gates, live subprocess)
+      - name: MCP server handshake (protocol gates, live subprocess)
         working-directory: Primus
         run: python test_mcp_server.py
+      - name: Adversarial fuzz gates (certify layer)
+        working-directory: Primus
+        run: python test_certify_fuzz.py
       - name: External validation — live-OEIS corpus (zero false stamps required)
         working-directory: Primus
         run: python oeis_live.py
+      - name: Wheel builds and carries the license notice
+        shell: bash
+        run: |
+          pip install build
+          python -m build Primus --wheel --outdir /tmp/wheel
+          python -c "import glob,zipfile,sys; w=glob.glob('/tmp/wheel/*.whl')[0]; names=zipfile.ZipFile(w).namelist(); sys.exit(0 if any('LICENSE' in n.upper() for n in names) else 1)"
+
+  # The flagship spine + the fold + differential testing, on one reference env.
+  chiron:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the primus package (numpy comes with it)
+        run: pip install ./Primus
       - name: Engine self-test (full embedded gate suite)
         run: python Chiron/chiron.py selftest
       - name: Grower offline dry-run
@@ -43,6 +70,9 @@ jobs:
         run: |
           python Chiron/tests/test_chiron.py
           python Chiron/tests/test_grow.py
+      - name: Drift detector — seed vs monolith must not contradict
+        working-directory: Primus
+        run: python drift_check.py
       - name: Monolith smoke (the fold still runs)
         working-directory: Chiron Monolith
         run: python chiron_monolith.py --smoke

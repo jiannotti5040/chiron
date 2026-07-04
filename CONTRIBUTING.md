@@ -5,16 +5,61 @@ This repository is licensed under the **PolyForm Noncommercial License 1.0.0** (
 your changes for any **noncommercial** purpose — experiment freely. Commercial use is
 reserved to the author; for that, contact jiannotti5040@gmail.com.
 
+This project has one inviolable property: **zero false verifications.** A change that
+makes an engine stamp something it cannot exactly prove is wrong even if every
+benchmark number goes up. Refusal is a feature; treat it as one.
+
 ## Run it / experiment
 
-Everything runs offline on the Python standard library (numpy/scipy optional):
+Everything runs offline (the packaged seed needs numpy; Chiron runs on bare Python):
 
 ```bash
 python3 Chiron/chiron.py selftest      # the embedded gate suite (prints GREEN)
 python3 Chiron/benchmark.py            # the reproducible benchmark (VERDICT: PASS)
+pip install ./Primus && primus selftest
 ```
 
 Fork it, point the grower at your own sources, try the tools — that's encouraged.
+
+## Before you open a PR — run the gates
+
+All of them pass or the change isn't ready (CI runs the same stack on a
+Python 3.9/3.13 × Ubuntu/Windows matrix):
+
+```bash
+pip install ./Primus
+cd Primus
+python3 test_invariant_engine.py     # 48 stress gates (via the compat shim)
+python3 benchmark.py                 # internal proving run — zero false confidence
+primus selftest                      # engine + certify gates
+python3 test_mcp_server.py           # MCP protocol handshake
+python3 test_certify_fuzz.py         # adversarial gates
+python3 oeis_live.py                 # external validation (cached live corpus)
+python3 drift_check.py               # seed vs Chiron differential test
+cd .. && python3 Chiron/chiron.py selftest
+```
+
+## Ground rules
+
+- **Sources of truth.** The seed engine is `Primus/src/primus/engine.py`
+  (`invariant_engine.py` is a shim — never add code there). Chiron modules are
+  canonical; `Chiron Monolith/chiron_monolith.py` is generated — edit the modules and
+  run `build_monolith.py`. The package version lives in `Primus/pyproject.toml` only.
+- **Exact means exact.** On integer surfaces, verification is exact integer equality —
+  no tolerances, no "close enough," floats beyond 2⁵³ are refused. New hypothesis
+  families follow the same contract: recover, predict held-out data exactly, or
+  abstain.
+- **If the seed and Chiron diverge on purpose,** ledger it in
+  `Primus/drift_check.py` with a dated reason. Unledgered divergence fails the build
+  by design.
+- **Certificate schema changes** bump the schema string and get documented in
+  `Primus/SCHEMA.md` + `Primus/CHANGELOG.md`. Consumers gate on that string.
+- **New checkable claim kinds** need exact semantics (no probabilistic or approximate
+  judgments — REFUSE instead), work bounds against hostile input, selftest gates for
+  the true/false/refused cases, and a fuzz case if they add a new scan pattern.
+- **State epistemic status plainly.** Implemented-and-tested, prototype, or theory —
+  label it like the rest of the vault does. Overclaiming is the one style error that
+  gets a PR closed on sight.
 
 ## Contributing back — the public grow
 
@@ -23,18 +68,11 @@ new **sources** or **profiles** (a website, a JSON API, an OEIS slice, a subject
 configuration), or corrections to public-grow configuration and documentation. Open a
 Pull Request.
 
-## Engine changes
-
-You may modify the engine in your own fork freely (noncommercially). For a change to be
-merged **upstream**, keep it additive and verifiable, and confirm before opening a PR:
-
-```bash
-python3 Chiron/chiron.py selftest      # must stay GREEN
-python3 Chiron/benchmark.py            # must end VERDICT: PASS (0 false positives)
-```
-
-PRs that break the self-test or introduce a false positive will not be merged. For a
-larger engine change, open an **issue** describing the case and the evidence first.
+Also high-value: external validation escalations (full OEIS, PySR), new exact claim
+kinds, hypothesis-class extensions with proofs (order-2 P-recursion is the known open
+edge), Windows/py-version compatibility, and documentation that removes a footgun.
+Low-value: new layers, new dashboards, new folds — the vault grows outward now, not
+inward.
 
 ## Attribution and licensing
 
