@@ -1,0 +1,225 @@
+{
+  "_about": "Per-script context for the vault dashboard: a Chiron-vocabulary title and what each module does mathematically, programmatically, and conceptually. Scripts not listed here fall back to their docstring purpose.",
+  "chiron": {
+    "title": "The Invariant Engine",
+    "math": "argmin over typed generator classes of the two-part MDL code L(M)+L(s|M) in exact rationals, accepted only if it predicts withheld terms at exact equality; otherwise INCOMPRESSIBLE.",
+    "prog": "one self-contained file: collapse()/articulate() codec, owner-signed certificates, an offline HTTP console; no third-party deps in the core path.",
+    "concept": "recover the exact rule beneath a codified surface, prove it on data it never saw, or honestly refuse — never a confident guess."
+  },
+  "semic": {
+    "title": "The Semantic Invariant Calculus",
+    "math": "edge-set energy E(S)=α|S|+Σ|Oᵢ △ S| is separable per edge, giving the closed-form argmin S*={e : count(e) > (n+α)/2} in O(N·m); the MDL collapse equals the T→0 limit of the Gibbs sampler.",
+    "prog": "pure-stdlib; surface_skeleton → collapse → certify; typed classes H1–H5; exhaustive/separable/branch-and-bound solvers agree; 56/56 gates.",
+    "concept": "the recovery discipline lifted from integers to meaning: find the shared invariant of a family of texts, verify on held-out members, refuse a contaminated pool."
+  },
+  "semic_energy": {
+    "title": "The Energy Stack",
+    "math": "three levels — exact collapse (L1), the constraint manifold (L2), and a Gibbs measure p_T(S)∝exp(−E(S)/T) ranking (L3); landscape entropy separates a flat (ambiguous) from a peaked (decisive) basin.",
+    "prog": "builds only on semic's exact core; three_level() returns CERTIFIED or, on refusal, explicitly UNCERTIFIED energy-ranked candidates — it never certifies at L3.",
+    "concept": "stay exact wherever possible; only when exact recovery refuses do you explore approximations, always labelled uncertified."
+  },
+  "epistemic": {
+    "title": "The Epistemic Contract",
+    "math": "the schema Surface → Hypothesis space → Constraint space → Verification → Certificate, with four engines proven to be instances of one pipeline.",
+    "prog": "a RecoveryEngine interface plus Chiron / semic / governance / energy adapters driven uniformly.",
+    "concept": "the repository is not many projects — it is one contract instantiated across integers, meaning, law, and probability."
+  },
+  "density_emotion": {
+    "title": "The Decoherence Channel",
+    "math": "competing readings as a density matrix evolved by a Lindblad CPTP semigroup with a deterministic half-life; von Neumann entropy decays as interpretations decohere toward one.",
+    "prog": "complete-positivity and trace preservation asserted at every step; deterministic; emits a signed certificate; 8/8 selftest.",
+    "concept": "model ambiguity as physics — rival interpretations interfere and settle, with a provable, honest collapse rather than a hand-waved one."
+  },
+  "certify_finding": {
+    "title": "The Certificate",
+    "math": "scores a finding against the Daubert / FRE-702 factors and binds the evidence under a Merkle root with a replay seed.",
+    "prog": "emits a structured, reproducible attestation carrying an explicit, honest legal_status.",
+    "concept": "turn a recovered fact into a court-ready, replayable record — an input a human decision can stand on, never the decision itself."
+  },
+  "govern": {
+    "title": "The Governance Gate",
+    "math": "the SoCPM decision rule over a Truth-Horizon partition (Knowns / Unknowns / void) against a fixed admissibility threshold.",
+    "prog": "a LexGuard gate applied to any claim; admit, or escalate to a human.",
+    "concept": "a standard of care for persuasive machines — a claim is allowed only if it clears the bar, otherwise a person decides."
+  },
+  "legal_corpus": {
+    "title": "The Codified Law",
+    "math": "a provision set with domain scoping; applicable(domain) ∩ keyword retrieval recovers the governing rules.",
+    "prog": "a hardcoded corpus of statutes, regulations, treaties, and orders (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001).",
+    "concept": "the explicit law the governance layer reasons over — stated in full, not implied."
+  },
+  "llm_certify": {
+    "title": "The Accountability Wrapper",
+    "math": "extracts the checkable claims from free text (arithmetic and numeric sequences via collapse) and reports how many of M verify exactly, under a Merkle root.",
+    "prog": "wraps any language-model output: candor audit, exact verification, governance gate; the verdict is modest by construction.",
+    "concept": "the model proposes, the engine disposes — certify what is checkable, and never call free text 'correct.'"
+  },
+  "llm_providers": {
+    "title": "The Proposer Chain",
+    "math": "a fallback ordering over providers returning the first non-empty answer, plus a fan-out that gathers every keyed provider's proposal for the verifier to test.",
+    "prog": "an env-keyed registry (gemini, openrouter, groq, openai, anthropic, perplexity; llama/qwen via OpenRouter), mock-testable, keys read only from the environment.",
+    "concept": "many possible proposers, one exact verifier — the proposer can be anyone; the source of truth is never the model."
+  },
+  "chiron_artifact": {
+    "title": "The Memorial",
+    "math": "a dual-view certificate (machine evidence + human claim) admitted only if it carries a non-empty falsifier.",
+    "prog": "quick() emits a signed record to artifacts/<script>/; refuses any claim with no stated way to break it.",
+    "concept": "every run can leave proof of what it found, why it is believed, and the one thing that would falsify it."
+  },
+  "build_manifest": {
+    "title": "The Index",
+    "math": "a per-script feature record — runnable, self-testing, stdlib-only, header-stamped, certificate-emitting, last result.",
+    "prog": "walks the spine, runs each selftest (positional or --selftest), and writes manifest.json.",
+    "concept": "the catalog that makes the whole vault auditable at a glance."
+  },
+  "chiron_ciphers": {
+    "title": "The Cipher Solver",
+    "math": "recovers a classical transform and key by inverting it under the engine's language model; a known pair recovers the key directly.",
+    "prog": "Caesar / affine / substitution / transposition / base-n / Morse, ciphertext-only; seeds a cryptography basis.",
+    "concept": "decoding is just inverse recovery — the same collapse, run backwards through a transform."
+  },
+  "intake": {
+    "title": "The Front Door",
+    "math": "normalizes arbitrary input (JSON / numeric / text) into the typed surfaces the engine accepts.",
+    "prog": "a strict structured-intake parser feeding collapse.",
+    "concept": "anything codified can enter — once it is a surface, the same law applies."
+  },
+  "intake_salvage": {
+    "title": "The Salvage Door",
+    "math": "a fault-tolerant parse that never overwrites a good interpretation with a worse one.",
+    "prog": "wraps strict intake so malformed input degrades gracefully instead of failing.",
+    "concept": "uncooperative material still gets read — the best available structure survives."
+  },
+  "language": {
+    "title": "Offline Language",
+    "math": "n-gram statistics with PPMI semantics — no model weights, no network.",
+    "prog": "builds a prose brief and a likelihood signal entirely in stdlib.",
+    "concept": "the engine can read and weigh natural language without depending on any external model."
+  },
+  "discernment": {
+    "title": "Independent Witnesses",
+    "math": "confidence by convergence of independent sources rather than by any single estimate.",
+    "prog": "aggregates witnesses and reports agreement.",
+    "concept": "belief earned by corroboration — multiple paths to the same answer, not one loud one."
+  },
+  "ontological": {
+    "title": "Value & Harmony",
+    "math": "V-Units and a Harmony Functional scoring coherence across a structure.",
+    "prog": "a deterministic value score over a recovered object.",
+    "concept": "ask not only what a structure is, but how well its parts cohere."
+  },
+  "actionable_intelligence": {
+    "title": "The Decision Brief",
+    "math": "combines an exact forecast, an exact anomaly flag, and a governed recommendation.",
+    "prog": "assembles a decision-ready brief from the engine's verified outputs.",
+    "concept": "intelligence that is not just true but usable — and cleared by governance before it is offered."
+  },
+  "operator_calculus": {
+    "title": "The Six Operators",
+    "math": "six epistemic operators acting on a Mystery Vector ξ ∈ ℝ⁶ (six species of the unknown).",
+    "prog": "a small algebra over a typed uncertainty state.",
+    "concept": "a vocabulary for the kinds of not-knowing, so each can be handled on its own terms."
+  },
+  "projection_stack": {
+    "title": "The Projection Stack",
+    "math": "projects a finding through P→C→E→S with identity preserved as a conservation law.",
+    "prog": "a layered transform that carries provenance through each stage.",
+    "concept": "a result can change form without losing what it is — identity persists under projection."
+  },
+  "significance": {
+    "title": "Curvature as Significance",
+    "math": "Ollivier–Ricci curvature over the structure locates where meaning concentrates; W₁ the underlying transport.",
+    "prog": "computes a curvature field and reports its peaks.",
+    "concept": "significance is geometric — it is where the structure bends most sharply."
+  },
+  "holographic": {
+    "title": "Boundary Recovery",
+    "math": "reconstructs interior structure from an erased boundary fragment (holographic error-correction analogy).",
+    "prog": "recovers a whole from a partial edge.",
+    "concept": "the rule is often legible from a fragment — the boundary already encodes the bulk."
+  },
+  "aesthetics": {
+    "title": "Mathematical Beauty",
+    "math": "the score B = (E·S·R)^{1/3} over elegance, symmetry, and resonance.",
+    "prog": "a deterministic beauty metric over a recovered generator.",
+    "concept": "elegance made measurable — simple, symmetric, resonant structure scores high."
+  },
+  "cross_examine": {
+    "title": "Reasonable Doubt",
+    "math": "an adversarial search for a counter-reading that would defeat the finding.",
+    "prog": "stress-tests a claim by trying to break it.",
+    "concept": "a finding is only as strong as the hardest cross-examination it survives."
+  },
+  "stare_decisis": {
+    "title": "The Precedent Ledger",
+    "math": "a Merkle-chained ledger of prior decisions; departures are flagged against precedent.",
+    "prog": "appends each judgment and detects deviations.",
+    "concept": "consistency over time — like cases decided alike, and any break made visible."
+  },
+  "judgment": {
+    "title": "Earned Finality",
+    "math": "a chief-justice rule that grants finality only when doubt has been exhausted.",
+    "prog": "combines the doubt search and the precedent ledger into a verdict.",
+    "concept": "closure is earned, not assumed — a decision stands only after it has withstood challenge."
+  },
+  "candor_bridge": {
+    "title": "Anti-Patronization",
+    "math": "scores an explanation across condescension, unearned confidence, evasion, and opacity, tracing each point to its span.",
+    "prog": "an audit that returns the offending text, not just a number.",
+    "concept": "respect the reader — say what is known plainly and flag what is not."
+  },
+  "provenance": {
+    "title": "Conserved History",
+    "math": "a conserved-history DAG with minimal-blame attribution (HCT axioms A3/T3).",
+    "prog": "tracks where every claim came from and assigns responsibility minimally.",
+    "concept": "nothing is unsourced — history is a conserved quantity you can audit back to its origin."
+  },
+  "axioms": {
+    "title": "The HCT Axioms",
+    "math": "the Holographic Continuity Theory axioms A1–A8 and theorems T1–T6, executed as code.",
+    "prog": "each axiom and theorem runs as a checkable unit.",
+    "concept": "the theory is not just stated — it is run, so its claims are testable."
+  },
+  "infectatrum_bridge": {
+    "title": "The Ambiguity Spectrum",
+    "math": "reading-spectrum cardinality |Σ| and Shannon entropy over interpretations, plus an origin-signature (JSD) and an adversarial detector.",
+    "prog": "measures how many ways a codified object can be read and how evenly.",
+    "concept": "quantify ambiguity and information loss — know exactly how much a surface under-determines its meaning."
+  },
+  "uma_bridge": {
+    "title": "The Physical Substrate",
+    "math": "tests robustness of recovered structure under the RSLS field dynamics (Lyapunov sensitivity, decoherence).",
+    "prog": "perturbs a finding through the substrate and checks it survives.",
+    "concept": "a real invariant should be stable under the physics, not an artifact of a quiet input."
+  },
+  "vault": {
+    "title": "The One-Command Launcher",
+    "math": "a small service supervisor — start, wait, signal, reap — over the local processes.",
+    "prog": "one command starts every service and prints one URL; Ctrl-C stops them all.",
+    "concept": "the whole system, reachable from a single door."
+  },
+  "trace": {
+    "title": "The Reasoning Path",
+    "math": "exposes the ranked candidate generators, the MDL margin to the runner-up, and the held-out verification.",
+    "prog": "prints why the winner won, step by step.",
+    "concept": "the engine shows its work — the decision is legible, not a black box."
+  },
+  "compare": {
+    "title": "Versus the Compressors",
+    "math": "head-to-head against gzip / bz2 / lzma: a constant-size law that regenerates terms general compressors cannot produce.",
+    "prog": "measures stored size and predictive power side by side.",
+    "concept": "compression that understands — it stores the rule, not just smaller bytes."
+  },
+  "benchmark": {
+    "title": "The Proof",
+    "math": "OEIS-core recovery, classical ciphers, and a randomized adversarial gauntlet scored for false verifications.",
+    "prog": "runs the scored suite and reports the zero that matters.",
+    "concept": "the headline claim, measured: across ~5,070 cases, zero rules certified that it could not predict."
+  },
+  "bench_suite": {
+    "title": "The Six Tasks",
+    "math": "the same architecture across six independent domains versus an established baseline in each.",
+    "prog": "a consolidated runner with a results table.",
+    "concept": "one discipline, many fields — each beating or matching a known method, refusing where refusal is right."
+  }
+}

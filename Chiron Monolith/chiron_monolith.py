@@ -10,6 +10,7 @@ modules work even with no Chiron/*.py files alongside. Each module's __file__ (u
 self-source scans and _HERE-relative data) points at the sibling Chiron/ directory when
 it exists — the normal in-repo case — so behaviour is identical to running the originals.
 
+    python3 chiron_monolith.py serve                 # open the operator dashboard on :8765
     python3 chiron_monolith.py --list                # list every embedded module
     python3 chiron_monolith.py <module> [args...]     # run a module's command line
     python3 chiron_monolith.py semic selftest         # -> 56/56 gates
@@ -168,6 +169,11 @@ def main(argv=None):
         return 0 if _selftest(full=True) else 1
     if args[0] == "--smoke":
         return 0 if _selftest(full=False) else 1
+    if args[0] in ("serve", "dashboard", "console"):
+        # Open the operator console from the one file. The engine finds dashboard.html next to
+        # its __file__: the sibling Chiron/ in-repo, or this folder when run standalone (the
+        # dashboard + data are bundled here), so the console works either way.
+        return run_module("chiron", ["serve"] + args[1:])
     return run_module(args[0], args[1:])
 
 
