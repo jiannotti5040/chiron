@@ -9,6 +9,25 @@ out of that one file — no `Chiron/*.py` siblings required for the *code*.
 This is the answer to a simple question: *can the entire engine live in one file and still
 run?* Yes — and it is proven by running the same selftests through the fold.
 
+## Source-of-truth policy
+
+**The `Chiron/*.py` modules are the single source of truth. `chiron_monolith.py`
+is a build artifact — never hand-edit it.** The generated file carries an
+`@generated … DO NOT EDIT` banner, and `build_monolith.py` asserts every embedded
+module is byte-identical to its original at build time, so any drift between the
+fold and the spine is a build error, not a fork. After changing any Chiron
+module:
+
+```bash
+python3 build_monolith.py            # regenerate the fold
+python3 chiron_monolith.py --selftest  # prove the fold (41/41 modules green)
+```
+
+(The same policy holds vault-wide: the packaged seed engine lives at
+`../Primus/src/primus/engine.py`, and `../Primus/invariant_engine.py` is a thin
+compatibility shim over it — one implementation per idea, everything else
+generated or aliased.)
+
 ## Run it
 
 ```bash
