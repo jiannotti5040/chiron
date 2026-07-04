@@ -43,19 +43,16 @@ SHOW, GRADE = 12, 4
 # the monolith. Every entry must say why. Anything seed-only and not listed
 # here fails the build.
 SEED_AHEAD_LEDGER = {
-    "neg_ratio_geometric": "2026-07-04 float purge: exact rational ratio "
-                           "detection handles negative ratios; Chiron's "
-                           "log-space geometric requires positive terms.",
-    "A001006": "2026-07-04 exact P-recursion solver (v0.4.0): Motzkin's "
-               "order-2 polynomial-coefficient recurrence is found by exact "
-               "Fraction nullspace with a rows>=unknowns+1 margin; Chiron's "
-               "float/SVD holonomic path demands +2, which is unformable on "
-               "the 9-term holdout prefix, so it (correctly, by its own "
-               "lights) abstains. Port the exact solver to Chiron to clear "
-               "this entry.",
-    "A006318": "2026-07-04 same as A001006 — large Schröder numbers, "
-               "holonomic_r2_p1, fetched live as a fresh probe after the "
-               "solver was written and verified on first contact.",
+    # Empty as of 2026-07-04 (later the same day the first entries were
+    # written): the order-2 P-recursion margin fix was ported into
+    # chiron.py, so Motzkin (A001006) and Schröder (A006318) verify in both
+    # engines and their entries cleared. Historical note for honesty: the
+    # original ledger text misdiagnosed Chiron's holonomic path as
+    # float/SVD; it was already exact (Fraction nullspace) — only its
+    # rows >= unknowns + 2 margin, unformable on 9-term holdout prefixes,
+    # blocked verification. The ledger mechanism worked exactly as
+    # intended either way: divergence went RED, got a written reason, and
+    # the reason's repair path cleared it.
 }
 
 SYNTHETIC = {

@@ -162,10 +162,13 @@ Three mechanisms now stand between the engine and silent regression.
 seed and the consolidated engine on every build; if both stamp with
 different predictions, or the seed stamps where the monolith abstains
 without a dated \emph{capability-ledger} entry, the build fails. The ledger
-was exercised in earnest the same day it was written, when the exact
-P-recursive solver made the seed verify Motzkin while the monolith's
-float/SVD path (which additionally demands an overdetermination margin
-unformable on holdout prefixes) abstains. \textbf{Adversarial fuzzing:}
+was exercised in earnest the same day it was written: the exact P-recursive
+solver made the seed verify Motzkin while the consolidated engine ---
+whose own holonomic solver was already exact, but demanded an
+overdetermination margin unformable on holdout prefixes --- abstained.
+The divergence failed the build, received a written reason, and was cleared
+within hours by porting the margin fix; the ledger is empty again, and both
+engines verify Motzkin and Schr\"oder identically. \textbf{Adversarial fuzzing:}
 thirteen gates throw hostile input at the certificate layer; before first
 release they found a denial-of-service (a 20{,}000-integer flood becoming a
 single unbounded recovery call) and a quadratic scanning cost, both fixed

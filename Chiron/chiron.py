@@ -27918,7 +27918,12 @@ def _f_holonomic(s, max_order=3, max_pdeg=2):
         for pdeg in range(1, max_pdeg + 1):
             ncols = (r + 1) * (pdeg + 1)
             nrows = n - r
-            if nrows < ncols + 2:
+            # 2026-07-04: margin relaxed +2 -> +1 (ported from the Primus
+            # seed's exact P-recursion work). The +2 margin was unformable on
+            # 9-term holdout prefixes for r=2, so Motzkin/Schroeder could
+            # recover on full data yet never verify. Exact reproduction of
+            # every shown term plus exact holdout prediction remain the gates.
+            if nrows < ncols + 1:
                 continue
             M = []
             for i in range(nrows):
