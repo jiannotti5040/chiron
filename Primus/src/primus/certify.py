@@ -278,7 +278,7 @@ def _claims_aggregate(text, add):
         total = sum(vals, Fraction(0))
         expected = total if kind in ("sum", "total") else total / len(vals)
         add(m, "aggregate", _status(expected == claimed),
-            {"kind": kind, "n_values": len(vals),
+            {"operation": kind, "n_values": len(vals),
              "expected": str(int(expected)) if expected.denominator == 1 else str(expected)})
 
 

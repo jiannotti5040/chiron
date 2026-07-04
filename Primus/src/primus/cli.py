@@ -43,6 +43,28 @@ def _cmd_collapse(args: argparse.Namespace) -> int:
 def _cmd_certify(args: argparse.Namespace) -> int:
     from primus.certify import certify, render
 
+    if args.jsonl:
+        # Pipeline mode: one certificate per input line, hash-chained so the
+        # sequence of certificates is itself tamper-evident. Gate semantics
+        # unchanged: --gate exits 1 if ANY line contained a refuted claim.
+        import hashlib
+
+        refuted_lines, prev = 0, "genesis"
+        for line in (sys.stdin if args.text == "-" else open(args.text)):
+            line = line.rstrip("\n")
+            if not line.strip():
+                continue
+            cert = certify(line)
+            cert["chain"] = {"prev_sha256": prev}
+            prev = hashlib.sha256(
+                (prev + cert["attestation"]["sha256"]).encode()).hexdigest()
+            cert["chain"]["this_sha256"] = prev
+            refuted_lines += 1 if cert["counts"]["refuted"] else 0
+            print(json.dumps(cert, separators=(",", ":"), default=str))
+        print(json.dumps({"chain_head": prev, "refuted_lines": refuted_lines},
+                         separators=(",", ":")), file=sys.stderr)
+        return 1 if (args.gate and refuted_lines) else 0
+
     cert = certify(_read_text(args.text))
     if args.json:
         print(json.dumps(cert, indent=2, default=str))
@@ -112,6 +134,9 @@ def main(argv=None) -> int:
     c.add_argument("--json", action="store_true", help="emit the full certificate")
     c.add_argument("--gate", action="store_true",
                    help="exit 1 if any claim was REFUTED (agent gating)")
+    c.add_argument("--jsonl", action="store_true",
+                   help="pipeline mode: certify each input line, emit one "
+                        "hash-chained certificate per line (chain head on stderr)")
     c.set_defaults(fn=_cmd_certify)
 
     c = sub.add_parser("selftest", help="run the built-in gates")
