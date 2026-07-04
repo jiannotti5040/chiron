@@ -23,10 +23,12 @@ required before a candidate exists, and exact-arithmetic prediction after.
   Fibonacci could be dressed up as holonomic — caught by the 48-gate
   stress suite before shipping).
 - The drift detector did its first real job: the new capability turned the
-  build RED as SEED-ONLY until ledgered with a dated reason (Chiron's
-  float/SVD holonomic path cannot form order-2 candidates on holdout
-  prefixes). Two ledger entries added; porting the exact solver to Chiron
-  clears them.
+  build RED as SEED-ONLY until ledgered with a dated reason. Later the same
+  day the margin fix was ported into Chiron (whose holonomic solver was
+  already exact — the original ledger text misdiagnosed it as float/SVD;
+  only its rows ≥ unknowns+2 margin blocked holdout verification), Motzkin
+  and Schröder verify in both engines, and the ledger is empty again. The
+  full loop — RED, written reason, repair, cleared — took one afternoon.
 
 ## 0.3.0 — 2026-07-04
 
