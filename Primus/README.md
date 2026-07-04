@@ -44,6 +44,30 @@ echo "<model output>" | primus certify - --json --gate   # exit 1 on any refuted
 primus selftest
 ```
 
+## The MCP server — the gate as agent infrastructure
+
+`primus-mcp` serves both operations over the Model Context Protocol (stdio,
+dependency-free), so any MCP-speaking agent can call the verifier natively —
+certify its own draft answer, gate on `counts.refuted == 0`, and treat the
+unverifiable remainder as exactly that.
+
+```bash
+primus-mcp                                   # speaks newline-delimited JSON-RPC on stdio
+claude mcp add primus -- primus-mcp          # register with Claude Code
+```
+
+Claude Desktop / Cowork (`claude_desktop_config.json` → `mcpServers`):
+
+```json
+{ "primus": { "command": "primus-mcp" } }
+```
+
+Tools exposed: `certify(text)` → the full certificate as structured content;
+`collapse(surface)` → the invariant (or an honest refusal). A refuted claim
+is a *result*, not a tool error — `isError` is reserved for real failures.
+Protocol conformance is gated by `python3 test_mcp_server.py` (10 handshake
+gates against the live subprocess).
+
 ## The code
 
 **`src/primus/engine.py`** — *the seed, and the single source of truth*

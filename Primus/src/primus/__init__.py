@@ -44,7 +44,13 @@ from primus.engine import (  # noqa: F401
 )
 from primus.certify import certify, extract_claims  # noqa: F401
 
-__version__ = "0.1.0"
+# Single source of version truth is pyproject.toml; read it from the
+# installed package metadata, with a fallback for raw source-tree use.
+try:
+    from importlib.metadata import version as _pkg_version
+    __version__ = _pkg_version("primus-intelligence")
+except Exception:  # not installed (e.g. sys.path use via the shim)
+    __version__ = "0.2.0+source"
 
 __all__ = [
     "collapse", "same_family", "same_generator", "same_structure", "cast",

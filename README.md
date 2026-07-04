@@ -36,7 +36,10 @@ primus collapse "1 1 2 3 5 8 13 21"                # the engine itself, one comm
 ```
 
 It refuses to call free text "correct," refutes what is exactly false, and stamps only
-what it exactly verifies on data it never saw. See [Primus/README.md](Primus/README.md).
+what it exactly verifies on data it never saw. And it speaks MCP: `primus-mcp` serves
+`certify` + `collapse` over stdio, so Claude Code (`claude mcp add primus -- primus-mcp`),
+Claude Desktop, Cowork, or any MCP agent can call the gate natively.
+See [Primus/README.md](Primus/README.md).
 
 ## Proof first — measured and reproducible
 

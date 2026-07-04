@@ -29,6 +29,9 @@ jobs:
         run: python benchmark.py
       - name: Primus package selftest (engine + certify gates)
         run: primus selftest
+      - name: MCP server handshake (10 protocol gates, live subprocess)
+        working-directory: Primus
+        run: python test_mcp_server.py
       - name: External validation — live-OEIS corpus (zero false stamps required)
         working-directory: Primus
         run: python oeis_live.py
