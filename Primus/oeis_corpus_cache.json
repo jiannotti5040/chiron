@@ -17,6 +17,7 @@
     "A000108": {"name": "Catalan", "class_prior": "in-class (holonomic)", "terms": [1,1,2,5,14,42,132,429,1430,4862,16796,58786,208012,742900,2674440,9694845,35357670,129644790,477638700,1767263190,6564120420,24466267020]},
     "A000984": {"name": "Central binomial coefficients", "class_prior": "in-class (holonomic)", "terms": [1,2,6,20,70,252,924,3432,12870,48620,184756,705432,2704156,10400600,40116600,155117520,601080390,2333606220,9075135300,35345263800,137846528820,538257874440]},
     "A001006": {"name": "Motzkin", "class_prior": "boundary probe (P-recursive order 2)", "terms": [1,1,2,4,9,21,51,127,323,835,2188,5798,15511,41835,113634,310572,853467,2356779,6536382,18199284,50852019,142547559]},
+    "A006318": {"name": "Large Schroeder numbers", "class_prior": "boundary probe (P-recursive order 2; fetched 2026-07-04 AFTER the order-2 solver was written, as a fresh out-of-development probe)", "terms": [1,2,6,22,90,394,1806,8558,41586,206098,1037718,5293446,27297738,142078746,745387038,3937603038,20927156706]},
     "A002620": {"name": "Quarter-squares", "class_prior": "boundary probe (floor(n^2/4), quasi-polynomial)", "terms": [0,0,1,2,4,6,9,12,16,20,25,30,36,42,49,56,64,72,81,90,100,110]},
     "A000040": {"name": "Primes", "class_prior": "out-of-class (refusal is correct)", "terms": [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79]},
     "A000041": {"name": "Partitions", "class_prior": "out-of-class (refusal is correct)", "terms": [1,1,2,3,5,7,11,15,22,30,42,56,77,101,135,176,231,297,385,490]},

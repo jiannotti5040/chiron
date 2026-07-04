@@ -46,6 +46,16 @@ SEED_AHEAD_LEDGER = {
     "neg_ratio_geometric": "2026-07-04 float purge: exact rational ratio "
                            "detection handles negative ratios; Chiron's "
                            "log-space geometric requires positive terms.",
+    "A001006": "2026-07-04 exact P-recursion solver (v0.4.0): Motzkin's "
+               "order-2 polynomial-coefficient recurrence is found by exact "
+               "Fraction nullspace with a rows>=unknowns+1 margin; Chiron's "
+               "float/SVD holonomic path demands +2, which is unformable on "
+               "the 9-term holdout prefix, so it (correctly, by its own "
+               "lights) abstains. Port the exact solver to Chiron to clear "
+               "this entry.",
+    "A006318": "2026-07-04 same as A001006 — large Schröder numbers, "
+               "holonomic_r2_p1, fetched live as a fresh probe after the "
+               "solver was written and verified on first contact.",
 }
 
 SYNTHETIC = {
