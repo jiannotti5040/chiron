@@ -258,18 +258,54 @@ def _cand_linear_recurrence(seq, precision, max_order=4):
         except np.linalg.LinAlgError:
             continue
         seeds = list(seq[:p])
-        gen = list(seeds)
-        for i in range(p, n):
-            gen.append(float(np.dot(coeffs, gen[i - p:i])))
-        pred = np.array(gen)
         cc = [float(c) for c in coeffs]
-        mb, rb, res = _score_numeric(seq, pred, 2 * p, cc + list(seeds), precision)
 
-        def predict(m, seeds=list(seeds), cc=cc, p=p):
-            o = list(seeds)
-            while len(o) < m:
-                o.append(sum(cc[j] * o[-p + j] for j in range(p)))
-            return o[:m]
+        # --- exact rational refinement (the repunit fix) -------------------
+        # lstsq coefficients carry float error that COMPOUNDS when the
+        # recurrence is iterated (found live on OEIS A002275, where
+        # a(n)=11a(n-1)-10a(n-2) drifted past the old tolerance). For integer
+        # surfaces, snap the coefficients to nearby small rationals and demand
+        # they reproduce EVERY shown term in exact Fraction arithmetic; only
+        # then use an exact integer predictor immune to drift.
+        exact = None
+        if all(float(x).is_integer() for x in seq):
+            from fractions import Fraction
+            snapped = [Fraction(c).limit_denominator(64) for c in cc]
+            iseq = [int(x) for x in seq]
+            gen_ex = [Fraction(s) for s in iseq[:p]]
+            ok_ex = True
+            for i in range(p, n):
+                v = sum(snapped[j] * gen_ex[i - p + j] for j in range(p))
+                if v != iseq[i]:
+                    ok_ex = False
+                    break
+                gen_ex.append(v)
+            if ok_ex:
+                exact = snapped
+
+        if exact is not None:
+            cc = [float(c) for c in exact]
+            pred = np.array([float(x) for x in seq], dtype=float)  # exact reproduction
+
+            def predict(m, seeds=None, cc=None, p=p, _ex=list(exact),
+                        _s=[int(x) for x in seq[:p]]):
+                from fractions import Fraction
+                o = [Fraction(s) for s in _s]
+                while len(o) < m:
+                    o.append(sum(_ex[j] * o[-p + j] for j in range(p)))
+                return [int(x) if x.denominator == 1 else float(x) for x in o[:m]]
+        else:
+            gen = list(seeds)
+            for i in range(p, n):
+                gen.append(float(np.dot(coeffs, gen[i - p:i])))
+            pred = np.array(gen)
+
+            def predict(m, seeds=list(seeds), cc=cc, p=p):
+                o = list(seeds)
+                while len(o) < m:
+                    o.append(sum(cc[j] * o[-p + j] for j in range(p)))
+                return o[:m]
+        mb, rb, res = _score_numeric(seq, pred, 2 * p, cc + list(seeds), precision)
         out.append((f"linear_recurrence_order{p}",
                     {"coeffs": cc, "seeds": [float(s) for s in seeds]},
                     {"family": "linear_recurrence", "order": p}, mb, rb, res, predict))
@@ -497,12 +533,34 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str
         return (False, 0, h, 0.0)
     pname, _, _, _, _, _, predict = best_pref
     try:
-        pred = np.array(predict(n), dtype=float)[n - h:]
+        raw = list(predict(n))[n - h:]
     except Exception:
         return (False, 0, h, 0.0)
     actual = arr[n - h:]
-    tol = np.maximum(precision, 1e-6 * (np.abs(actual) + 1.0))
-    hits = int(np.sum(np.abs(pred - actual) < tol))
+    int_surface = bool(np.all(np.mod(arr, 1) == 0))
+    if int_surface:
+        # "verified" must mean EXACT equality on integer surfaces. The old
+        # 1e-6 relative tolerance let a drifted recurrence stamp repunits
+        # (live OEIS A002275) — at a(n)~1e10 it forgave errors of ~1e4.
+        hits = 0
+        for p_val, a_val in zip(raw, actual):
+            try:
+                if isinstance(p_val, int):
+                    pi, close = p_val, True
+                else:
+                    f = float(p_val)
+                    if not math.isfinite(f) or abs(f) >= 2.0 ** 53:
+                        continue  # float cannot certify exactness up here
+                    pi = int(round(f))
+                    close = abs(f - pi) <= max(precision, 1e-6)
+                if close and pi == int(round(float(a_val))):
+                    hits += 1
+            except (OverflowError, ValueError):
+                continue
+    else:
+        pred = np.array([float(x) for x in raw], dtype=float)
+        tol = np.maximum(precision, 1e-6 * (np.abs(actual) + 1.0))
+        hits = int(np.sum(np.abs(pred - actual) < tol))
     # evidence = bits you'd have needed to send the held-out tail WITHOUT the rule
     evidence = float(sum(_dl_real(float(x), precision) for x in actual)) if hits == h else 0.0
     # verification is about PREDICTIVE POWER, not label stability: a rule
