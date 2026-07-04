@@ -1,0 +1,67 @@
+# Release — build and publish primus-intelligence to PyPI on version tags.
+#
+# Uses PyPI Trusted Publishing (OIDC) — no API tokens in the repo. Before the
+# first release, register the publisher once at
+#   https://pypi.org/manage/account/publishing/
+#   project: primus-intelligence, owner: jiannotti5040,
+#   repo: Jacob-s-Portfolio-Vault, workflow: release.yml, environment: pypi
+# then:  git tag v0.3.0 && git push origin v0.3.0
+# The tag must match Primus/pyproject.toml's version (checked below).
+
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tag matches package version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          PKG=$(python -c "import tomllib;print(tomllib.load(open('Primus/pyproject.toml','rb'))['project']['version'])")
+          TAG="${GITHUB_REF_NAME#v}"
+          test "$PKG" = "$TAG" || { echo "tag v$TAG != pyproject $PKG"; exit 1; }
+      - name: Run the gates before anything ships
+        run: |
+          pip install ./Primus
+          cd Primus
+          python test_invariant_engine.py
+          python benchmark.py
+          primus selftest
+          python test_mcp_server.py
+          python test_certify_fuzz.py
+          python oeis_live.py
+      - name: Build sdist + wheel
+        run: |
+          pip install build
+          python -m build Primus --outdir dist/
+      - name: License notice travels with the code (PolyForm requirement)
+        run: unzip -l dist/*.whl | grep -qi "LICENSE" || { echo "LICENSE missing from wheel"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') && github.repository == 'jiannotti5040/Jacob-s-Portfolio-Vault'
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write        # trusted publishing
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
