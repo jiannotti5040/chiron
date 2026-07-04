@@ -214,6 +214,40 @@ def _cand_constant(seq, precision):
 
 def _cand_poly(seq, precision, max_deg=6):
     out = []
+    n = len(seq)
+
+    # --- exact path (the float purge): integer surfaces with a constant
+    # d-th finite difference ARE that degree-d polynomial, exactly. Recover
+    # it by Newton forward differences in integer arithmetic and predict via
+    # p(m) = sum_k diff_k[0] * C(m, k) — no polyfit, no float drift, valid
+    # far beyond 2^53. polyfit remains only for non-integer/noisy surfaces.
+    if n >= 3 and all(float(v).is_integer() for v in seq):
+        row = [int(v) for v in seq]
+        table = [row]
+        for d in range(1, min(max_deg, n - 2) + 1):
+            row = [row[i + 1] - row[i] for i in range(len(row) - 1)]
+            table.append(row)
+            if len(row) >= 2 and all(v == row[0] for v in row):
+                if any(v != 0 for v in row):
+                    lead = [table[k][0] for k in range(d + 1)]
+
+                    def predict(m, _lead=list(lead), _d=d):
+                        return [sum(_lead[k] * math.comb(i, k)
+                                    for k in range(_d + 1)) for i in range(m)]
+
+                    pred = np.array([float(v) for v in seq])  # exact by construction
+                    mb, rb, res = _score_numeric(
+                        seq, pred, d + 1, [float(v) for v in lead], precision)
+                    name = "arithmetic" if d == 1 else f"polynomial_deg{d}"
+                    out.append((name,
+                                {"newton_coeffs": [int(v) for v in lead],
+                                 "degree": d, "exact": True},
+                                {"family": "polynomial", "degree": d},
+                                mb, rb, res, predict))
+                    return out          # exact recovery supersedes float fits
+                break                   # all-zero differences: constant; let
+                                        # _cand_constant own it
+
     x = np.arange(len(seq), dtype=float)
     for deg in range(1, min(max_deg, len(seq) - 1) + 1):
         try:
@@ -232,6 +266,30 @@ def _cand_poly(seq, precision, max_deg=6):
 
 
 def _cand_geometric(seq, precision):
+    # --- exact path (the float purge): integer surfaces whose consecutive
+    # ratio is a constant rational ARE geometric, exactly. Detect the ratio
+    # in Fraction arithmetic and predict with it — no log-space regression,
+    # no exp/round drift, valid beyond 2^53 and for negative ratios too.
+    if len(seq) >= 3 and all(float(v).is_integer() and v != 0 for v in seq):
+        from fractions import Fraction
+        iseq = [int(v) for v in seq]
+        r = Fraction(iseq[1], iseq[0])
+        if all(Fraction(iseq[i + 1], iseq[i]) == r for i in range(1, len(iseq) - 1)):
+            a0 = iseq[0]
+
+            def predict(n, _a0=a0, _r=r):
+                out, cur = [], Fraction(_a0)
+                for _ in range(n):
+                    out.append(int(cur) if cur.denominator == 1 else float(cur))
+                    cur *= _r
+                return out
+
+            pred = np.array([float(v) for v in iseq])   # exact by construction
+            mb, rb, res = _score_numeric(seq, pred, 2, [float(a0), float(r)],
+                                         precision)
+            return ("geometric", {"a0": float(a0), "r": float(r), "exact": True},
+                    {"family": "geometric"}, mb, rb, res, predict)
+
     if np.any(seq <= 0):
         return None
     logs = np.log(seq)
