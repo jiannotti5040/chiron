@@ -1,5 +1,7 @@
 # Chiron — recover exactly, verify, refuse, certify
 
+[![gates](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml/badge.svg)](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml)
+
 **What must a machine prove before it deserves influence over a human decision?**
 
 This repository answers that with engineering, not policy. At its center is **Chiron**: a portable,
