@@ -10,6 +10,14 @@ on:
   pull_request:
     branches: [main]
 
+# Windows runners default Python's console to a legacy code page; our gate
+# output is legitimately UTF-8 (em-dashes, Schröder, Apéry, ✓ marks), so a
+# single print can raise UnicodeEncodeError and fail a green gate run.
+# UTF-8 mode ends the entire class.
+env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: "utf-8"
+
 jobs:
   # The packaged seed: matrixed across OS and the supported Python span.
   primus:
