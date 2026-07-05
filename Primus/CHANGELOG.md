@@ -2,6 +2,40 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.5.0 — 2026-07-05
+
+**The Apéry release: degree-3 P-recursion, the deep-evidence tier, and
+three engine repairs the attempt forced.**
+
+- Exact P-recursive solver extended to polynomial coefficients of degree 3
+  (`max_pdeg` 2 → 3, seed and Chiron in step — no ledger debt). The Apéry
+  numbers (A005259, the ζ(3) irrationality sequence) now verify with their
+  classical recurrence; Franel numbers (A000172) verify as the blind probe
+  that needed only deeper evidence, not the new degree.
+- **Deep-evidence protocol tier** in `oeis_live.py`: sequences marked
+  `protocol: "deep"` are graded at 24 shown / 4 held out. This is MDL's
+  appetite made into protocol — a (2,3) rule has 12 unknowns and cannot
+  even FORM a candidate on 12 terms, and its holdout refit needs 18-term
+  prefixes to be unambiguous. Bell numbers ride the tier as the control:
+  24 terms of evidence still buy a refusal, because Bell is not P-recursive.
+- Repairs forced by the attempt (each a latent defect beyond Apéry):
+  1. **Exact integers now ride past the float front door.**
+     `collapse_numeric` floated every term on entry, silently corrupting
+     integers beyond 2⁵³ — Apéry's 29-digit terms died before any exact
+     solver saw them. Python-int inputs are preserved end-to-end
+     (`_exact_int_view`), and integral-looking floats are trusted only
+     below 2⁵³.
+  2. **Nullspace uniqueness is now a refusal condition** (seed and Chiron).
+     A solution space of dimension > 1 means the data admits multiple rules
+     of the class; any basis vector is an arbitrary mixture that reproduces
+     the shown terms yet predicts noise. Ambiguity refuses.
+  3. **Holdout refits judge the prefix at the prefix's own scale.** Reusing
+     full-surface precision let a tail-dominated tolerance (~10²⁶ for
+     Apéry) quantize every prefix residual to zero, handing the refit to a
+     one-parameter constant.
+- Live-OEIS battery now 28 sequences: **20 verified, all externally
+  correct; 0 false stamps; 7 honest refusals; 1 conservative unstamp.**
+
 ## 0.4.0 — 2026-07-04
 
 **The capability edge the live-OEIS run identified is closed.** New exact

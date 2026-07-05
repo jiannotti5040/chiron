@@ -49,8 +49,11 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(_HERE, "src"))
 from primus.engine import collapse  # noqa: E402
 
-SHOW = 12        # terms the engine is allowed to see
-GRADE = 4        # held-out terms it must predict exactly
+SHOW = 12        # terms the engine is allowed to see (standard tier)
+DEEP_SHOW = 24   # deep tier: parameter-rich rules (12-unknown P-recurrences)
+                 # cannot even form on 12 terms — rows >= unknowns + 1 needs
+                 # more evidence. Marked per-sequence via protocol: "deep".
+GRADE = 4        # held-out terms it must predict exactly (both tiers)
 UA = "primus-oeis-live-harness/0.1 (+https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault; jiannotti5040@gmail.com)"
 
 
@@ -102,10 +105,12 @@ def fetch_keyword_core(limit: int) -> dict:
 # ------------------------------------------------------------------ grading
 def grade_one(anum: str, meta: dict) -> dict:
     terms = meta["terms"]
-    if len(terms) < SHOW + GRADE:
+    show = DEEP_SHOW if meta.get("protocol") == "deep" else SHOW
+    if len(terms) < show + GRADE:
         return {"anum": anum, "grade": "skipped (too few terms)", **meta}
-    shown, held = terms[:SHOW], terms[SHOW:SHOW + GRADE]
+    shown, held = terms[:show], terms[show:show + GRADE]
     res = {"anum": anum, "name": meta.get("name", ""),
+           "protocol": meta.get("protocol", "standard"),
            "class_prior": meta.get("class_prior", "")}
     try:
         inv = collapse(shown)
@@ -115,7 +120,8 @@ def grade_one(anum: str, meta: dict) -> dict:
     res["model_class"] = inv.model_class
     predicted = None
     try:
-        predicted = [round(float(x)) for x in inv.predict(SHOW + GRADE)[SHOW:]]
+        raw_pred = inv.predict(show + GRADE)[show:]
+        predicted = [x if isinstance(x, int) else round(float(x)) for x in raw_pred]
     except Exception:
         pass
     ext_correct = predicted == held
@@ -168,7 +174,8 @@ def main(argv=None) -> int:
         print(f"OEIS LIVE VALIDATION — engine sees {SHOW} terms, "
               f"graded on exact prediction of the next {GRADE} (external data)\n")
         for r in graded:
-            line = f"  {r['anum']}  {r['grade']:20s} {r.get('model_class','-'):28s} {r['name'][:44]}"
+            tag = ' [deep]' if r.get('protocol') == 'deep' else ''
+            line = f"  {r['anum']}  {r['grade']:20s} {r.get('model_class','-'):28s} {r['name'][:40]}{tag}"
             print(line)
             if "predicted" in r:
                 print(f"          predicted {r['predicted']} expected {r['expected']}")

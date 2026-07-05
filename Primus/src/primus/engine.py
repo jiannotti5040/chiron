@@ -212,7 +212,25 @@ def _cand_constant(seq, precision):
             lambda n, c=c: [c] * n)
 
 
-def _cand_poly(seq, precision, max_deg=6):
+def _exact_int_view(seq, exact_ints=None):
+    """The ONLY trusted route from a surface to exact integers. If the caller
+    preserved python ints (threaded down from collapse_numeric), use them at
+    any magnitude. Otherwise fall back to the float values — but only below
+    2**53, where float64 still represents integers exactly. Above that, a
+    float that LOOKS like an integer has already lost digits (the Apéry
+    lesson, v0.5.0: 29-digit terms were being rounded at the front door
+    before any exact solver could see them)."""
+    if exact_ints is not None:
+        return list(exact_ints)
+    try:
+        if all(float(v).is_integer() and abs(float(v)) < 2.0 ** 53 for v in seq):
+            return [int(v) for v in seq]
+    except (TypeError, ValueError, OverflowError):
+        pass
+    return None
+
+
+def _cand_poly(seq, precision, max_deg=6, exact_ints=None):
     out = []
     n = len(seq)
 
@@ -221,8 +239,9 @@ def _cand_poly(seq, precision, max_deg=6):
     # it by Newton forward differences in integer arithmetic and predict via
     # p(m) = sum_k diff_k[0] * C(m, k) — no polyfit, no float drift, valid
     # far beyond 2^53. polyfit remains only for non-integer/noisy surfaces.
-    if n >= 3 and all(float(v).is_integer() for v in seq):
-        row = [int(v) for v in seq]
+    _iv = _exact_int_view(seq, exact_ints)
+    if n >= 3 and _iv is not None:
+        row = _iv
         table = [row]
         for d in range(1, min(max_deg, n - 2) + 1):
             row = [row[i + 1] - row[i] for i in range(len(row) - 1)]
@@ -265,14 +284,15 @@ def _cand_poly(seq, precision, max_deg=6):
     return out
 
 
-def _cand_geometric(seq, precision):
+def _cand_geometric(seq, precision, exact_ints=None):
     # --- exact path (the float purge): integer surfaces whose consecutive
     # ratio is a constant rational ARE geometric, exactly. Detect the ratio
     # in Fraction arithmetic and predict with it — no log-space regression,
     # no exp/round drift, valid beyond 2^53 and for negative ratios too.
-    if len(seq) >= 3 and all(float(v).is_integer() and v != 0 for v in seq):
+    _iv = _exact_int_view(seq, exact_ints)
+    if len(seq) >= 3 and _iv is not None and all(v != 0 for v in _iv):
         from fractions import Fraction
-        iseq = [int(v) for v in seq]
+        iseq = _iv
         r = Fraction(iseq[1], iseq[0])
         if all(Fraction(iseq[i + 1], iseq[i]) == r for i in range(1, len(iseq) - 1)):
             a0 = iseq[0]
@@ -302,7 +322,7 @@ def _cand_geometric(seq, precision):
             lambda n, a0=a0, r=r: [a0 * (r ** i) for i in range(n)])
 
 
-def _cand_linear_recurrence(seq, precision, max_order=4):
+def _cand_linear_recurrence(seq, precision, max_order=4, exact_ints=None):
     n = len(seq)
     out = []
     for p in range(2, min(max_order, n // 2) + 1):
@@ -326,10 +346,11 @@ def _cand_linear_recurrence(seq, precision, max_order=4):
         # they reproduce EVERY shown term in exact Fraction arithmetic; only
         # then use an exact integer predictor immune to drift.
         exact = None
-        if all(float(x).is_integer() for x in seq):
+        _iv = _exact_int_view(seq, exact_ints)
+        if _iv is not None:
             from fractions import Fraction
             snapped = [Fraction(c).limit_denominator(64) for c in cc]
-            iseq = [int(x) for x in seq]
+            iseq = _iv
             gen_ex = [Fraction(s) for s in iseq[:p]]
             ok_ex = True
             for i in range(p, n):
@@ -449,7 +470,7 @@ def _cand_alternating(seq, precision):
     return best
 
 
-def _cand_holonomic_exact(seq, precision, max_order=2, max_pdeg=2):
+def _cand_holonomic_exact(seq, precision, max_order=2, max_pdeg=3, exact_ints=None):
     """Exact P-recursive recovery for integer surfaces (the float purge,
     continued): find integer-polynomial coefficients p_j with
 
@@ -463,14 +484,20 @@ def _cand_holonomic_exact(seq, precision, max_order=2, max_pdeg=2):
     margin is rows >= unknowns + 1 (the float path demanded +2, which made
     candidates unformable on holdout prefixes — the second reason Motzkin
     could never verify); the real gate remains exact holdout prediction.
+    pdeg 3 (v0.5.0) reaches the Apéry class — with the evidence economics
+    made visible: a (r=2, pdeg=3) rule has 12 unknowns, so it cannot even
+    FORM on a 12-term surface; rich rules require the deep-evidence
+    protocol tier (20 shown terms) before verification is possible at all.
+    That is MDL's appetite, not a tuning choice.
     pdeg >= 1 by design: degree-0 coefficients ARE constant-coefficient
     recurrences, which _cand_linear_recurrence already owns."""
     from fractions import Fraction
 
     n = len(seq)
-    if n < 7 or not all(float(v).is_integer() for v in seq):
+    _iv = _exact_int_view(seq, exact_ints)
+    if n < 7 or _iv is None:
         return []
-    a = [int(v) for v in seq]
+    a = _iv
     out = []
     combos = sorted(((r, d) for r in range(1, max_order + 1)
                      for d in range(1, max_pdeg + 1)),
@@ -504,6 +531,17 @@ def _cand_holonomic_exact(seq, precision, max_order=2, max_pdeg=2):
         free = [c for c in range(ncols) if c not in pivots]
         if not free:
             continue                        # trivial nullspace only
+        if len(free) > 1:
+            # Nullspace dimension > 1: the data admits MULTIPLE rules of
+            # this (r, pdeg) class, so any basis vector is an arbitrary
+            # mixture — it reproduces the shown terms (they ARE the
+            # constraint rows) yet predicts whatever the mixture says. An
+            # ambiguous rule is not a rule; refuse this class outright.
+            # (Found via Apéry, v0.5.0: on a 15-term holdout prefix the
+            # (2,3) system left a 2-dim nullspace and the mixture's tail
+            # disagreed with OEIS — the holdout caught it, but uniqueness
+            # belongs in the solver, not only in the safety net.)
+            continue
 
         def _basis_vector(fv):
             x = [Fraction(0)] * ncols
@@ -677,19 +715,19 @@ def _cand_power_law(seq, precision):
             mb, rb, res, lambda m, c=c, p=float(p): [c * (i + 1) ** p for i in range(m)])
 
 
-def _best_numeric_model(arr: np.ndarray, precision: float) -> Optional[Tuple]:
+def _best_numeric_model(arr: np.ndarray, precision: float, exact_ints=None) -> Optional[Tuple]:
     cands: List[Tuple] = []
     c = _cand_constant(arr, precision)
     if c:
         cands.append(c)
-    cands += _cand_poly(arr, precision)
-    g = _cand_geometric(arr, precision)
+    cands += _cand_poly(arr, precision, exact_ints=exact_ints)
+    g = _cand_geometric(arr, precision, exact_ints=exact_ints)
     if g:
         cands.append(g)
-    cands += _cand_linear_recurrence(arr, precision)
+    cands += _cand_linear_recurrence(arr, precision, exact_ints=exact_ints)
     cands += _cand_periodic(arr, precision)
     try:
-        hx = _cand_holonomic_exact(arr, precision)
+        hx = _cand_holonomic_exact(arr, precision, exact_ints=exact_ints)
     except Exception:
         hx = []
     cands += hx
@@ -726,8 +764,8 @@ def _best_numeric_model(arr: np.ndarray, precision: float) -> Optional[Tuple]:
     return min(near, key=lambda c: (rank(c[0]), c[3] + c[4]))
 
 
-def _holdout_verify(arr: np.ndarray, precision: float, model_class: str
-                    ) -> Tuple[bool, int, int, float]:
+def _holdout_verify(arr: np.ndarray, precision: float, model_class: str,
+                    exact_ints=None) -> Tuple[bool, int, int, float]:
     """Prove the rule, don't assume it: refit on a PREFIX and predict the
     held-out tail. Returns (verified, correct, held_out, evidence_bits)."""
     n = len(arr)
@@ -735,7 +773,14 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str
         return (False, 0, 0, 0.0)
     h = max(2, n // 4)
     prefix = arr[:n - h]
-    best_pref = _best_numeric_model(prefix, precision)
+    # The refit must judge the prefix at the PREFIX's own scale. Reusing the
+    # full-surface precision breaks fast-growing sequences: Apéry grows ~33x
+    # per term, so a tail-dominated tolerance (~1e26) makes every prefix
+    # residual quantize to zero and a one-parameter constant 'wins' the
+    # refit, sinking the holdout (v0.5.0 lesson).
+    best_pref = _best_numeric_model(
+        prefix, _numeric_precision(prefix),
+        exact_ints=exact_ints[:n - h] if exact_ints is not None else None)
     if best_pref is None:
         return (False, 0, h, 0.0)
     pname, _, _, _, _, _, predict = best_pref
@@ -743,8 +788,8 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str
         raw = list(predict(n))[n - h:]
     except Exception:
         return (False, 0, h, 0.0)
-    actual = arr[n - h:]
-    int_surface = bool(np.all(np.mod(arr, 1) == 0))
+    actual = exact_ints[n - h:] if exact_ints is not None else arr[n - h:]
+    int_surface = exact_ints is not None or bool(np.all(np.mod(arr, 1) == 0))
     if int_surface:
         # "verified" must mean EXACT equality on integer surfaces. The old
         # 1e-6 relative tolerance let a drifted recurrence stamp repunits
@@ -760,7 +805,8 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str
                         continue  # float cannot certify exactness up here
                     pi = int(round(f))
                     close = abs(f - pi) <= max(precision, 1e-6)
-                if close and pi == int(round(float(a_val))):
+                truth = a_val if isinstance(a_val, int) else int(round(float(a_val)))
+                if close and pi == truth:
                     hits += 1
             except (OverflowError, ValueError):
                 continue
@@ -796,7 +842,17 @@ def collapse_numeric(seq: List[float]) -> Invariant:
     precision = _numeric_precision(arr)
     surface_bits = sum(_dl_real(float(x), precision) for x in arr) + _dl_int(len(arr))
 
-    best = _best_numeric_model(arr, precision)
+    # Preserve EXACT integers when the caller provided them (the Apéry fix):
+    # float64 corrupts integers beyond 2**53 at the front door, so the exact
+    # list must ride alongside the float array for the exact solvers and for
+    # the holdout truth. Floats that merely look integral are trusted only
+    # below 2**53, via _exact_int_view's fallback.
+    exact_ints = None
+    if all(isinstance(x, (int, np.integer)) and not isinstance(x, bool)
+           for x in seq):
+        exact_ints = [int(x) for x in seq]
+
+    best = _best_numeric_model(arr, precision, exact_ints=exact_ints)
     if best is None:
         return Invariant("numeric", "incompressible", {"values": list(arr)},
                          {"family": "none"}, surface_bits, 0.0, surface_bits,
@@ -806,7 +862,8 @@ def collapse_numeric(seq: List[float]) -> Invariant:
     name, params, structure, mb, rb, res, predict = best
     total = mb + rb
     fit = max(0.0, 1.0 - (rb / max(surface_bits, 1e-9)))
-    verified, hits, h, evidence = _holdout_verify(arr, precision, name)
+    verified, hits, h, evidence = _holdout_verify(arr, precision, name,
+                                                   exact_ints=exact_ints)
     structure = dict(structure)
     structure["verified"] = bool(verified)
     inv = Invariant("numeric", name, params, structure, mb, rb, surface_bits,
