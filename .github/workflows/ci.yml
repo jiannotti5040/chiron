@@ -55,9 +55,12 @@ jobs:
       - name: Wheel builds and carries the license notice
         shell: bash
         run: |
+          # Relative outdir, not /tmp — absolute POSIX paths do not survive
+          # the trip into a native Windows python (run 43: gates all green
+          # on Windows; this plumbing step was the only red).
           pip install build
-          python -m build Primus --wheel --outdir /tmp/wheel
-          python -c "import glob,zipfile,sys; w=glob.glob('/tmp/wheel/*.whl')[0]; names=zipfile.ZipFile(w).namelist(); sys.exit(0 if any('LICENSE' in n.upper() for n in names) else 1)"
+          python -m build Primus --wheel --outdir wheelhouse
+          python -c "import glob,zipfile,sys; ws=glob.glob('wheelhouse/*.whl'); assert ws, 'no wheel produced'; sys.exit(0 if any('LICENSE' in n.upper() for n in zipfile.ZipFile(ws[0]).namelist()) else 1)"
 
   # The flagship spine + the fold + differential testing, on one reference env.
   chiron:
