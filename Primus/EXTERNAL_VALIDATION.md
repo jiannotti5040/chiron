@@ -86,6 +86,33 @@ OEIS. `oeis_live.py --live --keyword-core` runs the same protocol over the
 full ~180-sequence keyword:core corpus on any machine with network access —
 that is the natural next escalation, and the harness ships ready for it.
 
+## Addendum, 2026-07-05 (v0.5.0): the Apéry release and the deep tier
+
+The next boundary fell the same way the last one did — and paid for itself
+in repairs. Extending the exact solver to degree-3 coefficients reached the
+**Apéry numbers** (A005259, the ζ(3) irrationality sequence), with the
+**Franel numbers** (A000172) as the blind probe needing only deeper
+evidence, not the new degree. Both verify with their classical recurrences
+on live-fetched terms; **Bell numbers still refuse with 24 shown terms**,
+because no amount of evidence should buy a stamp for a rule that does not
+exist.
+
+The attempt exposed three latent defects, each now fixed and each bigger
+than Apéry: (1) the numeric front door floated every input term, silently
+corrupting integers beyond 2⁵³ before any exact solver saw them; (2) an
+ambiguous nullspace (dimension > 1) let the solver pick an arbitrary
+mixture-rule — uniqueness is now a refusal condition in both engines;
+(3) holdout refits reused full-surface precision, which for fast-growing
+sequences quantized every prefix residual to zero. The holdout safety net
+caught all three before any false stamp — but the fixes moved the honesty
+into the solvers themselves, where it belongs.
+
+**Battery standing: 28 sequences — 20 verified (all externally correct),
+0 false stamps, 7 honest refusals, 1 conservative unstamp.** The deep tier
+(24 shown / 4 graded, marked per-sequence) is documented in the corpus
+provenance: parameter-rich rules cannot even form candidates on 12 terms;
+demanding more evidence for more parameters is MDL's appetite as protocol.
+
 ## Head-to-head: symbolic-regression baseline
 
 See `bench_symreg_external.py` (gplearn, runnable offline once installed)

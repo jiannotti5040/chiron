@@ -27603,6 +27603,12 @@ def _nullvector_exact(rows: List[List[Fraction]]) -> Optional[List[Fraction]]:
     free = [c for c in range(ncol) if c not in pivots]
     if not free:
         return None
+    if len(free) > 1:
+        # 2026-07-05 (in step with the Primus seed, v0.5.0): a nullspace of
+        # dimension > 1 means the data admits multiple rules of this class;
+        # any single basis vector is an arbitrary mixture. Ambiguity is a
+        # refusal, not a choice.
+        return None
     fc = free[0]
     x = [Fraction(0)] * ncol
     x[fc] = Fraction(1)
@@ -27908,7 +27914,7 @@ def _f_alternating(s):
     return None
 
 
-def _f_holonomic(s, max_order=3, max_pdeg=2):
+def _f_holonomic(s, max_order=3, max_pdeg=3):  # pdeg 3 since v0.5.0 (Apéry class), in step with the Primus seed
     """P-recursive: sum_{j} p_j(n) a_{n+j} = 0 with polynomial coefficients.
     Catalan / Motzkin / central-binomial fall out of THIS general fitter."""
     n = len(s)
