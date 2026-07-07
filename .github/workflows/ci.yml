@@ -65,6 +65,8 @@ jobs:
         run: pip install ./Primus
       - name: Engine self-test (full embedded gate suite)
         run: python Chiron/chiron.py selftest
+      - name: Twin cross-lock (corpus ↔ exact arithmetic ↔ engine)
+        run: python Primus/test_twins_exact.py
       - name: Grower offline dry-run
         run: python Chiron/chiron_grow.py --params Chiron/grow-public/parameters.json --dry-run --once
       - name: Unit tests
