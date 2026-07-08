@@ -113,6 +113,27 @@ into the solvers themselves, where it belongs.
 provenance: parameter-rich rules cannot even form candidates on 12 terms;
 demanding more evidence for more parameters is MDL's appetite as protocol.
 
+## Addendum, 2026-07-07 (v0.5.1): a third falsify-and-repair (companion Pell)
+
+Extending the live battery with 7 post-development probes (list fixed before
+grading) surfaced another false stamp — and it fell exactly like repunits did.
+**A002203 (companion Pell / Pell-Lucas)** was stamped VERIFIED with a float
+`holonomic_r1_p2` rule predicting 551612, where OEIS gives 551614. Root cause: on
+integer surfaces the float/SVD holonomic path can overfit (6 free parameters),
+score a shorter description than the true order-2 linear recurrence, and clear
+the prefix-holdout it happens to match within the shown window. The production
+engine (`../Chiron/chiron.py`) did **not** have the defect — it classifies
+companion Pell as the exact linear recurrence — so the seed had again silently
+drifted behind the monolith, on a surface the drift set did not yet cover.
+
+Fixed in `src/primus/engine.py`: when any candidate reproduces the integer
+surface exactly in integer arithmetic, the non-exact holonomic path is dropped
+from selection, so an exact rule can never be masked by a float overfit. The
+surface is now in both the seed/Chiron differential and the external battery.
+The extended battery stands at **35 sequences — 25 verified (all externally
+correct), 0 false stamps, 9 refusals, 1 conservative unstamp.** As before, the
+claim is stronger for having been falsified and repaired in the open.
+
 ## Head-to-head: symbolic-regression baseline
 
 See `bench_symreg_external.py` (gplearn, runnable offline once installed)

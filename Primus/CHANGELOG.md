@@ -2,6 +2,25 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.5.1 — 2026-07-07
+
+**A live false stamp on the seed, caught by an extended external OEIS probe and
+repaired at the root — the repunit story a third time.**
+
+- **Fix (stamping path).** On an integer surface, when any candidate reproduces
+  the data EXACTLY in integer arithmetic, the non-exact (float/SVD) holonomic
+  path is no longer allowed to mask it. Found live on OEIS **A002203** (companion
+  Pell): the seed scored a 6-parameter float `holonomic_r1_p2` overfit shorter
+  than the true order-2 linear recurrence, cleared the prefix-holdout it happened
+  to match, and stamped VERIFIED while predicting 551612 instead of 551614.
+  Chiron was already correct (exact `linear_recurrence_order2`); the seed had
+  silently drifted behind it.
+- **Guard.** A002203 added to the seed/Chiron differential (`drift_check.py`) and
+  to the external OEIS battery, closing the blind spot permanently.
+- Full battery green after the fix: 48 stress · 27 certify · 13 fuzz · 10 MCP ·
+  internal benchmark (zero false confidence) · live-OEIS extended 25 verified / 0
+  false · drift GREEN (companion Pell now covered) · Chiron selftest.
+
 ## 0.5.0 — 2026-07-05
 
 **The Apéry release: degree-3 P-recursion, the deep-evidence tier, and

@@ -64,6 +64,11 @@ SYNTHETIC = {
     "tribonacci": [0, 0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705],
     "neg_ratio_geometric": [5 * (-2) ** n for n in range(16)],
     "oblong": [n * (n + 1) for n in range(16)],
+    # A002203 companion Pell — the 2026-07-07 holonomic-overfit false stamp:
+    # the seed picked a float holonomic_r1_p2 (predicting 551612) over the exact
+    # order-2 linear recurrence, while Chiron was correct. Now in the differential.
+    "companion_pell": [2, 2, 6, 14, 34, 82, 198, 478, 1154, 2786, 6726, 16238,
+                       39202, 94642, 228486, 551614],
     "random_control": [7, 2, 9, 4, 4, 8, 3, 1, 6, 5, 5, 9, 2, 7, 1, 8],
 }
 
