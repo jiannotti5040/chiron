@@ -1,0 +1,86 @@
+<svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <!-- self-contained light panel so it reads on GitHub light OR dark -->
+  <rect x="0" y="0" width="900" height="600" rx="14" fill="#FAF9F6"/>
+  <rect x="0.5" y="0.5" width="899" height="599" rx="14" fill="none" stroke="#E4E1D8"/>
+
+  <text x="450" y="38" text-anchor="middle" font-size="19" font-weight="700" fill="#23272E">Chiron / Primus — how it fits together</text>
+  <text x="450" y="60" text-anchor="middle" font-size="12.5" fill="#6B7280">One rule, applied across domains:  recover structure  →  verify exactly  →  refuse otherwise  →  certify provenance</text>
+
+  <!-- marker -->
+  <defs>
+    <marker id="a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#8A8577"/></marker>
+  </defs>
+  <g stroke="#8A8577" stroke-width="1.6" fill="none" marker-end="url(#a)">
+    <line x1="450" y1="132" x2="450" y2="158"/>       <!-- well -> jdicert -->
+    <line x1="450" y1="238" x2="450" y2="262"/>       <!-- jdicert -> blackboard -->
+  </g>
+  <!-- blackboard -> row of organs (plain connectors) -->
+  <g stroke="#C9C4B6" stroke-width="1.4" fill="none">
+    <line x1="190" y1="330" x2="190" y2="360"/>
+    <line x1="405" y1="330" x2="405" y2="360"/>
+    <line x1="620" y1="330" x2="620" y2="360"/>
+    <line x1="790" y1="330" x2="790" y2="360"/>
+  </g>
+
+  <!-- outside world -->
+  <text x="450" y="92" text-anchor="middle" font-size="11.5" fill="#9AA0A6">outside world — humans · agents · files</text>
+
+  <!-- WELL -->
+  <rect x="360" y="100" width="180" height="34" rx="8" fill="#FFFFFF" stroke="#B9B3A4"/>
+  <text x="450" y="115" text-anchor="middle" font-size="13.5" font-weight="700" fill="#23272E">WELL</text>
+  <text x="450" y="128" text-anchor="middle" font-size="10.5" fill="#6B7280">I/O membrane — the only door in or out</text>
+
+  <!-- JDICERT (the gate) -->
+  <rect x="316" y="166" width="268" height="72" rx="10" fill="#EFF6F3" stroke="#4E9C86" stroke-width="1.8"/>
+  <text x="450" y="192" text-anchor="middle" font-size="15" font-weight="700" fill="#1F5E4E">JDICERT — the trust gate</text>
+  <text x="450" y="210" text-anchor="middle" font-size="11" fill="#3C7A67">decides what has been proven vs. merely asserted</text>
+  <text x="450" y="226" text-anchor="middle" font-size="11.5" font-weight="600" fill="#2E6B58">VERIFIED   ·   REFUTED   ·   REFUSED</text>
+
+  <!-- BLACKBOARD bus -->
+  <rect x="120" y="270" width="660" height="34" rx="8" fill="#F3F1EA" stroke="#B9B3A4"/>
+  <text x="450" y="285" text-anchor="middle" font-size="12.5" font-weight="700" fill="#3A3F46">BLACKBOARD</text>
+  <text x="450" y="298" text-anchor="middle" font-size="10.5" fill="#6B7280">shared workspace every part reads &amp; writes</text>
+
+  <!-- organ row: PRESIDENT / CONGRESS / PRIMUS / INFECTATRUM+INFECTICON -->
+  <!-- PRESIDENT -->
+  <rect x="120" y="360" width="140" height="150" rx="10" fill="#FFFFFF" stroke="#B9B3A4"/>
+  <text x="190" y="384" text-anchor="middle" font-size="13.5" font-weight="700" fill="#23272E">PRESIDENT</text>
+  <text x="190" y="399" text-anchor="middle" font-size="10" fill="#6B7280">bounded executive</text>
+  <foreignObject x="130" y="410" width="120" height="94">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font:10.5px -apple-system,Segoe UI,Roboto,sans-serif;color:#4B5563;text-align:center;line-height:1.35">deliberates over public archives; escalates anything irreversible to a human</div>
+  </foreignObject>
+
+  <!-- CONGRESS -->
+  <rect x="300" y="360" width="210" height="150" rx="10" fill="#FFFFFF" stroke="#B9B3A4"/>
+  <text x="405" y="384" text-anchor="middle" font-size="13.5" font-weight="700" fill="#23272E">CONGRESS</text>
+  <text x="405" y="399" text-anchor="middle" font-size="10" fill="#6B7280">the knowledge store</text>
+  <g font-size="10.5" fill="#374151">
+    <rect x="312" y="408" width="186" height="22" rx="5" fill="#F7F5EF" stroke="#DAD5C7"/>
+    <text x="320" y="423" font-weight="600">Vault</text><text x="498" y="423" text-anchor="end" fill="#6B7280">content-addressed</text>
+    <rect x="312" y="434" width="186" height="22" rx="5" fill="#F7F5EF" stroke="#DAD5C7"/>
+    <text x="320" y="449" font-weight="600">Crystal</text><text x="498" y="449" text-anchor="end" fill="#6B7280">similarity index</text>
+    <rect x="312" y="460" width="186" height="22" rx="5" fill="#F7F5EF" stroke="#DAD5C7"/>
+    <text x="320" y="475" font-weight="600">Bank</text><text x="498" y="475" text-anchor="end" fill="#6B7280">provenance ledger</text>
+    <rect x="312" y="486" width="186" height="20" rx="5" fill="#F7F5EF" stroke="#DAD5C7"/>
+    <text x="320" y="500" font-weight="600">Library</text><text x="498" y="500" text-anchor="end" fill="#6B7280">reusable parts</text>
+  </g>
+
+  <!-- PRIMUS -->
+  <rect x="550" y="360" width="140" height="150" rx="10" fill="#FFFFFF" stroke="#B9B3A4"/>
+  <text x="620" y="384" text-anchor="middle" font-size="13.5" font-weight="700" fill="#23272E">PRIMUS</text>
+  <text x="620" y="399" text-anchor="middle" font-size="10" fill="#6B7280">the engine</text>
+  <foreignObject x="560" y="410" width="120" height="94">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font:10.5px -apple-system,Segoe UI,Roboto,sans-serif;color:#4B5563;text-align:center;line-height:1.35">recovers the exact rule under a surface and proves it on data it never saw</div>
+  </foreignObject>
+
+  <!-- INFECTATRUM / INFECTICON -->
+  <rect x="730" y="360" width="150" height="150" rx="10" fill="#FFFFFF" stroke="#B9B3A4"/>
+  <text x="805" y="384" text-anchor="middle" font-size="12.5" font-weight="700" fill="#23272E">INFECTATRUM</text>
+  <text x="805" y="398" text-anchor="middle" font-size="12.5" font-weight="700" fill="#23272E">· INFECTICON</text>
+  <foreignObject x="740" y="410" width="130" height="94">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="font:10.5px -apple-system,Segoe UI,Roboto,sans-serif;color:#4B5563;text-align:center;line-height:1.35">measure ambiguity of an input · mint new vocabulary when the rule needs it</div>
+  </foreignObject>
+
+  <text x="450" y="545" text-anchor="middle" font-size="11" fill="#9AA0A6">Symbolic names are kept; plain-English equivalents are shown in italics — read either way.</text>
+  <text x="450" y="566" text-anchor="middle" font-size="10.5" fill="#B0B0A6">The engine + benchmarks are Proven / Measured.  The governance, organism, and physics layers are labeled Prototype / Theory.</text>
+</svg>
