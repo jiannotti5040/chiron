@@ -743,6 +743,29 @@ def _best_numeric_model(arr: np.ndarray, precision: float, exact_ints=None) -> O
             cands.append(r)
     if not cands:
         return None
+    # Integer-surface guard (found live on OEIS A002203, companion Pell): a
+    # float/SVD holonomic rule has enough free parameters to overfit, scoring a
+    # SHORTER description than the true exact rule and then clearing a prefix
+    # holdout it happens to match within the shown window — a false stamp
+    # (seed predicted 551612 vs 551614; Chiron, which classifies it as the
+    # exact order-2 linear recurrence, is correct). Rule: if ANY candidate
+    # reproduces the integer surface EXACTLY in integer arithmetic, the
+    # non-exact holonomic path must not be allowed to mask it. Only float
+    # holonomic is dropped, and only when a genuine exact reproducer exists, so
+    # no currently-verifying case changes.
+    if exact_ints is not None:
+        def _reproduces_exactly(cand):
+            try:
+                pr = cand[6](len(exact_ints))
+            except Exception:
+                return False
+            return (len(pr) >= len(exact_ints) and
+                    all(isinstance(pr[i], int) and pr[i] == exact_ints[i]
+                        for i in range(len(exact_ints))))
+        if any(_reproduces_exactly(c) for c in cands):
+            cands = [c for c in cands
+                     if not (c[0].startswith("holonomic")
+                             and not c[1].get("exact"))]
     # Occam with a CANONICAL tie-break: among models that compress within a
     # couple of bits of the best, prefer the simpler/more-canonical family
     # (so a straight line reads as 'arithmetic', not 'power_law c*n^1').
