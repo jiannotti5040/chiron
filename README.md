@@ -2,6 +2,10 @@
 
 [![gates](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml/badge.svg)](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml)
 
+> **New here? → [START_HERE.md](START_HERE.md) is the 90-second, plain-English tour** — what it is, a 20-second demo, and why it matters. No domain background needed.
+>
+> **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 155+ passing gates and zero false verifications. Architecture at a glance: **[architecture.svg](architecture.svg)**.
+
 **What must a machine prove before it deserves influence over a human decision?**
 
 This repository answers that with engineering, not policy. At its center is **Chiron**: a portable,
