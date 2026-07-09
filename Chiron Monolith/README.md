@@ -44,7 +44,7 @@ python3 chiron_monolith.py --smoke                 # quick: just the core-engine
 **The dashboard.** `python3 chiron_monolith.py serve` opens the full operator console at
 <http://127.0.0.1:8765> — Analyze, Run, Chat (with the *Add your own API key* panel), Feed. It is
 the same console as the spine; there is no second dashboard to maintain. This folder is
-**self-contained**: `build_monolith.py` bundles `dashboard.html`, `vault_dashboard.html`, and the
+**self-contained**: `build_monolith.py` bundles `dashboard.html` (whose Verify stage is the certificate browser) and the
 data it needs (`manifest.json`, `lexicon.json`, `parameters.json`, a clean Congress seed) right here,
 so the console works whether or not a sibling `Chiron/` directory is present. The aux services behind
 the other tabs run the same way (`chiron_monolith.py console_server serve`, etc.).

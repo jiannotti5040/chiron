@@ -44,12 +44,12 @@ Chiron/
   grow_control.py        start / stop / point the grower from the dashboard (Feed tab, :8767)
   llm_certify.py         accountability certificate over an LLM output (audit + verify its claims)
   chiron_artifact.py     one signed-certificate emit path; build_manifest.py indexes them (artifacts/)
-  vault_dashboard.html   the certificate browser (one tile per script + what would falsify it)
+  dashboard.html         the operator console — its Verify stage is the certificate browser
   parameters.json        default grower config (topics, source, thresholds)
   tests/                 test_chiron.py · test_grow.py (run by CI)
   requirements.txt       numpy required; scipy optional (pure-Python fallback)
-  README.md  ·  GROW.md  this document · the grower guide
-  cells.svg  ·  system.svg  ·  journey.svg   diagrams
+  README.md  ·  docs/GROW.md  this document · the grower guide
+  docs/cells.svg · docs/system.svg · docs/journey.svg   diagrams
   chiron.key             created only on first `seal` (movable; gitignored, never pushed)
 ```
 
@@ -63,16 +63,16 @@ its own.
 **The system** — sources, the shared grower (public + private), the offline monolith,
 the Congress, bounded self-growth, and what comes out.
 
-![Chiron system](system.svg)
+![Chiron system](docs/system.svg)
 
 **One input's journey** — surface → collapse → verify on held-out terms →
 integral or general → filed by subject → certificate → concept → spoken back.
 
-![Chiron input journey](journey.svg)
+![Chiron input journey](docs/journey.svg)
 
 **The cells** — one organism: a single Omega origin, the nuclei, a Congress cytoplasm, all inside one membrane of law.
 
-![The cells of Chiron](cells.svg)
+![The cells of Chiron](docs/cells.svg)
 
 ---
 
@@ -119,7 +119,7 @@ python3 trace.py "1 1 2 3 5 8 13"             # -> the ranked candidates, the wi
 it returns a confident wrong answer on anything it cannot actually model; gzip
 shrinks the bytes but cannot tell you the rule or predict the next term. Chiron
 returns the **exact** generator with a held-out proof, or an honest abstention —
-compared head-to-head in `compare.py`, explained in [WHY_CHIRON.md](WHY_CHIRON.md).
+compared head-to-head in `compare.py`, explained in [WHY_CHIRON.md](docs/WHY_CHIRON.md).
 
 ## Running it
 
@@ -183,7 +183,7 @@ or together with a crawl in one command: `python3 chiron_grow.py --serve`.
 The **Chat** tab is a natural-language assistant over the engine; it is provider-pluggable, so you
 can paste your own LLM key directly into its **“Add your own API key”** panel (held in memory for the
 session only, never written to disk) or set any provider variable in your shell — see
-[`RUNNING.md`](RUNNING.md) §3 and `llm_providers.py`. The certificate browser (`vault_dashboard.html`)
+[`docs/RUNNING.md`](docs/RUNNING.md) §3 and `llm_providers.py`. The certificate browser (the dashboard's **Verify → Certificates** stage)
 names every module in Chiron vocabulary and reads it back **mathematically, programmatically, and
 conceptually** (curated in `lexicon.json`).
 
@@ -267,7 +267,7 @@ python3 chiron_grow.py --params <cfg> --reset     # back to a clean seed + clear
 
 Wikipedia needs no API key (just a descriptive User-Agent); other sources are
 configured under `source` in each `parameters.json`. Outside contributors grow
-`grow-public/` and open a Pull Request. See **GROW.md** and **grow-public/README.md**
+`grow-public/` and open a Pull Request. See **docs/GROW.md** and **grow-public/README.md**
 for the full guides.
 
 ## Ciphers, codes & crypto
@@ -390,7 +390,7 @@ python3 benchmark.py      # OEIS-core + ciphers + adversarial, scored for FALSE 
 python3 compare.py        # head-to-head vs gzip / bz2 / lzma (structure recovery vs byte compression)
 python3 trace.py "1 1 2 3 5 8 13"   # the full ranked-candidate reasoning path, with verification
 python3 discover.py                  # cross-domain twins: one proven rule across domains
-python3 formal_check.py             # property-based soundness check (see FORMAL.md)
+python3 formal_check.py             # property-based soundness check (see docs/FORMAL.md)
 python3 mine_code.py                # code mining: structural skeletons + clones
 ```
 
@@ -400,8 +400,8 @@ classical ciphers cracked ciphertext-only, and **0 false positives** across
 the naive polynomial baseline that cannot abstain is confidently wrong on 18 of
 the same 29. Where the engine stops — prose yield, non-closed-form sequences,
 what "verified" does and does not mean, and what is not externally audited — is
-documented plainly in **[WHY_CHIRON.md](WHY_CHIRON.md)** and
-**[KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md)**.
+documented plainly in **[WHY_CHIRON.md](docs/WHY_CHIRON.md)** and
+**[KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)**.
 
 ## Verifying
 

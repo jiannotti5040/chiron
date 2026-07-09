@@ -1,18 +1,26 @@
 # Running Chiron — everything, end to end
 
 Everything is plain `python3`. The core needs no install; `numpy` is only used by a couple of
-optional tools. Run these from inside the `Chiron/` folder.
+optional tools.
 
-## 0. Run everything with one command
+## 0. The single entry point
+
+The vault has one interface: `bin/chiron` at the vault root. Alias it once
+(`alias chiron='python3 "<vault>/bin/chiron"'`) and every daily action is a verb:
 
 ```bash
-python3 vault.py                  # starts the engine + every service; prints one URL
-# then open http://127.0.0.1:8765 ;  Ctrl-C stops everything
+chiron serve       # the whole cockpit: console :8765 + launcher :8768 + assistant :8769
+                   #   + grow control :8767 + LLM grow :8766 ; one Ctrl-C stops everything
+chiron test        # the gate battery (--full adds the deep sweeps)
+chiron build       # fold source -> monolith, refresh the manifest
+chiron verify "1 1 2 3 5 8"    # certify one input
+chiron grow        # grower dry-run (--live to mutate the Congress)
+chiron doctor      # environment + vault sanity
 ```
 
-`vault.py` launches all five local services so you never juggle ports (console :8765, launcher
-:8768, assistant :8769, grow control :8767, LLM grow :8766). `python3 vault.py --core` runs just the
-engine. The sections below cover each service if you'd rather start them individually.
+`chiron serve` delegates to `vault.py`, the service supervisor; `chiron serve --core` runs just the
+engine + console. The sections below cover each service if you'd rather start them individually
+(from inside the `Chiron/` folder).
 
 ## 1. The engine + operator console
 
@@ -169,6 +177,6 @@ python3 chiron_monolith.py --smoke            # quick: the core-engine battery
 source + a `sys.meta_path` loader so their cross-imports resolve internally). It adds no logic; it
 runs the same gates the standalone scripts do, and `serve` opens the same operator console — there
 is no separate monolith dashboard. The folder is self-contained: `build_monolith.py` (which lives
-in the folder) bundles `dashboard.html`, `vault_dashboard.html`, and the data beside the monolith,
+in the folder) bundles `dashboard.html` and the data beside the monolith,
 so the console works with or without a sibling `Chiron/`. Regenerate after editing any module with
 `python3 build_monolith.py --verify` from the `Chiron Monolith/` folder.

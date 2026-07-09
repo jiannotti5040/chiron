@@ -108,7 +108,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `llm_certify.py` | accountability certificate over an LLM output — audit + exactly verify its checkable claims |
 | `chiron_artifact.py` + `build_manifest.py` | per-script signed, falsifiable certificates (`artifacts/`) + the manifest index the dashboard reads |
 | `apply_license_headers.py` | idempotent SPDX header stamper across every `.py` |
-| `vault_dashboard.html` | the certificate browser — one tile per script: its claim and what would falsify it |
+| `dashboard.html` (Verify → Certificates) | the certificate browser — one tile per script: its claim and what would falsify it |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## The whole spine in one file (`Chiron Monolith/`)
