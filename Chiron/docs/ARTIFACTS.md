@@ -13,7 +13,7 @@ intelligence system.
 | `chiron_artifact.py` | One emit path every script calls. Builds a dual-view certificate (`machine_view` evidence + `human_view` plain-language claim) and writes it to `artifacts/<script>/`. **Refuses any claim with no stated falsifier.** |
 | `build_manifest.py` | Walks every runnable script, records what it proves / deps / SPDX / last result, ties each to its emitted certificate, and merges `lexicon.json`. Writes `manifest.json`. |
 | `lexicon.json` | Per-script context for the dashboard: a Chiron-vocabulary **title** and what each module does **mathematically, programmatically, and conceptually**. Scripts not listed fall back to their docstring purpose. |
-| `vault_dashboard.html` | Reads `manifest.json` + the artifact tree. One tile per script showing its Chiron title, the three lenses (math / prog / concept), pass/fail, what it found, and **the one thing that would break the claim.** |
+| `dashboard.html` — Verify → Certificates | Reads `manifest.json` + the artifact tree. One tile per script showing its Chiron title, the three lenses (math / prog / concept), pass/fail, what it found, and **the one thing that would break the claim.** |
 | `apply_license_headers.py` | Idempotently stamps the PolyForm SPDX header on every `.py`, after any shebang/coding line. |
 
 ## Workflow
@@ -30,7 +30,7 @@ python3 density_emotion.py --json evolve 2 4 6 8 10
 python3 build_manifest.py --run
 
 # 4. open the dashboard (serve so fetch() can read manifest.json)
-python3 -m http.server 8000   # then open http://localhost:8000/vault_dashboard.html
+python3 bin/chiron serve      # from the vault root; open http://127.0.0.1:8765 -> Verify -> Certificates
 ```
 
 ## The discipline that keeps it honest
