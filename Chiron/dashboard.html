@@ -67,6 +67,42 @@
   canvas{width:100%;height:200px;display:block;background:#0a0e16;border:1px solid var(--line);border-radius:var(--r2)}
   .leg{display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--dim)}.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
   footer{color:var(--dim);font-size:11.5px;text-align:center;padding:22px;border-top:1px solid var(--line);margin-top:8px}
+  /* workflow-stage nav: Observe → Understand → Reason → Verify → Remember → Publish */
+  nav{gap:0;padding:10px 16px 12px;align-items:stretch}
+  .stg{display:flex;align-items:center;gap:4px;padding:0 12px;border-right:1px solid var(--line);position:relative;flex-wrap:wrap}
+  .stg:last-child{border-right:0}
+  .stgl{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:1.6px;color:var(--dim);position:absolute;top:-4px;left:14px}
+  .stg button{margin-top:12px;padding:7px 13px;font-size:13px}
+  @media(max-width:980px){.stg{border-right:0;padding:0 6px}}
+  /* certificate browser (Verify stage) — folded in from vault_dashboard.html */
+  .cstrip{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;margin-bottom:14px;flex-wrap:wrap}
+  .cstat{flex:1;background:var(--panel);padding:14px 18px;min-width:130px}
+  .cstat .n{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink)}
+  .cstat .n.good{color:var(--good)}.cstat .n.warn{color:var(--warn)}
+  .cstat .l{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:1.1px;margin-top:2px}
+  .cctl{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+  .cctl input{flex:1;min-width:220px;background:#0a0e16;color:var(--ink);border:1px solid var(--line2);border-radius:9px;padding:9px 13px;font-size:13px}
+  .cchip{font-family:var(--mono);font-size:11px;padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line2);color:var(--dim);cursor:pointer;user-select:none}
+  .cchip.on{color:var(--bg);background:var(--acc);border-color:var(--acc);font-weight:700}
+  .cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:13px}
+  .ccard{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:13px;padding:14px 15px;display:flex;flex-direction:column;gap:9px}
+  .ccard.pass{border-left:3px solid var(--good)}.ccard.fail{border-left:3px solid var(--bad)}.ccard.idle{border-left:3px solid var(--line2)}
+  .cname{font-family:var(--mono);font-weight:700;font-size:14px}
+  .ctitle{font-size:12px;color:var(--acc);font-weight:600}
+  .cbadge{font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:6px;letter-spacing:.5px}
+  .cbadge.pass{background:#0e1a16;color:var(--good);border:1px solid #2b5444}
+  .cbadge.fail{background:#1c1013;color:var(--bad);border:1px solid #5a2a32}
+  .cbadge.idle{background:#11151f;color:var(--dim);border:1px solid var(--line2)}
+  .lens .lx{font-size:12.5px;color:var(--ink2);background:#0b0f16;border:1px solid var(--line);border-left:2px solid var(--acc);border-radius:8px;padding:7px 10px;margin:4px 0}
+  .lens .k,.falsify .k,.discovered .k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:2px}
+  .lens .k{color:var(--acc)}
+  .falsify{font-size:12.5px;color:var(--ink2);background:#0c1016;border:1px solid var(--line);border-left:2px solid var(--warn);border-radius:8px;padding:8px 10px}
+  .falsify .k{color:var(--warn)}
+  .discovered{font-size:12.5px;color:var(--dim)}.discovered .k{color:var(--acc)}
+  .cfoot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:2px;padding-top:9px;border-top:1px solid var(--line)}
+  .tagm{font-family:var(--mono);font-size:10px;color:var(--dim);padding:2px 7px;border:1px solid var(--line);border-radius:6px}
+  .tagm.np{color:var(--violet);border-color:#3a3258}.tagm.std{color:var(--good);border-color:#244038}.tagm.ms{color:var(--ink2)}
+  .chash{font-family:var(--mono);font-size:10px;color:var(--dim);margin-left:auto}
 </style>
 </head>
 <body>
@@ -75,18 +111,26 @@
     <div class="tag">Operator console — reads your data, recovers the structure beneath it, and grows a Congress of what it learns. Fully offline.</div></div>
   <div class="grow"></div><span id="status" class="pill">checking engine…</span>
 </header>
-<div id="offline">⚠ <b>The Chiron engine isn't running.</b> Open a terminal in the Chiron folder and run <code>python3 chiron.py serve</code>, then reload.</div>
+<div id="offline">⚠ <b>The Chiron engine isn't running.</b> Open a terminal at the vault root and run <code>python3 bin/chiron serve</code> (one command starts every service), then reload.</div>
 <nav>
-  <button data-tab="analyze" class="active">Analyze</button>
-  <button data-tab="run">Run</button>
-  <button data-tab="chat">Chat</button>
-  <button data-tab="congress">What it knows</button>
-  <button data-tab="growth">Growth</button>
-  <button data-tab="feed">Feed</button>
-  <button data-tab="self">Self-growth</button>
-  <button data-tab="grow">Grow · President</button>
-  <button data-tab="system">Status &amp; how it grows</button>
-  <button data-tab="gloss">Glossary</button>
+  <div class="stg"><span class="stgl">Observe</span>
+    <button data-tab="analyze" class="active">Analyze</button>
+    <button data-tab="feed">Feed</button></div>
+  <div class="stg"><span class="stgl">Understand</span>
+    <button data-tab="congress">Congress</button>
+    <button data-tab="gloss">Glossary</button></div>
+  <div class="stg"><span class="stgl">Reason</span>
+    <button data-tab="chat">Chat</button>
+    <button data-tab="run">Run</button></div>
+  <div class="stg"><span class="stgl">Verify</span>
+    <button data-tab="certs">Certificates</button>
+    <button data-tab="system">Health &amp; gates</button></div>
+  <div class="stg"><span class="stgl">Remember</span>
+    <button data-tab="growth">Growth</button>
+    <button data-tab="self">Self-growth</button>
+    <button data-tab="grow">President</button></div>
+  <div class="stg"><span class="stgl">Publish</span>
+    <button data-tab="pub">Ship &amp; operate</button></div>
 </nav>
 <main>
   <!-- ANALYZE -->
@@ -116,13 +160,15 @@
   <!-- RUN -->
   <section id="run" class="tab">
     <div class="card" style="border-color:#2b5444;background:linear-gradient(180deg,#0e1a16,#0c1512)">
-      <h3 class="ok">Run Chiron — quick start</h3>
-      <p class="lead">Everything is plain <code>python3</code>, no install. From the <code>Chiron/</code> folder, start what you need:</p>
-      <pre style="white-space:pre-wrap;font-size:12.5px;margin:0">python3 chiron.py serve          # this console             :8765
-python3 console_server.py serve  # the launcher below        :8768
-python3 grow_control.py serve    # start / stop / point grow :8767
-python3 president_grow.py serve  # LLM grow (free key)        :8766</pre>
-      <p class="note">Full guide: <code>Chiron/RUNNING.md</code>. The launcher below runs any function live once <code>console_server.py serve</code> is up.</p>
+      <h3 class="ok">Run Chiron — one command</h3>
+      <p class="lead">The vault has a single entry point. From the vault root:</p>
+      <pre style="white-space:pre-wrap;font-size:12.5px;margin:0">python3 bin/chiron serve    # every service (console :8765, launcher :8768, assistant :8769, grow :8767, President :8766)
+python3 bin/chiron test     # the whole gate battery
+python3 bin/chiron build    # fold source -> monolith, refresh the manifest
+python3 bin/chiron doctor   # environment + vault sanity</pre>
+      <p class="note">Alias it once (<code>alias chiron='python3 "&lt;vault&gt;/bin/chiron"'</code>) and it's just <code>chiron serve</code>.
+        Individual services still run bare if you want them: <code>python3 chiron.py serve</code>, <code>python3 console_server.py serve</code>,
+        <code>python3 grow_control.py serve</code> (:8767), <code>python3 president_grow.py serve</code> (:8766). Full guide: <code>Chiron/docs/RUNNING.md</code>.</p>
     </div>
     <div id="runOut"></div>
     <div class="card"><h3>Launcher — run any function or engine</h3>
@@ -209,20 +255,6 @@ python3 verify.py</pre></div>
   </section>
   <!-- SYSTEM -->
   <section id="system" class="tab">
-    <div class="card"><h3>How to run Chiron</h3>
-      <ol class="steps">
-        <li>Put <code>chiron.py</code> in any folder (it can sit beside the data you want it to read).</li>
-        <li>Start this console: <code>python3 chiron.py serve</code> — open <code>http://127.0.0.1:8765</code>. No installs needed.</li>
-        <li>To save memory as a JSON file in that folder: <code>python3 chiron.py serve --congress chiron_memory.json</code>.</li>
-        <li>Headless: <code>python3 chiron.py run</code> reads the whole current folder; <code>run /path</code> reads any folder.</li>
-      </ol></div>
-    <div class="card"><h3>The whole spine in one file</h3>
-      <p class="muted" style="font-family:var(--sans)">All 62 Chiron modules are also folded, byte-identical, into a single file in <code>Chiron&nbsp;Monolith/</code> — every cross-import resolves internally, so any module runs from the one file.</p>
-      <ol class="steps">
-        <li><code>python3 "Chiron Monolith/chiron_monolith.py" --list</code> — every embedded module.</li>
-        <li><code>python3 "Chiron Monolith/chiron_monolith.py" chiron selftest</code> — CHIRON GREEN, from one file.</li>
-        <li><code>python3 "Chiron Monolith/chiron_monolith.py" --selftest</code> — the core engines, through the fold.</li>
-      </ol></div>
     <div class="card"><h3>How Chiron grows — the exact points</h3>
       <div class="kv"><b>A new DOMAIN is born</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">the first time a structurally-distinct kind of material is seen (numbers vs text vs code vs graph). The same kind extends it.</span></div>
       <div class="kv"><b>A new ORGANISM is minted</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:62%">when a reasoning cycle meets structure its charts can't cleanly read and the proposed capability passes the gate: non-colliding, runnable, still able to reject.</span></div>
@@ -300,6 +332,50 @@ python3 verify.py</pre></div>
       <div class="card"><h3 style="color:var(--bad)">Rejected <span class="muted" style="font-weight:400;font-size:13px">— refused by the gate (hallucination-safe)</span></h3>
         <div id="growRej"><div class="empty">Unverifiable guesses land here, never in the Congress.</div></div></div>
     </div>
+  </section>
+  <!-- CERTIFICATES (Verify) — the vault manifest, one falsifiable tile per script -->
+  <section id="certs" class="tab">
+    <div class="card"><h3>Certificates — every claim, and what would break it</h3>
+      <p class="lead">Every script runs on its own and leaves a signed, falsifiable certificate. This is the index:
+        what each proves, whether it passed, and the one thing that would falsify the claim.
+        <span id="certGen" class="muted"></span></p>
+      <div id="certErr" class="empty" style="display:none">No manifest reachable — run <code>python3 bin/chiron build</code>, start
+        <code>python3 bin/chiron serve</code>, then <button class="btn ghost" style="padding:4px 10px" onclick="certsBoot()">Retry</button>.</div>
+      <div class="cstrip" id="cstrip"></div>
+      <div class="cctl">
+        <input id="cq" placeholder="Filter by name, purpose, or falsifier…" autocomplete="off">
+        <span class="cchip" data-f="pass">passed</span>
+        <span class="cchip" data-f="fail">failed</span>
+        <span class="cchip" data-f="emits">emits certificate</span>
+        <span class="cchip" data-f="numpy">needs numpy</span>
+      </div>
+      <div class="cgrid" id="cgrid"></div>
+      <div id="cempty" class="empty" style="display:none">No scripts match the current filter.</div>
+    </div>
+  </section>
+  <!-- PUBLISH -->
+  <section id="pub" class="tab">
+    <div class="card"><h3>Ship &amp; operate — the vault in five concepts</h3>
+      <div class="kv"><b>Source</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%"><code>Chiron/</code> — you edit here, always. Never touch the monolith.</span></div>
+      <div class="kv"><b>CLI</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%"><code>bin/chiron</code> — the single way you interact with the system.</span></div>
+      <div class="kv"><b>Build</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%"><code>chiron build</code> — folds source → monolith, refreshes the manifest. Reproducible.</span></div>
+      <div class="kv"><b>Runtime</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%"><code>chiron serve</code> — this console, the launcher, and the assistant, one command.</span></div>
+      <div class="kv"><b>Artifacts</b><span class="muted" style="font-family:var(--sans);text-align:right;max-width:64%">the monolith, <code>manifest.json</code>, certificates in <code>artifacts/</code> — generated, never hand-edited.</span></div>
+    </div>
+    <div class="card"><h3>The whole spine in one file</h3>
+      <p class="muted" style="font-family:var(--sans)">Every Chiron module is folded, byte-identical, into a single file in <code>Chiron&nbsp;Monolith/</code> — every cross-import resolves internally, so any module runs from the one file. Rebuild it any time with <code>chiron build</code>; never edit it.</p>
+      <ol class="steps">
+        <li><code>python3 bin/chiron run --list</code> — every embedded module.</li>
+        <li><code>python3 bin/chiron run chiron selftest</code> — CHIRON GREEN, from one file.</li>
+        <li><code>python3 bin/chiron run --selftest</code> — the full 41-module sweep through the fold (<code>--smoke</code> for the quick battery).</li>
+      </ol></div>
+    <div class="card"><h3>Headless &amp; export</h3>
+      <ol class="steps">
+        <li><code>python3 bin/chiron verify "1 1 2 3 5 8"</code> — certify one input from the terminal.</li>
+        <li><code>python3 bin/chiron dev run /path/to/folder</code> — read a whole folder, publish one report.</li>
+        <li><code>python3 Chiron/export_graph.py</code> — the Congress as JSON-LD / TSV / Markdown in <code>Chiron/export/</code>.</li>
+        <li><code>python3 bin/chiron benchmark</code> — the proving run; <code>--suite</code> for the six-task cross-domain suite.</li>
+      </ol></div>
   </section>
   <!-- GLOSSARY -->
   <section id="gloss" class="tab">
@@ -485,6 +561,71 @@ async function chatSend(){const i=$('#chatIn');const t=i.value.trim();if(!t)retu
     ph.innerHTML=h;chatHist.push({role:'assistant',content:r.reply||''});
   }catch(e){ph.innerHTML='<span class=err>'+e.message+'</span> — is <code>assistant_server.py serve</code> running?';}}
 (async function(){try{await call('/api/meta');setOnline(true);loadCongress();}catch(e){setOnline(false);}})();
+
+// --- Verify tab: the certificate browser (manifest via the assistant :8769, fallback: same-origin file) ---
+const CFILTERS=new Set();let CDATA=null;
+function cesc(s){return (s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function cstatus(e){const r=e.last_run;if(!r||r.exit_code==null)return"idle";return r.exit_code===0?"pass":"fail";}
+function ccard(e){
+  const st=cstatus(e),art=e.artifact;
+  const badge=st==="pass"?'<span class="cbadge pass">PASS</span>':st==="fail"?'<span class="cbadge fail">FAIL</span>':'<span class="cbadge idle">not run</span>';
+  const runtime=e.last_run&&e.last_run.runtime_ms!=null?'<span class="tagm ms">'+e.last_run.runtime_ms+' ms</span>':"";
+  const dep=e.stdlib_only?'<span class="tagm std">stdlib</span>':'<span class="tagm np">'+cesc((e.dependencies||[]).join(",")||"deps")+'</span>';
+  const discovered=art&&art.what_was_discovered?'<div class="discovered"><span class="k">found</span>'+cesc(art.what_was_discovered)+'</div>':"";
+  const falsify=art&&art.what_would_falsify?'<div class="falsify"><span class="k">what would falsify this</span>'+cesc(art.what_would_falsify)+'</div>'
+    :'<div class="discovered" style="opacity:.7"><span class="k">no certificate yet</span>run the script to memorialize its result</div>';
+  const hash=art&&art.self_hash?'<span class="chash">#'+cesc(art.self_hash)+'</span>':"";
+  const conf=art&&art.confidence?'<span class="tagm ms">'+cesc(art.confidence.split("(")[0].trim())+'</span>':"";
+  const lens=e.lens?'<div class="lens">'+(e.lens.math?'<div class="lx"><span class="k">mathematically</span>'+cesc(e.lens.math)+'</div>':"")+
+    (e.lens.prog?'<div class="lx"><span class="k">programmatically</span>'+cesc(e.lens.prog)+'</div>':"")+
+    (e.lens.concept?'<div class="lx"><span class="k">conceptually</span>'+cesc(e.lens.concept)+'</div>':"")+'</div>':"";
+  return '<div class="ccard '+st+'"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="cname">'+cesc(e.script)+'</span>'+
+    (e.title?'<span class="ctitle">'+cesc(e.title)+'</span>':"")+badge+'</div>'+
+    '<div style="color:var(--ink2);font-size:13px">'+cesc(e.purpose||"—")+'</div>'+lens+discovered+falsify+
+    '<div class="cfoot">'+dep+conf+runtime+hash+'</div></div>';
+}
+function cpass(e){
+  const st=cstatus(e);
+  for(const f of CFILTERS){
+    if(f==="pass"&&st!=="pass")return false;
+    if(f==="fail"&&st!=="fail")return false;
+    if(f==="emits"&&!e.emits_artifact)return false;
+    if(f==="numpy"&&e.stdlib_only)return false;
+  }
+  const q=$('#cq').value.trim().toLowerCase();
+  if(q){const hay=[e.script,e.purpose,e.artifact&&e.artifact.what_would_falsify,e.artifact&&e.artifact.what_was_discovered].join(" ").toLowerCase();
+    if(!hay.includes(q))return false;}
+  return true;
+}
+function crender(){
+  if(!CDATA)return;
+  const shown=CDATA.scripts.filter(cpass);
+  $('#cgrid').innerHTML=shown.map(ccard).join("");
+  $('#cempty').style.display=shown.length?"none":"block";
+}
+function cstrip(s){
+  const items=[["runnable_scripts","scripts run independently",""],["with_selftest","carry a selftest gate",""],
+    ["with_spdx_header","carry the license header",s.with_spdx_header===s.runnable_scripts?"good":"warn"],
+    ["emitting_artifacts","emit a signed certificate",s.emitting_artifacts>0?"good":"warn"]];
+  $('#cstrip').innerHTML=items.map(([k,l,cl])=>'<div class="cstat"><div class="n '+cl+'">'+(s[k]??"—")+'</div><div class="l">'+l+'</div></div>').join("");
+}
+async function certsBoot(){
+  $('#certErr').style.display="none";
+  try{
+    let r=await fetch(ASSIST+'/api/assistant/manifest',{cache:'no-store'});
+    if(!r.ok)throw new Error('assistant has no manifest');
+    CDATA=await r.json();
+  }catch(e1){
+    try{const r2=await fetch('manifest.json',{cache:'no-store'});if(!r2.ok)throw 0;CDATA=await r2.json();}
+    catch(e2){$('#certErr').style.display="block";return;}
+  }
+  $('#certGen').textContent=' generated '+(CDATA.generated_utc||'—')+' · '+(CDATA.mode||'')+' mode · owner '+(CDATA.owner||'—');
+  cstrip(CDATA.summary||{});crender();
+  $('#cq').oninput=crender;
+  document.querySelectorAll('.cchip').forEach(ch=>{ch.onclick=()=>{const f=ch.dataset.f;
+    if(CFILTERS.has(f)){CFILTERS.delete(f);ch.classList.remove('on');}else{CFILTERS.add(f);ch.classList.add('on');}crender();};});
+}
+certsBoot();
 </script>
 </body>
 </html>

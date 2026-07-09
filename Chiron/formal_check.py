@@ -15,7 +15,7 @@ The guarantee being checked is the soundness property:
 Equivalently: the engine never reports "verified" for a rule that mispredicts. This
 is checked over thousands of generated cases — in-class generators, shuffled
 controls, and corrupted sequences. It is property-based verification, not a
-machine-checked proof; see FORMAL.md for the argument and its limits.
+machine-checked proof; see docs/FORMAL.md for the argument and its limits.
 """
 import os
 import sys

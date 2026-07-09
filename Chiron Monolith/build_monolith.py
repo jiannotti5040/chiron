@@ -30,7 +30,7 @@ OUT = os.path.join(_HERE, "chiron_monolith.py")
 
 # Runtime files copied next to the monolith so the folder is self-contained — it can serve the
 # dashboard and run standalone even with no sibling Chiron/ directory present.
-_BUNDLE = ["dashboard.html", "vault_dashboard.html", "parameters.json",
+_BUNDLE = ["dashboard.html", "parameters.json",
            "lexicon.json", "manifest.json"]
 
 # The generated monolith's static head: SPDX + docstring + loader + dispatcher.

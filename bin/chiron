@@ -1,0 +1,242 @@
+#!/usr/bin/env python3
+"""chiron — the single entry point for the vault.
+
+Three concepts, nothing else:
+
+    Source    Chiron/ (+ Primus/)   you edit here, always
+    Build     chiron build          folds source -> monolith, refreshes the manifest
+    Artifact  Chiron Monolith/      run it, ship it, delete it, rebuild it — never edit it
+
+Daily verbs:
+
+    chiron dev  [args...]      run the spine        (python3 Chiron/chiron.py ...)
+    chiron run  [args...]      run the artifact     (python3 'Chiron Monolith/chiron_monolith.py' ...)
+    chiron build [--full]      rebuild monolith + manifest (--full: manifest re-runs selftests)
+    chiron test [--full]       the gate battery, same gates as CI
+                               (--full adds primus benchmark, certify fuzz, MCP gates,
+                                cached-OEIS external validation, and the full monolith sweep)
+    chiron serve [--core]      every service via vault.py (console :8765, launcher :8768,
+                               assistant :8769, grow :8767, President :8766); one Ctrl-C
+    chiron grow [--live]       knowledge grower     (dry-run by default; --live mutates Congress)
+    chiron verify <input>      ingest one string/file and certify it exactly
+    chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
+    chiron demo                self-contained demonstration
+    chiron doctor              environment + vault sanity report
+    chiron clean               sweep caches (__pycache__) out of the tree
+
+Install once:  alias chiron='python3 "<vault>/bin/chiron"'   (or add bin/ to PATH)
+
+Every command is a thin, transparent delegation — the exact child command is shown
+before it runs. The dozens of Python files are implementation details; this
+interface is the product.
+"""
+import os
+import shutil
+import subprocess
+import sys
+
+VAULT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CHIRON = os.path.join(VAULT, "Chiron")
+PRIMUS = os.path.join(VAULT, "Primus")
+MONO_DIR = os.path.join(VAULT, "Chiron Monolith")
+MONOLITH = os.path.join(MONO_DIR, "chiron_monolith.py")
+PY = sys.executable or "python3"
+
+
+def _run(argv, cwd=None, **kw):
+    """Delegate to a child process, showing the exact command (no hidden magic)."""
+    pretty = " ".join(a if " " not in a else f"'{a}'" for a in argv)
+    where = f"  (in {os.path.relpath(cwd, VAULT)})" if cwd and cwd != VAULT else ""
+    print(f"[chiron] $ {pretty}{where}", flush=True)
+    return subprocess.call(argv, cwd=cwd or VAULT, **kw)
+
+
+def _script(name):
+    return os.path.join(CHIRON, name)
+
+
+def cmd_dev(args):
+    return _run([PY, _script("chiron.py")] + (args or ["--help"]))
+
+
+def cmd_run(args):
+    if not os.path.isfile(MONOLITH):
+        print("[chiron] no artifact yet — run `chiron build` first"); return 2
+    return _run([PY, MONOLITH] + (args or ["--help"]))
+
+
+def cmd_build(args):
+    full = "--full" in args
+    rc = _run([PY, os.path.join(MONO_DIR, "build_monolith.py")], cwd=MONO_DIR)
+    if rc:
+        return rc
+    manifest = [PY, _script("build_manifest.py")]
+    if full:
+        manifest.append("--run")
+    rc = _run(manifest)
+    if rc:
+        return rc
+    print("[chiron] build complete: artifact + manifest are fresh")
+    return 0
+
+
+def cmd_test(args):
+    """The gate battery — the same gates CI runs. A failing gate is information,
+    not an obstacle: investigate, fix the root cause, never widen a tolerance."""
+    full = "--full" in args
+    gates = [
+        ("spine selftest (embedded suite)", [PY, _script("chiron.py"), "selftest"], None),
+        ("primus stress tests (48 gates)", [PY, "test_invariant_engine.py"], PRIMUS),
+        ("twin cross-lock (corpus <-> exact <-> engine)", [PY, "test_twins_exact.py"], PRIMUS),
+        ("unit: chiron", [PY, _script(os.path.join("tests", "test_chiron.py"))], None),
+        ("unit: grow", [PY, _script(os.path.join("tests", "test_grow.py"))], None),
+        ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",
+                          _script(os.path.join("grow-public", "parameters.json")),
+                          "--dry-run", "--once"], None),
+        ("drift detector (seed vs monolith)", [PY, "drift_check.py"], PRIMUS),
+    ]
+    if full:
+        gates += [
+            ("primus internal benchmark (zero false confidence)", [PY, "benchmark.py"], PRIMUS),
+            ("adversarial fuzz gates (certify layer)", [PY, "test_certify_fuzz.py"], PRIMUS),
+            ("MCP server handshake (protocol gates)", [PY, "test_mcp_server.py"], PRIMUS),
+            ("external validation (cached live-OEIS corpus)", [PY, "oeis_live.py"], PRIMUS),
+        ]
+    if os.path.isfile(MONOLITH):
+        gates.append(("monolith " + ("full sweep" if full else "smoke"),
+                      [PY, MONOLITH, "--selftest" if full else "--smoke"], MONO_DIR))
+    failed = []
+    for name, argv, cwd in gates:
+        print(f"\n[chiron] ── gate: {name} " + "─" * max(1, 46 - len(name)), flush=True)
+        if _run(argv, cwd=cwd):
+            failed.append(name)
+    print("\n[chiron] " + ("GATE BATTERY GREEN — all gates passed" if not failed
+          else f"GATES FAILED: {', '.join(failed)}"))
+    return 1 if failed else 0
+
+
+def cmd_serve(args):
+    """The whole cockpit with one command — delegates to Chiron/vault.py, the
+    service supervisor. `--core` starts just the engine + console."""
+    return _run([PY, _script("vault.py")] + [a for a in args if a == "--core"])
+
+
+def cmd_grow(args):
+    live = "--live" in args
+    passthrough = [a for a in args if a not in ("--live",)]
+    argv = [PY, _script("chiron_grow.py"), "--params",
+            _script(os.path.join("grow-public", "parameters.json"))]
+    if not live:
+        argv += ["--dry-run", "--once"]
+        print("[chiron] dry-run (real Congress untouched); pass --live to mutate")
+    return _run(argv + passthrough)
+
+
+def cmd_verify(args):
+    if not args:
+        print("usage: chiron verify <string-or-file>"); return 2
+    target = args[0]
+    if os.path.isfile(target):
+        return _run([PY, _script("chiron.py"), "run",
+                     os.path.dirname(os.path.abspath(target)) or "."])
+    return _run([PY, _script("chiron.py"), "ingest", target])
+
+
+def cmd_benchmark(args):
+    script = "bench_suite.py" if "--suite" in args else "benchmark.py"
+    return _run([PY, _script(script)])
+
+
+def cmd_demo(args):
+    return _run([PY, _script("chiron.py"), "demo"])
+
+
+def cmd_doctor(args):
+    ok = True
+    def check(label, cond, hint=""):
+        nonlocal ok
+        mark = "OK " if cond else "FAIL"
+        if not cond:
+            ok = False
+        print(f"  [{mark}] {label}" + (f" — {hint}" if hint and not cond else ""))
+    print("[chiron] vault doctor\n")
+    v = sys.version_info
+    check(f"python {v.major}.{v.minor}.{v.micro} (need 3.9+)", (v.major, v.minor) >= (3, 9))
+    try:
+        import numpy  # noqa: F401
+        check("numpy available (CI parity)", True)
+    except Exception:
+        check("numpy available (CI parity)", False, "pip install numpy")
+    check("source spine    Chiron/chiron.py", os.path.isfile(_script("chiron.py")))
+    check("seed package    Primus/src/primus/engine.py",
+          os.path.isfile(os.path.join(PRIMUS, "src", "primus", "engine.py")),
+          "the packaged seed is missing — is this checkout complete?")
+    check("build script    Chiron Monolith/build_monolith.py",
+          os.path.isfile(os.path.join(MONO_DIR, "build_monolith.py")))
+    check("artifact        Chiron Monolith/chiron_monolith.py", os.path.isfile(MONOLITH),
+          "run `chiron build`")
+    check("manifest        Chiron/manifest.json", os.path.isfile(_script("manifest.json")),
+          "run `chiron build`")
+    check("lexicon         Chiron/lexicon.json", os.path.isfile(_script("lexicon.json")))
+    check("Congress        Chiron/chiron_memory.json",
+          os.path.isfile(_script("chiron_memory.json")))
+    arts = _script("artifacts")
+    n = sum(1 for d in (os.listdir(arts) if os.path.isdir(arts) else [])
+            if os.path.isfile(os.path.join(arts, d, "latest.json")))
+    check(f"artifact ledger: {n} engines with latest.json certificates", n > 0)
+    if os.path.isfile(MONOLITH) and os.path.isfile(_script("chiron.py")):
+        # mtime heuristic only — informational, never fails the doctor (CI checkouts
+        # randomize mtimes; the authoritative drift gates are Primus/drift_check.py
+        # and CI's rebuild-and-diff step).
+        fresh = os.path.getmtime(MONOLITH) >= max(
+            os.path.getmtime(os.path.join(CHIRON, f))
+            for f in os.listdir(CHIRON) if f.endswith(".py"))
+        print(f"  [{'OK ' if fresh else 'NOTE'}] artifact vs source mtime"
+              + ("" if fresh else " — source may have changed since the last fold; run `chiron build`"))
+    print("\n[chiron] " + ("healthy" if ok else "issues found — see FAIL lines above"))
+    return 0 if ok else 1
+
+
+def cmd_clean(args):
+    swept = 0
+    for root, dirs, _files in os.walk(VAULT):
+        if ".git" in root or ".trash" in root:
+            continue
+        for d in list(dirs):
+            if d == "__pycache__":
+                path = os.path.join(root, d)
+                try:
+                    shutil.rmtree(path)
+                except OSError:
+                    dest = os.path.join(VAULT, ".trash",
+                                        path.replace(VAULT, "").strip(os.sep).replace(os.sep, "_"))
+                    os.makedirs(os.path.join(VAULT, ".trash"), exist_ok=True)
+                    shutil.move(path, dest)
+                dirs.remove(d)
+                swept += 1
+    print(f"[chiron] swept {swept} cache dir(s)")
+    return 0
+
+
+COMMANDS = {
+    "dev": cmd_dev, "run": cmd_run, "build": cmd_build, "test": cmd_test,
+    "serve": cmd_serve, "grow": cmd_grow, "verify": cmd_verify,
+    "benchmark": cmd_benchmark, "demo": cmd_demo, "doctor": cmd_doctor,
+    "clean": cmd_clean,
+}
+
+
+def main(argv):
+    if not argv or argv[0] in ("-h", "--help", "help"):
+        print(__doc__)
+        return 0
+    cmd, args = argv[0], argv[1:]
+    if cmd not in COMMANDS:
+        print(f"[chiron] unknown command: {cmd}\n")
+        print(__doc__)
+        return 2
+    return COMMANDS[cmd](args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv[1:]))
