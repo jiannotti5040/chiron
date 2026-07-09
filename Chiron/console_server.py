@@ -160,7 +160,7 @@ pre{background:#0a0e16;border:1px solid #1e2a3b;border-radius:10px;padding:12px;
 .qs{background:#0e1a16;border:1px solid #2b5444;border-radius:10px;padding:10px 14px}</style></head><body>
 <h2>Run anything in Chiron</h2>
 <div class=qs><b>Quick start:</b> <code>python3 chiron.py serve</code> (console :8765) ·
-<code>python3 console_server.py serve</code> (this :8768) — full guide in RUNNING.md.</div>
+<code>python3 console_server.py serve</code> (this :8768) — full guide in docs/RUNNING.md.</div>
 <div id=out></div><div id=cat></div>
 <script>const B='';
 async function j(p,b){const o=b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{};const r=await fetch(B+p,o);return r.json()}

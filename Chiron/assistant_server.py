@@ -231,6 +231,27 @@ def serve(port=8769):
                     "providers": provs,
                     "chain": llm.chain(),
                     "model": (avail[0][2] if avail else "")}))
+            if self.path == "/api/assistant/manifest":
+                # The vault manifest (build_manifest.py output) — feeds the dashboard's
+                # Verify stage (certificate browser). Read fresh from disk on every call.
+                p = os.path.join(_HERE, "manifest.json")
+                if not os.path.isfile(p):
+                    return self._send(404, json.dumps(
+                        {"error": "no manifest.json — run `chiron build` first"}))
+                return self._send(200, open(p, "rb").read())
+            if self.path == "/api/assistant/artifacts":
+                # Every engine's latest signed certificate from the artifact ledger.
+                out = {}
+                arts = os.path.join(_HERE, "artifacts")
+                if os.path.isdir(arts):
+                    for d in sorted(os.listdir(arts)):
+                        latest = os.path.join(arts, d, "latest.json")
+                        if os.path.isfile(latest):
+                            try:
+                                out[d] = json.load(open(latest, encoding="utf-8"))
+                            except Exception as e:
+                                out[d] = {"error": str(e)}
+                return self._send(200, json.dumps(out))
             self._send(404, json.dumps({"error": "not found"}))
 
         def do_POST(self):

@@ -92,26 +92,50 @@ end, and it emits an auditable certificate on every run.
   won and how it was verified.
 - `python3 Chiron/llm_certify.py "..."` — wrap a language-model output: audit its honesty, exactly
   verify the checkable claims, refuse to call free text "correct." The discipline as an LLM wrapper.
-- **Run everything with one command:** `cd Chiron && python3 vault.py`, then open
+- **Run everything with one command:** `python3 bin/chiron serve` from the vault root, then open
   http://127.0.0.1:8765 — the operator console with **Analyze**, **Run** (run any function), **Chat**
   (natural language over the engine), and **Feed** (start/stop/point the grower). Full guide:
-  **[RUNNING.md](Chiron/RUNNING.md)**.
+  **[RUNNING.md](Chiron/docs/RUNNING.md)**.
 - **The Chat assistant is provider-pluggable and free.** It tries a fallback chain of LLMs — set any
   one key (`GEMINI_API_KEY`, `OPENROUTER_API_KEY` for Llama/Qwen/GPT, `GROQ_API_KEY`, `OPENAI_API_KEY`,
   `ANTHROPIC_API_KEY`, …) in your shell, **or paste it right in the Chat tab’s “Add your own API key”
   panel**. The model only proposes; the exact engine still verifies. See `Chiron/llm_providers.py`.
 - Every script can leave a signed, falsifiable certificate under `Chiron/artifacts/`, indexed by
-  `build_manifest.py` and browsable in `vault_dashboard.html` — each tile names the module in Chiron
+  `build_manifest.py` and browsable in the dashboard's **Verify → Certificates** stage — each tile names the module in Chiron
   vocabulary and explains it **mathematically, programmatically, and conceptually**. See
-  [ARTIFACTS.md](Chiron/ARTIFACTS.md). Four scripts (`semic`, `chiron`, `density_emotion`,
+  [ARTIFACTS.md](Chiron/docs/ARTIFACTS.md). Four scripts (`semic`, `chiron`, `density_emotion`,
   `chiron_artifact`) emit as working proofs.
 - **The whole spine in one file:** all 63 Chiron modules folded, byte-identical, into a single
   runnable file. `python3 "Chiron Monolith/chiron_monolith.py" serve` opens the same dashboard;
   `--selftest` runs the full gate sweep (identical coverage to the full build); run any module with
   `... <module> [args]`. The folder is self-contained. See
   [Chiron Monolith/README.md](Chiron%20Monolith/README.md).
-- Scope and failure modes are stated plainly in [WHY_CHIRON.md](Chiron/WHY_CHIRON.md) and
-  [KNOWN_LIMITATIONS.md](Chiron/KNOWN_LIMITATIONS.md).
+- Scope and failure modes are stated plainly in [WHY_CHIRON.md](Chiron/docs/WHY_CHIRON.md) and
+  [KNOWN_LIMITATIONS.md](Chiron/docs/KNOWN_LIMITATIONS.md).
+
+## The vault at a glance
+
+Five concepts, one interface:
+
+| Concept | Where | Rule |
+|---|---|---|
+| **Source** | `Chiron/` (flat engine modules; guides in `Chiron/docs/`) + `Primus/` (the packaged seed) | you edit here, always |
+| **CLI** | `bin/chiron` — `serve · test · build · verify · grow · benchmark · doctor` | the single way you interact |
+| **Build** | `Chiron Monolith/build_monolith.py` + `Chiron/build_manifest.py`, driven by `chiron build` | reproducible; never guess |
+| **Runtime** | `chiron serve` → console :8765, launcher :8768, assistant :8769, grow :8767/:8766 | one Ctrl-C stops everything |
+| **Artifacts** | `Chiron Monolith/` (the self-contained fold), `Chiron/manifest.json`, `Chiron/artifacts/` | generated — run, ship, delete, rebuild, **never edit** |
+
+```
+START_HERE.md         the 90-second front door        playground.html   the engine in a browser
+bin/chiron            the CLI — the product; the scripts behind it are implementation details
+Chiron/               the flagship engine (source of truth) + docs/ + tests/ + artifacts/
+Chiron Monolith/      generated artifact: the whole spine folded into one runnable file
+Primus/               the packaged seed engine (pip install ./Primus) + its full gate battery
+JDICert/ Veritas/ Candor/ Infectatrum/    the same contract in other domains
+Governance/ UMA Suite/ Individual Programs/ Ontological & Philosophical Books/
+Quack System Constructs/ Paper/           doctrine, theory, papers, salvage
+docs/                 vault-level documents (Mathematical Compendium)
+```
 
 ## Components
 
@@ -136,7 +160,7 @@ continuity theory, the physical substrate, the governance rules, and the derived
 collected in one document, each result tagged by its epistemic status (standard result, implemented
 and tested, proof-of-concept, or self-developed theory):
 
-**[Mathematical_Compendium.pdf](Mathematical_Compendium.pdf)** (source: `Mathematical_Compendium.tex`).
+**[docs/Mathematical_Compendium.pdf](docs/Mathematical_Compendium.pdf)** (source: `docs/Mathematical_Compendium.tex`).
 
 ## Theoretical foundations
 

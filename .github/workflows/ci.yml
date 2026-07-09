@@ -79,3 +79,9 @@ jobs:
       - name: Monolith smoke (the fold still runs)
         working-directory: Chiron Monolith
         run: python chiron_monolith.py --smoke
+      - name: Monolith staleness gate — rebuilding must be a no-op (the fold is deterministic)
+        working-directory: Chiron Monolith
+        run: |
+          python build_monolith.py
+          git diff --stat --exit-code chiron_monolith.py \
+            || (echo "::error::monolith is stale — run 'chiron build' and commit the artifact" && exit 1)
