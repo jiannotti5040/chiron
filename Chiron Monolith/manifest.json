@@ -1,14 +1,420 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-07-10T06:59:02Z",
+  "generated_utc": "2026-07-10T11:38:54Z",
   "mode": "run",
   "summary": {
-    "runnable_scripts": 69,
-    "with_selftest": 50,
-    "stdlib_only": 60,
-    "with_spdx_header": 69,
-    "emitting_artifacts": 5
+    "runnable_scripts": 71,
+    "with_selftest": 52,
+    "stdlib_only": 62,
+    "with_spdx_header": 71,
+    "emitting_artifacts": 5,
+    "internal_edges": 100
+  },
+  "graph": {
+    "note": "internal import edges [importer, imported], AST-derived",
+    "edges": [
+      [
+        "actionable_intelligence",
+        "chiron"
+      ],
+      [
+        "actionable_intelligence",
+        "govern"
+      ],
+      [
+        "aesthetics",
+        "chiron"
+      ],
+      [
+        "aesthetics",
+        "ontological"
+      ],
+      [
+        "aesthetics",
+        "uma_bridge"
+      ],
+      [
+        "assistant_server",
+        "chiron"
+      ],
+      [
+        "assistant_server",
+        "console_server"
+      ],
+      [
+        "assistant_server",
+        "heartbeat"
+      ],
+      [
+        "assistant_server",
+        "llm_providers"
+      ],
+      [
+        "assistant_server",
+        "president_grow"
+      ],
+      [
+        "assistant_server",
+        "run_ledger"
+      ],
+      [
+        "bench_authorship",
+        "language"
+      ],
+      [
+        "bench_compression",
+        "chiron"
+      ],
+      [
+        "bench_legal",
+        "legal_corpus"
+      ],
+      [
+        "bench_proverbs",
+        "semic"
+      ],
+      [
+        "bench_suite",
+        "bench_authorship"
+      ],
+      [
+        "bench_suite",
+        "bench_compression"
+      ],
+      [
+        "bench_suite",
+        "bench_legal"
+      ],
+      [
+        "bench_suite",
+        "bench_protocol"
+      ],
+      [
+        "bench_suite",
+        "bench_proverbs"
+      ],
+      [
+        "bench_suite",
+        "bench_symreg"
+      ],
+      [
+        "bench_symreg",
+        "chiron"
+      ],
+      [
+        "benchmark",
+        "chiron"
+      ],
+      [
+        "build_examples",
+        "chiron"
+      ],
+      [
+        "candor_bridge",
+        "chiron"
+      ],
+      [
+        "certify_finding",
+        "chiron"
+      ],
+      [
+        "certify_finding",
+        "govern"
+      ],
+      [
+        "certify_finding",
+        "legal_corpus"
+      ],
+      [
+        "chiron",
+        "chiron_artifact"
+      ],
+      [
+        "chiron_ciphers",
+        "chiron"
+      ],
+      [
+        "chiron_events",
+        "chiron"
+      ],
+      [
+        "chiron_grow",
+        "chiron"
+      ],
+      [
+        "compare",
+        "chiron"
+      ],
+      [
+        "console_server",
+        "run_ledger"
+      ],
+      [
+        "cross_examine",
+        "chiron"
+      ],
+      [
+        "density_emotion",
+        "chiron"
+      ],
+      [
+        "density_emotion",
+        "chiron_artifact"
+      ],
+      [
+        "discernment",
+        "aesthetics"
+      ],
+      [
+        "discernment",
+        "candor_bridge"
+      ],
+      [
+        "discernment",
+        "chiron"
+      ],
+      [
+        "discernment",
+        "cross_examine"
+      ],
+      [
+        "discernment",
+        "govern"
+      ],
+      [
+        "discernment",
+        "ontological"
+      ],
+      [
+        "discernment",
+        "uma_bridge"
+      ],
+      [
+        "discover",
+        "chiron"
+      ],
+      [
+        "epistemic",
+        "chiron"
+      ],
+      [
+        "epistemic",
+        "legal_corpus"
+      ],
+      [
+        "epistemic",
+        "semic"
+      ],
+      [
+        "epistemic",
+        "semic_energy"
+      ],
+      [
+        "export_graph",
+        "chiron"
+      ],
+      [
+        "formal_check",
+        "chiron"
+      ],
+      [
+        "govern",
+        "chiron"
+      ],
+      [
+        "govern",
+        "legal_corpus"
+      ],
+      [
+        "grow_clean",
+        "chiron"
+      ],
+      [
+        "grow_clean",
+        "chiron_grow"
+      ],
+      [
+        "grow_clean",
+        "president_grow"
+      ],
+      [
+        "heartbeat",
+        "run_ledger"
+      ],
+      [
+        "holographic",
+        "chiron"
+      ],
+      [
+        "holographic",
+        "legal_corpus"
+      ],
+      [
+        "ingest_pdf",
+        "chiron"
+      ],
+      [
+        "intake",
+        "chiron"
+      ],
+      [
+        "intake_salvage",
+        "intake"
+      ],
+      [
+        "judgment",
+        "candor_bridge"
+      ],
+      [
+        "judgment",
+        "certify_finding"
+      ],
+      [
+        "judgment",
+        "chiron"
+      ],
+      [
+        "judgment",
+        "cross_examine"
+      ],
+      [
+        "judgment",
+        "govern"
+      ],
+      [
+        "judgment",
+        "uma_bridge"
+      ],
+      [
+        "jurisdiction",
+        "legal_corpus"
+      ],
+      [
+        "language",
+        "chiron"
+      ],
+      [
+        "llm_certify",
+        "chiron"
+      ],
+      [
+        "llm_certify",
+        "govern"
+      ],
+      [
+        "llm_providers",
+        "president_grow"
+      ],
+      [
+        "mine_code",
+        "chiron"
+      ],
+      [
+        "ontological",
+        "chiron"
+      ],
+      [
+        "operator_calculus",
+        "chiron"
+      ],
+      [
+        "planner",
+        "chiron"
+      ],
+      [
+        "planner",
+        "run_ledger"
+      ],
+      [
+        "president_grow",
+        "chiron"
+      ],
+      [
+        "primus_atlas",
+        "chiron"
+      ],
+      [
+        "primus_verses",
+        "chiron"
+      ],
+      [
+        "profile",
+        "chiron"
+      ],
+      [
+        "projection_stack",
+        "chiron"
+      ],
+      [
+        "provenance",
+        "chiron"
+      ],
+      [
+        "semic",
+        "chiron_artifact"
+      ],
+      [
+        "semic_bridge",
+        "semic"
+      ],
+      [
+        "semic_energy",
+        "semic"
+      ],
+      [
+        "significance",
+        "chiron"
+      ],
+      [
+        "stare_decisis",
+        "chiron"
+      ],
+      [
+        "stare_decisis",
+        "legal_corpus"
+      ],
+      [
+        "stress_test",
+        "chiron"
+      ],
+      [
+        "stress_test",
+        "console_server"
+      ],
+      [
+        "stress_test",
+        "heartbeat"
+      ],
+      [
+        "stress_test",
+        "run_ledger"
+      ],
+      [
+        "test_chiron",
+        "chiron"
+      ],
+      [
+        "test_grow",
+        "chiron"
+      ],
+      [
+        "test_grow",
+        "chiron_grow"
+      ],
+      [
+        "trace",
+        "chiron"
+      ],
+      [
+        "uma_bridge",
+        "chiron"
+      ],
+      [
+        "verify",
+        "chiron"
+      ]
+    ]
   },
   "scripts": [
     {
@@ -20,6 +426,10 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "govern"
+      ],
       "title": "The Decision Brief",
       "lens": {
         "math": "combines an exact forecast, an exact anomaly flag, and a governed recommendation.",
@@ -28,12 +438,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 242.6,
+        "runtime_ms": 222.6,
         "stdout_tail": "actionable_intelligence.py self-test: 11/11 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "aesthetics",
@@ -46,6 +458,11 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron",
+        "ontological",
+        "uma_bridge"
+      ],
       "title": "Mathematical Beauty",
       "lens": {
         "math": "the score B = (E\u00b7S\u00b7R)^{1/3} over elegance, symmetry, and resonance.",
@@ -54,12 +471,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 369.2,
+        "runtime_ms": 358.9,
         "stdout_tail": "aesthetics.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": [
+        "discernment"
+      ]
     },
     {
       "script": "apply_license_headers",
@@ -70,9 +491,12 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "assistant_server",
@@ -83,9 +507,21 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "console_server",
+        "heartbeat",
+        "llm_providers",
+        "president_grow",
+        "run_ledger"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "server"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "axioms",
@@ -96,6 +532,7 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The HCT Axioms",
       "lens": {
         "math": "the Holographic Continuity Theory axioms A1\u2013A8 and theorems T1\u2013T6, executed as code.",
@@ -104,12 +541,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 392.4,
+        "runtime_ms": 304.9,
         "stdout_tail": "axioms.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "bench_authorship",
@@ -120,14 +559,23 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "language"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 225.8,
+        "runtime_ms": 184.6,
         "stdout_tail": "  [PASS] Burrows Delta attributes a strong majority of held-out passages\n  [PASS] attribution is deterministic (reproducible)\n  3/3 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "bench_compression",
@@ -138,14 +586,23 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 229.5,
+        "runtime_ms": 194.2,
         "stdout_tail": "  [PASS] zero false-verify on controls\n  [PASS] chiron law beats lzma on a long sequence\n  4/4 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "bench_legal",
@@ -156,14 +613,23 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "legal_corpus"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 16.0,
+        "runtime_ms": 19.5,
         "stdout_tail": "  [PASS] domain scoping removes cross-domain provisions the baseline included\n  [PASS] recovered sets are non-empty exactly when not abstaining\n  4/4 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "bench_protocol",
@@ -174,14 +640,21 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 14.0,
+        "runtime_ms": 13.5,
         "stdout_tail": "  [PASS] beats the Markov baseline on held-out\n  [PASS] abstains on contradictory traces\n  4/4 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "bench_proverbs",
@@ -192,14 +665,23 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "semic"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 26.2,
+        "runtime_ms": 23.7,
         "stdout_tail": "  [PASS] all controls refused\n  [PASS] bag-of-words baseline conflates the invariants\n  5/5 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "bench_suite",
@@ -210,6 +692,14 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "bench_authorship",
+        "bench_compression",
+        "bench_legal",
+        "bench_protocol",
+        "bench_proverbs",
+        "bench_symreg"
+      ],
       "title": "The Six Tasks",
       "lens": {
         "math": "the same architecture across six independent domains versus an established baseline in each.",
@@ -218,12 +708,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 268.2,
+        "runtime_ms": 223.4,
         "stdout_tail": "  [PASS] authorship benchmark\n\n  VERDICT: PASS \u2014 6/6 tasks green"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "bench_symreg",
@@ -236,14 +730,23 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "benchmark"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 247.6,
+        "runtime_ms": 183.1,
         "stdout_tail": "  [PASS] chiron refuses the structureless control\n  [PASS] chiron never emits a confident wrong tail\n  6/6 checks"
-      }
+      },
+      "imported_by": [
+        "bench_suite"
+      ]
     },
     {
       "script": "benchmark",
@@ -254,6 +757,9 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Proof",
       "lens": {
         "math": "OEIS-core recovery, classical ciphers, and a randomized adversarial gauntlet scored for false verifications.",
@@ -262,7 +768,11 @@
       },
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "benchmark"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "build",
@@ -273,24 +783,30 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [
+        "builder"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 63.2,
+        "runtime_ms": 57.6,
         "stdout_tail": "build.py [chiron]: PASS (7 modules, 30131 lines, byte-identical=True)\n  build.py [semic]: PASS (34 modules, 1773 lines, byte-identical=True)\n  build.py self-test: PASS (2 targets)"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "build_manifest",
       "path": "build_manifest.py",
       "purpose": "build_manifest \u2014 enumerate every runnable script in the vault and capture, for",
-      "lines": 249,
+      "lines": 316,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The Index",
       "lens": {
         "math": "a per-script feature record \u2014 runnable, self-testing, stdlib-only, header-stamped, certificate-emitting, last result.",
@@ -299,7 +815,11 @@
       },
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "builder"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "candor_bridge",
@@ -310,6 +830,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Anti-Patronization",
       "lens": {
         "math": "scores an explanation across condescension, unearned confidence, evasion, and opacity, tracing each point to its span.",
@@ -318,12 +841,17 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 200.4,
+        "runtime_ms": 194.3,
         "stdout_tail": "candor_bridge.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": [
+        "discernment",
+        "judgment"
+      ]
     },
     {
       "script": "certify_finding",
@@ -334,6 +862,11 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "govern",
+        "legal_corpus"
+      ],
       "title": "The Certificate",
       "lens": {
         "math": "scores a finding against the Daubert / FRE-702 factors and binds the evidence under a Merkle root with a replay seed.",
@@ -342,12 +875,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 193.4,
+        "runtime_ms": 188.4,
         "stdout_tail": "certify_finding.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": [
+        "judgment"
+      ]
     },
     {
       "script": "chiron",
@@ -361,6 +898,9 @@
         "scipy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron_artifact"
+      ],
       "title": "The Invariant Engine",
       "lens": {
         "math": "argmin over typed generator classes of the two-part MDL code L(M)+L(s|M) in exact rationals, accepted only if it predicts withheld terms at exact equality; otherwise INCOMPRESSIBLE.",
@@ -369,19 +909,70 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "901448cd78cc6aed",
-        "generated_utc": "2026-07-10T06:58:48Z",
+        "self_hash": "d4cf1e3d22546432",
+        "generated_utc": "2026-07-10T11:38:28Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
       },
       "emits_artifact": true,
+      "roles": [
+        "certifying"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 6151.3,
+        "runtime_ms": 5778.3,
         "stdout_tail": "\n  CHIRON core gates: 12/12 passed.\n  CHIRON GREEN \u2014 exact knowledge, honest wisdom, bounded agency, one file."
-      }
+      },
+      "imported_by": [
+        "actionable_intelligence",
+        "aesthetics",
+        "assistant_server",
+        "bench_compression",
+        "bench_symreg",
+        "benchmark",
+        "build_examples",
+        "candor_bridge",
+        "certify_finding",
+        "chiron_ciphers",
+        "chiron_events",
+        "chiron_grow",
+        "compare",
+        "cross_examine",
+        "density_emotion",
+        "discernment",
+        "discover",
+        "epistemic",
+        "export_graph",
+        "formal_check",
+        "govern",
+        "grow_clean",
+        "holographic",
+        "ingest_pdf",
+        "intake",
+        "judgment",
+        "language",
+        "llm_certify",
+        "mine_code",
+        "ontological",
+        "operator_calculus",
+        "planner",
+        "president_grow",
+        "primus_atlas",
+        "primus_verses",
+        "profile",
+        "projection_stack",
+        "provenance",
+        "significance",
+        "stare_decisis",
+        "stress_test",
+        "test_chiron",
+        "test_grow",
+        "trace",
+        "uma_bridge",
+        "verify"
+      ]
     },
     {
       "script": "chiron_artifact",
@@ -392,6 +983,7 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The Memorial",
       "lens": {
         "math": "a dual-view certificate (machine evidence + human claim) admitted only if it carries a non-empty falsifier.",
@@ -407,7 +999,15 @@
         "what_would_falsify": "A certificate that emits despite an empty what_would_falsify field would break the honesty guarantee."
       },
       "emits_artifact": true,
-      "last_run": null
+      "roles": [
+        "certifying"
+      ],
+      "last_run": null,
+      "imported_by": [
+        "chiron",
+        "density_emotion",
+        "semic"
+      ]
     },
     {
       "script": "chiron_ciphers",
@@ -418,6 +1018,9 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Cipher Solver",
       "lens": {
         "math": "recovers a classical transform and key by inverting it under the engine's language model; a known pair recovers the key directly.",
@@ -426,7 +1029,32 @@
       },
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "chiron_events",
+      "path": "chiron_events.py",
+      "purpose": "chiron_events \u2014 a minimal, deterministic event bus so vault modules can be",
+      "lines": 200,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 198.6,
+        "stdout_tail": "  [PASS] report transmits abstention faithfully (no false verify)\n  [PASS] report flag == engine flag on both cases\nchiron_events selftest: 10/10 gates green"
+      },
+      "imported_by": []
     },
     {
       "script": "chiron_grow",
@@ -437,9 +1065,17 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "grow_clean",
+        "test_grow"
+      ]
     },
     {
       "script": "compare",
@@ -450,6 +1086,9 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Versus the Compressors",
       "lens": {
         "math": "head-to-head against gzip / bz2 / lzma: a constant-size law that regenerates terms general compressors cannot produce.",
@@ -458,20 +1097,32 @@
       },
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "console_server",
       "path": "console_server.py",
       "purpose": "console_server.py \u2014 run any Chiron function, and reach every engine, from the dashboard.",
-      "lines": 280,
+      "lines": 282,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "run_ledger"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "server"
+      ],
+      "last_run": null,
+      "imported_by": [
+        "assistant_server",
+        "stress_test"
+      ]
     },
     {
       "script": "cross_examine",
@@ -482,6 +1133,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Reasonable Doubt",
       "lens": {
         "math": "an adversarial search for a counter-reading that would defeat the finding.",
@@ -490,12 +1144,17 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 223.1,
+        "runtime_ms": 194.6,
         "stdout_tail": "cross_examine.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": [
+        "discernment",
+        "judgment"
+      ]
     },
     {
       "script": "density_emotion",
@@ -508,6 +1167,10 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron",
+        "chiron_artifact"
+      ],
       "title": "The Decoherence Channel",
       "lens": {
         "math": "competing readings as a density matrix evolved by a Lindblad CPTP semigroup with a deterministic half-life; von Neumann entropy decays as interpretations decohere toward one.",
@@ -516,19 +1179,23 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "b0b176dd6ae977aa",
-        "generated_utc": "2026-07-10T06:58:48Z",
+        "self_hash": "7d9cf5d714217950",
+        "generated_utc": "2026-07-10T11:38:29Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
       },
       "emits_artifact": true,
+      "roles": [
+        "certifying"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 317.8,
+        "runtime_ms": 256.4,
         "stdout_tail": "density_emotion.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "discernment",
@@ -539,6 +1206,15 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "aesthetics",
+        "candor_bridge",
+        "chiron",
+        "cross_examine",
+        "govern",
+        "ontological",
+        "uma_bridge"
+      ],
       "title": "Independent Witnesses",
       "lens": {
         "math": "confidence by convergence of independent sources rather than by any single estimate.",
@@ -547,12 +1223,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 361.7,
+        "runtime_ms": 324.1,
         "stdout_tail": "discernment.py self-test: 9/9 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "discover",
@@ -563,9 +1241,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "epistemic",
@@ -576,6 +1259,12 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "legal_corpus",
+        "semic",
+        "semic_energy"
+      ],
       "title": "The Epistemic Contract",
       "lens": {
         "math": "the schema Surface \u2192 Hypothesis space \u2192 Constraint space \u2192 Verification \u2192 Certificate, with four engines proven to be instances of one pipeline.",
@@ -584,12 +1273,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 204.9,
+        "runtime_ms": 193.4,
         "stdout_tail": "epistemic self-test\n  13/13 checks"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "build_examples",
@@ -600,9 +1291,16 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "builder"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "export_graph",
@@ -613,9 +1311,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "fastops",
@@ -626,14 +1329,17 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 13.1,
+        "runtime_ms": 14.0,
         "stdout_tail": "  hexameter_feet_ok(LSLSLSLSLSLS      ) -> False (want False)  OK\nbackend: pure-python fallback\nVERDICT: PASS"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "formal_check",
@@ -644,9 +1350,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "govern",
@@ -657,6 +1368,10 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "legal_corpus"
+      ],
       "title": "The Governance Gate",
       "lens": {
         "math": "the SoCPM decision rule over a Truth-Horizon partition (Knowns / Unknowns / void) against a fixed admissibility threshold.",
@@ -665,12 +1380,20 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 200.1,
+        "runtime_ms": 191.0,
         "stdout_tail": "govern.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": [
+        "actionable_intelligence",
+        "certify_finding",
+        "discernment",
+        "judgment",
+        "llm_certify"
+      ]
     },
     {
       "script": "grow_clean",
@@ -681,9 +1404,16 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "chiron_grow",
+        "president_grow"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "grow_control",
@@ -694,27 +1424,38 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "heartbeat",
       "path": "heartbeat.py",
       "purpose": "heartbeat.py \u2014 the vault's pulse: all of it at once, always (HORIZON.md H1\u2192H2 bridge).",
-      "lines": 321,
+      "lines": 359,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "run_ledger"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 354.3,
-        "stdout_tail": "  [PASS] state survives between beats\n  [PASS] the body enumerates its own organs (modules + guides)\n  10/10 checks"
-      }
+        "runtime_ms": 336.7,
+        "stdout_tail": "  [PASS] state survives and advances across beats\n  [PASS] the body enumerates its own organs (modules + guides)\n  13/13 checks"
+      },
+      "imported_by": [
+        "assistant_server",
+        "stress_test"
+      ]
     },
     {
       "script": "holographic",
@@ -727,6 +1468,10 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron",
+        "legal_corpus"
+      ],
       "title": "Boundary Recovery",
       "lens": {
         "math": "reconstructs interior structure from an erased boundary fragment (holographic error-correction analogy).",
@@ -735,12 +1480,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 251.0,
+        "runtime_ms": 213.2,
         "stdout_tail": "holographic.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "infectatrum_bridge",
@@ -751,6 +1498,7 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The Ambiguity Spectrum",
       "lens": {
         "math": "reading-spectrum cardinality |\u03a3| and Shannon entropy over interpretations, plus an origin-signature (JSD) and an adversarial detector.",
@@ -759,12 +1507,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "--selftest",
         "exit_code": 0,
-        "runtime_ms": 317.7,
+        "runtime_ms": 286.5,
         "stdout_tail": "infectatrum_bridge.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "ingest_pdf",
@@ -775,9 +1525,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "intake",
@@ -788,6 +1543,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Front Door",
       "lens": {
         "math": "normalizes arbitrary input (JSON / numeric / text) into the typed surfaces the engine accepts.",
@@ -796,12 +1554,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 202.7,
+        "runtime_ms": 184.4,
         "stdout_tail": "intake.py self-test: 12/12 passed"
-      }
+      },
+      "imported_by": [
+        "intake_salvage"
+      ]
     },
     {
       "script": "intake_salvage",
@@ -812,6 +1574,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "intake"
+      ],
       "title": "The Salvage Door",
       "lens": {
         "math": "a fault-tolerant parse that never overwrites a good interpretation with a worse one.",
@@ -820,12 +1585,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 206.3,
+        "runtime_ms": 192.6,
         "stdout_tail": "format=text salvaged=False collapse_ready=False primary_series=None"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "judgment",
@@ -836,6 +1603,14 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "candor_bridge",
+        "certify_finding",
+        "chiron",
+        "cross_examine",
+        "govern",
+        "uma_bridge"
+      ],
       "title": "Earned Finality",
       "lens": {
         "math": "a chief-justice rule that grants finality only when doubt has been exhausted.",
@@ -844,12 +1619,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 240.2,
+        "runtime_ms": 240.1,
         "stdout_tail": "judgment.py self-test: 12/12 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "jurisdiction",
@@ -860,14 +1637,19 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "legal_corpus"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 21.4,
+        "runtime_ms": 19.0,
         "stdout_tail": "jurisdiction.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "language",
@@ -878,6 +1660,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Offline Language",
       "lens": {
         "math": "n-gram statistics with PPMI semantics \u2014 no model weights, no network.",
@@ -886,12 +1671,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 216.9,
+        "runtime_ms": 190.6,
         "stdout_tail": "language.py self-test: 17/17 passed"
-      }
+      },
+      "imported_by": [
+        "bench_authorship"
+      ]
     },
     {
       "script": "legal_corpus",
@@ -902,6 +1691,7 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The Codified Law",
       "lens": {
         "math": "a provision set with domain scoping; applicable(domain) \u2229 keyword retrieval recovers the governing rules.",
@@ -910,12 +1700,22 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 19.9,
+        "runtime_ms": 19.8,
         "stdout_tail": "legal_corpus.py self-test: 12/12 passed  (67 provisions)"
-      }
+      },
+      "imported_by": [
+        "bench_legal",
+        "certify_finding",
+        "epistemic",
+        "govern",
+        "holographic",
+        "jurisdiction",
+        "stare_decisis"
+      ]
     },
     {
       "script": "llm_certify",
@@ -926,6 +1726,10 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "govern"
+      ],
       "title": "The Accountability Wrapper",
       "lens": {
         "math": "extracts the checkable claims from free text (arithmetic and numeric sequences via collapse) and reports how many of M verify exactly, under a Merkle root.",
@@ -934,12 +1738,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 196.5,
+        "runtime_ms": 200.3,
         "stdout_tail": "  [PASS] states it is not a legal determination\n  [PASS] flags the unverifiable as neither confirmed nor denied\n  9/9 checks"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "llm_providers",
@@ -950,6 +1756,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "president_grow"
+      ],
       "title": "The Proposer Chain",
       "lens": {
         "math": "a fallback ordering over providers returning the first non-empty answer, plus a fan-out that gathers every keyed provider's proposal for the verifier to test.",
@@ -958,12 +1767,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 41.4,
+        "runtime_ms": 38.5,
         "stdout_tail": "  [PASS] llama via openrouter key\n  [PASS] qwen via openrouter key\n  11/11 checks"
-      }
+      },
+      "imported_by": [
+        "assistant_server"
+      ]
     },
     {
       "script": "mine_code",
@@ -974,9 +1787,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "ontological",
@@ -987,6 +1805,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Value & Harmony",
       "lens": {
         "math": "V-Units and a Harmony Functional scoring coherence across a structure.",
@@ -995,12 +1816,17 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 196.8,
+        "runtime_ms": 181.4,
         "stdout_tail": "ontological.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": [
+        "aesthetics",
+        "discernment"
+      ]
     },
     {
       "script": "operator_calculus",
@@ -1013,6 +1839,9 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Six Operators",
       "lens": {
         "math": "six epistemic operators acting on a Mystery Vector \u03be \u2208 \u211d\u2076 (six species of the unknown).",
@@ -1021,12 +1850,38 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 234.3,
+        "runtime_ms": 205.1,
         "stdout_tail": "operator_calculus.py self-test: 9/9 passed"
-      }
+      },
+      "imported_by": []
+    },
+    {
+      "script": "planner",
+      "path": "planner.py",
+      "purpose": "planner.py \u2014 the first slice of Horizon Two: engines compose toward a goal, and the",
+      "lines": 260,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "run_ledger"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 195.7,
+        "stdout_tail": "  [PASS] an invariant violation halts the campaign\n  [PASS] the gate refuses a 'verified' finding that can't regenerate the surface\n  11/11 checks"
+      },
+      "imported_by": []
     },
     {
       "script": "president_grow",
@@ -1037,9 +1892,18 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "assistant_server",
+        "grow_clean",
+        "llm_providers"
+      ]
     },
     {
       "script": "primus_atlas",
@@ -1050,9 +1914,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "primus_verses",
@@ -1063,9 +1932,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "profile",
@@ -1076,9 +1950,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "projection_stack",
@@ -1091,6 +1970,9 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Projection Stack",
       "lens": {
         "math": "projects a finding through P\u2192C\u2192E\u2192S with identity preserved as a conservation law.",
@@ -1099,12 +1981,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 253.2,
+        "runtime_ms": 234.2,
         "stdout_tail": "projection_stack.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "provenance",
@@ -1115,6 +1999,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "Conserved History",
       "lens": {
         "math": "a conserved-history DAG with minimal-blame attribution (HCT axioms A3/T3).",
@@ -1123,12 +2010,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 218.0,
+        "runtime_ms": 204.5,
         "stdout_tail": "provenance.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "run_ledger",
@@ -1139,14 +2028,23 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 19.8,
+        "runtime_ms": 17.7,
         "stdout_tail": "  [PASS] recording never raises on a bad path\n  [PASS] read of a missing ledger is empty, not an error\n  9/9 checks"
-      }
+      },
+      "imported_by": [
+        "assistant_server",
+        "console_server",
+        "heartbeat",
+        "planner",
+        "stress_test"
+      ]
     },
     {
       "script": "semic",
@@ -1157,6 +2055,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron_artifact"
+      ],
       "title": "The Semantic Invariant Calculus",
       "lens": {
         "math": "edge-set energy E(S)=\u03b1|S|+\u03a3|O\u1d62 \u25b3 S| is separable per edge, giving the closed-form argmin S*={e : count(e) > (n+\u03b1)/2} in O(N\u00b7m); the MDL collapse equals the T\u21920 limit of the Gibbs sampler.",
@@ -1165,19 +2066,28 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "c0c2b79c753a96d6",
-        "generated_utc": "2026-07-10T06:58:53Z",
+        "self_hash": "476b29dd1b323865",
+        "generated_utc": "2026-07-10T11:38:34Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
       },
       "emits_artifact": true,
+      "roles": [
+        "certifying"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 687.1,
+        "runtime_ms": 659.7,
         "stdout_tail": "  [PASS] G56 config defaults reproduce in-source constants\n\n  56/56 gates passing"
-      }
+      },
+      "imported_by": [
+        "bench_proverbs",
+        "epistemic",
+        "semic_bridge",
+        "semic_energy"
+      ]
     },
     {
       "script": "semic_bridge",
@@ -1188,14 +2098,19 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "semic"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 34.8,
+        "runtime_ms": 36.2,
         "stdout_tail": "semic_bridge.py self-test: 14/14 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "semic_energy",
@@ -1206,6 +2121,9 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "semic"
+      ],
       "title": "The Energy Stack",
       "lens": {
         "math": "three levels \u2014 exact collapse (L1), the constraint manifold (L2), and a Gibbs measure p_T(S)\u221dexp(\u2212E(S)/T) ranking (L3); landscape entropy separates a flat (ambiguous) from a peaked (decisive) basin.",
@@ -1214,12 +2132,16 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 28.1,
+        "runtime_ms": 27.7,
         "stdout_tail": "  [PASS] candidate probabilities are a descending distribution\n  [PASS] energy peak == exact collapse generator\n  8/8 checks"
-      }
+      },
+      "imported_by": [
+        "epistemic"
+      ]
     },
     {
       "script": "significance",
@@ -1232,6 +2154,9 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron"
+      ],
       "title": "Curvature as Significance",
       "lens": {
         "math": "Ollivier\u2013Ricci curvature over the structure locates where meaning concentrates; W\u2081 the underlying transport.",
@@ -1240,12 +2165,14 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 225.2,
+        "runtime_ms": 227.7,
         "stdout_tail": "significance.py self-test: 8/8 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "stare_decisis",
@@ -1256,6 +2183,10 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "legal_corpus"
+      ],
       "title": "The Precedent Ledger",
       "lens": {
         "math": "a Merkle-chained ledger of prior decisions; departures are flagged against precedent.",
@@ -1264,30 +2195,40 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 182.9,
+        "runtime_ms": 187.8,
         "stdout_tail": "stare_decisis.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "stress_test",
       "path": "stress_test.py",
       "purpose": "stress_test.py \u2014 try to break the vault; make every hole a permanent gate.",
-      "lines": 330,
+      "lines": 358,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "console_server",
+        "heartbeat",
+        "run_ledger"
+      ],
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 6701.1,
-        "stdout_tail": "======================================================================\n  21/21 probes held \u2014 NO HOLES FOUND\n======================================================================"
-      }
+        "runtime_ms": 17902.9,
+        "stdout_tail": "======================================================================\n  23/23 probes held \u2014 NO HOLES FOUND\n======================================================================"
+      },
+      "imported_by": []
     },
     {
       "script": "test_chiron",
@@ -1298,9 +2239,16 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "test_grow",
@@ -1311,9 +2259,17 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron",
+        "chiron_grow"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "trace",
@@ -1324,6 +2280,9 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Reasoning Path",
       "lens": {
         "math": "exposes the ranked candidate generators, the MDL margin to the runner-up, and the held-out verification.",
@@ -1332,7 +2291,9 @@
       },
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "uma_bridge",
@@ -1345,6 +2306,9 @@
         "numpy"
       ],
       "stdlib_only": false,
+      "imports": [
+        "chiron"
+      ],
       "title": "The Physical Substrate",
       "lens": {
         "math": "tests robustness of recovered structure under the RSLS field dynamics (Lyapunov sensitivity, decoherence).",
@@ -1353,12 +2317,18 @@
       },
       "artifact": null,
       "emits_artifact": false,
+      "roles": [],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 230.4,
+        "runtime_ms": 223.5,
         "stdout_tail": "uma_bridge.py self-test: 10/10 passed"
-      }
+      },
+      "imported_by": [
+        "aesthetics",
+        "discernment",
+        "judgment"
+      ]
     },
     {
       "script": "vault",
@@ -1369,6 +2339,7 @@
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [],
       "title": "The One-Command Launcher",
       "lens": {
         "math": "a small service supervisor \u2014 start, wait, signal, reap \u2014 over the local processes.",
@@ -1377,19 +2348,23 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "308fe73a29095fe9",
-        "generated_utc": "2026-07-10T06:58:59Z",
+        "self_hash": "5354c487f4e688ec",
+        "generated_utc": "2026-07-10T11:38:51Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null
       },
       "emits_artifact": true,
+      "roles": [
+        "certifying"
+      ],
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 2109.9,
+        "runtime_ms": 2123.5,
         "stdout_tail": "  [PASS] dummy services are running\n  [PASS] Ctrl-C path stops them all\n  7/7 checks"
-      }
+      },
+      "imported_by": []
     },
     {
       "script": "verify",
@@ -1400,9 +2375,14 @@
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
+      "imports": [
+        "chiron"
+      ],
       "artifact": null,
       "emits_artifact": false,
-      "last_run": null
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     }
   ]
 }
