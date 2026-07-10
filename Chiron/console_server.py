@@ -89,6 +89,8 @@ FEATURED = {
         ("build", ["verify-all"], "chiron.py + semic.py recompile byte-identical", None),
         ("formal_check", [], "property-based soundness check", None),
         ("stress_test", [], "adversarial stress probes — try to break the vault", None),
+        ("planner", ["run"], "compose a campaign — the gate arbitrates each step", "1 1 2 3 5 8 13"),
+        ("planner", ["selftest"], "planner gates (compose / halt / escalate)", None),
         ("heartbeat", ["status"], "the vault's pulse — last beat + certificate", None),
     ],
 }
