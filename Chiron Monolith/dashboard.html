@@ -375,7 +375,7 @@ python3 verify.py</pre></div>
         <code>python3 bin/chiron serve</code>, then <button class="btn ghost" style="padding:4px 10px" onclick="certsBoot()">Retry</button>.</div>
       <div class="cstrip" id="cstrip"></div>
       <div class="cctl">
-        <input id="cq" placeholder="Filter by name, purpose, or falsifier…" autocomplete="off">
+        <input id="cq" placeholder="Search anything — name, purpose, lenses, imports, roles…" autocomplete="off">
         <span class="cchip" data-f="pass">passed</span>
         <span class="cchip" data-f="fail">failed</span>
         <span class="cchip" data-f="emits">emits certificate</span>
@@ -608,13 +608,17 @@ function ccard(e){
     :'<div class="discovered" style="opacity:.7"><span class="k">no certificate yet</span>run the script to memorialize its result</div>';
   const hash=art&&art.self_hash?'<span class="chash">#'+cesc(art.self_hash)+'</span>':"";
   const conf=art&&art.confidence?'<span class="tagm ms">'+cesc(art.confidence.split("(")[0].trim())+'</span>':"";
+  // the internal dependency graph, surfaced: hover for the exact module lists
+  const gI=e.imports&&e.imports.length?'<span class="tagm" title="imports: '+cesc(e.imports.join(", "))+'">→ '+e.imports.length+'</span>':"";
+  const gO=e.imported_by&&e.imported_by.length?'<span class="tagm" title="imported by: '+cesc(e.imported_by.join(", "))+'">← '+e.imported_by.length+'</span>':"";
+  const roles=(e.roles||[]).map(r=>'<span class="tagm">'+cesc(r)+'</span>').join("");
   const lens=e.lens?'<div class="lens">'+(e.lens.math?'<div class="lx"><span class="k">mathematically</span>'+cesc(e.lens.math)+'</div>':"")+
     (e.lens.prog?'<div class="lx"><span class="k">programmatically</span>'+cesc(e.lens.prog)+'</div>':"")+
     (e.lens.concept?'<div class="lx"><span class="k">conceptually</span>'+cesc(e.lens.concept)+'</div>':"")+'</div>':"";
   return '<div class="ccard '+st+'"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span class="cname">'+cesc(e.script)+'</span>'+
     (e.title?'<span class="ctitle">'+cesc(e.title)+'</span>':"")+badge+'</div>'+
     '<div style="color:var(--ink2);font-size:13px">'+cesc(e.purpose||"—")+'</div>'+lens+discovered+falsify+
-    '<div class="cfoot">'+dep+conf+runtime+hash+'</div></div>';
+    '<div class="cfoot">'+dep+roles+gI+gO+conf+runtime+hash+'</div></div>';
 }
 function cpass(e){
   const st=cstatus(e);
@@ -625,8 +629,19 @@ function cpass(e){
     if(f==="numpy"&&e.stdlib_only)return false;
   }
   const q=$('#cq').value.trim().toLowerCase();
-  if(q){const hay=[e.script,e.purpose,e.artifact&&e.artifact.what_would_falsify,e.artifact&&e.artifact.what_was_discovered].join(" ").toLowerCase();
-    if(!hay.includes(q))return false;}
+  if(q){
+    // search-first: one haystack over everything the vault knows about the
+    // script — lexicon lenses included, so "govern AI output" resolves by
+    // MEANING, not just filename. Multi-word queries AND their terms.
+    const lens=e.lens?[e.lens.math,e.lens.prog,e.lens.concept]:[];
+    const hay=[e.script,e.title,e.purpose,...lens,
+      (e.roles||[]).join(" "),(e.capabilities||[]).join(" "),
+      (e.dependencies||[]).join(" "),
+      (e.imports||[]).join(" "),(e.imported_by||[]).join(" "),
+      e.artifact&&e.artifact.what_would_falsify,
+      e.artifact&&e.artifact.what_was_discovered].join(" ").toLowerCase();
+    for(const term of q.split(/\s+/)){if(!hay.includes(term))return false;}
+  }
   return true;
 }
 function crender(){
@@ -639,6 +654,7 @@ function cstrip(s){
   const items=[["runnable_scripts","scripts run independently",""],["with_selftest","carry a selftest gate",""],
     ["with_spdx_header","carry the license header",s.with_spdx_header===s.runnable_scripts?"good":"warn"],
     ["emitting_artifacts","emit a signed certificate",s.emitting_artifacts>0?"good":"warn"]];
+  if(s.internal_edges!=null)items.push(["internal_edges","internal import edges",""]);
   $('#cstrip').innerHTML=items.map(([k,l,cl])=>'<div class="cstat"><div class="n '+cl+'">'+(s[k]??"—")+'</div><div class="l">'+l+'</div></div>').join("");
 }
 async function certsBoot(){
