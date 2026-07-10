@@ -2,7 +2,7 @@
 
 **All of Chiron, folded into one file.**
 
-`chiron_monolith.py` embeds the byte-identical source of every Chiron module (65 of them,
+`chiron_monolith.py` embeds the byte-identical source of every Chiron module (68 of them,
 ~1.9 MB of code) inside a single Python file, with a small loader so the whole spine runs
 out of that one file — no `Chiron/*.py` siblings required for the *code*.
 
@@ -40,6 +40,16 @@ python3 chiron_monolith.py trace "1 1 2 3 5 8 13"  # -> ranked candidates -> ver
 python3 chiron_monolith.py --selftest              # FULL sweep: every selftest-bearing module
 python3 chiron_monolith.py --smoke                 # quick: just the core-engine battery
 ```
+
+## Plugins (prototype)
+
+Drop `<name>.py` into `plugins/` next to the monolith and `python3
+chiron_monolith.py <name>` runs it, no rebuild required; plugins may import any
+embedded module. Two enforced rules keep this honest: **embedded always wins**
+(a plugin can add to the runtime, never shadow — and thereby never replace — a
+certified module), and **plugins are outside the fold's claims** (`--selftest`
+sweeps only embedded modules; `--list` marks plugins as external). See
+`plugins/README.md` and `plugins/example_echo.py`.
 
 **The dashboard.** `python3 chiron_monolith.py serve` opens the full operator console at
 <http://127.0.0.1:8765> — Analyze, Run, Chat (with the *Add your own API key* panel), Feed. It is

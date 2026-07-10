@@ -51,12 +51,18 @@ self-source scans and _HERE-relative data) points at the sibling Chiron/ directo
 it exists — the normal in-repo case — so behaviour is identical to running the originals.
 
     python3 chiron_monolith.py serve                 # open the operator dashboard on :8765
-    python3 chiron_monolith.py --list                # list every embedded module
+    python3 chiron_monolith.py --list                # list every embedded module (and plugins)
     python3 chiron_monolith.py <module> [args...]     # run a module's command line
     python3 chiron_monolith.py semic selftest         # -> 56/56 gates
     python3 chiron_monolith.py chiron selftest        # -> CHIRON GREEN
     python3 chiron_monolith.py --selftest             # FULL sweep: every selftest-bearing module
     python3 chiron_monolith.py --smoke                # quick: just the core-engine battery
+
+Plugins (prototype): drop <name>.py into a plugins/ folder next to this file and
+`python3 chiron_monolith.py <name>` runs it; it may import any embedded module.
+Embedded modules ALWAYS win over a plugin with the same name — a plugin can add
+to the runtime, never replace the certified spine. The --selftest sweep covers
+ONLY embedded modules, so its coverage claim is the fold's, not a plugin's.
 
 Regenerate with build_monolith.py. The embedded sources are a lossless fold of the spine —
 byte-identical to Chiron/*.py — so the fold runs exactly the gates the full build runs.
@@ -66,13 +72,32 @@ import os
 import base64
 import importlib.abc
 import importlib.machinery
+import importlib.util
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _CHIRON = os.path.normpath(os.path.join(_HERE, os.pardir, "Chiron"))
+_PLUGIN_DIR = os.path.join(_HERE, "plugins")
 
 
 def _decode(name):
     return base64.b64decode(_SOURCES[name]).decode("utf-8")
+
+
+def _plugin_path(name):
+    """plugins/<name>.py — but ONLY for names that are not embedded. The
+    embedded spine always wins, so a plugin can never shadow (and thereby
+    silently replace) a certified module."""
+    if name in _SOURCES or not name.isidentifier():
+        return None
+    p = os.path.join(_PLUGIN_DIR, name + ".py")
+    return p if os.path.isfile(p) else None
+
+
+def _plugin_names():
+    if not os.path.isdir(_PLUGIN_DIR):
+        return []
+    return sorted(f[:-3] for f in os.listdir(_PLUGIN_DIR)
+                  if f.endswith(".py") and _plugin_path(f[:-3]))
 
 
 def _module_file(name):
@@ -98,6 +123,9 @@ class _Finder(importlib.abc.MetaPathFinder):
     def find_spec(self, fullname, path=None, target=None):
         if fullname in _SOURCES:
             return importlib.machinery.ModuleSpec(fullname, _Loader(fullname))
+        plug = _plugin_path(fullname)                 # additive only; never shadows
+        if plug:
+            return importlib.util.spec_from_file_location(fullname, plug)
         return None
 
 
@@ -116,12 +144,16 @@ def run_module(name, argv):
     running module (and its real Chiron/<name>.py source), not to this launcher."""
     import types
     _install()
+    plug = None
     if name not in _SOURCES:
-        print("unknown module:", name, "(try --list)", file=sys.stderr)
-        return 2
+        plug = _plugin_path(name)
+        if plug is None:
+            print("unknown module:", name,
+                  "(try --list; plugins live in plugins/)", file=sys.stderr)
+            return 2
     mod = types.ModuleType("__main__")
     mod.__name__ = "__main__"
-    mod.__file__ = _module_file(name)
+    mod.__file__ = plug if plug else _module_file(name)
     mod.__package__ = None
     saved_argv = list(sys.argv)
     saved_main = sys.modules.get("__main__")
@@ -130,7 +162,8 @@ def run_module(name, argv):
     sys.modules["__main__"] = mod
     sys.modules[name] = mod
     try:
-        exec(compile(_decode(name), mod.__file__, "exec"), mod.__dict__)
+        src = open(plug, encoding="utf-8").read() if plug else _decode(name)
+        exec(compile(src, mod.__file__, "exec"), mod.__dict__)
         return 0
     except SystemExit as exc:
         if isinstance(exc.code, int):
@@ -176,7 +209,9 @@ def _run_self(name):
 
 def _selftest(full=True):
     """full=True sweeps EVERY selftest-bearing embedded module (the same set the full build
-    runs); full=False runs only the core-engine smoke battery."""
+    runs); full=False runs only the core-engine smoke battery. Plugins are DELIBERATELY
+    excluded: the sweep's green is a claim about the certified fold, never about
+    external files someone dropped alongside it."""
     if full:
         names = sorted(n for n in _SOURCES
                        if "selftest" in _decode(n) and n not in _NO_AUTORUN)
@@ -202,8 +237,12 @@ def main(argv=None):
     if args[0] == "--list":
         for key in sorted(_SOURCES):
             print(key)
+        plugins = _plugin_names()
+        for key in plugins:
+            print(key, "[plugin — external file, not part of the certified fold]")
         print()
-        print("%d modules embedded." % len(_SOURCES))
+        print("%d modules embedded%s." % (len(_SOURCES),
+              ", %d plugin(s) alongside" % len(plugins) if plugins else ""))
         return 0
     if args[0] == "--selftest":
         return 0 if _selftest(full=True) else 1
