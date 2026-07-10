@@ -59,6 +59,8 @@ Everything in this repo carries one of these labels, so nothing is oversold:
 
 The **engine and the benchmarks are A/B** (reproducible, gated). The **governance, "organism," and physics layers are C/D** — real, interesting, and honestly marked as prototype/theory. That labeling *is* the discipline.
 
+The vault also runs on its own pulse: a **heartbeat** reads its own code inward, grows outward, self-verifies each beat, and emits one signed *vault certificate* — and it never reports a beat green if any movement failed. Where it's going (and how hard it's been stress-tested for a sale) is in [docs/HORIZON.md](docs/HORIZON.md) and [docs/STRESS_TEST.md](docs/STRESS_TEST.md).
+
 ## If you have 10 more minutes
 
 1. `pip install ./Primus && primus certify "your text with a claim like 2+2=5"` — watch it verify, refute, and refuse, claim by claim.

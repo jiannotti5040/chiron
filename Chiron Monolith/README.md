@@ -2,7 +2,7 @@
 
 **All of Chiron, folded into one file.**
 
-`chiron_monolith.py` embeds the byte-identical source of every Chiron module (63 of them,
+`chiron_monolith.py` embeds the byte-identical source of every Chiron module (65 of them,
 ~1.9 MB of code) inside a single Python file, with a small loader so the whole spine runs
 out of that one file — no `Chiron/*.py` siblings required for the *code*.
 

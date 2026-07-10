@@ -9,8 +9,9 @@ the shape and why it is kept that way.
 ## The one file: `chiron.py`
 
 The entire engine is defined natively in a single Python file — no `exec()` of
-embedded source, no second hidden engine, no third-party packages in the core
-path. Inside it, six concerns are organized as clearly separated sections:
+embedded source, no second hidden engine. Its one third-party dependency is
+numpy (imported at load; declared in `Primus/pyproject.toml`). Inside it, six
+concerns are organized as clearly separated sections:
 
 1. **Invariant engine** — `collapse`, the hypothesis-class fitters, MDL ranking
    (`top_generators`), residual taxonomy, structural fingerprints, `articulate`
@@ -29,9 +30,10 @@ path. Inside it, six concerns are organized as clearly separated sections:
 
 ### Why a single file
 
-- **Portability and zero install.** One file runs anywhere Python does; the core
-  has no dependencies (numpy/scipy are optional accelerators with pure-Python
-  fallbacks).
+- **Portability, one dependency.** One file runs anywhere Python + numpy do.
+  numpy is required by the engine today (the recovery math and the physics/UMA
+  layers use it); making the bare `collapse` path numpy-free is a tracked item in
+  [HORIZON.md](HORIZON.md). scipy is an optional accelerator with a pure-Python fallback.
 - **Auditability.** A reviewer reads one artifact end to end. The self-test scans
   the core to prove properties (e.g. no network in the core path).
 - **Owner-signed integrity.** Hashes and the Merkle root bind the whole record.
@@ -105,20 +107,22 @@ costing the properties above (`python3 build.py verify-all`).
 | `console_server.py` | the launcher service — run any function from the dashboard Run tab (port 8768) |
 | `assistant_server.py` | the natural-language assistant — intent → real engine actions (Chat tab, port 8769) |
 | `grow_control.py` | start / stop / point the continuous grower from the dashboard (Feed tab, port 8767) |
+| `run_ledger.py` | the vault's operational memory — every engine invocation appended as one append-only, crash-healing, replay-exact record (`artifacts/run_ledger.jsonl`) |
+| `heartbeat.py` | the autonomous pulse — each beat reads one own organ inward, grows outward, runs a rotating battery gate, and emits the signed **vault certificate**; never stamps unverified, never edits source, never flatters a failed beat |
 | `llm_certify.py` | accountability certificate over an LLM output — audit + exactly verify its checkable claims |
 | `chiron_artifact.py` + `build_manifest.py` | per-script signed, falsifiable certificates (`artifacts/`) + the manifest index the dashboard reads |
 | `apply_license_headers.py` | idempotent SPDX header stamper across every `.py` |
-| `dashboard.html` (Verify → Certificates) | the certificate browser — one tile per script: its claim and what would falsify it |
+| `dashboard.html` | the offline operator console, organized by workflow: **Pulse** (the live vault certificate + run ledger), Observe, Understand, Reason, **Verify → Certificates** (one tile per script: its claim and what would falsify it), Remember, Publish |
 | `examples/` | worked examples + certificates, regenerated from real output |
 
 ## The whole spine in one file (`Chiron Monolith/`)
 
 The single-file property of `chiron.py` is extended to the **entire spine**: the sibling
 `Chiron Monolith/` folder holds `chiron_monolith.py`, which embeds the byte-identical source of
-all 63 Chiron modules and wraps them in a `sys.meta_path` loader so every cross-import
+all 65 Chiron modules and wraps them in a `sys.meta_path` loader so every cross-import
 (`import chiron`, `import semic`, …) resolves to the embedded copy. Any module runs from the one
 file — `python3 chiron_monolith.py <module> [args]` — and `--selftest` proves it: the core engine
-battery and 43/43 selftest-bearing modules pass identically to the standalone scripts. It is a
+battery and every selftest-bearing module pass identically to the standalone scripts. It is a
 **lossless fold** (round-trip asserted at build by `build_monolith.py`), not a rewrite, and adds no
 logic; each module's `__file__` points back at the real `../Chiron/<name>.py` so self-source scans
 and data files resolve exactly as they do standalone.
@@ -136,3 +140,17 @@ Sources feed the grower; the grower feeds `assimilate`; verified rules become
 laws in the Congress; the console and the certificate are how a human reads it.
 Network is off by default and never essential — engine, Congress, console, and
 gates all run fully offline and deterministically.
+
+Above that steady state runs the **heartbeat** — the organism's autonomous loop:
+
+```
+each beat:  inward (read one own organ → self-grown heart congress, verified-or-refused)
+          outward (one grower pass at the world; dry unless CHIRON_HEART_LIVE=1)
+          reflex (one rotating battery gate; full spine↔fold parity every 8th beat)
+          witness → run ledger + the vault certificate (artifacts/vault/latest.json)
+```
+
+The heartbeat changes only *when* the vault moves, never *whether* a movement is
+gated: every mutation still passes exact held-out verification, and a failed
+movement makes the beat's certificate report NOT green. It is the tempo off the
+harness, with the truth left exactly where the constitution keeps it.

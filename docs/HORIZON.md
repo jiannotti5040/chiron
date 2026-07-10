@@ -19,11 +19,16 @@ one of those hands needs a conscience that cannot be sweet-talked, because it do
 on talk: it runs on exact arithmetic and refuses everything else. The vault already *is*
 that conscience in miniature **[measured]** — 155+ CI gates, zero false verifications across
 ~5,000 internal and 35+ live external cases, three public falsify-and-repair stories. The
-horizon is scale: from *a conscience* to *the conscience other systems call*.
+horizon is scale: from *a conscience* to *the conscience other systems call*. The first step of that scaling is already beating: the **heartbeat** (`heartbeat.py`) moves the vault on its own pulse — reading its own organs *inward* into a self-grown memory, reaching *outward* at the world, and *self-verifying* every beat — the tempo off the harness with the truth left untouched.
 
 ---
 
 ## 1 · Where it honestly stands today
+
+*This section is the honest baseline as of 2026-07-09. Since then, parts of Horizon One
+have shipped — the **run ledger**, the **heartbeat + vault certificate**, and the dashboard's
+**Pulse** stage; see the `(shipped)` tags in §2. The "No"/"theory" statements below are kept
+as the record they were written against, so progress can be measured against an honest start.*
 
 The agentic wiring that already exists — each line is real, gated code, not aspiration:
 
@@ -81,20 +86,20 @@ incarnations and asserts the outcomes are identical **[proven]** (wired into `bi
 
 ## 2 · Horizon One — the organism closes its loops *(weeks)*
 
-**H1.1 — Spine ↔ fold: total integration.**
+**H1.1 — Spine ↔ fold: total integration.** *(shipped: `chiron parity` — the spine's full gate suite run through both incarnations, 138 identical outcomes required; proven to have teeth in [STRESS_TEST.md](STRESS_TEST.md).)*
 Parity as a CI gate, not just a CLI verb. The fold's hash embedded in every certificate, so
 a verdict names its incarnation. An incarnation badge in the dashboard header. Drift
 surfaces extended from Primus sequences to Chiron behaviors (semic verdicts, candor scores,
 governance gates) — target ≥100 surfaces. *Falsifier: any behavioral difference between
 spine and fold that a user can observe but the battery cannot.*
 
-**H1.2 — The run ledger.**
+**H1.2 — The run ledger.** *(shipped: `Chiron/run_ledger.py` — append-only, crash-healing, replay-exact; 9/9 gates. Every console/assistant/CLI/heartbeat invocation is witnessed. The heartbeat above it emits the organism-level **vault certificate** each beat and, per the constitution, never reports a beat green over a failed movement.)*
 Every engine invocation appends one record — engine, input hash, verdict, certificate path,
 duration, incarnation — to an append-only vault ledger. The Remember stage becomes actual
 memory of operations; `chiron doctor` reads health from it; strategy (H2) will learn from it.
 *Falsifier: a ledger replay that fails to reproduce any recorded verdict.*
 
-**H1.3 — Workflow that flows.**
+**H1.3 — Workflow that flows.** *(partially shipped: the dashboard's **Pulse** stage renders the live vault certificate + streaming ledger + since-you-last-looked; Run and Analyze deep-link to their certificates in Verify. Still ahead: acceptance→Congress and gate-failure→module-tile links.)*
 Deep links between stages: verdict → certificate, acceptance → Congress entry, gate failure →
 the module tile that failed. A "since you last looked" diff on the home stage. *Gate: a new
 user goes ingest → proof → publish without touching a terminal.*

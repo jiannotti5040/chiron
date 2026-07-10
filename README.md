@@ -80,7 +80,7 @@ Chiron takes an ambiguous surface (an integer sequence, a string, a ciphertext, 
 recovers the minimal generator beneath it under a Minimum Description Length criterion in **exact
 rational arithmetic**. A result is *verified* only when the recovered rule predicts withheld terms at
 exact equality; anything it cannot compress is returned as a classified residual, never a confident
-guess. The core is a single self-contained file with no third-party dependencies, owner-signed end to
+guess. The core is a single self-contained file whose one dependency is numpy (declared in `Primus/pyproject.toml`, so `pip install ./Primus` brings it), owner-signed end to
 end, and it emits an auditable certificate on every run.
 
 - `python3 Chiron/epistemic.py` — the contract (Surface → Hypothesis → Constraint → Verify →
@@ -93,8 +93,9 @@ end, and it emits an auditable certificate on every run.
 - `python3 Chiron/llm_certify.py "..."` — wrap a language-model output: audit its honesty, exactly
   verify the checkable claims, refuse to call free text "correct." The discipline as an LLM wrapper.
 - **Run everything with one command:** `python3 bin/chiron serve` from the vault root, then open
-  http://127.0.0.1:8765 — the operator console with **Analyze**, **Run** (run any function), **Chat**
-  (natural language over the engine), and **Feed** (start/stop/point the grower). Full guide:
+  http://127.0.0.1:8765 — the operator console, opening on **Pulse** (the live vault certificate and
+  run ledger) and flowing through **Analyze**, **Run** (run any function), **Chat** (natural language
+  over the engine), **Verify → Certificates**, and **Feed** (start/stop/point the grower). Full guide:
   **[RUNNING.md](Chiron/docs/RUNNING.md)**.
 - **The Chat assistant is provider-pluggable and free.** It tries a fallback chain of LLMs — set any
   one key (`GEMINI_API_KEY`, `OPENROUTER_API_KEY` for Llama/Qwen/GPT, `GROQ_API_KEY`, `OPENAI_API_KEY`,
@@ -105,7 +106,7 @@ end, and it emits an auditable certificate on every run.
   vocabulary and explains it **mathematically, programmatically, and conceptually**. See
   [ARTIFACTS.md](Chiron/docs/ARTIFACTS.md). Four scripts (`semic`, `chiron`, `density_emotion`,
   `chiron_artifact`) emit as working proofs.
-- **The whole spine in one file:** all 63 Chiron modules folded, byte-identical, into a single
+- **The whole spine in one file:** all 65 Chiron modules folded, byte-identical, into a single
   runnable file. `python3 "Chiron Monolith/chiron_monolith.py" serve` opens the same dashboard;
   `--selftest` runs the full gate sweep (identical coverage to the full build); run any module with
   `... <module> [args]`. The folder is self-contained. See
@@ -120,10 +121,10 @@ Five concepts, one interface:
 | Concept | Where | Rule |
 |---|---|---|
 | **Source** | `Chiron/` (flat engine modules; guides in `Chiron/docs/`) + `Primus/` (the packaged seed) | you edit here, always |
-| **CLI** | `bin/chiron` — `serve · test · build · verify · grow · benchmark · doctor` | the single way you interact |
+| **CLI** | `bin/chiron` — `serve · test · build · verify · grow · benchmark · parity · doctor` | the single way you interact |
 | **Build** | `Chiron Monolith/build_monolith.py` + `Chiron/build_manifest.py`, driven by `chiron build` | reproducible; never guess |
-| **Runtime** | `chiron serve` → console :8765, launcher :8768, assistant :8769, grow :8767/:8766 | one Ctrl-C stops everything |
-| **Artifacts** | `Chiron Monolith/` (the self-contained fold), `Chiron/manifest.json`, `Chiron/artifacts/` | generated — run, ship, delete, rebuild, **never edit** |
+| **Runtime** | `chiron serve` → console :8765, launcher :8768, assistant :8769, grow :8767/:8766, **heartbeat** (the vault's autonomous pulse) | one Ctrl-C stops everything |
+| **Artifacts** | `Chiron Monolith/` (the self-contained fold), `Chiron/manifest.json`, per-script certificates + **the vault certificate** (`artifacts/vault/latest.json`, one signed self-statement per heartbeat) | generated — run, ship, delete, rebuild, **never edit** |
 
 ```
 START_HERE.md         the 90-second front door        playground.html   the engine in a browser
@@ -137,10 +138,14 @@ Quack System Constructs/ Paper/           doctrine, theory, papers, salvage
 docs/                 vault-level documents (Mathematical Compendium)
 ```
 
-**Where this is going:** the long-horizon vision — dashboard flow, the run ledger, the President
-as planner, certify-before-act for external agents, and the *Abstain or Prove* benchmark — lives in
-**[docs/HORIZON.md](docs/HORIZON.md)**, every milestone with a falsifier attached. `chiron parity`
-already proves the spine and the fold are one organism (138 identical gates through both).
+**Where this is going:** the long-horizon vision lives in **[docs/HORIZON.md](docs/HORIZON.md)**,
+every milestone with a falsifier attached. The first horizon has begun shipping: the **run ledger**
+(operational memory) and the **heartbeat** (the vault beating on its own pulse — reading its own
+organs, growing on itself, self-verifying, and emitting one signed *vault certificate* per beat)
+are live, and `chiron parity` proves the spine and the fold are one organism (138 identical gates
+through both). Still ahead: the President as planner and certify-before-act for external agents.
+How hard it has been stress-tested for a sale — and the holes found and repaired — is in
+**[docs/STRESS_TEST.md](docs/STRESS_TEST.md)**.
 
 ## Components
 
