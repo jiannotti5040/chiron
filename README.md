@@ -137,6 +137,11 @@ Quack System Constructs/ Paper/           doctrine, theory, papers, salvage
 docs/                 vault-level documents (Mathematical Compendium)
 ```
 
+**Where this is going:** the long-horizon vision — dashboard flow, the run ledger, the President
+as planner, certify-before-act for external agents, and the *Abstain or Prove* benchmark — lives in
+**[docs/HORIZON.md](docs/HORIZON.md)**, every milestone with a falsifier attached. `chiron parity`
+already proves the spine and the fold are one organism (138 identical gates through both).
+
 ## Components
 
 Each system stands alone in its folder with its own README; together they are one contract in

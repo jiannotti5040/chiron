@@ -1,0 +1,148 @@
+<svg viewBox="0 0 960 640" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5cc8ff"/>
+    </marker>
+    <marker id="arrd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ffcf86"/>
+    </marker>
+  </defs>
+
+  <rect width="960" height="640" fill="#080b11"/>
+  <text x="30" y="40" fill="#eef2f8" font-size="20" font-weight="700" letter-spacing="3">THE CONSTELLATION</text>
+  <text x="30" y="62" fill="#8593a8" font-size="12">solid = gated reality (counts are real CI gates) · dashed = the horizons (H1 weeks · H2 months)</text>
+
+  <!-- ================= EXISTING EDGES (solid) ================= -->
+  <!-- world -> grower -->
+  <line x1="120" y1="180" x2="238" y2="240" stroke="#2c3850" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- grower -> president -->
+  <line x1="300" y1="290" x2="378" y2="330" stroke="#2c3850" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- president -> congress (verified only) -->
+  <line x1="500" y1="352" x2="608" y2="352" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="512" y="344" fill="#7ee0b8" font-size="10.5">verified only — hallucination structurally excluded</text>
+  <!-- chiron <-> primus -->
+  <line x1="438" y1="205" x2="438" y2="140" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+  <text x="450" y="176" fill="#8593a8" font-size="10.5">drift_check · 39 surfaces · 0 skew</text>
+  <!-- chiron <-> monolith -->
+  <line x1="530" y1="235" x2="640" y2="200" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)" marker-start="url(#arr)"/>
+  <text x="536" y="208" fill="#8593a8" font-size="10.5">deterministic fold · 41/41 · chiron parity</text>
+  <!-- chiron -> congress -->
+  <line x1="480" y1="272" x2="640" y2="330" stroke="#2c3850" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- agents -> mcp -> primus -->
+  <line x1="150" y1="480" x2="248" y2="452" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="330" y1="430" x2="392" y2="150" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="222" y="300" fill="#8593a8" font-size="10.5" transform="rotate(-77 338 300)">MCP · 10 protocol gates</text>
+  <!-- llm -> llm_certify -> chiron -->
+  <line x1="700" y1="480" x2="580" y2="470" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="510" y1="448" x2="452" y2="278" stroke="#5cc8ff" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="470" y="420" fill="#8593a8" font-size="10.5">audit + exact verify · refuse free text</text>
+  <!-- assistant/dashboard -> chiron -->
+  <line x1="770" y1="240" x2="535" y2="248" stroke="#2c3850" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="560" y="236" fill="#8593a8" font-size="10.5">LLM directs · engine does · 7/7</text>
+  <!-- human <- president escalation -->
+  <line x1="438" y1="376" x2="438" y2="524" stroke="#ffcf86" stroke-width="2" marker-end="url(#arrd)"/>
+  <text x="450" y="470" fill="#ffcf86" font-size="10.5">everything irreversible escalates</text>
+
+  <!-- ================= HORIZON EDGES (dashed) ================= -->
+  <!-- run ledger hub -->
+  <line x1="700" y1="352" x2="775" y2="352" stroke="#ffcf86" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+  <line x1="672" y1="200" x2="800" y2="330" stroke="#ffcf86" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+  <line x1="820" y1="262" x2="820" y2="330" stroke="#ffcf86" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+  <text x="712" y="318" fill="#ffcf86" font-size="10.5">H1 run ledger</text>
+  <!-- president planner loop -->
+  <path d="M 378 340 C 300 340 300 240 372 238" fill="none" stroke="#ffcf86" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+  <text x="252" y="212" fill="#ffcf86" font-size="10.5">H2 planner: goal → compose engines</text>
+  <!-- external agents certify-before-act -->
+  <line x1="150" y1="508" x2="700" y2="508" stroke="#ffcf86" stroke-width="1.5" stroke-dasharray="6 5" marker-end="url(#arrd)"/>
+  <text x="298" y="500" fill="#ffcf86" font-size="10.5">H2 certify_action — other agents consult the vault before consequence</text>
+
+  <!-- ================= NODES ================= -->
+  <!-- world -->
+  <g>
+    <rect x="40" y="140" width="112" height="52" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="96" y="162" fill="#c4cedd" font-size="12.5" text-anchor="middle">the world</text>
+    <text x="96" y="178" fill="#8593a8" font-size="9.5" text-anchor="middle">wikipedia · OEIS · files</text>
+  </g>
+  <!-- grower -->
+  <g>
+    <rect x="200" y="238" width="104" height="52" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="252" y="260" fill="#c4cedd" font-size="12.5" text-anchor="middle">Grower</text>
+    <text x="252" y="276" fill="#8593a8" font-size="9.5" text-anchor="middle">senses · dry-run gated</text>
+  </g>
+  <!-- primus -->
+  <g>
+    <rect x="368" y="84" width="140" height="56" rx="10" fill="#0e1a16" stroke="#2b5444" stroke-width="1.5"/>
+    <text x="438" y="107" fill="#7ee0b8" font-size="13" text-anchor="middle" font-weight="700">PRIMUS</text>
+    <text x="438" y="124" fill="#8593a8" font-size="9.5" text-anchor="middle">the seed · pip-installable · 48+27 gates</text>
+  </g>
+  <!-- chiron -->
+  <g>
+    <rect x="368" y="205" width="164" height="68" rx="12" fill="#0d1726" stroke="#5cc8ff" stroke-width="2"/>
+    <text x="450" y="230" fill="#5cc8ff" font-size="15" text-anchor="middle" font-weight="700">CHIRON</text>
+    <text x="450" y="247" fill="#c4cedd" font-size="9.5" text-anchor="middle">the spine · 63 modules · one contract</text>
+    <text x="450" y="261" fill="#8593a8" font-size="9.5" text-anchor="middle">recover → verify → refuse → certify</text>
+  </g>
+  <!-- monolith -->
+  <g>
+    <rect x="640" y="168" width="132" height="56" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="706" y="190" fill="#c4cedd" font-size="12.5" text-anchor="middle">Monolith</text>
+    <text x="706" y="206" fill="#8593a8" font-size="9.5" text-anchor="middle">the artifact · never edited</text>
+  </g>
+  <!-- president -->
+  <g>
+    <rect x="378" y="322" width="122" height="54" rx="10" fill="#171206" stroke="#ffcf86" stroke-width="1.5"/>
+    <text x="439" y="344" fill="#ffcf86" font-size="12.5" text-anchor="middle" font-weight="700">President</text>
+    <text x="439" y="360" fill="#8593a8" font-size="9.5" text-anchor="middle">proposes → engine disposes</text>
+  </g>
+  <!-- congress -->
+  <g>
+    <rect x="608" y="326" width="92" height="52" rx="10" fill="#10151f" stroke="#b69cff" stroke-width="1.5"/>
+    <text x="654" y="348" fill="#b69cff" font-size="12.5" text-anchor="middle" font-weight="700">Congress</text>
+    <text x="654" y="364" fill="#8593a8" font-size="9.5" text-anchor="middle">memory + provenance</text>
+  </g>
+  <!-- run ledger (H1) -->
+  <g>
+    <rect x="775" y="326" width="120" height="52" rx="10" fill="#171206" stroke="#ffcf86" stroke-dasharray="6 5"/>
+    <text x="835" y="348" fill="#ffcf86" font-size="12" text-anchor="middle">Run Ledger</text>
+    <text x="835" y="364" fill="#8593a8" font-size="9.5" text-anchor="middle">H1 · every verdict, replayable</text>
+  </g>
+  <!-- dashboard -->
+  <g>
+    <rect x="770" y="210" width="150" height="52" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="845" y="230" fill="#c4cedd" font-size="12" text-anchor="middle">Dashboard + Assistant</text>
+    <text x="845" y="247" fill="#8593a8" font-size="9.5" text-anchor="middle">Observe→…→Publish · :8765-:8769</text>
+  </g>
+  <!-- external agents -->
+  <g>
+    <rect x="40" y="452" width="110" height="56" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="95" y="475" fill="#c4cedd" font-size="12.5" text-anchor="middle">agents</text>
+    <text x="95" y="491" fill="#8593a8" font-size="9.5" text-anchor="middle">anything with hands</text>
+  </g>
+  <!-- mcp -->
+  <g>
+    <rect x="248" y="428" width="96" height="48" rx="10" fill="#10151f" stroke="#5cc8ff" stroke-width="1.5"/>
+    <text x="296" y="448" fill="#5cc8ff" font-size="12" text-anchor="middle" font-weight="700">MCP</text>
+    <text x="296" y="464" fill="#8593a8" font-size="9.5" text-anchor="middle">the engine as a tool</text>
+  </g>
+  <!-- llm_certify -->
+  <g>
+    <rect x="470" y="440" width="110" height="52" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="525" y="462" fill="#c4cedd" font-size="12" text-anchor="middle">llm_certify</text>
+    <text x="525" y="478" fill="#8593a8" font-size="9.5" text-anchor="middle">the LLM's auditor</text>
+  </g>
+  <!-- LLMs -->
+  <g>
+    <rect x="700" y="456" width="100" height="48" rx="10" fill="#10151f" stroke="#2c3850"/>
+    <text x="750" y="476" fill="#c4cedd" font-size="12" text-anchor="middle">LLMs</text>
+    <text x="750" y="492" fill="#8593a8" font-size="9.5" text-anchor="middle">eloquent · unsworn</text>
+  </g>
+  <!-- human -->
+  <g>
+    <rect x="384" y="524" width="110" height="52" rx="26" fill="#0e1a16" stroke="#7ee0b8" stroke-width="1.5"/>
+    <text x="439" y="546" fill="#7ee0b8" font-size="12.5" text-anchor="middle" font-weight="700">the human</text>
+    <text x="439" y="562" fill="#8593a8" font-size="9.5" text-anchor="middle">owns the irreversible</text>
+  </g>
+
+  <text x="30" y="616" fill="#8593a8" font-size="11">Nothing enters the Congress without exact held-out verification. Nothing irreversible happens without the human.</text>
+  <text x="30" y="632" fill="#5cc8ff" font-size="11">The dream: the small deterministic thing between an AI's assertion and a consequence — correct or silent.</text>
+</svg>
