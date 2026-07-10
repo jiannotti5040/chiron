@@ -22,6 +22,8 @@ Daily verbs:
     chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
     chiron parity              prove spine and fold are ONE organism: identical gate
                                outcomes through both incarnations, or it fails
+    chiron plan <surface>      run a composed campaign (observe→analyze→verify→
+                               remember→escalate); the gate arbitrates every step
     chiron demo                self-contained demonstration
     chiron doctor              environment + vault sanity report
     chiron clean               sweep caches (__pycache__) out of the tree
@@ -167,6 +169,12 @@ def cmd_demo(args):
     return _run([PY, _script("chiron.py"), "demo"])
 
 
+def cmd_plan(args):
+    if not args:
+        print("usage: chiron plan <surface>   e.g. chiron plan 1 1 2 3 5 8"); return 2
+    return _run([PY, _script("planner.py"), "run"] + args)
+
+
 def cmd_parity(args):
     """Spine <-> fold: run the spine's own gate suite through BOTH incarnations and
     require identical outcomes, gate by gate. The fold is only trustworthy while
@@ -269,7 +277,7 @@ COMMANDS = {
     "dev": cmd_dev, "run": cmd_run, "build": cmd_build, "test": cmd_test,
     "serve": cmd_serve, "grow": cmd_grow, "verify": cmd_verify,
     "benchmark": cmd_benchmark, "demo": cmd_demo, "parity": cmd_parity,
-    "doctor": cmd_doctor, "clean": cmd_clean,
+    "plan": cmd_plan, "doctor": cmd_doctor, "clean": cmd_clean,
 }
 
 
