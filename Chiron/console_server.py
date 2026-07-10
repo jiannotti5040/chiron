@@ -88,6 +88,8 @@ FEATURED = {
     "Build & verify": [
         ("build", ["verify-all"], "chiron.py + semic.py recompile byte-identical", None),
         ("formal_check", [], "property-based soundness check", None),
+        ("stress_test", [], "adversarial stress probes — try to break the vault", None),
+        ("heartbeat", ["status"], "the vault's pulse — last beat + certificate", None),
     ],
 }
 

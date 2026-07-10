@@ -76,6 +76,8 @@ jobs:
       - name: Drift detector — seed vs monolith must not contradict
         working-directory: Primus
         run: python drift_check.py
+      - name: Adversarial stress probes (parity teeth, certificate honesty, ledger, launcher, 0-false, certify)
+        run: python Chiron/stress_test.py selftest
       - name: Monolith smoke (the fold still runs)
         working-directory: Chiron Monolith
         run: python chiron_monolith.py --smoke
