@@ -142,9 +142,19 @@ def run(module, argv, user_args=""):
         out = (p.stdout or "") + (p.stderr or "")
     except subprocess.TimeoutExpired:
         return {"ok": False, "output": "timed out after 180s", "cmd": " ".join(cmd[1:])}
-    return {"ok": p.returncode == 0, "returncode": p.returncode,
-            "output": out[-12000:], "seconds": round(time.time() - t0, 2),
-            "cmd": "python3 " + " ".join(os.path.basename(c) if c == path else c for c in cmd[1:])}
+    res = {"ok": p.returncode == 0, "returncode": p.returncode,
+           "output": out[-12000:], "seconds": round(time.time() - t0, 2),
+           "cmd": "python3 " + " ".join(os.path.basename(c) if c == path else c for c in cmd[1:])}
+    try:  # the witness never breaks the act it witnesses
+        import run_ledger
+        res["certificate"] = run_ledger.certificate_for(module)
+        run_ledger.record(module, list(argv) + extra, ok=res["ok"],
+                          verdict=out.strip().replace("\n", " · ")[-160:],
+                          seconds=res["seconds"], certificate=res["certificate"],
+                          source="console")
+    except Exception:
+        pass
+    return res
 
 
 # ---------------------------------------------------------------------

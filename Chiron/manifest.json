@@ -1,14 +1,14 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-07-09T21:07:00Z",
+  "generated_utc": "2026-07-10T06:19:51Z",
   "mode": "run",
   "summary": {
-    "runnable_scripts": 66,
-    "with_selftest": 47,
-    "stdlib_only": 57,
-    "with_spdx_header": 66,
-    "emitting_artifacts": 4
+    "runnable_scripts": 68,
+    "with_selftest": 49,
+    "stdlib_only": 59,
+    "with_spdx_header": 68,
+    "emitting_artifacts": 5
   },
   "scripts": [
     {
@@ -31,7 +31,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 404.7,
+        "runtime_ms": 220.5,
         "stdout_tail": "actionable_intelligence.py self-test: 11/11 passed"
       }
     },
@@ -57,7 +57,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 358.1,
+        "runtime_ms": 350.5,
         "stdout_tail": "aesthetics.py self-test: 10/10 passed"
       }
     },
@@ -78,7 +78,7 @@
       "script": "assistant_server",
       "path": "assistant_server.py",
       "purpose": "assistant_server.py \u2014 a natural-language assistant over the Chiron engine and the Congress.",
-      "lines": 354,
+      "lines": 381,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -107,7 +107,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 325.4,
+        "runtime_ms": 304.5,
         "stdout_tail": "axioms.py self-test: 10/10 passed"
       }
     },
@@ -125,7 +125,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 189.3,
+        "runtime_ms": 183.6,
         "stdout_tail": "  [PASS] Burrows Delta attributes a strong majority of held-out passages\n  [PASS] attribution is deterministic (reproducible)\n  3/3 checks"
       }
     },
@@ -143,7 +143,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 198.0,
+        "runtime_ms": 195.4,
         "stdout_tail": "  [PASS] zero false-verify on controls\n  [PASS] chiron law beats lzma on a long sequence\n  4/4 checks"
       }
     },
@@ -161,7 +161,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 15.3,
+        "runtime_ms": 15.4,
         "stdout_tail": "  [PASS] domain scoping removes cross-domain provisions the baseline included\n  [PASS] recovered sets are non-empty exactly when not abstaining\n  4/4 checks"
       }
     },
@@ -179,7 +179,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 12.5,
+        "runtime_ms": 12.9,
         "stdout_tail": "  [PASS] beats the Markov baseline on held-out\n  [PASS] abstains on contradictory traces\n  4/4 checks"
       }
     },
@@ -197,7 +197,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 24.3,
+        "runtime_ms": 23.7,
         "stdout_tail": "  [PASS] all controls refused\n  [PASS] bag-of-words baseline conflates the invariants\n  5/5 checks"
       }
     },
@@ -221,7 +221,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 234.9,
+        "runtime_ms": 225.4,
         "stdout_tail": "  [PASS] authorship benchmark\n\n  VERDICT: PASS \u2014 6/6 tasks green"
       }
     },
@@ -241,7 +241,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 194.8,
+        "runtime_ms": 185.4,
         "stdout_tail": "  [PASS] chiron refuses the structureless control\n  [PASS] chiron never emits a confident wrong tail\n  6/6 checks"
       }
     },
@@ -278,7 +278,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 54.7,
+        "runtime_ms": 53.3,
         "stdout_tail": "build.py [chiron]: PASS (7 modules, 30131 lines, byte-identical=True)\n  build.py [semic]: PASS (34 modules, 1773 lines, byte-identical=True)\n  build.py self-test: PASS (2 targets)"
       }
     },
@@ -321,7 +321,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 194.0,
+        "runtime_ms": 189.4,
         "stdout_tail": "candor_bridge.py self-test: 8/8 passed"
       }
     },
@@ -345,7 +345,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 194.7,
+        "runtime_ms": 187.2,
         "stdout_tail": "certify_finding.py self-test: 8/8 passed"
       }
     },
@@ -369,8 +369,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "17251d454b6b4c8b",
-        "generated_utc": "2026-07-09T21:06:52Z",
+        "self_hash": "4ac6c11d79481feb",
+        "generated_utc": "2026-07-10T06:19:43Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -379,7 +379,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 6193.0,
+        "runtime_ms": 5958.9,
         "stdout_tail": "\n  CHIRON core gates: 12/12 passed.\n  CHIRON GREEN \u2014 exact knowledge, honest wisdom, bounded agency, one file."
       }
     },
@@ -464,7 +464,7 @@
       "script": "console_server",
       "path": "console_server.py",
       "purpose": "console_server.py \u2014 run any Chiron function, and reach every engine, from the dashboard.",
-      "lines": 268,
+      "lines": 278,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -493,7 +493,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 245.9,
+        "runtime_ms": 205.7,
         "stdout_tail": "cross_examine.py self-test: 10/10 passed"
       }
     },
@@ -516,8 +516,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "ae0033273f8d5c1e",
-        "generated_utc": "2026-07-09T21:06:53Z",
+        "self_hash": "9c562c770bdcd2be",
+        "generated_utc": "2026-07-10T06:19:44Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -526,7 +526,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 325.7,
+        "runtime_ms": 259.0,
         "stdout_tail": "density_emotion.py self-test: 8/8 passed"
       }
     },
@@ -550,7 +550,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 400.3,
+        "runtime_ms": 329.6,
         "stdout_tail": "discernment.py self-test: 9/9 passed"
       }
     },
@@ -587,7 +587,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 249.9,
+        "runtime_ms": 203.4,
         "stdout_tail": "epistemic self-test\n  13/13 checks"
       }
     },
@@ -631,7 +631,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 16.7,
+        "runtime_ms": 14.0,
         "stdout_tail": "  hexameter_feet_ok(LSLSLSLSLSLS      ) -> False (want False)  OK\nbackend: pure-python fallback\nVERDICT: PASS"
       }
     },
@@ -668,7 +668,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 215.8,
+        "runtime_ms": 190.0,
         "stdout_tail": "govern.py self-test: 8/8 passed"
       }
     },
@@ -699,6 +699,24 @@
       "last_run": null
     },
     {
+      "script": "heartbeat",
+      "path": "heartbeat.py",
+      "purpose": "heartbeat.py \u2014 the vault's pulse: all of it at once, always (HORIZON.md H1\u2192H2 bridge).",
+      "lines": 321,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 221.1,
+        "stdout_tail": "  [PASS] state survives between beats\n  [PASS] the body enumerates its own organs (modules + guides)\n  10/10 checks"
+      }
+    },
+    {
       "script": "holographic",
       "path": "holographic.py",
       "purpose": "holographic.py \u2014 distributed redundancy: recover the whole from a fragment (O-3, hardened).",
@@ -720,7 +738,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 235.5,
+        "runtime_ms": 245.8,
         "stdout_tail": "holographic.py self-test: 8/8 passed"
       }
     },
@@ -744,7 +762,7 @@
       "last_run": {
         "command": "--selftest",
         "exit_code": 0,
-        "runtime_ms": 310.6,
+        "runtime_ms": 289.6,
         "stdout_tail": "infectatrum_bridge.py self-test: 8/8 passed"
       }
     },
@@ -781,7 +799,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 198.7,
+        "runtime_ms": 204.9,
         "stdout_tail": "intake.py self-test: 12/12 passed"
       }
     },
@@ -805,7 +823,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 193.0,
+        "runtime_ms": 190.3,
         "stdout_tail": "format=text salvaged=False collapse_ready=False primary_series=None"
       }
     },
@@ -829,7 +847,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 249.2,
+        "runtime_ms": 261.3,
         "stdout_tail": "judgment.py self-test: 12/12 passed"
       }
     },
@@ -871,7 +889,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 196.8,
+        "runtime_ms": 203.0,
         "stdout_tail": "language.py self-test: 17/17 passed"
       }
     },
@@ -895,7 +913,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 20.3,
+        "runtime_ms": 20.5,
         "stdout_tail": "legal_corpus.py self-test: 12/12 passed  (67 provisions)"
       }
     },
@@ -919,7 +937,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 193.7,
+        "runtime_ms": 196.7,
         "stdout_tail": "  [PASS] states it is not a legal determination\n  [PASS] flags the unverifiable as neither confirmed nor denied\n  9/9 checks"
       }
     },
@@ -980,7 +998,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 190.6,
+        "runtime_ms": 181.7,
         "stdout_tail": "ontological.py self-test: 10/10 passed"
       }
     },
@@ -1006,7 +1024,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 217.9,
+        "runtime_ms": 212.7,
         "stdout_tail": "operator_calculus.py self-test: 9/9 passed"
       }
     },
@@ -1084,7 +1102,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 249.1,
+        "runtime_ms": 246.4,
         "stdout_tail": "projection_stack.py self-test: 10/10 passed"
       }
     },
@@ -1108,8 +1126,26 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 207.3,
+        "runtime_ms": 202.4,
         "stdout_tail": "provenance.py self-test: 8/8 passed"
+      }
+    },
+    {
+      "script": "run_ledger",
+      "path": "run_ledger.py",
+      "purpose": "run_ledger.py \u2014 the vault's operational memory (HORIZON.md H1.2).",
+      "lines": 162,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "artifact": null,
+      "emits_artifact": false,
+      "last_run": {
+        "command": "selftest",
+        "exit_code": 0,
+        "runtime_ms": 16.2,
+        "stdout_tail": "  [PASS] recording never raises on a bad path\n  [PASS] read of a missing ledger is empty, not an error\n  9/9 checks"
       }
     },
     {
@@ -1129,8 +1165,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "2aa678430fb616c7",
-        "generated_utc": "2026-07-09T21:06:57Z",
+        "self_hash": "7b0e83747a193600",
+        "generated_utc": "2026-07-10T06:19:48Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -1139,7 +1175,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 670.5,
+        "runtime_ms": 664.9,
         "stdout_tail": "  [PASS] G56 config defaults reproduce in-source constants\n\n  56/56 gates passing"
       }
     },
@@ -1157,7 +1193,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 35.8,
+        "runtime_ms": 33.7,
         "stdout_tail": "semic_bridge.py self-test: 14/14 passed"
       }
     },
@@ -1181,7 +1217,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 27.9,
+        "runtime_ms": 27.2,
         "stdout_tail": "  [PASS] candidate probabilities are a descending distribution\n  [PASS] energy peak == exact collapse generator\n  8/8 checks"
       }
     },
@@ -1207,7 +1243,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 234.4,
+        "runtime_ms": 227.9,
         "stdout_tail": "significance.py self-test: 8/8 passed"
       }
     },
@@ -1231,7 +1267,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 189.7,
+        "runtime_ms": 183.9,
         "stdout_tail": "stare_decisis.py self-test: 10/10 passed"
       }
     },
@@ -1302,7 +1338,7 @@
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 237.1,
+        "runtime_ms": 225.4,
         "stdout_tail": "uma_bridge.py self-test: 10/10 passed"
       }
     },
@@ -1310,7 +1346,7 @@
       "script": "vault",
       "path": "vault.py",
       "purpose": "vault.py \u2014 one command to run the whole thing.",
-      "lines": 170,
+      "lines": 171,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -1321,12 +1357,19 @@
         "prog": "one command starts every service and prints one URL; Ctrl-C stops them all.",
         "concept": "the whole system, reachable from a single door."
       },
-      "artifact": null,
-      "emits_artifact": false,
+      "artifact": {
+        "verified": null,
+        "self_hash": "90d57c969a23a451",
+        "generated_utc": "2026-07-10T06:18:33Z",
+        "confidence": null,
+        "what_was_discovered": null,
+        "what_would_falsify": null
+      },
+      "emits_artifact": true,
       "last_run": {
         "command": "selftest",
         "exit_code": 0,
-        "runtime_ms": 2100.9,
+        "runtime_ms": 2122.5,
         "stdout_tail": "  [PASS] dummy services are running\n  [PASS] Ctrl-C path stops them all\n  7/7 checks"
       }
     },
