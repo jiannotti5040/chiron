@@ -33,6 +33,30 @@ import time
 _HERE = os.path.dirname(os.path.abspath(__file__))
 LEDGER = os.path.join(_HERE, "artifacts", "run_ledger.jsonl")
 
+# The ledger is a rolling window, not an infinite tape: an unbounded append-only
+# file on an always-on heartbeat is a disk-exhaustion hole. When it grows past
+# MAX_LINES we keep the newest KEEP_LINES and drop the rest. History that must
+# survive lives in git + the per-run certificates, not here.
+MAX_LINES = 20000
+KEEP_LINES = 10000
+
+
+def _rotate_if_needed(path):
+    """Cap the ledger. Best-effort and atomic-ish: newest KEEP_LINES rewritten via
+    a temp file + os.replace, so a crash mid-rotate leaves the old ledger intact."""
+    try:
+        with open(path, "rb") as f:
+            lines = f.readlines()
+        if len(lines) <= MAX_LINES:
+            return
+        kept = lines[-KEEP_LINES:]
+        tmp = path + ".rot"
+        with open(tmp, "wb") as f:
+            f.writelines(kept)
+        os.replace(tmp, path)  # atomic on POSIX
+    except OSError:
+        pass  # rotation is a courtesy, never a failure
+
 
 def incarnation() -> str:
     """Which body did the work: the flat spine or the folded monolith."""
@@ -74,6 +98,7 @@ def record(engine, argv=None, ok=None, verdict="", seconds=None,
             os.write(fd, line.encode("utf-8"))
         finally:
             os.close(fd)
+        _rotate_if_needed(path)
         return rec
     except Exception:
         return None

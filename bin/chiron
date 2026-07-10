@@ -108,6 +108,8 @@ def cmd_test(args):
                           _script(os.path.join("grow-public", "parameters.json")),
                           "--dry-run", "--once"], None),
         ("drift detector (seed vs monolith)", [PY, "drift_check.py"], PRIMUS),
+        ("adversarial stress probes (parity teeth, certificate honesty, ledger, security, 0-false, certify)",
+         [PY, _script("stress_test.py"), "selftest"], None),
     ]
     if full:
         gates += [
