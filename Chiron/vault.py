@@ -33,6 +33,7 @@ SERVICES = [
     ("assistant (Chat tab)",    "assistant_server.py", 8769, False, ["serve"]),
     ("grow control (Feed tab)", "grow_control.py",    8767, False, ["serve"]),
     ("LLM grow (President tab)", "president_grow.py",  8766, False, ["serve"]),
+    ("heartbeat (Pulse tab)",    "heartbeat.py",          0, False, ["serve", "--interval", "600"]),
 ]
 MAIN_URL = "http://127.0.0.1:8765"
 
@@ -97,7 +98,7 @@ def _selftest():
     def ok(name, cond):
         checks.append((name, bool(cond)))
 
-    ports = [s[2] for s in SERVICES]
+    ports = [s[2] for s in SERVICES if s[2]]
     ok("ports are all distinct", len(set(ports)) == len(ports))
     ok("exactly one core (required) service", sum(1 for s in SERVICES if s[3]) == 1)
     ok("the core service is the engine console", next(s for s in SERVICES if s[3])[1] == "chiron.py")
@@ -113,7 +114,7 @@ def _selftest():
             self.pid = self.proc.pid
             started.append(self.pid)
     procs = up(spawn=_Dummy)
-    ok("starts all five services (dummy)", len(procs) == 5)
+    ok("starts all six services (dummy)", len(procs) == 6)
     ok("dummy services are running", all(p.proc.poll() is None for _, _, p in procs))
     down(procs)
     ended = 0

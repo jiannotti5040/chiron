@@ -63,6 +63,9 @@ grow_control_state.json
 grow.log
 nohup.out
 *.dryrun
+Chiron/artifacts/run_ledger.jsonl
+Chiron/artifacts/heart_state.json
+Chiron/artifacts/heart_congress.json
 
 # --- artifact ledger: keep latest.json, ignore timestamped run memorials ---
 Chiron/artifacts/*/[0-9]*.json

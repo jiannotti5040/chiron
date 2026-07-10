@@ -113,8 +113,10 @@
 </header>
 <div id="offline">⚠ <b>The Chiron engine isn't running.</b> Open a terminal at the vault root and run <code>python3 bin/chiron serve</code> (one command starts every service), then reload.</div>
 <nav>
+  <div class="stg"><span class="stgl">Now</span>
+    <button data-tab="pulse" class="active">Pulse</button></div>
   <div class="stg"><span class="stgl">Observe</span>
-    <button data-tab="analyze" class="active">Analyze</button>
+    <button data-tab="analyze">Analyze</button>
     <button data-tab="feed">Feed</button></div>
   <div class="stg"><span class="stgl">Understand</span>
     <button data-tab="congress">Congress</button>
@@ -133,8 +135,37 @@
     <button data-tab="pub">Ship &amp; operate</button></div>
 </nav>
 <main>
+  <!-- PULSE — all of it at once, always -->
+  <section id="pulse" class="tab active">
+    <div class="card" id="vcCard"><h3>The vault certificate <span id="vcHash" class="pill">no beat yet</span></h3>
+      <p class="lead">One signed self-statement of the whole organism, refreshed every heartbeat:
+        what it is, what it knows, what it proved, what it refused — and what would falsify it.
+        <button class="btn ghost" style="padding:5px 12px" id="beatBtn" onclick="beatNow()">♥ Beat now</button></p>
+      <div class="grid4" id="vitals"></div>
+      <div id="movements" style="margin-top:12px"></div>
+      <details style="margin-top:12px"><summary>the falsifier — what would break this organism's word</summary>
+        <pre id="vcFalsify">—</pre></details>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>The living ledger <span id="sinceLast" class="pill"></span></h3>
+        <p class="lead">Every engine invocation, witnessed — console, assistant, CLI, and the heart itself.</p>
+        <div id="ledgerFeed"><div class="empty">No records yet — run anything, or press Beat now.</div></div>
+      </div>
+      <div class="card"><h3>Body &amp; memory</h3>
+        <div class="kv"><b>Heartbeat</b><span id="pHeart" class="muted">checking…</span></div>
+        <div class="kv"><b>Incarnation serving</b><span id="pInc" class="muted">—</span></div>
+        <div class="kv"><b>Congress (curated)</b><span id="pCongress" class="muted">—</span></div>
+        <div class="kv"><b>Heart congress (self-grown)</b><span id="pHeartC" class="muted">—</span></div>
+        <div class="kv"><b>Fold hash</b><span id="pFold" class="muted">—</span></div>
+        <div class="kv"><b>CI on GitHub</b><span id="pCI" class="muted">checking…</span></div>
+        <p class="note">The heart beats every 10 minutes under <code>chiron serve</code>. Outward growth is
+          dry-run by default; set <code>CHIRON_HEART_LIVE=1</code> to let exactly-verified knowledge land.
+          Inward growth (the vault reading its own organs) is always on — it passes the same gate.</p>
+      </div>
+    </div>
+  </section>
   <!-- ANALYZE -->
-  <section id="analyze" class="tab active">
+  <section id="analyze" class="tab">
     <div class="card">
       <h3>Analyze your data</h3>
       <p class="lead">Point Chiron at files on this machine, or paste content. It reads the material, recovers any
@@ -153,7 +184,8 @@
         <div class="block b-rel"><div class="h">Where it stands in the Congress</div><div class="b" id="rel">—</div></div>
         <div class="block b-rec"><div class="h">Recommendation</div><div class="b" id="rec">—</div></div>
         <details><summary>The certificate — executive headline + engineer appendix</summary>
-          <pre id="cert">—</pre><button class="btn ghost" onclick="downloadCert()">Download certificate (.md)</button></details>
+          <pre id="cert">—</pre><button class="btn ghost" onclick="downloadCert()">Download certificate (.md)</button>
+          <button class="btn ghost" onclick="goVerify('chiron')">Open in Verify → Certificates</button></details>
       </div>
     </div>
   </section>
@@ -541,7 +573,7 @@ async function loadCatalog(){try{const groups=await consoleCall('/api/console/ca
 async function runFn(id){const el=$('#'+id);const mod=el.dataset.mod;const argv=JSON.parse(el.dataset.argv);const inp=el.querySelector('input');const args=inp?inp.value:'';
   $('#runOut').innerHTML='<div class="card"><pre>running '+mod+' '+argv.join(' ')+' …</pre></div>';
   try{const r=await consoleCall('/api/console/run',{module:mod,argv:argv,args:args});
-    $('#runOut').innerHTML='<div class="card"><div class="kv"><b style="font-family:var(--mono);font-size:12px">$ '+(r.cmd||'')+'</b><span>'+(r.seconds||0)+'s · '+(r.ok?'<span class=ok>ok</span>':'<span class=err>exit '+r.returncode+'</span>')+'</span></div><pre>'+((r.output||'(no output)').replace(/</g,'&lt;'))+'</pre></div>';window.scrollTo(0,0);
+    $('#runOut').innerHTML='<div class="card"><div class="kv"><b style="font-family:var(--mono);font-size:12px">$ '+(r.cmd||'')+'</b><span>'+(r.seconds||0)+'s · '+(r.ok?'<span class=ok>ok</span>':'<span class=err>exit '+r.returncode+'</span>')+(r.certificate?' · <a href="#" onclick="goVerify(\''+mod+'\');return false">view certificate →</a>':'')+'</span></div><pre>'+((r.output||'(no output)').replace(/</g,'&lt;'))+'</pre></div>';window.scrollTo(0,0);
   }catch(e){$('#runOut').innerHTML='<div class="card"><pre class=err>'+e.message+' — is console_server.py serve running?</pre></div>';}}
 // --- Chat tab: the LLM assistant (assistant_server.py, port 8769) ---
 const ASSIST="http://127.0.0.1:8769";let chatHist=[];
@@ -626,6 +658,61 @@ async function certsBoot(){
     if(CFILTERS.has(f)){CFILTERS.delete(f);ch.classList.remove('on');}else{CFILTERS.add(f);ch.classList.add('on');}crender();};});
 }
 certsBoot();
+
+// --- Pulse: the organism at a glance, refreshed on a loop ---
+function goVerify(module){
+  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelector('nav button[data-tab=certs]').classList.add('active');
+  $('#certs').classList.add('active');
+  const q=$('#cq'); if(q){q.value=module||'';} if(typeof crender==='function'&&CDATA)crender();
+  window.scrollTo(0,0);
+}
+function fmtC(c){return c?((c.size_mb!=null?c.size_mb+' MB':'—')+(c.domains!=null?' · '+c.domains+' domains':'')+(c.laws!=null?' · '+c.laws+' laws':'')):'—';}
+async function pulseTick(){
+  try{
+    const v=await (await fetch(ASSIST+'/api/assistant/vault',{cache:'no-store'})).json();
+    const c=v.certificate;
+    if(c){
+      $('#vcHash').textContent='#'+c.self_hash+' · beat '+c.beat;
+      $('#vcHash').className='pill '+(c.all_movements_green?'on':'bad');
+      $('#vitals').innerHTML=[
+        ['beat',c.beat],['gates in manifest',(c.body&&c.body.manifest&&c.body.manifest.with_selftest)||'—'],
+        ['ledger height',c.ledger_height],['movements green',c.movements.filter(m=>m.ok).length+'/'+c.movements.length]
+      ].map(([l,n])=>'<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>').join('');
+      $('#movements').innerHTML=c.movements.map(m=>'<div class="led"><span class="'+(m.ok?'ok':'err')+'">'+(m.ok?'●':'○')+'</span> <span class="d">'+m.name+'</span> <span class="s">'+esc2(m.verdict).slice(0,150)+'</span></div>').join('');
+      $('#vcFalsify').textContent=c.what_would_falsify;
+      $('#pInc').textContent=c.incarnation;
+      $('#pFold').textContent=c.fold_hash?('#'+c.fold_hash):'—';
+      $('#pCongress').textContent=fmtC(c.memory&&c.memory.congress);
+      $('#pHeartC').textContent=fmtC(c.memory&&c.memory.heart_congress)+(c.memory&&c.memory.heart_congress?' — grown by the vault, on the vault':'');
+    }
+    $('#pHeart').textContent=v.heart?('beat '+v.heart.beat+' · last '+(v.heart.last_utc||'—')):'no beats yet — press ♥';
+    const l=await (await fetch(ASSIST+'/api/assistant/ledger',{cache:'no-store'})).json();
+    const last=+(localStorage.getItem('vaultLastVisit')||0);
+    const fresh=(l.records||[]).filter(r=>r.t*1000>last).length;
+    $('#sinceLast').textContent=fresh?fresh+' since your last visit':'';
+    $('#ledgerFeed').innerHTML=(l.records||[]).slice(0,14).map(r=>{
+      const mark=r.ok===true?'<span class=ok>ok</span>':r.ok===false?'<span class=err>FAIL</span>':'<span class=muted>·</span>';
+      const cert=r.certificate?' <a href="#" onclick="goVerify(\''+esc2(r.engine)+'\');return false">cert→</a>':'';
+      return '<div class="led'+(r.t*1000>last?'" style="background:#0e1a1622':'')+'"><span class="d">'+esc2(r.utc||'').slice(11,19)+'</span> '+mark+' <span class="m">'+esc2(r.engine)+'</span> <span class="s">'+esc2((r.verdict||'').slice(0,90))+'</span>'+cert+' <span class="s">['+esc2(r.incarnation||'?')+'·'+esc2(r.source||'')+']</span></div>';
+    }).join('')||'<div class="empty">No records yet.</div>';
+  }catch(e){ $('#pHeart').textContent='assistant offline — chiron serve'; }
+  try{
+    const g=await (await fetch('https://api.github.com/repos/jiannotti5040/Jacob-s-Portfolio-Vault/actions/runs?per_page=1',{cache:'no-store'})).json();
+    const w=g.workflow_runs&&g.workflow_runs[0];
+    $('#pCI').innerHTML=w?('<span class="'+(w.conclusion==='success'?'ok':(w.conclusion?'err':'muted'))+'">'+(w.conclusion||w.status)+'</span> · '+esc2((w.head_sha||'').slice(0,7))):'—';
+  }catch(e){ $('#pCI').textContent='offline'; }
+}
+function esc2(s){return (s==null?'':String(s)).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+async function beatNow(){
+  const b=$('#beatBtn'); b.disabled=true; b.textContent='♥ beating…';
+  try{ await fetch(ASSIST+'/api/assistant/beat',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'}); }
+  catch(e){}
+  b.disabled=false; b.textContent='♥ Beat now'; pulseTick();
+}
+pulseTick(); setInterval(pulseTick, 7000);
+window.addEventListener('beforeunload',()=>localStorage.setItem('vaultLastVisit',Date.now()));
 </script>
 </body>
 </html>

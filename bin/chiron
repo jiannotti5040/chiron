@@ -46,11 +46,23 @@ PY = sys.executable or "python3"
 
 
 def _run(argv, cwd=None, **kw):
-    """Delegate to a child process, showing the exact command (no hidden magic)."""
+    """Delegate to a child process, showing the exact command (no hidden magic).
+    Every delegation is memorialized in the run ledger — the witness never gates."""
+    import time
     pretty = " ".join(a if " " not in a else f"'{a}'" for a in argv)
     where = f"  (in {os.path.relpath(cwd, VAULT)})" if cwd and cwd != VAULT else ""
     print(f"[chiron] $ {pretty}{where}", flush=True)
-    return subprocess.call(argv, cwd=cwd or VAULT, **kw)
+    t0 = time.time()
+    rc = subprocess.call(argv, cwd=cwd or VAULT, **kw)
+    try:
+        sys.path.insert(0, CHIRON)
+        import run_ledger
+        engine = os.path.basename(str(argv[1])) if len(argv) > 1 else "?"
+        run_ledger.record(engine, [str(a) for a in argv[2:6]], ok=(rc == 0),
+                          verdict=f"exit {rc}", seconds=time.time() - t0, source="cli")
+    except Exception:
+        pass
+    return rc
 
 
 def _script(name):

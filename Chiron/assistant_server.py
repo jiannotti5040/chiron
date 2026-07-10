@@ -239,6 +239,24 @@ def serve(port=8769):
                     return self._send(404, json.dumps(
                         {"error": "no manifest.json — run `chiron build` first"}))
                 return self._send(200, open(p, "rb").read())
+            if self.path == "/api/assistant/ledger":
+                import run_ledger
+                return self._send(200, json.dumps({"records": run_ledger.read(40)}))
+            if self.path == "/api/assistant/vault":
+                out = {"certificate": None, "heart": None}
+                vc = os.path.join(_HERE, "artifacts", "vault", "latest.json")
+                if os.path.isfile(vc):
+                    try:
+                        out["certificate"] = json.load(open(vc, encoding="utf-8"))
+                    except Exception:
+                        pass
+                hs = os.path.join(_HERE, "artifacts", "heart_state.json")
+                if os.path.isfile(hs):
+                    try:
+                        out["heart"] = json.load(open(hs, encoding="utf-8"))
+                    except Exception:
+                        pass
+                return self._send(200, json.dumps(out))
             if self.path == "/api/assistant/artifacts":
                 # Every engine's latest signed certificate from the artifact ledger.
                 out = {}
@@ -259,6 +277,15 @@ def serve(port=8769):
             body = json.loads(self.rfile.read(n) or b"{}") if n else {}
             if self.path == "/api/assistant/chat":
                 return self._send(200, json.dumps(chat(body.get("message", ""), body.get("history", []))))
+            if self.path == "/api/assistant/beat":
+                # One beat of the heart, on demand from the Pulse stage. The beat
+                # obeys every gate the autonomous loop obeys — this only changes WHEN.
+                try:
+                    import heartbeat
+                    cert = heartbeat.beat_once(quiet=True)
+                    return self._send(200, json.dumps({"ok": True, "certificate": cert}))
+                except Exception as e:
+                    return self._send(500, json.dumps({"ok": False, "error": str(e)}))
             if self.path == "/api/assistant/key":
                 # Set a provider's key for THIS running process only — session-scoped, held in
                 # memory, never written to disk or the repo. Restarting the service forgets it;
