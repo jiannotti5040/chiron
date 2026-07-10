@@ -43,6 +43,20 @@ stands on the CPTP validity of its quantum channel and a deterministic
 half-life, **not** on the readability of its interpretation sentence. That is
 the line between applicable intelligence and authoritative-looking text.
 
+## The vault certificate — the organism, not just a script
+
+The per-script certificates above each attest one module. Above them sits **one
+certificate for the whole organism**: `artifacts/vault/latest.json`, emitted by
+the heartbeat (`heartbeat.py`) on every beat. It states — in the same
+falsifiable form — what the vault is, what it knows (both the curated Congress
+and the self-grown heart congress), what it proved and refused *this beat*, the
+fold hash of the artifact it ran through, and its own self-hash. It obeys the
+same non-flattery rule as every gate here: **if any movement of the beat failed,
+`all_movements_green` is false** — the certificate cannot claim a green beat over
+a red movement. The dashboard's **Pulse** stage renders it live; `run_ledger.py`
+(`artifacts/run_ledger.jsonl`) is the append-only witness beneath it, recording
+every engine invocation (console, assistant, CLI, and the heart itself).
+
 ## Propagating to the rest of the scripts
 
 Four scripts are wired as proofs — `semic.py` (hard), `density_emotion.py` (soft),

@@ -1,7 +1,6 @@
 # Running Chiron — everything, end to end
 
-Everything is plain `python3`. The core needs no install; `numpy` is only used by a couple of
-optional tools.
+Everything is plain `python3`, plus **one dependency: numpy** (`pip install numpy`, or `pip install ./Primus` which brings it). The engine imports numpy at load, so install it once before serving; `python3 bin/chiron doctor` checks for it.
 
 ## 0. The single entry point
 
@@ -18,8 +17,11 @@ chiron grow        # grower dry-run (--live to mutate the Congress)
 chiron doctor      # environment + vault sanity
 ```
 
-`chiron serve` delegates to `vault.py`, the service supervisor; `chiron serve --core` runs just the
-engine + console. The sections below cover each service if you'd rather start them individually
+`chiron serve` delegates to `vault.py`, the service supervisor — which also starts the **heartbeat**, the vault's autonomous pulse (a signed *vault certificate* every 10 minutes; press ♥ Beat now on the Pulse stage for one on demand). `chiron serve --core` runs just the engine + console.
+
+`chiron parity` proves the spine and the fold are one organism — the spine's full gate suite run through both incarnations, 138 identical outcomes required.
+
+> **First-boot note:** if you skipped numpy, the heartbeat's first beat records honest `FAIL` movements and its certificate reports *not green* — by design, it refuses to flatter. Install numpy and the next beat goes green. The sections below cover each service if you'd rather start them individually
 (from inside the `Chiron/` folder).
 
 ## 1. The engine + operator console
@@ -139,6 +141,7 @@ https://aistudio.google.com/apikey); everything else runs with no key.
 | `assistant_server.py serve` | 8769 | natural-language assistant over the engine + Congress (Chat tab) |
 | `grow_control.py serve` | 8767 | start / stop / point the continuous grower |
 | `president_grow.py serve` | 8766 | LLM-assisted growth (propose → verify) |
+| `heartbeat.py serve` | — | the autonomous pulse — a signed vault certificate every beat (no socket) |
 
 ## 6. Verify and benchmark
 

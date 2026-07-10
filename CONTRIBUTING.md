@@ -11,10 +11,12 @@ benchmark number goes up. Refusal is a feature; treat it as one.
 
 ## Run it / experiment
 
-Everything runs offline (the packaged seed needs numpy; Chiron runs on bare Python):
+Everything runs offline. The one dependency is numpy — `pip install ./Primus` brings it, or `pip install numpy` directly (the engine imports it at load; there is no pure-Python fallback for the core today):
 
 ```bash
-python3 Chiron/chiron.py selftest      # the embedded gate suite (prints GREEN)
+python3 bin/chiron test                # the whole gate battery (same gates as CI)
+python3 bin/chiron parity              # prove spine and fold are one organism (138 identical gates)
+python3 Chiron/chiron.py selftest      # just the embedded gate suite (prints GREEN)
 python3 Chiron/benchmark.py            # the reproducible benchmark (VERDICT: PASS)
 pip install ./Primus && primus selftest
 ```
