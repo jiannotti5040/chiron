@@ -9,7 +9,7 @@ principle applied to the whole vault.*
 
 The adversary is a committed gate: `Chiron/stress_test.py` (also `chiron test`
 runs it, and it is in the manifest). It is not a story about testing — it is the
-test, and it stays a regression gate forever. **21/21 probes hold today.**
+test, and it stays a regression gate forever. **23/23 probes hold today.**
 
 ---
 
@@ -63,7 +63,7 @@ A test that never triggers the behavior it guards is a hole too.
 
 | # | Probe | The claim it attacks | Result |
 |---|---|---|---|
-| **P1** | parity has teeth | "spine and fold are one organism" isn't a rubber stamp | a real mutation to the engine's own gate suite makes its selftest **fail** (the gates aren't vacuous); the parity comparator flags a synthetic one-gate divergence and never calls an empty outcome-set "agreement" |
+| **P1** | parity has teeth | "spine and fold are one organism" isn't a rubber stamp | a real mutation to the engine's own gate suite makes its selftest **fail** (the gates aren't vacuous); **end-to-end**, the real fold's 138 named gate outcomes are run and a real injected divergence is caught by the exact comparator; an empty outcome-set is never called "agreement" |
 | **P2** | the certificate can't lie | the vault certificate never flatters | a beat with one failed movement can never report `all_movements_green`; the self-hash actually binds the content (tampering changes it); a corrupted certificate is caught, never fatal |
 | **P3** | the ledger survives concurrency | operational memory is trustworthy under load | 8 writers × 40 records = 320 whole, valid JSON lines, zero torn or interleaved; the rolling window stays bounded under a 400-record flood and keeps the newest |
 | **P4** | the launcher is not a shell | the "run any function" console can't be abused | 11 hostile module names (path traversal, dotted, slashed, `os`/`subprocess`, injection) all rejected; a real sibling still runs; no blocking `serve` verb is ever exposed |
@@ -76,24 +76,27 @@ A test that never triggers the behavior it guards is a hole too.
 
 The probes above are real, but a sale deserves to know the edges too:
 
-- **P1 is teeth-by-transitivity, not end-to-end.** It proves the spine's gates
-  catch a mutation and the comparator catches a divergence; it does **not** yet
-  mutate the 2.7 MB fold in place and run the real `chiron parity` against it.
-  That end-to-end mutation test is the stronger version and is not written.
-- **Outward growth needs the network.** Inward growth and every gate are fully
-  offline, but the heartbeat's *outward* movement pulls from Wikipedia/OEIS. On an
-  air-gapped machine, outward beats fail — the certificate reports them honestly as
-  not-green, which is correct behavior, but a buyer running offline should expect
-  partial beats by design.
+- ~~P1 is teeth-by-transitivity, not end-to-end.~~ **Closed 2026-07-10.** P1 now runs the
+  real fold's `chiron selftest` (138 named gate outcomes), injects a real divergence into a
+  live engine copy, and confirms the exact parity comparison catches it — end-to-end, two
+  real runs and the real comparator.
+- **Outward growth needs the network — now handled honestly.** The heartbeat probes
+  connectivity first; offline, the outward movement records `skipped: offline` as a **neutral**
+  event (not a failure), so an air-gapped vault still beats **green** on inward + reflex while
+  disclosing the skip. Only a real attempted failure marks a beat red.
 - **`certify`'s claim extraction is scoped, not general NLP.** It reliably catches
   checkable arithmetic/structural claims; it does not attempt to parse every
   natural-language assertion. Its discipline is to *refuse* what it cannot check,
   never to bless it — so the failure mode is silence, not a false stamp.
-- **The H2 layer does not exist to test.** The President-as-planner and
-  certify-before-act for external agents are HORIZON theory; there is nothing to
-  stress yet.
-- **The certify kernel is battery-proven, not machine-checked.** Formal
-  verification of the stamping path is a HORIZON dream, not a current guarantee.
+- **The H2 layer is now a testable prototype.** `Chiron/planner.py` composes engines toward
+  a goal (observe→analyze→verify→remember→escalate) with the exact gate arbitrating every
+  step; 11/11 gates prove an unverifiable surface **halts** at the gate and an irreversible
+  step **escalates** rather than executing. Certify-before-act for *external* agents is still
+  HORIZON theory.
+- **The certify kernel is now property-proven over a bounded grid**, the honest step before a
+  proof assistant: `Primus/test_certify_property.py` checks every `a∘b=c` for a,b∈[-10,10],
+  ∘∈{+,−,×}, in true and wrong forms — **2646 claims, 0 false VERIFIED, 0 true REFUTED**. Full
+  machine-checking of the stamping path remains a HORIZON dream.
 
 ---
 

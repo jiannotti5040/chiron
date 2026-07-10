@@ -114,7 +114,7 @@ as the fourth source. The crawler becomes a supervised service with live status 
 
 ## 3 · Horizon Two — strategy *(months)*
 
-**H2.1 — The President becomes the planner.**
+**H2.1 — The President becomes the planner.** *(prototype shipped: `Chiron/planner.py` — a `Goal{intent, budget, invariants}` and a deliberation loop composing engine steps (observe→analyze→verify→remember→escalate), the exact gate arbitrating every state change, every step ledgered, irreversible steps escalated not executed; 11/11 gates. The composition is still a fixed deterministic pipeline — an LLM *proposing* the plan is the next step, below.)*
 A goal object — `{intent, budget, invariants}` — and a deliberation loop: the LLM proposes a
 *plan* (a composition of engine calls), engines execute steps, the certify gate arbitrates
 every state change, the ledger records everything, and anything irreversible stops for a
@@ -123,7 +123,7 @@ single actions to campaigns. *Falsifier-gate: a full grow → verify → publish
 unattended except the final publish acknowledgment, with zero uncertified mutations in the
 ledger.*
 
-**H2.2 — Certify-before-act as a protocol.**
+**H2.2 — Certify-before-act as a protocol.** *(a step taken: the certify kernel's core invariant is now property-proven over a bounded grid — `Primus/test_certify_property.py`, 2646 claims, zero false stamps — the honest intermediate before the machine-checked kernel of H3. The external-agent `certify_action` MCP surface is still theory.)*
 The MCP surface grows `certify_action`: any external agent submits a claim-bearing action
 and receives VERIFIED / REFUTED / REFUSED before consequence. The vault stops being only
 its own conscience and becomes one *other* agent stacks consult. *Gate: a public demo where

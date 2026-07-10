@@ -52,6 +52,9 @@ jobs:
       - name: External validation — live-OEIS corpus (zero false stamps required)
         working-directory: Primus
         run: python oeis_live.py
+      - name: Certify kernel property sweep (invariant over a bounded grid, zero false stamps)
+        working-directory: Primus
+        run: python test_certify_property.py
   # The flagship spine + the fold + differential testing, on one reference env.
   chiron:
     runs-on: ubuntu-latest
