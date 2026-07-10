@@ -1,38 +1,32 @@
 {
   "artifact": "vault",
   "claim": "this organism moves on its own pulse and stamps only what it exactly verifies",
-  "generated_utc": "2026-07-10T07:00:16Z",
-  "beat": 14,
+  "generated_utc": "2026-07-10T07:15:58Z",
+  "beat": 999,
   "incarnation": "spine",
-  "fold_hash": "e5835d4e53323bb0",
-  "all_movements_green": true,
+  "fold_hash": "8a0007af6d3fab6c",
+  "all_movements_green": false,
   "movements": [
     {
       "name": "inward",
       "ok": true,
-      "verdict": "read own organ build_manifest.py -> heart congress \u00b7 n\" \u00b7   } \u00b7 } \u00b7 [saved to /Users/jacobiannotti/Desktop/Jacob-s-Portfolio-Vault copy/Chiron/artifacts/heart_congress.json]",
-      "seconds": 1.01
-    },
-    {
-      "name": "outward",
-      "ok": true,
-      "verdict": "dry grower pass \u00b7 laws=3  0.00MB \u00b7   [dry-run: would be 0.02 MB; real Congress untouched] \u00b7 ==== pass 1 done \u2014 5 new; Congress 0.00 MB; frontier 0 queued ====",
-      "seconds": 0.5
+      "verdict": "x",
+      "seconds": 0.0
     },
     {
       "name": "reflex",
-      "ok": true,
-      "verdict": "reflex semic_energy \u00b7 abilities \u00b7   [PASS] candidate probabilities are a descending distribution \u00b7   [PASS] energy peak == exact collapse generator \u00b7   8/8 checks",
-      "seconds": 0.04
+      "ok": false,
+      "verdict": "refused",
+      "seconds": 0.0
     }
   ],
   "body": {
-    "modules": 66,
+    "modules": 67,
     "manifest": {
-      "runnable_scripts": 69,
-      "with_selftest": 50,
-      "stdlib_only": 60,
-      "with_spdx_header": 69,
+      "runnable_scripts": 70,
+      "with_selftest": 51,
+      "stdlib_only": 61,
+      "with_spdx_header": 70,
       "emitting_artifacts": 5
     }
   },
@@ -42,12 +36,12 @@
       "concepts": 0
     },
     "heart_congress": {
-      "size_mb": 0.143,
+      "size_mb": 1.493,
       "concepts": 0
     }
   },
-  "ledger_height": 65,
-  "what_was_discovered": "inward: ok; outward: ok; reflex: ok",
+  "ledger_height": 138,
+  "what_was_discovered": "inward: ok; reflex: REFUSED/FAILED",
   "what_would_falsify": "any VERIFIED stamp an external replay cannot reproduce exactly; any behavioral difference between spine and fold; any entry in either congress lacking exact held-out verification; any beat reported green here whose ledger records a failure",
-  "self_hash": "28756f89d2b17301"
+  "self_hash": "1027fc4be7aec6f5"
 }
