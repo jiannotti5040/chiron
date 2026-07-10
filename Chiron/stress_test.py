@@ -35,6 +35,7 @@ Status: implemented & tested. Findings + repairs: docs/STRESS_TEST.md.
 import json
 import os
 import random
+import re as _re
 import shutil
 import subprocess
 import sys
@@ -85,6 +86,33 @@ def p1_parity_teeth():
                    not outcomes_equal(good, drift)))
     checks.append(("parity comparator: empty outcome set is never 'agreement'",
                    not outcomes_equal([], [])))
+
+    # (c) END-TO-END: run the REAL fold's selftest and a REAL mutated engine's selftest,
+    # parse both, and confirm the exact parity comparison declares them divergent. This is
+    # the strong form — two real engine runs and the real comparator, not a synthetic list.
+    def outcomes(argv, cwd, timeout=90):
+        try:
+            p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+            return sorted((m.group(2).strip(), m.group(1)) for m in
+                          _re.finditer(r"\[(PASS|FAIL)\]\s+(.+)", p.stdout + p.stderr))
+        except Exception:
+            return []
+    mono = os.path.join(os.path.dirname(_HERE), "Chiron Monolith", "chiron_monolith.py")
+    if os.path.isfile(mono):
+        fold_ok = outcomes([PY, mono, "chiron", "selftest"],
+                           os.path.join(os.path.dirname(_HERE), "Chiron Monolith"))
+        with tempfile.TemporaryDirectory() as td:
+            mut = os.path.join(td, "chiron.py")
+            txt = open(src, encoding="utf-8").read()
+            open(mut, "w", encoding="utf-8").write(
+                txt.replace("1, 1, 2, 3, 5, 8, 13", "1, 1, 2, 3, 5, 8, 99", 1))
+            mut_ok = outcomes([PY, mut, "selftest"], td)
+        checks.append((f"end-to-end: the real fold produces {len(fold_ok)} named gate outcomes",
+                       len(fold_ok) > 0))
+        checks.append(("end-to-end: real parity comparison CATCHES a real injected divergence",
+                       not outcomes_equal(fold_ok, mut_ok)))
+    else:
+        checks.append(("end-to-end fold-vs-mutant (skipped: no monolith — run `chiron build`)", True))
     return checks
 
 

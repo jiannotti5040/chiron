@@ -117,7 +117,24 @@ def move_inward(beat, timeout=60):
     return ok, f"read own organ {name} -> heart congress · {tail[-120:]}", secs
 
 
+def _online(host="8.8.8.8", port=53, timeout=2.0):
+    """A quick, honest connectivity probe. Outward growth is the one network-facing
+    movement; on an air-gapped machine it cannot run, and pretending it failed would
+    be a lie. This lets the beat record 'skipped: offline' as neutral, not red."""
+    import socket
+    try:
+        s = socket.create_connection((host, port), timeout=timeout)
+        s.close()
+        return True
+    except OSError:
+        return False
+
+
 def move_outward(beat, timeout=90):
+    # Neutral, not failed: outward needs a network. Offline ⇒ skip honestly (ok=None),
+    # so an air-gapped vault still beats green on inward + reflex.
+    if not _online():
+        return None, "skipped: offline — outward growth needs a network", 0.0
     live = os.environ.get("CHIRON_HEART_LIVE") == "1"
     argv = [PY, os.path.join(_SPINE, "chiron_grow.py"), "--params",
             os.path.join(_SPINE, "grow-public", "parameters.json"), "--once"]
@@ -177,7 +194,10 @@ def vault_certificate(beat, movements):
         "beat": beat,
         "incarnation": run_ledger.incarnation(),
         "fold_hash": _sha(MONOLITH),
-        "all_movements_green": all(m["ok"] for m in movements),
+        # green ⇔ nothing that was ATTEMPTED failed. A neutral skip (ok is None —
+        # e.g. outward growth offline) is honest degradation, not a red mark; only an
+        # explicit False fails the beat. This keeps the never-flatter rule exact.
+        "all_movements_green": all(m["ok"] is not False for m in movements),
         "movements": movements,
         "body": {"modules": len([f for f in os.listdir(_HERE) if f.endswith('.py')]),
                  "manifest": manifest},
@@ -185,7 +205,8 @@ def vault_certificate(beat, movements):
                    "heart_congress": _congress_stats(HEART_CONGRESS)},
         "ledger_height": len(run_ledger.read(100000)),
         "what_was_discovered": "; ".join(
-            f"{m['name']}: {'ok' if m['ok'] else 'REFUSED/FAILED'}" for m in movements),
+            f"{m['name']}: {'ok' if m['ok'] else ('skipped' if m['ok'] is None else 'REFUSED/FAILED')}"
+            for m in movements),
         "what_would_falsify": ("any VERIFIED stamp an external replay cannot reproduce exactly; "
                                "any behavioral difference between spine and fold; any entry in "
                                "either congress lacking exact held-out verification; any beat "
@@ -206,13 +227,17 @@ def beat_once(movers=None, quiet=False):
     movements = []
     for name, fn in movers:
         ok, verdict, secs = fn(beat)
-        movements.append({"name": name, "ok": bool(ok), "verdict": verdict,
+        # preserve None (a neutral skip) — do NOT coerce it to False; the certificate
+        # distinguishes skipped from failed, and only failed breaks a green beat.
+        norm = None if ok is None else bool(ok)
+        movements.append({"name": name, "ok": norm, "verdict": verdict,
                           "seconds": None if secs is None else round(secs, 2)})
-        run_ledger.record(f"heartbeat.{name}", ["beat", str(beat)], ok=ok,
+        run_ledger.record(f"heartbeat.{name}", ["beat", str(beat)], ok=norm,
                           verdict=verdict[:200], seconds=secs, source="heartbeat",
                           certificate="artifacts/vault/latest.json")
         if not quiet:
-            print(f"  [{'OK ' if ok else 'FAIL'}] {name:8} {verdict[:110]}", flush=True)
+            mark = "OK " if norm else ("skip" if norm is None else "FAIL")
+            print(f"  [{mark}] {name:8} {verdict[:110]}", flush=True)
     cert = vault_certificate(beat, movements)
     st["last_utc"] = cert["generated_utc"]
     _save_state(st)
@@ -269,10 +294,23 @@ def _selftest():
         c2 = beat_once(movers=mixed, quiet=True)
         ok("the certificate does not flatter: one failure -> NOT green",
            c2["all_movements_green"] is False)
+
+        # a NEUTRAL skip (ok is None, e.g. outward offline) is honest degradation,
+        # not a failure: the beat stays green, but the skip is shown, never hidden.
+        skipped = [("inward", lambda b: (True, "ok", 0.01)),
+                   ("outward", lambda b: (None, "skipped: offline", 0.0)),
+                   ("reflex", lambda b: (True, "ok", 0.01))]
+        c3 = beat_once(movers=skipped, quiet=True)
+        ok("a neutral skip keeps the beat green (offline is not failure)",
+           c3["all_movements_green"] is True)
+        ok("but the skip is disclosed, never hidden",
+           "skipped" in c3["what_was_discovered"])
+        ok("a skip is distinct from a pass in the movement record",
+           any(m["name"] == "outward" and m["ok"] is None for m in c3["movements"]))
         ok("the failure is a first-class movement record",
            any(m["ok"] is False for m in c2["movements"]))
         ok("beats are counted monotonically", c2["beat"] == c1["beat"] + 1)
-        ok("state survives between beats", _state()["beat"] == c2["beat"])
+        ok("state survives and advances across beats", _state()["beat"] == c3["beat"])
         organs = _body()
         ok("the body enumerates its own organs (modules + guides)",
            len(organs) > 50 and any(p.endswith("heartbeat.py") for p in organs))
