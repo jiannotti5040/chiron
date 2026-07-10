@@ -14,11 +14,18 @@ machine-readable index the dashboard reads.
 What it records per script:
   - path, stem
   - dependencies (stdlib-only vs needs numpy/scipy)        [static scan]
+  - imports / imported_by: the INTERNAL dependency graph — which vault
+    modules this script imports and which import it        [static scan]
+  - roles: mechanical tags derived from name patterns and provable facts
+    only (benchmark/builder/server/test/certifying) — never editorial
   - whether it has a `selftest` entry point                [static scan]
   - line count                                             [static scan]
   - SPDX header present?                                   [static scan]
   - last run: command, exit code, runtime_ms, tail of stdout   [live, optional]
   - emitted artifact: latest.json summary if one exists    [live]
+
+Top-level "graph" section: every internal import edge [importer, imported],
+sorted — the manifest is a build graph, not just a list.
 
 Run modes:
     python3 build_manifest.py              # static index only (fast, safe)
@@ -97,6 +104,41 @@ def _scan(path: str) -> Dict[str, Any]:
     }
 
 
+def _local_imports(path: str, stems: set) -> List[str]:
+    """Top-level module names this script imports that are OTHER vault
+    scripts — the internal dependency graph, from the AST, no execution."""
+    try:
+        tree = ast.parse(open(path, encoding="utf-8", errors="replace").read())
+    except Exception:
+        return []
+    found = set()
+    self_stem = os.path.basename(path)[:-3]
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for n in node.names:
+                found.add(n.name.split(".")[0])
+        elif isinstance(node, ast.ImportFrom) and node.module and not node.level:
+            found.add(node.module.split(".")[0])
+    return sorted((found & stems) - {self_stem})
+
+
+def _roles(stem: str, emits_artifact: bool) -> List[str]:
+    """Mechanical role tags. Derived ONLY from name patterns and provable
+    facts, never from judgment — a wrong tag here would be an overclaim."""
+    roles = []
+    if stem.startswith(("bench_", "benchmark")):
+        roles.append("benchmark")
+    if stem.startswith("build"):
+        roles.append("builder")
+    if stem.endswith("_server"):
+        roles.append("server")
+    if stem.startswith("test_"):
+        roles.append("test")
+    if emits_artifact:
+        roles.append("certifying")
+    return roles
+
+
 def _purpose(path: str) -> str:
     """First non-empty line of the module docstring = a one-line purpose."""
     try:
@@ -170,7 +212,9 @@ def _load_lexicon() -> Dict[str, Any]:
 
 def build(run: bool, timeout: int) -> Dict[str, Any]:
     lexicon = _load_lexicon()
-    entries: List[Dict[str, Any]] = []
+
+    # pass 1: enumerate, so the import scan knows every local stem
+    found: List[tuple] = []
     for dirpath, _, files in os.walk(ROOT):
         if "artifacts" in dirpath or "__pycache__" in dirpath:
             continue
@@ -178,30 +222,47 @@ def build(run: bool, timeout: int) -> Dict[str, Any]:
             if not fn.endswith(".py"):
                 continue
             path = os.path.join(dirpath, fn)
-            if not _runnable(path):
-                continue
-            stem = fn[:-3]
-            rec: Dict[str, Any] = {
-                "script": stem,
-                "path": os.path.relpath(path, ROOT),
-                "purpose": _purpose(path),
-            }
-            rec.update(_scan(path))
-            if stem in lexicon:
-                rec["title"] = lexicon[stem].get("title", "")
-                rec["lens"] = {k: lexicon[stem][k] for k in ("math", "prog", "concept")
-                               if k in lexicon[stem]}
-            art = _artifact_summary(stem)
-            rec["artifact"] = art
-            rec["emits_artifact"] = art is not None
-            if run and rec["has_selftest"] and stem not in NO_AUTORUN:
-                rec["last_run"] = _run_selftest(path, timeout)
-                # refresh artifact summary in case the run just emitted one
-                rec["artifact"] = _artifact_summary(stem)
-                rec["emits_artifact"] = rec["artifact"] is not None
-            else:
-                rec["last_run"] = None
-            entries.append(rec)
+            if _runnable(path):
+                found.append((fn[:-3], path))
+    stems = {s for s, _ in found}
+
+    # pass 2: per-script records, now with the internal import graph
+    entries: List[Dict[str, Any]] = []
+    imported_by: Dict[str, List[str]] = {}
+    for stem, path in found:
+        rec: Dict[str, Any] = {
+            "script": stem,
+            "path": os.path.relpath(path, ROOT),
+            "purpose": _purpose(path),
+        }
+        rec.update(_scan(path))
+        rec["imports"] = _local_imports(path, stems)
+        for tgt in rec["imports"]:
+            imported_by.setdefault(tgt, []).append(stem)
+        if stem in lexicon:
+            rec["title"] = lexicon[stem].get("title", "")
+            rec["lens"] = {k: lexicon[stem][k] for k in ("math", "prog", "concept")
+                           if k in lexicon[stem]}
+            if "capabilities" in lexicon[stem]:       # optional, curated in lexicon
+                rec["capabilities"] = list(lexicon[stem]["capabilities"])
+        art = _artifact_summary(stem)
+        rec["artifact"] = art
+        rec["emits_artifact"] = art is not None
+        rec["roles"] = _roles(stem, art is not None)
+        if run and rec["has_selftest"] and stem not in NO_AUTORUN:
+            rec["last_run"] = _run_selftest(path, timeout)
+            # refresh artifact summary in case the run just emitted one
+            rec["artifact"] = _artifact_summary(stem)
+            rec["emits_artifact"] = rec["artifact"] is not None
+            rec["roles"] = _roles(stem, rec["emits_artifact"])
+        else:
+            rec["last_run"] = None
+        entries.append(rec)
+
+    # reverse edges + the graph section: the manifest as a build graph
+    for rec in entries:
+        rec["imported_by"] = sorted(imported_by.get(rec["script"], []))
+    edges = sorted([src["script"], tgt] for src in entries for tgt in src["imports"])
 
     entries.sort(key=lambda r: r["path"])
     n = len(entries)
@@ -216,6 +277,11 @@ def build(run: bool, timeout: int) -> Dict[str, Any]:
             "stdlib_only": sum(1 for e in entries if e["stdlib_only"]),
             "with_spdx_header": sum(1 for e in entries if e["has_spdx_header"]),
             "emitting_artifacts": sum(1 for e in entries if e["emits_artifact"]),
+            "internal_edges": len(edges),
+        },
+        "graph": {
+            "note": "internal import edges [importer, imported], AST-derived",
+            "edges": edges,
         },
         "scripts": entries,
     }
@@ -240,6 +306,7 @@ def main(argv=None) -> int:
     print(f"  stdlib-only        : {s['stdlib_only']}")
     print(f"  with SPDX header   : {s['with_spdx_header']}")
     print(f"  emitting artifacts : {s['emitting_artifacts']}")
+    print(f"  internal edges     : {s['internal_edges']}")
     print(f"  -> {os.path.relpath(MANIFEST, ROOT)}")
     return 0
 
