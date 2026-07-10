@@ -20,6 +20,8 @@ Daily verbs:
     chiron grow [--live]       knowledge grower     (dry-run by default; --live mutates Congress)
     chiron verify <input>      ingest one string/file and certify it exactly
     chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
+    chiron parity              prove spine and fold are ONE organism: identical gate
+                               outcomes through both incarnations, or it fails
     chiron demo                self-contained demonstration
     chiron doctor              environment + vault sanity report
     chiron clean               sweep caches (__pycache__) out of the tree
@@ -151,6 +153,37 @@ def cmd_demo(args):
     return _run([PY, _script("chiron.py"), "demo"])
 
 
+def cmd_parity(args):
+    """Spine <-> fold: run the spine's own gate suite through BOTH incarnations and
+    require identical outcomes, gate by gate. The fold is only trustworthy while
+    this cannot find a difference."""
+    import re
+    if not os.path.isfile(MONOLITH):
+        print("[chiron] no artifact — run `chiron build` first"); return 2
+    outcomes = {}
+    for name, argv, cwd in (("spine", [PY, _script("chiron.py"), "selftest"], None),
+                            ("fold ", [PY, MONOLITH, "chiron", "selftest"], MONO_DIR)):
+        print(f"[chiron] ── parity: {name.strip()} incarnation", flush=True)
+        p = subprocess.run(argv, cwd=cwd or VAULT, capture_output=True, text=True)
+        gates = sorted((m.group(2).strip(), m.group(1))
+                       for m in re.finditer(r"\[(PASS|FAIL)\]\s+(.+)", p.stdout + p.stderr))
+        outcomes[name.strip()] = (p.returncode, gates)
+        print(f"          exit {p.returncode} · {len(gates)} gates observed")
+    (rc_s, g_s), (rc_f, g_f) = outcomes["spine"], outcomes["fold"]
+    identical, green = g_s == g_f, rc_s == 0 and rc_f == 0
+    if identical and green and g_s:
+        print(f"\n[chiron] PARITY GREEN — {len(g_s)} gates, identical outcomes through both incarnations")
+        return 0
+    print("\n[chiron] PARITY BROKEN — do not trust either incarnation until this is understood:")
+    ds, df = dict(g_s), dict(g_f)
+    for k in sorted(set(ds) | set(df)):
+        if ds.get(k) != df.get(k):
+            print(f"  spine={ds.get(k) or 'absent'} · fold={df.get(k) or 'absent'} · {k[:80]}")
+    if rc_s or rc_f:
+        print(f"  exit codes: spine={rc_s} fold={rc_f}")
+    return 1
+
+
 def cmd_doctor(args):
     ok = True
     def check(label, cond, hint=""):
@@ -221,8 +254,8 @@ def cmd_clean(args):
 COMMANDS = {
     "dev": cmd_dev, "run": cmd_run, "build": cmd_build, "test": cmd_test,
     "serve": cmd_serve, "grow": cmd_grow, "verify": cmd_verify,
-    "benchmark": cmd_benchmark, "demo": cmd_demo, "doctor": cmd_doctor,
-    "clean": cmd_clean,
+    "benchmark": cmd_benchmark, "demo": cmd_demo, "parity": cmd_parity,
+    "doctor": cmd_doctor, "clean": cmd_clean,
 }
 
 

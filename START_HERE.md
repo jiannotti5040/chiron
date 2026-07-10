@@ -20,7 +20,7 @@ primus collapse "2 3 5 7 11 13 17"
 
 The refusal is the point. There's also a browser demo that runs the *real* engine, no install: **[playground.html](playground.html)**.
 
-To operate the whole vault (dashboard, function launcher, assistant, grower) it's one command from the repo root: `python3 bin/chiron serve` — and `python3 bin/chiron test` runs the same gate battery CI runs.
+To operate the whole vault (dashboard, function launcher, assistant, grower) it's one command from the repo root: `python3 bin/chiron serve` — and `python3 bin/chiron test` runs the same gate battery CI runs. Where it's all going: [docs/HORIZON.md](docs/HORIZON.md).
 
 ## What this demonstrates (the hiring-manager version)
 
