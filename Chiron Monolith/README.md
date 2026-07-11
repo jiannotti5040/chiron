@@ -20,7 +20,7 @@ module:
 
 ```bash
 python3 build_monolith.py            # regenerate the fold
-python3 chiron_monolith.py --selftest  # prove the fold (41/41 modules green)
+python3 chiron_monolith.py --selftest  # prove the fold (46/46 modules green)
 ```
 
 (The same policy holds vault-wide: the packaged seed engine lives at
@@ -68,7 +68,7 @@ identically) — and reports the count:
   [PASS] chiron               CHIRON GREEN — exact knowledge, honest wisdom, bounded agency
   [PASS] semic                56/56 gates passing
   ...
-  41/41 modules green through the fold (same coverage as the full build's manifest)
+  46/46 modules green through the fold (same coverage as the full build's manifest)
 ```
 
 This is the proof that **Chiron-full and Chiron-monolith are identical in function**: the embedded

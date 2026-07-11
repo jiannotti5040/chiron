@@ -64,4 +64,5 @@ Convert a private, inward-growing research vault into an externally validated, i
 2. Enable GitHub Pages → one browser check of the playground.
 3. Show HN draft when ready. 4–6: PyPI tag, PySR, full-OEIS sweep — parked, optional.
 
-**End of review.** This file is untracked; keep or delete freely.
+**End of review.** *Published working record of Jacob's Portfolio Vault — an
+internal after-action review, tracked as part of the project's paper trail.*
