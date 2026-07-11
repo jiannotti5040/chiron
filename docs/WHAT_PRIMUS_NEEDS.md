@@ -1,8 +1,9 @@
 # What Primus still needs — grounded map (2026-07-07)
 
-Reconciled against your own AFTER_ACTION / STATUS_REPORT (07-04),
-EXTERNAL_VALIDATION.md (through the v0.5.0 addendum), and the current git
-state. This file is untracked — keep or delete freely.
+Reconciled against the AFTER_ACTION / STATUS_REPORT (07-04),
+EXTERNAL_VALIDATION.md (through the v0.5.0 addendum), and the git state on
+2026-07-07. *Published working record — a point-in-time roadmap, tracked as
+part of the project's paper trail.*
 
 ## Headline (the honest part)
 

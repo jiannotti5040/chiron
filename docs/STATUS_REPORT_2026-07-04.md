@@ -59,4 +59,4 @@ The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (th
 
 ## 7. Risk register
 
-No open defects. No failing gates. No deadlines. Worst live issue is the un-pushed Windows fix (item 1). This file is untracked — keep or delete freely.
+No open defects. No failing gates. No deadlines. Worst live issue is the un-pushed Windows fix (item 1). *Published working record — a point-in-time status report, tracked as part of the project's paper trail.*

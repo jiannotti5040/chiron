@@ -1,8 +1,13 @@
 # External validation addendum — 2026-07-07: a live false verification (seed engine)
 
-**Status: OPEN DEFECT in the seed engine. Not yet fixed. No source of truth was
-modified to find it.** This file publishes the miss, per the project's rule that a
-falsified-and-repaired story is worth more than an unblemished table.
+**Status: RESOLVED.** The defect below was fixed in Primus v0.5.1 (commit
+`42453bc`, "fix seed false-stamp on companion Pell — holonomic overfit"); the
+battery and drift gates have been green since. The original report is preserved
+unedited below, per the project's rule that a falsified-and-repaired story is
+worth more than an unblemished table.
+
+**Original status (2026-07-07): OPEN DEFECT in the seed engine. Not yet fixed. No
+source of truth was modified to find it.** This file publishes the miss.
 
 ## What happened
 
@@ -95,5 +100,5 @@ full gate discipline with your sign-off — not slipped in.
 - Everything else (Pages, playground, PySR) is unaffected.
 
 ---
-This file is untracked — keep or fold into `Primus/EXTERNAL_VALIDATION.md` once the
-fix lands, as the "falsified again, repaired again" entry.
+*Published working record of Jacob's Portfolio Vault; kept as the
+"falsified again, repaired again" entry in the project's paper trail.*
