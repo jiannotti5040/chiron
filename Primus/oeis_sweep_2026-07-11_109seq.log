@@ -1,0 +1,194 @@
+  page start=0: +10 (corpus 10)
+  page start=10: +10 (corpus 20)
+  page start=20: +10 (corpus 30)
+  page start=30: +10 (corpus 40)
+  page start=40: +10 (corpus 50)
+  page start=50: +10 (corpus 60)
+  page start=60: +10 (corpus 70)
+  page start=70: +10 (corpus 80)
+  page start=80: +10 (corpus 90)
+  page start=90: +10 (corpus 100)
+  page start=100: +10 (corpus 110)
+  page start=110: attempt 1 failed (JSONDecodeError); backing off
+  page start=110: attempt 2 failed (JSONDecodeError); backing off
+  page start=110: attempt 3 failed (JSONDecodeError); backing off
+  page start=110: unreadable after retries — grading the 110 sequences fetched so far
+OEIS LIVE VALIDATION — engine sees 12 terms, graded on exact prediction of the next 4 (external data)
+
+  A000002  VERIFIED+WRONG       periodic_3                   Kolakoski sequence: a(n) is length of n-
+          predicted [1, 2, 2, 1] expected [1, 1, 2, 1]
+  A000004  VERIFIED+correct     constant                     The zero sequence.
+  A000005  declined             periodic_3                   d(n) (also called tau(n) or sigma_0(n)),
+          predicted [1, 2, 2, 1] expected [2, 4, 4, 5]
+  A000007  VERIFIED+correct     linear_recurrence_order2     The characteristic function of {0}: a(n)
+  A000009  declined             periodic_1                   Expansion of Product_{m >= 1} (1 + x^m);
+          predicted [1, 1, 1, 1] expected [15, 18, 22, 27]
+  A000010  declined             periodic_1                   Euler totient function phi(n): count num
+          predicted [1, 1, 1, 1] expected [12, 6, 8, 8]
+  A000012  VERIFIED+correct     constant                     The simplest sequence of positive number
+  A000027  VERIFIED+correct     arithmetic                   The positive integers. Also called the n
+  A000032  VERIFIED+correct     linear_recurrence_order2     Lucas numbers beginning at 2: L(n) = L(n
+  A000035  VERIFIED+correct     periodic_2                   Period 2: repeat [0, 1]; a(n) = n mod 2;
+  A000040  declined             multiplicative_ratio         The prime numbers.
+          predicted [40, 39, 37, 33] expected [41, 43, 47, 53]
+  A000041  declined             periodic_1                   a(n) is the number of partitions of n (t
+          predicted [1, 1, 1, 1] expected [77, 101, 135, 176]
+  A000043  declined             multiplicative_ratio         Mersenne exponents: primes p such that 2
+          predicted [198, 260, 334, 421] expected [521, 607, 1279, 2203]
+  A000045  VERIFIED+correct     linear_recurrence_order2     Fibonacci numbers: F(n) = F(n-1) + F(n-2
+  A000069  declined             power_law                    Odious numbers: numbers with an odd numb
+          predicted [27, 30, 32, 35] expected [25, 26, 28, 31]
+  A000079  VERIFIED+correct     geometric                    Powers of 2: a(n) = 2^n.
+  A000081  declined             periodic_2                   Number of unlabeled rooted trees with n 
+          predicted [0, 1, 0, 1] expected [4766, 12486, 32973, 87811]
+  A000085  VERIFIED+correct     holonomic_r2_p1              Number of self-inverse permutations on n
+  A000088  declined             holonomic_r1_p1              Number of simple graphs on n unlabeled n
+          predicted [200274107037, 327635480599485, -126327164504740592, 25259980525665275904] expected [165091172592, 50502031367952, 29054155657235488, 31426485969804308768]
+  A000108  VERIFIED+correct     holonomic_r1_p1              Catalan numbers: C(n) = binomial(2n,n)/(
+  A000110  declined             holonomic_r1_p1              Bell or exponential numbers: number of w
+          predicted [4212875, 27623654, 190515817, 1377125210] expected [4213597, 27644437, 190899322, 1382958545]
+  A000111  declined             holonomic_r1_p1              Euler or up/down numbers: e.g.f. sec(x) 
+          predicted [2703029, 22375520, 199504783, 1906259880] expected [2702765, 22368256, 199360981, 1903757312]
+  A000120  declined             periodic_3                   Ones-counting sequence: number of 1's in
+          predicted [0, 1, 1, 0] expected [2, 3, 3, 4]
+  A000124  VERIFIED+correct     polynomial_deg2              Central polygonal numbers (the Lazy Cate
+  A000129  VERIFIED+correct     linear_recurrence_order2     Pell numbers: a(0) = 0, a(1) = 1; for n 
+  A000142  VERIFIED+correct     multiplicative_ratio         Factorial numbers: n! = 1*2*3*4*...*n (o
+  A000166  VERIFIED+correct     holonomic_r2_p1              Subfactorial or rencontres numbers, or d
+  A000169  declined             holonomic_r1_p1              Number of labeled rooted trees with n no
+          predicted [23298419414353, 793765021208252, 29197859918467384, 1153329044209974016] expected [23298085122481, 793714773254144, 29192926025390625, 1152921504606846976]
+  A000203  declined             periodic_1                   a(n) = sigma(n), the sum of the divisors
+          predicted [1, 1, 1, 1] expected [14, 24, 24, 31]
+  A000204  VERIFIED+correct     linear_recurrence_order2     Lucas numbers (beginning with 1): L(n) =
+  A000217  VERIFIED+correct     polynomial_deg2              Triangular numbers: a(n) = binomial(n+1,
+  A000219  declined             periodic_1                   Number of plane partitions (or planar pa
+          predicted [1, 1, 1, 1] expected [1479, 2485, 4167, 6879]
+  A000225  VERIFIED+correct     linear_recurrence_order2     a(n) = 2^n - 1. (Sometimes called Mersen
+  A000244  VERIFIED+correct     geometric                    Powers of 3: a(n) = 3^n.
+  A000272  declined             holonomic_r1_p1              Number of trees on n labeled nodes: n^(n
+          predicted [61923398238, 1792920150916, 56757320765947, 1950702382056392] expected [61917364224, 1792160394037, 56693912375296, 1946195068359375]
+  A000290  VERIFIED+correct     polynomial_deg2              The squares: a(n) = n^2.
+  A000292  VERIFIED+correct     polynomial_deg3              Tetrahedral (or triangular pyramidal) nu
+  A000302  VERIFIED+correct     geometric                    Powers of 4: a(n) = 4^n.
+  A000312  declined             holonomic_r1_p1              a(n) = n^n; number of labeled mappings f
+          predicted [8916080238587, 302872101272402, 11111714493840156, 437869944605877504] expected [8916100448256, 302875106592253, 11112006825558016, 437893890380859375]
+  A000326  VERIFIED+correct     polynomial_deg2              Pentagonal numbers: a(n) = n*(3*n-1)/2.
+  A000330  VERIFIED+correct     polynomial_deg3              Square pyramidal numbers: a(n) = 0^2 + 1
+  A000364  declined             holonomic_r1_p1              Euler (or secant or "Zig") numbers: e.g.
+          predicted [15553092264436881408, 4133914166592787709952, 1292559351076178777604096, 473098313795683213065060352] expected [15514534163557086905, 4087072509293123892361, 1252259641403629865468285, 441543893249023104553682821]
+  A000521  declined             holonomic_r1_p1              Coefficients of modular function j as po
+          predicted [146196236142239360, 873941327318313344, 4866990940100275200, 25447841960503902208] expected [146211911499519294, 874313719685775360, 4872010111798142520, 25497827389410525184]
+  A000578  VERIFIED+correct     polynomial_deg3              The cubes: a(n) = n^3.
+  A000583  VERIFIED+correct     polynomial_deg4              Fourth powers: a(n) = n^4.
+  A000593  declined             periodic_3                   Sum of odd divisors of n.
+          predicted [1, 1, 4, 1] expected [14, 8, 24, 1]
+  A000670  declined             holonomic_r1_p1              Fubini numbers: number of preferential a
+          predicted [28091567500, 526858341668, 10641342650285, 230283177848923] expected [28091567595, 526858348381, 10641342970443, 230283190977853]
+  A000720  declined             periodic_3                   pi(n), the number of primes <= n. Someti
+          predicted [0, 1, 2, 0] expected [6, 6, 6, 6]
+  A000796  declined             periodic_1                   Decimal expansion of Pi (or digits of Pi
+          predicted [3, 3, 3, 3] expected [9, 7, 9, 3]
+  A000959  declined             power_law                    Lucky numbers.
+          predicted [51, 57, 63, 70] expected [49, 51, 63, 67]
+  A000961  declined             power_law                    Powers of primes. Alternatively, 1 and t
+          predicted [17, 18, 20, 22] expected [19, 23, 25, 27]
+  A000984  VERIFIED+correct     holonomic_r1_p1              Central binomial coefficients: binomial(
+  A001006  VERIFIED+correct     holonomic_r2_p1              Motzkin numbers: number of ways of drawi
+  A001045  VERIFIED+correct     linear_recurrence_order2     Jacobsthal sequence (or Jacobsthal numbe
+  A001055  declined             periodic_1                   The multiplicative partition function: n
+          predicted [1, 1, 1, 1] expected [1, 2, 2, 5]
+  A001065  declined             periodic_3                   Sum of proper divisors (or aliquot parts
+          predicted [0, 1, 1, 0] expected [1, 10, 9, 15]
+  A001097  declined             geometric                    Twin primes.
+          predicted [86, 111, 142, 183] expected [61, 71, 73, 101]
+  A001113  declined             periodic_4                   Decimal expansion of e.
+          predicted [2, 7, 1, 8] expected [9, 0, 4, 5]
+  A001147  VERIFIED+WRONG       multiplicative_ratio         Double factorial of odd numbers: a(n) = 
+          predicted [316234143225, 7905853580625, 213458046676876, 6190283353629417] expected [316234143225, 7905853580625, 213458046676875, 6190283353629375]
+  A001157  declined             power_law                    a(n) = sigma_2(n): sum of squares of div
+          predicted [211, 245, 283, 323] expected [170, 250, 260, 341]
+  A001221  declined             periodic_3                   Number of distinct primes dividing n (al
+          predicted [0, 1, 1, 0] expected [1, 2, 2, 1]
+  A001222  declined             periodic_4                   Number of prime divisors of n counted wi
+          predicted [0, 1, 1, 2] expected [1, 2, 2, 4]
+  A001227  declined             periodic_3                   Number of odd divisors of n.
+          predicted [1, 1, 2, 1] expected [2, 2, 4, 1]
+  A001333  VERIFIED+correct     linear_recurrence_order2     Pell-Lucas numbers: numerators of contin
+  A001358  declined             arithmetic                   Semiprimes (or biprimes): products of tw
+          predicted [36, 39, 42, 45] expected [35, 38, 39, 46]
+  A001405  VERIFIED+correct     holonomic_r2_p1              a(n) = binomial(n, floor(n/2)).
+  A001477  VERIFIED+correct     arithmetic                   The nonnegative integers.
+  A001511  declined             periodic_2                   The ruler function: exponent of the high
+          predicted [1, 2, 1, 2] expected [1, 2, 1, 5]
+  A001519  VERIFIED+correct     linear_recurrence_order2     a(n) = 3*a(n-1) - a(n-2) for n >= 2, wit
+  A001615  declined             periodic_2                   Dedekind psi function: n * Product_{p|n,
+          predicted [1, 3, 1, 3] expected [14, 24, 24, 24]
+  A001622  declined             periodic_6                   Decimal expansion of golden ratio phi (o
+          predicted [1, 6, 1, 8] expected [9, 8, 9, 4]
+  A001700  VERIFIED+correct     holonomic_r1_p1              a(n) = binomial(2*n+1, n+1): number of w
+  A001764  VERIFIED+correct     holonomic_r1_p2              a(n) = binomial(3*n,n)/(2*n+1) (enumerat
+  A001906  VERIFIED+correct     linear_recurrence_order2     F(2n) = bisection of Fibonacci sequence:
+  A001969  declined             periodic_2                   Evil numbers: nonnegative integers with 
+          predicted [0, 3, 0, 3] expected [24, 27, 29, 30]
+  A002110  declined             holonomic_r1_p1              Primorial numbers (first definition): pr
+          predicted [6418509795926, 209278709298491, 6907795982094495, 229995547707308608] expected [7420738134810, 304250263527210, 13082761331670030, 614889782588491410]
+  A002113  declined             holonomic_r2_p1              Palindromes in base 10.
+          predicted [82, 357, 1437, 5251] expected [33, 44, 55, 66]
+  A002275  VERIFIED+correct     linear_recurrence_order2     Repunits: (10^n - 1)/9. Often denoted by
+  A002322  declined             periodic_3                   Reduced totient function psi(n): least k
+          predicted [1, 1, 2, 1] expected [12, 6, 4, 4]
+  A002378  VERIFIED+correct     polynomial_deg2              Oblong (or promic, pronic, or heteromeci
+  A002426  VERIFIED+correct     holonomic_r2_p1              Central trinomial coefficients: largest 
+  A002487  declined             periodic_3                   Stern's diatomic series (or Stern-Brocot
+          predicted [0, 1, 1, 0] expected [2, 5, 3, 4]
+  A002620  VERIFIED+correct     linear_recurrence_order4     Quarter-squares: a(n) = floor(n/2)*ceili
+  A002808  VERIFIED+WRONG       linear_recurrence_order4     The composite numbers: numbers n of the 
+          predicted [22, 24, 26, 27] expected [22, 24, 25, 26]
+  A003415  declined             periodic_3                   a(n) = n' = arithmetic derivative of n: 
+          predicted [0, 0, 1, 0] expected [16, 1, 9, 8]
+  A003418  declined             periodic_1                   Least common multiple (or LCM) of {1, 2,
+          predicted [1, 1, 1, 1] expected [27720, 360360, 360360, 360360]
+  A004526  VERIFIED+correct     linear_recurrence_order3     Nonnegative integers repeated, floor(n/2
+  A005101  declined             arithmetic                   Abundant numbers (sum of divisors of m e
+          predicted [65, 70, 74, 79] expected [66, 70, 72, 78]
+  A005117  declined             arithmetic                   Squarefree numbers: numbers that are not
+          predicted [18, 20, 21, 23] expected [19, 21, 22, 23]
+  A005408  VERIFIED+correct     arithmetic                   The odd numbers: a(n) = 2*n + 1.
+  A005843  VERIFIED+correct     arithmetic                   The nonnegative even numbers: a(n) = 2n.
+  A006318  VERIFIED+correct     holonomic_r2_p1              Large Schröder numbers (or large Schroed
+  A006530  declined             periodic_3                   Gpf(n): greatest prime dividing n, for n
+          predicted [1, 2, 3, 1] expected [13, 7, 5, 2]
+  A006882  VERIFIED+correct     holonomic_r2_p1              Double factorials n!!: a(n) = n*a(n-2) f
+  A007318  declined             periodic_1                   Pascal's triangle read by rows: C(n,k) =
+          predicted [1, 1, 1, 1] expected [6, 4, 1, 1]
+  A008275  declined             periodic_1                   Triangle read by rows of Stirling number
+          predicted [1, 1, 1, 1] expected [35, -10, 1, -120]
+  A008277  declined             periodic_1                   Triangle of Stirling numbers of the seco
+          predicted [1, 1, 1, 1] expected [25, 10, 1, 1]
+  A008292  declined             periodic_1                   Triangle of Eulerian numbers T(n,k) (n >
+          predicted [1, 1, 1, 1] expected [66, 26, 1, 1]
+  A008683  declined             periodic_4                   Möbius (or Moebius) function mu(n). mu(1
+          predicted [1, -1, -1, 0] expected [-1, 1, 1, 0]
+  A010060  recovered-unstamped  periodic_3                   Thue-Morse sequence: let A_k denote the 
+  A018252  declined             arithmetic                   The nonprime numbers: 1 together with th
+          predicted [21, 23, 25, 26] expected [21, 22, 24, 25]
+  A020639  declined             periodic_2                   Lpf(n): least prime dividing n (when n >
+          predicted [1, 2, 1, 2] expected [13, 2, 3, 2]
+  A025487  declined             periodic_1                   Least integer of each prime signature A1
+          predicted [1, 1, 1, 1] expected [60, 64, 72, 96]
+  A027642  declined             periodic_1                   Denominator of Bernoulli number B_n.
+          predicted [1, 1, 1, 1] expected [2730, 1, 6, 1]
+  A049310  declined             periodic_5                   Triangle of coefficients of Chebyshev's 
+          predicted [1, -1, 0, 1] expected [-3, 0, 1, 0]
+  A056239  declined             periodic_3                   If n = Product_{k >= 1} (p_k)^(c_k) wher
+          predicted [0, 1, 2, 0] expected [6, 5, 5, 4]
+  A070939  declined             periodic_1                   Length of binary representation of n.
+          predicted [1, 1, 1, 1] expected [4, 4, 4, 4]
+  A112798  declined             periodic_1                   Table where n-th row is factorization of
+          predicted [1, 1, 1, 1] expected [2, 1, 3, 5]
+  A246655  declined             polynomial_deg2              Prime powers: numbers of the form p^k wh
+          predicted [22, 24, 27, 29] expected [23, 25, 27, 29]
+
+  n=109   VERIFIED+WRONG: 3   VERIFIED+correct: 44   declined: 61   recovered-unstamped: 1
+  stamped VERIFIED: 47   false confidence (VERIFIED+WRONG): 3
+  RESULT: FAIL — the engine stamped a wrong rule
