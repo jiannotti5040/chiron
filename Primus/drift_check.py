@@ -70,6 +70,15 @@ SYNTHETIC = {
     "companion_pell": [2, 2, 6, 14, 34, 82, 198, 478, 1154, 2786, 6726, 16238,
                        39202, 94642, 228486, 551614],
     "random_control": [7, 2, 9, 4, 4, 8, 3, 1, 6, 5, 5, 9, 2, 7, 1, 8],
+    # The 2026-07-11 keyword:core sweep's three false stamps — both engines
+    # must refuse the first and third at 12 terms and exactly verify the
+    # second, forever (issue #5).
+    "kolakoski_12": [1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
+    "odd_double_factorial": [1, 1, 3, 15, 105, 945, 10395, 135135, 2027025,
+                             34459425, 654729075, 13749310575,
+                             316234143225, 7905853580625,
+                             213458046676875, 6190283353629375],
+    "composites_12": [4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21],
 }
 
 
