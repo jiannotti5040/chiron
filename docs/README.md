@@ -9,7 +9,7 @@ misses) is part of what it is selling.
 
 | Document | What it is |
 |---|---|
-| [SOP.md](SOP.md) | **The instruction manual.** Standard operating procedures for the whole vault: daily operation, the gate battery, change playbooks, the defect-response protocol (with the 2026-07-11→12 night as the worked example), external validation, releasing, troubleshooting |
+| [SOP.md](SOP.md) | **The instruction manual — the documentation IS the interface.** Part I: operating procedures for every engine, à la carte and dashboard-free — recover rules, gate LLM pipelines, audit candor, governed decisions, bounded-agency campaigns, grow the memory on your own corpus, ship as one file / plugins / HTTP / MCP — each with a real captured session. Part II: maintaining the vault — the gate battery, change playbooks, the defect-response protocol (the 07-11→12 night as worked example), releasing, troubleshooting |
 | [DICTIONARY.md](DICTIONARY.md) | The vault's vocabulary — every load-bearing term (collapse, stamp, holdout, drift, parity, Congress, heartbeat…), hand-curated |
 | [ENCYCLOPEDIA.md](ENCYCLOPEDIA.md) | Every module, A–Z — **generated from the manifest + lexicon** (`python3 Chiron/build_encyclopedia.py`), so it cannot drift from the code |
 
