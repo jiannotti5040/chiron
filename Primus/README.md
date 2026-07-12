@@ -7,8 +7,10 @@ Python package: **exact invariant recovery with held-out verification and
 refusal** — plus that discipline turned into an accountability certificate
 for LLM/agent output. One idea: never certify what you cannot exactly verify.
 
+From the vault root (PyPI name: `primus-intelligence`):
+
 ```bash
-pip install ./Primus          # from the vault root (PyPI name: primus-intelligence)
+pip install ./Primus
 ```
 
 ## Two operations
@@ -42,9 +44,12 @@ cert = certify("2+2=5. The sequence 2 4 6 8 continues as 10, 12.")
 cert["counts"]      # {'checkable': 2, 'verified': 1, 'refuted': 1, 'refused': 0}
 ```
 
+The second line exits 1 on any refuted claim — pipe your model's output in
+place of the example text:
+
 ```bash
 primus collapse "1 1 2 3 5 8 13 21"
-echo "<model output>" | primus certify - --json --gate   # exit 1 on any refuted claim
+echo "17*3 = 51 and 2+2 = 5" | primus certify - --json --gate
 primus selftest
 ```
 
@@ -55,9 +60,12 @@ dependency-free), so any MCP-speaking agent can call the verifier natively —
 certify its own draft answer, gate on `counts.refuted == 0`, and treat the
 unverifiable remainder as exactly that.
 
+`primus-mcp` speaks newline-delimited JSON-RPC on stdio; the second line
+registers it with Claude Code:
+
 ```bash
-primus-mcp                                   # speaks newline-delimited JSON-RPC on stdio
-claude mcp add primus -- primus-mcp          # register with Claude Code
+primus-mcp
+claude mcp add primus -- primus-mcp
 ```
 
 Claude Desktop / Cowork (`claude_desktop_config.json` → `mcpServers`):
