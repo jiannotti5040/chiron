@@ -49,6 +49,13 @@ FEATURED = {
         ("chiron", ["selftest"], "the engine's full gate suite", None),
         ("chiron", ["demo"], "self-contained demonstration", None),
     ],
+    "Compose — build your own validation system": [
+        ("pipeline", ["demo"], "chain · team · swarm — worked examples", None),
+        ("pipeline", ["selftest"], "the composer's own gates (7/7)", None),
+        ("pipeline", ["run"], "run a pipeline spec (JSON)",
+         '{"mode":"chain","input":"1 1 2 3 5 8 13 21 34 55","stages":[{"component":"collapse"},{"component":"cross_examine"}]}'),
+        ("planner", ["run"], "goal-directed campaign (gate arbitrates)", "1 1 2 3 5 8 13"),
+    ],
     "Meaning — the semantic calculus": [
         ("semic", ["selftest"], "semic gates (56/56)", None),
         ("semic", [], "semic full report", None),
