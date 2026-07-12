@@ -81,6 +81,10 @@ jobs:
         run: python drift_check.py
       - name: Adversarial stress probes (parity teeth, certificate honesty, ledger, launcher, 0-false, certify)
         run: python Chiron/stress_test.py selftest
+      - name: Pipeline composer gates (chain/team/swarm — AND-of-required, never a false verify)
+        run: python Chiron/pipeline.py selftest
+      - name: SOP smoke — every documented command runs exactly as written
+        run: python ci/sop_smoke.py
       - name: Monolith smoke (the fold still runs)
         working-directory: Chiron Monolith
         run: python chiron_monolith.py --smoke
