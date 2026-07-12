@@ -28128,6 +28128,11 @@ def collapse_numeric(seq) -> Invariant:
                          "sequence (honest negative).")
     name, params, structure, mb, predict = best
     verified, hits, h = _holdout_exact(fr, name)
+    # Same evidence rule for the FULL-surface winner (A002808, 2026-07-11):
+    # an order-p recurrence cannot stamp unless the holdout offered >= p terms.
+    m_ord = _ord_re.match(name or "")
+    if m_ord and max(2, len(fr) // 4) < int(m_ord.group(1)):
+        verified = False
     structure = dict(structure)
     structure["verified"] = bool(verified)
     inv = Invariant("numeric", name, params, structure, mb, surface_bits,
@@ -28150,6 +28155,9 @@ def collapse_numeric(seq) -> Invariant:
     return inv
 
 
+_ord_re = re.compile(r"linear_recurrence_order(\d+)$")
+
+
 def _holdout_exact(fr: List[Fraction], name: str) -> Tuple[bool, int, int]:
     n = len(fr)
     if n < 6:
@@ -28159,10 +28167,26 @@ def _holdout_exact(fr: List[Fraction], name: str) -> Tuple[bool, int, int]:
     best, _ = _best_numeric(prefix)
     if best is None:
         return (False, 0, h)
-    _, _, _, _, predict = best
+    pname, _, _, _, predict = best
+    # Held-out evidence must scale with model capacity (2026-07-11, live OEIS
+    # A002808): an order-4 recurrence (8 free parameters) fit the composites
+    # exactly through every shown term and was judged by only 3 held-out
+    # terms. A rule with 2p parameters buys a stamp only from at least p
+    # held-out hits; below that, refuse. (Ported from the seed engine the
+    # same night the sweep found it.)
+    m_ord = _ord_re.match(pname or "")
+    if m_ord and h < int(m_ord.group(1)):
+        return (False, 0, h)
     try:
-        pred = predict(n)[n - h:]
+        full = predict(n)
+        pred = full[n - h:]
     except Exception:
+        return (False, 0, h)
+    # A rule that misfits the prefix it was fitted on has recovered nothing —
+    # tail hits are then coincidence (2026-07-11, A000002 Kolakoski in the
+    # seed). Chiron's families are exact by construction, so this costs
+    # nothing on legitimate fits and hardens every future family.
+    if any(p != a for p, a in zip(full[:n - h], prefix)):
         return (False, 0, h)
     hits = sum(1 for p, a in zip(pred, fr[n - h:]) if p == a)
     return (hits == h, hits, h)
