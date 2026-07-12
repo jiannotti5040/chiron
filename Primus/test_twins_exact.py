@@ -35,7 +35,7 @@ SIMPLE = 279608910057308160
 RETRO = 69902227514327040
 
 _HERE = Path(__file__).resolve().parent          # .../Primus
-_VAULT = _HERE.parent                            # .../Jacob-s-Portfolio-Vault
+_VAULT = _HERE.parent                            # .../chiron-vault
 _CHIRON = _VAULT / "Chiron"
 _CORPUS = _VAULT / "Infectatrum" / "corpus"
 

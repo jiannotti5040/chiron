@@ -114,7 +114,7 @@
 
 <footer>
   Everything runs locally in this tab. Source of truth:
-  <a href="https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault">the vault</a>
+  <a href="https://github.com/jiannotti5040/chiron-vault">the vault</a>
   — this page fetches <code>Primus/src/primus/engine.py</code> and
   <code>certify.py</code> verbatim, so it cannot drift from the repo.
   PolyForm Noncommercial 1.0.0.
@@ -136,7 +136,7 @@ $("ex-certify").onchange = e => { $("in-certify").value = e.target.value; };
 
 const SOURCES = ["engine.py", "certify.py"];
 const LOCAL = "Primus/src/primus/";
-const REMOTE = "https://raw.githubusercontent.com/jiannotti5040/Jacob-s-Portfolio-Vault/main/Primus/src/primus/";
+const REMOTE = "https://raw.githubusercontent.com/jiannotti5040/chiron-vault/main/Primus/src/primus/";
 
 async function fetchSource(name) {
   for (const base of [LOCAL, REMOTE]) {

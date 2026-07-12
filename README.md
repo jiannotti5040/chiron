@@ -1,16 +1,16 @@
 # Chiron — recover exactly, verify, refuse, certify
 
-[![gates](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml/badge.svg)](https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault/actions/workflows/ci.yml)
+[![gates](https://github.com/jiannotti5040/chiron-vault/actions/workflows/ci.yml/badge.svg)](https://github.com/jiannotti5040/chiron-vault/actions/workflows/ci.yml)
 
 > **New here? → [START_HERE.md](START_HERE.md) is the 90-second, plain-English tour** — what it is, a 20-second demo, and why it matters. No domain background needed.
 >
-> **Or skip the reading: [try the live playground](https://jiannotti5040.github.io/Jacob-s-Portfolio-Vault/playground.html)** — the real engine, in your browser, no install. Paste a sequence, watch it verify or refuse.
+> **Or skip the reading: [try the live playground](https://jiannotti5040.github.io/chiron-vault/playground.html)** — the real engine, in your browser, no install. Paste a sequence, watch it verify or refuse.
 >
 > **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 155+ passing gates and zero false verifications. Architecture at a glance: **[architecture.svg](architecture.svg)**.
 
 <p align="center"><img src="docs/assets/demo.svg" width="780" alt="Real terminal session, outputs unedited: collapse recovers Fibonacci's generator and proves it on 3 held-out terms; certify verifies 2+3+7=12 and 17*3=51 but REFUTES 2^10=1025."></p>
 
-<p align="center"><b><a href="https://jiannotti5040.github.io/Jacob-s-Portfolio-Vault/playground.html">Run this yourself in the browser</a></b> · or locally: double-click <code>SERVE_VAULT.command</code> (or <code>python3 bin/chiron serve</code>) → the full operator dashboard on <code>127.0.0.1:8765</code>. (Opening <code>Chiron/dashboard.html</code> as a plain file shows dead panels — it needs the local services; use the command.)</p>
+<p align="center"><b><a href="https://jiannotti5040.github.io/chiron-vault/playground.html">Run this yourself in the browser</a></b> · or locally: double-click <code>SERVE_VAULT.command</code> (or <code>python3 bin/chiron serve</code>) → the full operator dashboard on <code>127.0.0.1:8765</code>. (Opening <code>Chiron/dashboard.html</code> as a plain file shows dead panels — it needs the local services; use the command.)</p>
 
 **What must a machine prove before it deserves influence over a human decision?**
 

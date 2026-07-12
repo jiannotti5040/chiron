@@ -30,7 +30,7 @@ primus = "primus.cli:main"
 primus-mcp = "primus.mcp_server:main"
 
 [project.urls]
-Homepage = "https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault"
+Homepage = "https://github.com/jiannotti5040/chiron-vault"
 
 [tool.setuptools]
 # PolyForm NC *requires* the notice to travel with the code: embed the

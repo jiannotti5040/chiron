@@ -32,7 +32,7 @@ To put it online:
 2. **Build and deployment → Source:** "Deploy from a branch".
 3. **Branch:** `main`, **folder:** `/ (root)` → **Save**.
 4. Wait ~1 min, then open
-   `https://jiannotti5040.github.io/Jacob-s-Portfolio-Vault/playground.html`
+   `https://jiannotti5040.github.io/chiron-vault/playground.html`
    and do one sanity pass (enter a sequence, confirm a VERIFIED and a REFUSED).
 
 Show HN post is drafted in `SHOW_HN_DRAFT.md` — **hold it until the fix lands**;
