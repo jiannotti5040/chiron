@@ -5,6 +5,14 @@ project is going, and **published working records** — point-in-time internal
 notes tracked deliberately, because this project's paper trail (including its
 misses) is part of what it is selling.
 
+## The operator's papers — start here
+
+| Document | What it is |
+|---|---|
+| [SOP.md](SOP.md) | **The instruction manual.** Standard operating procedures for the whole vault: daily operation, the gate battery, change playbooks, the defect-response protocol (with the 2026-07-11→12 night as the worked example), external validation, releasing, troubleshooting |
+| [DICTIONARY.md](DICTIONARY.md) | The vault's vocabulary — every load-bearing term (collapse, stamp, holdout, drift, parity, Congress, heartbeat…), hand-curated |
+| [ENCYCLOPEDIA.md](ENCYCLOPEDIA.md) | Every module, A–Z — **generated from the manifest + lexicon** (`python3 Chiron/build_encyclopedia.py`), so it cannot drift from the code |
+
 ## Living references
 
 | Document | What it is |
