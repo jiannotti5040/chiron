@@ -91,3 +91,6 @@ Resume*.docx
 # --- transcribe tool: local env + temp audio ---
 **/.transcribe_env/
 *_temp_audio.wav
+
+# PySR run artifacts (bench_pysr.py)
+/outputs/
