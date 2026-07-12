@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 400" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="13">
+  <style>
+    .l{opacity:0;animation-duration:16s;animation-timing-function:linear;animation-iteration-count:infinite}
+    .a1{animation-name:k1}.a2{animation-name:k2}.a3{animation-name:k3}.a4{animation-name:k4}
+    .a5{animation-name:k5}.a6{animation-name:k6}.a7{animation-name:k7}.a8{animation-name:k8}
+    .a9{animation-name:k9}.a10{animation-name:k10}.a11{animation-name:k11}
+    @keyframes k1{0%,2%{opacity:0}4%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k2{0%,12%{opacity:0}14%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k3{0%,16%{opacity:0}18%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k4{0%,30%{opacity:0}32%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k5{0%,40%{opacity:0}42%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k6{0%,46%{opacity:0}48%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k7{0%,52%{opacity:0}54%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k8{0%,58%{opacity:0}60%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k9{0%,66%{opacity:0}68%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k10{0%,74%{opacity:0}76%,96%{opacity:1}100%{opacity:0}}
+    @keyframes k11{0%,80%{opacity:0}82%,96%{opacity:1}100%{opacity:0}}
+    .p{fill:#7ee0b8}.c{fill:#e6edf3}.d{fill:#8b98ab}.g{fill:#7ee0b8}.r{fill:#ff8090}.y{fill:#ffcf86}
+  </style>
+  <rect width="860" height="400" rx="12" fill="#0d1117" stroke="#30363d"/>
+  <circle cx="24" cy="24" r="6" fill="#ff5f57"/><circle cx="44" cy="24" r="6" fill="#febc2e"/><circle cx="64" cy="24" r="6" fill="#28c840"/>
+  <text x="430" y="28" text-anchor="middle" class="d">real session — outputs unedited (primus 0.5.x)</text>
+
+  <text x="24" y="72" class="l a1"><tspan class="p">$</tspan><tspan class="c" dx="8">primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"</tspan></text>
+  <text x="24" y="98" class="l a2"><tspan class="g">VERIFIED</tspan><tspan class="c" dx="8">generator 'linear_recurrence_order2' — recovered from the first 9 terms,</tspan></text>
+  <text x="24" y="120" class="l a3"><tspan class="c">it EXACTLY predicts all 3 held-out terms — 90 bits it had never seen.</tspan><tspan class="d" dx="8">325→97 bits.</tspan></text>
+
+  <text x="24" y="164" class="l a4"><tspan class="p">$</tspan><tspan class="c" dx="8">echo "2+3+7 is 12, 17*3 = 51, and 2^10 = 1025." | primus certify -</tspan></text>
+  <text x="24" y="190" class="l a5"><tspan class="c">PRIMUS CERTIFICATE</tspan><tspan class="d" dx="10">(exact verification; refusal over confidence)</tspan></text>
+  <text x="24" y="216" class="l a6"><tspan class="g">[✓ VERIFIED]</tspan><tspan class="d" dx="10">aggregate</tspan><tspan class="c" dx="12">sum of 2, 3 and 7 is 12</tspan></text>
+  <text x="24" y="238" class="l a7"><tspan class="g">[✓ VERIFIED]</tspan><tspan class="d" dx="10">arithmetic</tspan><tspan class="c" dx="12">17*3 = 51</tspan></text>
+  <text x="24" y="260" class="l a8"><tspan class="r">[✗ REFUTED ]</tspan><tspan class="d" dx="10">arithmetic</tspan><tspan class="c" dx="12">2^10 = 1025</tspan></text>
+  <text x="24" y="292" class="l a9"><tspan class="c">VERDICT: 2 verified · 1 refuted · 0 refused</tspan><tspan class="d" dx="8">— free text is reported, never blessed</tspan></text>
+  <text x="24" y="314" class="l a10"><tspan class="d">coverage: 69.3% of input checkable · attestation sha256 5e25f94f… (tamper-evident)</tspan></text>
+  <text x="24" y="352" class="l a11"><tspan class="y">The discipline: prove exactly, or refuse.</tspan><tspan class="d" dx="8">No confidence scores. Zero false verifications.</tspan></text>
+</svg>
