@@ -54,7 +54,7 @@ DEEP_SHOW = 24   # deep tier: parameter-rich rules (12-unknown P-recurrences)
                  # cannot even form on 12 terms — rows >= unknowns + 1 needs
                  # more evidence. Marked per-sequence via protocol: "deep".
 GRADE = 4        # held-out terms it must predict exactly (both tiers)
-UA = "primus-oeis-live-harness/0.1 (+https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault; jiannotti5040@gmail.com)"
+UA = "primus-oeis-live-harness/0.1 (+https://github.com/jiannotti5040/chiron-vault; jiannotti5040@gmail.com)"
 
 
 # ----------------------------------------------------------------- fetching

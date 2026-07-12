@@ -56,5 +56,5 @@ License: PolyForm Noncommercial. Repo and a browser playground (runs the real
 engine) linked below. Please try to break it — the fuzz suite exists because
 someone's inputs will.
 
-- Repo: https://github.com/jiannotti5040/Jacob-s-Portfolio-Vault
+- Repo: https://github.com/jiannotti5040/chiron-vault
 - Playground: (enable GitHub Pages first — see steps in RELEASE_AND_REACH.md)

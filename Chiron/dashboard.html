@@ -715,7 +715,7 @@ async function pulseTick(){
     }).join('')||'<div class="empty">No records yet.</div>';
   }catch(e){ $('#pHeart').textContent='assistant offline — chiron serve'; }
   try{
-    const g=await (await fetch('https://api.github.com/repos/jiannotti5040/Jacob-s-Portfolio-Vault/actions/runs?per_page=1',{cache:'no-store'})).json();
+    const g=await (await fetch('https://api.github.com/repos/jiannotti5040/chiron-vault/actions/runs?per_page=1',{cache:'no-store'})).json();
     const w=g.workflow_runs&&g.workflow_runs[0];
     $('#pCI').innerHTML=w?('<span class="'+(w.conclusion==='success'?'ok':(w.conclusion?'err':'muted'))+'">'+(w.conclusion||w.status)+'</span> · '+esc2((w.head_sha||'').slice(0,7))):'—';
   }catch(e){ $('#pCI').textContent='offline'; }
