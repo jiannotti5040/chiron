@@ -4,6 +4,8 @@
 
 > **New here? → [START_HERE.md](START_HERE.md) is the 90-second, plain-English tour** — what it is, a 20-second demo, and why it matters. No domain background needed.
 >
+> **Or skip the reading: [try the live playground](https://jiannotti5040.github.io/Jacob-s-Portfolio-Vault/playground.html)** — the real engine, in your browser, no install. Paste a sequence, watch it verify or refuse.
+>
 > **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 155+ passing gates and zero false verifications. Architecture at a glance: **[architecture.svg](architecture.svg)**.
 
 **What must a machine prove before it deserves influence over a human decision?**
