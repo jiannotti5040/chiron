@@ -112,6 +112,10 @@ def cmd_test(args):
         ("drift detector (seed vs monolith)", [PY, "drift_check.py"], PRIMUS),
         ("adversarial stress probes (parity teeth, certificate honesty, ledger, security, 0-false, certify)",
          [PY, _script("stress_test.py"), "selftest"], None),
+        ("pipeline composer (chain/team/swarm; AND-of-required, never a false verify)",
+         [PY, _script("pipeline.py"), "selftest"], None),
+        ("SOP smoke (every documented command runs as written)",
+         [PY, os.path.join(VAULT, "ci", "sop_smoke.py")], None),
     ]
     if full:
         gates += [
