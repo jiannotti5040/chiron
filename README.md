@@ -42,9 +42,12 @@ cert["counts"]                        # every checkable claim: VERIFIED / REFUTE
 cert["unverifiable_remainder"]        # free text is reported honestly, never blessed
 ```
 
+Pipe any model output through the gate (exit 1 if any claim is REFUTED), or
+run the engine itself — both paste-safe as written:
+
 ```bash
-echo "<model output>" | primus certify - --gate    # exit 1 if any claim is REFUTED
-primus collapse "1 1 2 3 5 8 13 21"                # the engine itself, one command
+echo "17*3 = 51 and 2+2 = 5" | primus certify - --gate
+primus collapse "1 1 2 3 5 8 13 21"
 ```
 
 It refuses to call free text "correct," refutes what is exactly false, and stamps only

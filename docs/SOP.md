@@ -15,10 +15,14 @@ manifest), [RUNNING.md](../Chiron/docs/RUNNING.md) (the dashboard guide).
 
 # PART I — OPERATING THE ENGINES
 
-Setup once (or skip installs entirely — see §1.11 and §1.12):
+Setup once — the seed engine + certify gate; one dependency (numpy). Or skip
+installs entirely: see §1.11 and §1.12. **Every command block in this manual
+is paste-safe** (no inline comments, no placeholders — macOS zsh chokes on
+both) and is executed as a gate by `ci/sop_smoke.py`, so if a documented
+command breaks, CI goes red.
 
 ```bash
-pip install ./Primus        # the seed engine + certify gate; one dependency (numpy)
+pip install ./Primus
 ```
 
 Each procedure below follows the same shape: **what it's for → the
@@ -65,8 +69,11 @@ or `trace.py` below.
 *For:* refusing to let a model's arithmetic/factual errors flow downstream —
 in CI, in an agent loop, in a data pipeline.
 
+Pipe any model output in; the exit code is the gate — 0 clean, 1 if ANY
+claim is REFUTED:
+
 ```bash
-echo "<model output>" | primus certify - --gate    # exit 1 if ANY claim is REFUTED
+echo "17*3 = 51 and 2+2 = 5" | primus certify - --gate
 ```
 
 A real certificate (`2^10 = 1025` is the model's error):
@@ -94,8 +101,10 @@ cert["coverage"]                  # how much of the text was checkable AT ALL
 cert["unverifiable_remainder"]    # True — free text is reported, never blessed
 ```
 
+Register certify + collapse as native tools for any MCP agent:
+
 ```bash
-claude mcp add primus -- primus-mcp     # certify + collapse as native agent tools
+claude mcp add primus -- primus-mcp
 ```
 
 **Operational readings:** `--gate` exit codes make it a CI step; `coverage`
@@ -185,7 +194,62 @@ python3 Chiron/actionable_intelligence.py brief 100 103 106 109 112 115 118 121
 `python3 Chiron/govern.py gate|comply|walk` (thresholds via `--Cx --Ar --Hp
 --Mc --V`, regime via `--domain`).
 
-## 1.8 · Compose engines toward a goal (bounded agency)
+## 1.8 · Build your own validation system (compose the engines)
+
+*For:* the real point of the vault — **you design the checks.** Wire any
+engines into a chain, a team, or a swarm, arbitrated by the one gate, and get
+back a single signed verdict. The rule never lies: **the pipeline verifies
+only if every required stage verified; any refusal or refutation makes it
+abstain or fail.** No stage can upgrade another's verdict.
+
+Five composable components, all exact, all already in the vault:
+`collapse` (prove a rule), `cross_examine` (attack it), `certify` (judge a
+text's claims), `govern` (clear against a regime), `candor` (audit tone).
+
+Three modes: **chain** (stages in order over one input, stop on a required
+failure), **team** (every stage over the same input, verdict = AND of
+required), **swarm** (a chain fanned across many inputs).
+
+See the built-in worked examples and the composer's own gates:
+
+```bash
+python3 Chiron/pipeline.py demo
+python3 Chiron/pipeline.py selftest
+```
+
+Run a validation system you declared as data — this one recovers a rule and
+then adversarially attacks it, passing only if both hold:
+
+```bash
+python3 Chiron/pipeline.py run '{"mode":"chain","input":"1 1 2 3 5 8 13 21 34 55","stages":[{"component":"collapse"},{"component":"cross_examine"}]}'
+```
+
+> `PIPELINE (chain) -> VERIFIED`
+> `  [PASS] collapse       VERIFIED linear_recurrence_order2`
+> `  [PASS] cross_examine  SURVIVES CROSS-EXAMINATION — search space exhausted, no peer generator`
+
+From Python, the fluent builder — this is how you cater it to whatever a
+court, an auditor, or a pipeline needs:
+
+```python
+from pipeline import Pipeline
+
+# a text-integrity gate: the claims must verify AND the tone must be candid
+verdict = Pipeline("team").certify().candor().run("The total of 2 and 3 is 5.")
+verdict["verified"]        # True only if BOTH required stages passed
+
+# a swarm: one proof-chain fanned across a whole batch, each independently judged
+batch = Pipeline("swarm").collapse().run(inputs=["1 1 2 3 5 8", "2 4 6 8 10", "4 6 8 9 10 12"])
+batch["verified_count"]    # how many of the batch earned a stamp
+```
+
+Mark a stage `required=False` to make it advisory (it reports but can't sink
+the verdict). Add stages, reorder them, mix text and numeric components —
+the AND-of-required rule holds no matter what you build. **This is the
+system for designing whatever validations-and-checks you need**, and it runs
+from the shell, from Python, or from the dashboard's Run tab (§1.11).
+
+## 1.9 · Compose toward a goal (bounded agency)
 
 *For:* multi-step work where every step must pass the gate and anything
 irreversible must reach a human. This is the vault's answer to "agent mode."
@@ -212,8 +276,11 @@ ever land.
 
 ```bash
 python3 Chiron/chiron_grow.py --params Chiron/grow-public/parameters.json --dry-run --once
-python3 Chiron/grow_clean.py --help     # any file / Wikipedia preset / LLM-aided, same gate
+python3 Chiron/grow_clean.py --help
 ```
+
+(`grow_clean` feeds any file, a Wikipedia preset, or LLM-proposed material —
+all through the same verified-or-refused gate.)
 
 Point `parameters.json` at your topics or feed files directly. The Congress
 (`chiron_memory.json`) is the replayable journal of everything earned;
@@ -226,12 +293,16 @@ heartbeat's outward beat stays **dry-run** until you set
 The discipline is one interface — `Surface → Hypothesis → Constraint →
 Verify → Certificate` — instantiated across domains:
 
+In order: the contract walked end to end; the semantic calculus (56 gates);
+a multi-surface sweep; the head-to-head with general compressors (a law, not
+a dictionary); six domains vs established baselines.
+
 ```bash
-python3 Chiron/epistemic.py demo        # the contract, walked end to end
-python3 Chiron/semic.py selftest        # the semantic calculus (56 gates)
-python3 Chiron/discover.py 3 6 9 12 "abcabcabc"   # multi-surface sweep
-python3 Chiron/compare.py               # vs gzip/bz2/lzma: a law, not a dictionary
-python3 Chiron/bench_suite.py           # six domains vs established baselines
+python3 Chiron/epistemic.py demo
+python3 Chiron/semic.py selftest
+python3 Chiron/discover.py 3 6 9 12 "abcabcabc"
+python3 Chiron/compare.py
+python3 Chiron/bench_suite.py
 ```
 
 Every other module — authorship, legal corpus, protocol inference,
@@ -304,9 +375,12 @@ battery before any commit that touches an engine or a gate. **A failing gate
 is information, not an obstacle** — investigate the root cause; never widen a
 tolerance to get green.
 
+The standard battery, and the full one (adds benchmark, fuzz, MCP, cached
+OEIS, full sweep):
+
 ```bash
-python3 bin/chiron test        # THE standard battery
-python3 bin/chiron test --full # adds benchmark, fuzz, MCP, cached OEIS, full sweep
+python3 bin/chiron test
+python3 bin/chiron test --full
 ```
 
 | Suite (from `Primus/` unless noted) | Command | Green |
@@ -371,10 +445,13 @@ the 2026-07-11→12 night as the worked example:
 
 ## 2.5 · External validation
 
+Cached (offline, what CI runs) · live re-fetch of the curated corpus · the
+full live sweep (author machine, needs oeis.org):
+
 ```bash
-python3 Primus/oeis_live.py                          # cached (offline, CI)
-python3 Primus/oeis_live.py --live                   # re-fetch curated corpus
-python3 Primus/oeis_live.py --live --keyword-core    # full live sweep (author machine)
+python3 Primus/oeis_live.py
+python3 Primus/oeis_live.py --live
+python3 Primus/oeis_live.py --live --keyword-core
 ```
 
 Probe lists fixed before grading; post-development fetches labeled; misses
@@ -395,7 +472,8 @@ Trusted publishing registered (project `primus-intelligence`, owner
    the law.
 2. Bump `Primus/pyproject.toml` + `CHANGELOG.md`.
 3. Full battery.
-4. `git tag v<X.Y.Z>` matching pyproject exactly; push the tag.
+4. Tag matching pyproject exactly, then push the tag — e.g. for 0.6.0:
+   `git tag v0.6.0` and `git push origin v0.6.0`.
 5. `release.yml` verifies the match, reruns gates, checks the LICENSE ships
    in the wheel, publishes.
 
