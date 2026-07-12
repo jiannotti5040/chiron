@@ -101,7 +101,7 @@ MY SET UP LOCALLY ON MACBOOK:
 3. pip install fastapi uvicorn python-multipart numpy scipy networkx \
   anthropic yt-dlp aiofiles opencv-python ultralytics \
   easyocr librosa openai-whisper Pillow
-5. cd /Users/jacobiannotti/Desktop/Thruput_v4 
+5. cd ~/Thruput_v4    # wherever you unpacked it
 6. uvicorn thruput_v4_backend:app --host 0.0.0.0 --port 8000
 7. (Not in terminal) open frontend in browser
 ## API
