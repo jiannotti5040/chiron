@@ -67,7 +67,7 @@ See [Primus/README.md](Primus/README.md).
 | Classical ciphers | 42 / 44 plaintexts recovered ciphertext-only |
 | Randomized fuzz + labeled gauntlet | ~5,070 scored cases — **0 false verifications**, 0 crashes |
 | **Live OEIS (external data)** | `python3 Primus/oeis_live.py` — 28 sequences fetched from oeis.org: **20 verified, all externally correct; 0 false stamps; 7 honest refusals** — incl. Motzkin, Schröder, and (deep tier) the Apéry and Franel numbers via exact P-recursion, with Bell correctly refusing even at 24 shown terms ([results + miss list](Primus/EXTERNAL_VALIDATION.md)) |
-| **vs. symbolic regression** | Same live protocol vs gplearn GP: Primus 16 exact / **0 wrong** / 8 refused; the regressor 2 exact / 22 wrong ([details](Primus/SYMREG_RESULTS.md)) |
+| **vs. symbolic regression** | Same live protocol, both baselines: Primus 18 exact / **0 wrong** / 11 refused; gplearn GP 2 exact / 22 wrong; **PySR** (deterministic, 40 iterations) 5 exact / **24 wrong** — it recovers exactly the polynomial rows and confidently misses everything else ([details](Primus/SYMREG_RESULTS.md)) |
 
 The number that matters is the zero — and it is now an *externally tested* zero. The first
 live-OEIS run caught a false verification the ~5,070 internal cases never surfaced (float

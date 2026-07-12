@@ -1,4 +1,4 @@
-# Head-to-head vs symbolic regression (gplearn) — live OEIS protocol
+# Head-to-head vs symbolic regression (gplearn + PySR) — live OEIS protocol
 
 **Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root [LICENSE.md](../LICENSE.md)).**
 Reproduce: `python3 bench_symreg_external.py --population 300 --generations 12`
@@ -28,9 +28,35 @@ It is deliberately a comparison of **contracts**, not of curve-fitting
 skill. Genetic-programming regression targets approximate fit under noise;
 exact integer continuation is a hostile bar for it, and a larger budget
 than the time-capped run here (population 300, 12 generations) would let it
-recover a few more closed forms. PySR, the stronger modern baseline, would
-do better still — `bench_pysr.py` ships ready to run wherever PySR/Julia is
-installed, same scoring.
+recover a few more closed forms.
+
+## PySR — the stronger baseline (run 2026-07-12)
+
+Reproduce: `python3 bench_pysr.py` (PySR, deterministic serial mode,
+`niterations=40`, seed 0; run on the author machine 2026-07-12 against the
+same cached live-OEIS corpus, now 29 rows, same 12-shown/4-graded exact
+scoring, post-fix engine — commits `ff3acd0..10d6b80`).
+
+| | exact 4/4 | wrong | refused |
+|---|---|---|---|
+| **Primus** | **18** | **0** | 11 |
+| PySR | 5 | 24 | — (cannot refuse) |
+
+PySR's five exact hits are precisely the polynomial-expressible rows:
+triangular numbers, squares, cubes, oblong, and quarter-squares. Everything
+non-polynomial — Fibonacci, Lucas, Pell, Catalan, Motzkin, Schröder,
+factorials, repunits, powers of 2 and 3 — it answered with a confident
+closed-form equation, and answered wrong, 24 times. Primus stamped 18
+exactly, refused 11, and was never wrong.
+
+One honest footnote in PySR's favor: quarter-squares (A002620) is a true
+order-4 recurrence that Primus now *refuses* at 12 shown terms — its
+evidence rule (h ≥ p held-out terms for an order-p recurrence, adopted
+2026-07-11 after the composites false stamp) demands 16 terms before an
+8-parameter rule can stamp. PySR's polynomial guess happens to land exact
+there. That is the trade this project chooses on purpose: the same rule
+that refuses one true quarter-squares stamp is the rule that prevented a
+false composites stamp. Refusal is the product.
 
 But no budget fixes the structural difference this table isolates: a
 regressor **must** return its best guess and carries no native notion of
