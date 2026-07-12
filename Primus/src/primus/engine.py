@@ -45,6 +45,7 @@ from __future__ import annotations
 import math
 import hashlib
 import json
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -408,12 +409,50 @@ def _cand_periodic(seq, precision):
     return out
 
 
-def _cand_factorial_products(seq, precision):
+def _cand_factorial_products(seq, precision, exact_ints=None):
     """Factorial / running-product families: a_n = a_{n-1} * (linear in n).
-    Catches n!, double factorials, Catalan-like products, etc."""
+    Catches n!, double factorials, Catalan-like products, etc.
+
+    On integer surfaces this runs in EXACT Fraction arithmetic end to end
+    (2026-07-11, live OEIS A001147: the float ratio fit reproduced the shown
+    window but drifted in the last digits of the 15th and 16th terms — the
+    repunit defect class in another family). alpha/beta are solved from two
+    exact ratios and must reproduce EVERY ratio exactly, or there is no
+    candidate; the predictor multiplies Fractions, never floats."""
     n = len(seq)
     if n < 4 or np.any(seq == 0):
         return None
+
+    _iv = _exact_int_view(seq, exact_ints)
+    if _iv is not None:
+        from fractions import Fraction
+        iseq = _iv
+        rat = [Fraction(iseq[k + 1], iseq[k]) for k in range(n - 1)]
+        # r_k = alpha*k + beta for k = 1..n-1, solved exactly from the first
+        # two ratios, then REQUIRED to hold exactly everywhere.
+        alpha_ex = rat[1] - rat[0]
+        beta_ex = rat[0] - alpha_ex
+        if any(rat[k - 1] != alpha_ex * k + beta_ex for k in range(1, n)):
+            return None
+        a0_ex = Fraction(iseq[0])
+
+        def predict(m, _a0=a0_ex, _al=alpha_ex, _be=beta_ex):
+            from fractions import Fraction
+            o = [_a0]
+            for k in range(1, m):
+                o.append(o[-1] * (_al * k + _be))
+            return [int(x) if x.denominator == 1 else float(x) for x in o[:m]]
+        pred = np.array([float(x) for x in seq], dtype=float)  # exact reproduction
+        mb, rb, res = _score_numeric(seq, pred, 3,
+                                     [float(a0_ex), float(alpha_ex), float(beta_ex)],
+                                     precision)
+        return ("multiplicative_ratio",
+                {"a0": float(a0_ex), "ratio_slope": float(alpha_ex),
+                 "ratio_intercept": float(beta_ex), "exact": True},
+                {"family": "multiplicative"}, mb, rb, res, predict)
+
+    # non-integer surfaces: the float path remains, and _holdout_verify's
+    # 2^53 guard plus exact-equality rule keep it from stamping big integers.
     ratios = seq[1:] / seq[:-1]                       # r_k = a_{k+1}/a_k
     x = np.arange(1, n, dtype=float)
     # is the ratio itself linear/affine in k?  r_k ~ alpha*k + beta
@@ -733,8 +772,13 @@ def _best_numeric_model(arr: np.ndarray, precision: float, exact_ints=None) -> O
     cands += hx
     # exact holonomic supersedes the float/SVD path on integer surfaces
     _holo_fns = () if hx else (_cand_holonomic,)
-    for fn in (_cand_factorial_products, _cand_alternating, _cand_power_law,
-               *_holo_fns):
+    try:
+        r = _cand_factorial_products(arr, precision, exact_ints=exact_ints)
+    except Exception:
+        r = None
+    if r:
+        cands.append(r)
+    for fn in (_cand_alternating, _cand_power_law, *_holo_fns):
         try:
             r = fn(arr, precision)
         except Exception:
@@ -807,12 +851,43 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str,
     if best_pref is None:
         return (False, 0, h, 0.0)
     pname, _, _, _, _, _, predict = best_pref
+    # Held-out evidence must scale with model capacity (2026-07-11, A002808):
+    # an order-4 recurrence (8 free parameters) fit the composites EXACTLY
+    # through all 12 shown terms — no in-window test can catch it — and was
+    # then judged by only 3 held-out terms. A rule with 2p parameters buys a
+    # stamp only from at least p held-out hits; below that, refuse.
+    m_ord = re.match(r"linear_recurrence_order(\d+)$", pname or "")
+    if m_ord and h < int(m_ord.group(1)):
+        return (False, 0, h, 0.0)
     try:
-        raw = list(predict(n))[n - h:]
+        raw_full = list(predict(n))
+        raw = raw_full[n - h:]
     except Exception:
         return (False, 0, h, 0.0)
     actual = exact_ints[n - h:] if exact_ints is not None else arr[n - h:]
     int_surface = exact_ints is not None or bool(np.all(np.mod(arr, 1) == 0))
+    # A rule that misfits the very prefix it was fitted on has recovered
+    # nothing — tail hits are then coincidence, and on small alphabets the
+    # coincidence is cheap (2026-07-11, A000002 Kolakoski: a residual-bearing
+    # periodic_3 hit 3 held-out terms at ~1/8 odds). On integer surfaces the
+    # refit must reproduce its OWN prefix exactly before tail hits count.
+    if int_surface:
+        pref_actual = exact_ints[:n - h] if exact_ints is not None else arr[:n - h]
+        for p_val, a_val in zip(raw_full[:n - h], pref_actual):
+            try:
+                if isinstance(p_val, int):
+                    pi, close = p_val, True
+                else:
+                    f = float(p_val)
+                    if not math.isfinite(f) or abs(f) >= 2.0 ** 53:
+                        return (False, 0, h, 0.0)
+                    pi = int(round(f))
+                    close = abs(f - pi) <= max(precision, 1e-6)
+                truth = a_val if isinstance(a_val, int) else int(round(float(a_val)))
+                if not (close and pi == truth):
+                    return (False, 0, h, 0.0)
+            except (OverflowError, ValueError):
+                return (False, 0, h, 0.0)
     if int_surface:
         # "verified" must mean EXACT equality on integer surfaces. The old
         # 1e-6 relative tolerance let a drifted recurrence stamp repunits
@@ -887,6 +962,13 @@ def collapse_numeric(seq: List[float]) -> Invariant:
     fit = max(0.0, 1.0 - (rb / max(surface_bits, 1e-9)))
     verified, hits, h, evidence = _holdout_verify(arr, precision, name,
                                                    exact_ints=exact_ints)
+    # The same evidence rule the holdout refit obeys, applied to the
+    # FULL-surface winner (2026-07-11, A002808): an order-p recurrence may
+    # describe the surface, but it cannot STAMP unless the holdout offered
+    # at least p held-out terms (h = max(2, n // 4)).
+    m_ord = re.match(r"linear_recurrence_order(\d+)$", name or "")
+    if m_ord and max(2, len(arr) // 4) < int(m_ord.group(1)):
+        verified = False
     structure = dict(structure)
     structure["verified"] = bool(verified)
     inv = Invariant("numeric", name, params, structure, mb, rb, surface_bits,

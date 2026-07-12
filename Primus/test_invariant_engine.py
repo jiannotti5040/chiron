@@ -247,5 +247,29 @@ check("NaN/inf reported honestly, no crash",
       E.collapse([1.0, float("nan"), 3.0]).model_class == "non_finite")
 check("__all__ exposes the public API", "collapse" in _IE.__all__ and "TwinBijection" in _IE.__all__)
 
+print("\n=== STRESS 16: THE 2026-07-11 LIVE-SWEEP MISSES (issue #5) — locked ===")
+# Three false verifications from the first full keyword:core sweep; each is a
+# distinct defect class and each must stay fixed forever.
+kol = E.collapse([1, 2, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2])         # A000002
+check("Kolakoski-12 REFUSES (residual-bearing periodic can never stamp)",
+      not kol.structure.get("verified"))
+dfo = E.collapse([1, 1, 3, 15, 105, 945, 10395, 135135, 2027025,
+                  34459425, 654729075, 13749310575])            # A001147
+check("odd double factorial VERIFIES via exact ratio path",
+      dfo.structure.get("verified") is True and dfo.model_class == "multiplicative_ratio")
+check("...and predicts terms 13-16 EXACTLY (no float drift past 2^53)",
+      list(dfo.predict(16))[12:] == [316234143225, 7905853580625,
+                                     213458046676875, 6190283353629375])
+cmp12 = E.collapse([4, 6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21])  # A002808
+check("composites-12 REFUSES (order-4 = 8 params; 3 held-out terms cannot stamp it)",
+      not cmp12.structure.get("verified"))
+check("composites-16 STILL refuses (the accident does not survive more evidence)",
+      not E.collapse([4, 6, 8, 9, 10, 12, 14, 15, 16, 18,
+                      20, 21, 22, 24, 25, 26]).structure.get("verified"))
+check("Fibonacci-10 still stamps (h>=p spares order-2)",
+      E.collapse([1, 1, 2, 3, 5, 8, 13, 21, 34, 55]).structure.get("verified") is True)
+check("Tribonacci-12 still stamps (h=3 >= p=3 — evidence rule is calibrated, not blanket)",
+      E.collapse([0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274]).structure.get("verified") is True)
+
 print(f"\n  {P}/{P+F} stress tests passed.")
 exit(0 if F == 0 else 1)
