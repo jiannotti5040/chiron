@@ -134,6 +134,34 @@ The extended battery stands at **35 sequences — 25 verified (all externally
 correct), 0 false stamps, 9 refusals, 1 conservative unstamp.** As before, the
 claim is stronger for having been falsified and repaired in the open.
 
+## 2026-07-11 — the first full keyword:core sweep: 3 false stamps. OPEN.
+
+**Status: OPEN DEFECTS in the seed engine, found tonight, not yet fixed.**
+Published immediately, per this project's rule that the miss list *is* the
+product.
+
+The live sweep was expanded from the curated battery to the OEIS
+`keyword:core` corpus fetched live (109 sequences graded after the search API
+stopped serving pages at start=110; the pager now retries with backoff and
+grades the honest partial — that fetch-path hardening was itself found by this
+run, first live contact). Protocol: engine sees 12 terms, graded on exact
+prediction of the next 4. Raw log: `oeis_sweep_2026-07-11_109seq.log`.
+
+Result: **44 verified-correct · 3 VERIFIED+WRONG · 61 honest declines · 1
+conservative unstamp.** The three false stamps, each a distinct root cause:
+
+| Sequence | Stamped as | Predicted vs expected | Suspected root cause |
+|---|---|---|---|
+| A000002 Kolakoski | `periodic_3` | `[1,2,2,1]` vs `[1,1,2,1]` | periodic family's verification hole on short surfaces |
+| A001147 odd double factorial | `multiplicative_ratio` | `…876, …417` vs `…875, …375` (last digits) | float precision leaking past 2^53 in the ratio path — the repunit defect class, different family |
+| A002808 composites | `linear_recurrence_order4` | `[22,24,26,27]` vs `[22,24,25,26]` | order-4 evidence margin too loose at 12 shown terms |
+
+At 12 shown terms the honest behaviour for all three was **refusal**. The fix
+work (per playbook: root cause, never a widened tolerance; exact arithmetic on
+every stamping path; port to Chiron; drift + full battery) is tracked in the
+repo's issues. The cached battery and all internal suites remain green; the
+sections above this one predate tonight's finding.
+
 ## Head-to-head: symbolic-regression baseline
 
 See `bench_symreg_external.py` (gplearn, runnable offline once installed)

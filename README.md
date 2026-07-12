@@ -6,7 +6,7 @@
 >
 > **Or skip the reading: [try the live playground](https://jiannotti5040.github.io/chiron-vault/playground.html)** — the real engine, in your browser, no install. Paste a sequence, watch it verify or refuse.
 >
-> **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 155+ passing gates and zero false verifications. Architecture at a glance: **[architecture.svg](architecture.svg)**.
+> **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 155+ passing gates and a zero-false-verification contract **enforced by live external testing — which just did its job again**: a 109-sequence OEIS sweep (2026-07-11) caught 3 false stamps, published the same night as [open defects under repair](Primus/EXTERNAL_VALIDATION.md). Architecture at a glance: **[architecture.svg](architecture.svg)**.
 
 <p align="center"><img src="docs/assets/demo.svg" width="780" alt="Real terminal session, outputs unedited: collapse recovers Fibonacci's generator and proves it on 3 held-out terms; certify verifies 2+3+7=12 and 17*3=51 but REFUTES 2^10=1025."></p>
 
