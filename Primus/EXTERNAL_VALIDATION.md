@@ -134,11 +134,21 @@ The extended battery stands at **35 sequences — 25 verified (all externally
 correct), 0 false stamps, 9 refusals, 1 conservative unstamp.** As before, the
 claim is stronger for having been falsified and repaired in the open.
 
-## 2026-07-11 — the first full keyword:core sweep: 3 false stamps. OPEN.
+## 2026-07-11 — the first full keyword:core sweep: 3 false stamps. RESOLVED same night.
 
-**Status: OPEN DEFECTS in the seed engine, found tonight, not yet fixed.**
-Published immediately, per this project's rule that the miss list *is* the
-product.
+**Status: RESOLVED.** All three defects were fixed at root within hours
+(commits `ff3acd0`/`5f619da`: prefix-exactness in the holdout refit, held-out
+evidence scaled to model capacity — h ≥ p for order-p recurrences — and an
+exact-Fraction multiplicative_ratio path), ported to Chiron the same night,
+locked into the drift set (42/42) and the stress suite (55/55). The re-run
+sweep on the same 109 live sequences: **44 verified — all externally correct,
+0 false stamps, 63 honest declines, 2 conservative unstamps**
+(`oeis_sweep_2026-07-12_fixed.log`). The repair cost zero correct external
+stamps at this protocol, and A001147 moved from false-stamp to exactly
+verified. Bonus finding: the fix exposed Thue-Morse's old cached stamp as the
+same coincidence class (lucky-right), now an honest refusal.
+
+The original report is preserved unedited below.
 
 The live sweep was expanded from the curated battery to the OEIS
 `keyword:core` corpus fetched live (109 sequences graded after the search API
