@@ -89,7 +89,15 @@ def fetch_keyword_core(limit: int) -> dict:
     while len(out) < limit:
         j = json.loads(_get(
             f"https://oeis.org/search?q=keyword:core&fmt=json&start={start}"))
-        results = j.get("results") or []
+        # OEIS has served both shapes over time: {"results": [...]} and a bare
+        # list of results. First live keyword:core run (2026-07-11) met the
+        # bare list; accept both, refuse anything else.
+        if isinstance(j, list):
+            results = j
+        elif isinstance(j, dict):
+            results = j.get("results") or []
+        else:
+            results = []
         if not results:
             break
         for r in results:
