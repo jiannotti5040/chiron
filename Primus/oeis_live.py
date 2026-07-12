@@ -87,26 +87,44 @@ def fetch_keyword_core(limit: int) -> dict:
     """Full keyword:core corpus via the OEIS search API (JSON, paged by 10)."""
     out, start = {}, 0
     while len(out) < limit:
-        j = json.loads(_get(
-            f"https://oeis.org/search?q=keyword:core&fmt=json&start={start}"))
-        # OEIS has served both shapes over time: {"results": [...]} and a bare
-        # list of results. First live keyword:core run (2026-07-11) met the
-        # bare list; accept both, refuse anything else.
-        if isinstance(j, list):
-            results = j
-        elif isinstance(j, dict):
-            results = j.get("results") or []
-        else:
-            results = []
+        url = f"https://oeis.org/search?q=keyword:core&fmt=json&start={start}"
+        # Politeness + honesty: retry a flaky page twice with backoff; if the
+        # API still serves non-JSON, STOP and grade the partial corpus rather
+        # than crash — the harness reports exactly how many it graded.
+        results = None
+        for attempt in range(3):
+            try:
+                j = json.loads(_get(url))
+            except (json.JSONDecodeError, OSError) as exc:
+                print(f"  page start={start}: attempt {attempt + 1} failed "
+                      f"({type(exc).__name__}); backing off", flush=True)
+                time.sleep(8.0 * (attempt + 1))
+                continue
+            # OEIS has served both shapes over time: {"results": [...]} and a
+            # bare list. First live keyword:core run (2026-07-11) met the bare
+            # list; accept both.
+            if isinstance(j, list):
+                results = j
+            elif isinstance(j, dict):
+                results = j.get("results") or []
+            else:
+                results = []
+            break
+        if results is None:
+            print(f"  page start={start}: unreadable after retries — grading "
+                  f"the {len(out)} sequences fetched so far", flush=True)
+            break
         if not results:
             break
+        print(f"  page start={start}: +{len(results)} (corpus {len(out) + len(results)})",
+              flush=True)
         for r in results:
             anum = f"A{r['number']:06d}"
             terms = [int(x) for x in r["data"].split(",")]
             out[anum] = {"name": r.get("name", ""), "terms": terms,
                          "class_prior": "unlabeled (keyword:core)"}
         start += len(results)
-        time.sleep(1.0)  # be polite
+        time.sleep(2.0)  # be polite
     return out
 
 
