@@ -48,11 +48,14 @@ def pysr_row(terms, niterations):
     shown, held = terms[:SHOW], terms[SHOW:SHOW + GRADE]
     X = np.arange(SHOW, dtype=float).reshape(-1, 1)
     y = np.array(shown, dtype=float)
+    # PySR >= 1.x demands the full deterministic triple: deterministic=True is
+    # only honoured with parallelism="serial" AND an explicit random_state
+    # (first live run, 2026-07-11). Serial is slower; determinism is the point.
     model = PySRRegressor(niterations=niterations,
                           binary_operators=["+", "-", "*", "/"],
                           unary_operators=[], progress=False,
                           model_selection="best", random_state=0,
-                          deterministic=True, procs=0)
+                          deterministic=True, parallelism="serial")
     model.fit(X, y)
     Xt = np.arange(SHOW, SHOW + GRADE, dtype=float).reshape(-1, 1)
     pred_f = model.predict(Xt)
