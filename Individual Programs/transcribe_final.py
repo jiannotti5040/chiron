@@ -11,9 +11,9 @@ from pyannote.audio import Pipeline
 from datetime import timedelta
 from docx import Document
 
-# CONFIGURATION
-WATCH_FOLDER = "/Users/jacobiannotti/Desktop/DUMP/Transcription Folder- Walter Reed Project /transcribe_input"
-OUTPUT_FOLDER = "/Users/jacobiannotti/Desktop/DUMP/Transcription Folder- Walter Reed Project /transcribe_output"
+# CONFIGURATION — override via env; defaults are relative to where you run it
+WATCH_FOLDER = os.environ.get("TRANSCRIBE_WATCH", "./transcribe_input")
+OUTPUT_FOLDER = os.environ.get("TRANSCRIBE_OUT", "./transcribe_output")
 MODEL_REPO = "mlx-community/whisper-medium.en-mlx" 
 EXTENSIONS = {".mp4", ".mkv", ".mov", ".webm", ".avi", ".m4a", ".mp3", ".wav"}
 
