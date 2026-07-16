@@ -28,6 +28,17 @@ _HERE = os.path.dirname(os.path.abspath(__file__))          # the Chiron Monolit
 CHIRON = os.path.normpath(os.path.join(_HERE, os.pardir, "Chiron"))   # the sibling spine to fold
 OUT = os.path.join(_HERE, "chiron_monolith.py")
 
+# [2026-07-16] Cross-package spine dependencies, folded in so the monolith is truly
+# standalone. cert_engine (JDICert) and candor (Candor) are imported by Chiron/*.py
+# (density_emotion, axioms, holographic, candor_bridge, judgment, ...) but live outside
+# Chiron/ — without them the "one file" silently required the vault beside it. Same
+# byte-identical embedding and round-trip assertion as the spine. cert_engine needs
+# numpy at import time; that is the fold's one external dependency and is disclosed.
+EXTRA_SPINE = {
+    "cert_engine": os.path.normpath(os.path.join(_HERE, os.pardir, "JDICert", "cert_engine.py")),
+    "candor": os.path.normpath(os.path.join(_HERE, os.pardir, "Candor", "candor.py")),
+}
+
 # Runtime files copied next to the monolith so the folder is self-contained — it can serve the
 # dashboard and run standalone even with no sibling Chiron/ directory present.
 _BUNDLE = ["dashboard.html", "parameters.json",
@@ -83,6 +94,17 @@ def _decode(name):
     return base64.b64decode(_SOURCES[name]).decode("utf-8")
 
 
+def _register_source(name, filename):
+    """Make the embedded source visible to inspect.getsource / traceback, keyed by the
+    module's __file__ — so a folded module that scans its OWN source (e.g. a license-header
+    gate that calls inspect.getsource(sys.modules[__name__])) works even when no matching
+    .py exists on disk. This is what lets the fold be genuinely standalone, not just importable."""
+    import linecache
+    src = _decode(name)
+    lines = src.splitlines(keepends=True)
+    linecache.cache[filename] = (len(src), None, lines, filename)
+
+
 def _plugin_path(name):
     """plugins/<name>.py — but ONLY for names that are not embedded. The
     embedded spine always wins, so a plugin can never shadow (and thereby
@@ -100,10 +122,17 @@ def _plugin_names():
                   if f.endswith(".py") and _plugin_path(f[:-3]))
 
 
+_EXTRA_REAL = {
+    "cert_engine": os.path.normpath(os.path.join(_HERE, os.pardir, "JDICert", "cert_engine.py")),
+    "candor": os.path.normpath(os.path.join(_HERE, os.pardir, "Candor", "candor.py")),
+}
+
+
 def _module_file(name):
-    """__file__ for an embedded module: the real Chiron/<name>.py when present (so
-    self-source scans and _HERE-relative data resolve), else a virtual local path."""
-    real = os.path.join(_CHIRON, name + ".py")
+    """__file__ for an embedded module: the real source when present (so self-source
+    scans and _HERE-relative data resolve), else a virtual local path. Cross-package
+    spine modules (cert_engine, candor) resolve to their own packages, not Chiron/."""
+    real = _EXTRA_REAL.get(name, os.path.join(_CHIRON, name + ".py"))
     return real if os.path.isfile(real) else os.path.join(_HERE, name + ".py")
 
 
@@ -116,6 +145,7 @@ class _Loader(importlib.abc.Loader):
 
     def exec_module(self, module):
         module.__file__ = _module_file(self._name)
+        _register_source(self._name, module.__file__)
         exec(compile(_decode(self._name), module.__file__, "exec"), module.__dict__)
 
 
@@ -155,6 +185,8 @@ def run_module(name, argv):
     mod.__name__ = "__main__"
     mod.__file__ = plug if plug else _module_file(name)
     mod.__package__ = None
+    if not plug:
+        _register_source(name, mod.__file__)   # self-source scans work standalone
     saved_argv = list(sys.argv)
     saved_main = sys.modules.get("__main__")
     saved_named = sys.modules.get(name)
@@ -184,7 +216,12 @@ def run_module(name, argv):
 # Servers and corpus-mutating tools are not auto-run in a sweep (identical to the full
 # build's build_manifest.NO_AUTORUN), so the fold's coverage matches the spine's exactly.
 _NO_AUTORUN = {"assistant_server", "console_server", "chiron_grow", "president_grow",
-               "grow_control", "grow_clean", "build_manifest", "ingest_pdf"}
+               "grow_control", "grow_clean", "build_manifest", "ingest_pdf",
+               # cross-package libraries folded in [2026-07-16] for import resolution
+               # (Chiron modules do `import candor` / `import cert_engine`); they are
+               # exercised THROUGH the spine (candor's over-assertion gate, the JDICert
+               # 280-test suite), not via their own CLI, so the sweep does not auto-run them.
+               "candor"}
 _SMOKE = ["semic", "chiron", "density_emotion", "semic_energy", "epistemic"]
 
 
@@ -273,6 +310,14 @@ def build():
         raw = open(os.path.join(CHIRON, fname), "rb").read()
         b64 = base64.b64encode(raw).decode("ascii")
         assert base64.b64decode(b64) == raw, "round-trip failed: " + fname
+        entries.append((name, b64))
+        total += len(raw)
+    for name, path in sorted(EXTRA_SPINE.items()):     # cross-package spine deps
+        assert name not in {e[0] for e in entries}, "name collision: " + name
+        assert os.path.isfile(path), "missing spine dependency: " + path
+        raw = open(path, "rb").read()
+        b64 = base64.b64encode(raw).decode("ascii")
+        assert base64.b64decode(b64) == raw, "round-trip failed: " + name
         entries.append((name, b64))
         total += len(raw)
     with open(OUT, "w", encoding="utf-8") as out:
