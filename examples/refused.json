@@ -1,0 +1,35 @@
+{
+  "owner": "Jacob Iannotti",
+  "domain": "numeric",
+  "model_class": "linear_recurrence_order3",
+  "params": {
+    "coeffs": [
+      -6,
+      3,
+      2
+    ],
+    "seeds": [
+      2,
+      3,
+      5
+    ]
+  },
+  "structure": {
+    "family": "linear_recurrence",
+    "order": 3,
+    "verified": false,
+    "status": "recovered_unstamped",
+    "reason": "held_out_mismatch"
+  },
+  "exact": true,
+  "verified": false,
+  "model_bits": 49.25,
+  "surface_bits": 70.36,
+  "compression_ratio": 1.429,
+  "mdl_margin_bits": 999.0,
+  "fit_score": 1.0,
+  "family_fingerprint": "245b1d28d05a0d87",
+  "generator_fingerprint": "0d20010fb354ace5",
+  "residual": [],
+  "explanation": "Recovered model 'linear_recurrence_order3' reproduces the given terms exactly but its held-out prediction did not confirm (0/2); status recovered_unstamped. Treat as a candidate, not verified."
+}
