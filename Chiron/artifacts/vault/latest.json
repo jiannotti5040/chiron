@@ -1,10 +1,10 @@
 {
   "artifact": "vault",
   "claim": "this organism moves on its own pulse and stamps only what it exactly verifies",
-  "generated_utc": "2026-07-12T12:37:52Z",
+  "generated_utc": "2026-07-16T21:42:11Z",
   "beat": 999,
   "incarnation": "spine",
-  "fold_hash": "a1c22b55fe8ac954",
+  "fold_hash": "dd99275ef782f2b4",
   "all_movements_green": false,
   "movements": [
     {
@@ -36,13 +36,10 @@
       "size_mb": 10.215,
       "concepts": 0
     },
-    "heart_congress": {
-      "size_mb": 0.118,
-      "concepts": 0
-    }
+    "heart_congress": null
   },
-  "ledger_height": 149,
+  "ledger_height": 12,
   "what_was_discovered": "inward: ok; reflex: REFUSED/FAILED",
   "what_would_falsify": "any VERIFIED stamp an external replay cannot reproduce exactly; any behavioral difference between spine and fold; any entry in either congress lacking exact held-out verification; any beat reported green here whose ledger records a failure",
-  "self_hash": "b269564d281f1f1e"
+  "self_hash": "479c8962db7afe15"
 }
