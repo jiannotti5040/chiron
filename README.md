@@ -1,8 +1,10 @@
 # Chiron
 
-For full program license Here: 
+For full program license checkout at stripe 
 https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
+
 https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
+
 https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
 
 ### The verification layer for machine intelligence.
