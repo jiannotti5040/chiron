@@ -1,5 +1,12 @@
 # License
 
+
+https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
+
+https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
+
+https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
+
 **Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved.**
 
 This repository is licensed under the PolyForm Noncommercial License 1.0.0.
