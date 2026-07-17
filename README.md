@@ -1,6 +1,7 @@
 # Chiron
 
 For full program license checkout at stripe 
+
 https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
 
 https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
