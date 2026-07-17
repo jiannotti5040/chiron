@@ -43,8 +43,18 @@ commercial rights run to the end of the paid period.
 
 ## Buy
 
-Individual and Team tiers are self-serve via Stripe (links added at launch).
-Business, Business Scale, and Enterprise start with a short conversation so the
-license matches your size and needs: **jiannotti1@gmail.com**.
+Self-serve, live now (billed monthly via Stripe; card statements read
+`THRUPUT CHIRON`):
+
+- **[Individual — $100/month](https://buy.stripe.com/7sYaEX1817df9047KR67S0c)**
+- **[Team — $500/month](https://buy.stripe.com/8x29AT03X9lna486GN67S0d)**
+- **[Business — $2,000/month](https://buy.stripe.com/fZufZh5oh4134JO4yF67S0e)**
+
+Checkout asks for your GitHub username — that's how your `chiron-vault` engine
+access is provisioned after payment.
+
+**Business Scale** (up to $10,000/month) and **Enterprise** (custom, above
+that) start with a short conversation so the license matches your size and
+needs: **jiannotti1@gmail.com**.
 
 > Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
