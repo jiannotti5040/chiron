@@ -1,6 +1,14 @@
 ;# Verified Ink
 *An algorithmic philosophy*
 
+For full program license checkout at stripe 
+
+https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
+
+https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
+
+https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
+
 Most generative art asserts. Every particle that crosses the canvas leaves its
 mark unconditionally, every trail is believed simply because it was drawn.
 **Verified Ink** begins from the opposite temperament: ink is not a right, it
