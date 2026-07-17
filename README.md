@@ -1,5 +1,10 @@
 # Chiron
 
+For full program license Here: 
+https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
+https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
+https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
+
 ### The verification layer for machine intelligence.
 
 Chiron recovers the exact rule behind data, proves it on evidence the rule never saw, and **refuses to answer when it cannot prove** — then leaves a signed, falsifiable certificate of what it did and why.
@@ -147,3 +152,10 @@ Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHIT
 > Required Notice: Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
 > Public materials licensed under PolyForm Noncommercial 1.0.0 — see [LICENSE.md](LICENSE.md).
 > Questions: jiannotti1@gmail.com
+
+
+
+For full program license Here: 
+https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
+https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
+https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
