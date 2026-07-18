@@ -6,7 +6,7 @@
 
 Chiron recovers the exact rule behind data, proves it on evidence the rule never saw, and **refuses to answer when it cannot prove** — then leaves a signed, falsifiable certificate of what it did and why.
 
-Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict**. On its published gates, Chiron's `verified` stamp has never been wrong on external data — because when it cannot prove a claim exactly, it says so instead of guessing.
+Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict**. On the current published gates, Chiron produces zero false verifications. Earlier external runs did find false stamps; those failures were published and repaired at the exactness boundary instead of being hidden.
 
 **You are not buying code. You are buying certainty about machine output.**
 
