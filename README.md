@@ -1,12 +1,6 @@
 # Chiron
 
-For full program license checkout at stripe 
-
-https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
-
-https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
-
-https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
+> **Checkout is temporarily paused.** Automated paid access to the private subscriber repository is being finalized and acceptance-tested. No self-serve tier is currently for sale. Questions: jiannotti1@gmail.com.
 
 ### The verification layer for machine intelligence.
 
@@ -158,7 +152,4 @@ Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHIT
 
 
 
-For full program license Here: 
-https://buy.stripe.com/bJe7sL6sl1SVfos3uB67S0h Individual
-https://buy.stripe.com/5kQ6oH8At69b7W02qx67S0g Team
-https://buy.stripe.com/4gMbJ1cQJ8hj3FKfdj67S0f Business
+> **Checkout is temporarily paused.** Automated paid access to the private subscriber repository is being finalized and acceptance-tested. No self-serve tier is currently for sale. Questions: jiannotti1@gmail.com.
