@@ -8,9 +8,13 @@ whole design.
 
 A change to Chiron that makes any engine stamp something it cannot exactly prove
 is wrong — even if every benchmark number improves. This is not a tuning
-preference; it is the contract. The entire value of a `verified` stamp is that
-it has never lied on external data. The moment it lies once, it is worth nothing,
-because you can no longer tell its true stamps from its false ones.
+preference; it is the contract. The entire value of a `verified` stamp is that a
+lie is never allowed to stand: the stamp is policed by live external testing,
+and on the occasions that testing has caught a false stamp, the miss was
+published the same night and fixed at the root — never quietly absorbed. The
+current external battery grades 44 verified, all correct, zero false. A stamp
+whose failures are hunted, published, and repaired in the open is the only kind
+whose true stamps you can tell from luck.
 
 So Chiron would rather say **REFUSED** than risk a false **VERIFIED**. Refusal is
 a feature, not a failure. A calculator that is right 99% of the time is useless

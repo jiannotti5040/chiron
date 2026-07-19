@@ -4,7 +4,7 @@
 
 Chiron recovers the exact rule behind data, proves it on evidence the rule never saw, and **refuses to answer when it cannot prove** — then leaves a signed, falsifiable certificate of what it did and why.
 
-Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict**. On its published gates, Chiron's `verified` stamp has never been wrong on external data — because when it cannot prove a claim exactly, it says so instead of guessing.
+Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict** — and the verdict is policed by live external testing. When a 109-sequence OEIS sweep caught 3 false stamps, they were published the same night and fixed at the root within hours; the re-run grades **44 verified, all externally correct, zero false**. When Chiron cannot prove a claim exactly, it says so instead of guessing — and on the day a stamp is ever wrong, the miss gets published and repaired, never buried. The record is stronger for having been falsified and repaired in the open.
 
 **You are not buying code. You are buying certainty about machine output.**
 
@@ -73,7 +73,7 @@ Organizations are deploying AI into decisions they cannot afford to get wrong �
 
 Today the answers are fragmented: internal testing, screenshots, human review, vendor promises. None of them produce evidence that survives an audit, a regulator, an incident, or a courtroom.
 
-Chiron is the missing layer between a machine's output and your decision to trust it. It **measures, checks, governs, and certifies** — built on one non-negotiable property: **zero false verifications.** Refusal is a feature. A stamp that has never lied is worth more than a stamp that is usually right.
+Chiron is the missing layer between a machine's output and your decision to trust it. It **measures, checks, governs, and certifies** — built on one non-negotiable property: **zero false verifications.** Refusal is a feature. A stamp whose every miss is published and repaired at the root is worth more than a stamp that is usually right.
 
 ---
 

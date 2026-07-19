@@ -1,4 +1,4 @@
-;# Verified Ink
+# Verified Ink
 *An algorithmic philosophy*
 
 Most generative art asserts. Every particle that crosses the canvas leaves its
