@@ -8,6 +8,8 @@ Most AI systems assert. They produce an output and you trust it. Chiron inverts 
 
 **You are not buying code. You are buying certainty about machine output.**
 
+<p align="center"><img src="docs/assets/chiron_demo.gif" width="880" alt="Real terminal session, outputs unedited: Chiron verifies a geometric rule on held-out terms, then refuses to certify a formula that fits the primes but fails the withheld terms, then shows a certificate that names its own falsifier."></p>
+
 > Free to explore and use noncommercially (PolyForm Noncommercial 1.0.0).
 > Commercial use and the full engine are licensed — see **[Pricing](PRICING.md)**.
 
