@@ -3,8 +3,13 @@
 **Licensor:** Jacob Iannotti (THRUPUT) · **Contact:** jiannotti1@gmail.com
 **Licensee:** the individual or legal entity holding an active Chiron
 subscription (Stripe), at the tier shown on that subscription.
-**Engine:** the contents of this repository (`chiron-vault`) and the public
-`chiron` repository, as published during your License Term.
+**Engine:** the software in this repository (`chiron-vault`) — code, tests,
+gates, certificates, schemas, and technical documentation — and the public
+`chiron` repository, as published during your License Term. The Vault's
+literary, philosophical, and artistic works (including
+`Ontological & Philosophical Books/`, `Paper/`, and other prose works) are
+**not** part of the Engine: your repository access lets you read them, but they
+remain governed by PolyForm Noncommercial 1.0.0 at every tier.
 
 If you can read this repository because you were invited after subscribing,
 this license is yours — no countersignature required. Your Effective Date is
