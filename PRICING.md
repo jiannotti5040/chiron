@@ -41,18 +41,21 @@ on your own data — the verification claims refer to the engine's published,
 reproducible self-test gates. All sales are final; cancel anytime and your
 commercial rights run to the end of the paid period.
 
-## Availability
+## Buy
 
-**Self-serve checkout is temporarily paused** while automated paid access to the
-private subscriber repository is finalized and acceptance-tested. No tier is
-currently available through an unattended purchase link.
+Self-serve, live now (billed monthly via Stripe; card statements read
+`THRUPUT CHIRON`):
 
-The planned self-serve v1 offer is **Individual — $100/month, one seat**. Team,
-Business, Business Scale, and Enterprise remain sales-assisted and unavailable
-for self-serve purchase until seat-roster enforcement and the corresponding
-terms have been reviewed.
+- **[Individual — $100/month](https://buy.stripe.com/7sYaEX1817df9047KR67S0c)**
+- **[Team — $500/month](https://buy.stripe.com/8x29AT03X9lna486GN67S0d)**
+- **[Business — $2,000/month](https://buy.stripe.com/fZufZh5oh4134JO4yF67S0e)**
 
-For availability or commercial-license questions, contact
-**jiannotti1@gmail.com**. Do not send payment details by email.
+Checkout asks for your GitHub username — that's how your `chiron-vault` engine
+access is provisioned after payment (Team and Business: extra seat invites are
+set up with you directly after purchase).
+
+**Business Scale** (up to $10,000/month) and **Enterprise** (custom, above
+that) start with a short conversation so the license matches your size and
+needs: **jiannotti1@gmail.com**. Do not send payment details by email.
 
 > Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
