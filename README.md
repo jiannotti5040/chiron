@@ -1,7 +1,5 @@
 # Chiron
 
-> **Checkout is temporarily paused.** Automated paid access to the private subscriber repository is being finalized and acceptance-tested. No self-serve tier is currently for sale. Questions: jiannotti1@gmail.com.
-
 ### The verification layer for machine intelligence.
 
 Chiron recovers the exact rule behind data, proves it on evidence the rule never saw, and **refuses to answer when it cannot prove** — then leaves a signed, falsifiable certificate of what it did and why.
