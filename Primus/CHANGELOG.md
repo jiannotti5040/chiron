@@ -2,6 +2,46 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.6.0 — 2026-07-20
+
+**Guess-and-prove: a stochastic proposer behind the exact gate.**
+The benchmark adversary (gplearn GP, see SYMREG_RESULTS.md) becomes a
+conjecture generator whose output must survive the same discipline it was
+losing to. The stochastic search never touches a stamping path.
+
+- **New module `primus.conjecture`** (+ `primus conjecture` CLI, MCP
+  `conjecture` tool, optional install `pip install primus-intelligence[conjecture]`).
+  Pipeline: the engine's `collapse` answers first; on refusal, gplearn
+  proposes closed forms from a train split, float constants are snapped to
+  exact integers/rationals, and a candidate is stamped ONLY if it
+  reproduces every supplied term exactly in rational arithmetic —
+  including a holdout suffix the search never saw (h ≥ p: candidates with
+  more snapped constants than holdout terms are refused). No gplearn →
+  honest REFUSED, never an error. The certificate carries the caveat that
+  a stamp certifies fit to the given data, never the true generator.
+- **New certify claim kind `closed_form`** (`a(n) = <expr> matches …`,
+  schema string unchanged at primus.certificate/2, contract in SCHEMA.md):
+  a pure exact checker — no gplearn on this path — so conjecture output
+  round-trips through the gate. Anchor-windowed scan, depth/exponent/digit
+  bounds, three fuzz gates added.
+- **Chiron twin `Chiron/conjecture.py`**: line-identical exact core;
+  stage 0 uses `chiron.collapse`. Honest capability note: with the
+  add/sub/mul/div function set an integer-valued closed form is
+  necessarily polynomial, so the layer adds stamping reach to the SEED
+  (degree-6 poly cap → degree-7+ now reachable, gated in selftest) while
+  Chiron's uncapped polynomial family subsumes it today — its gates prove
+  pipeline integrity with the engine verdict disclosed alongside.
+- **External validation** (SYMREG_RESULTS.md, cached live corpus, 29
+  rows): raw GP 2 exact / 27 wrong; gated GP **3 exact / 0 stamped-wrong /
+  26 refused** — every forced wrong answer became a refusal, and the gate
+  rescued one row (cubes) the raw run missed. `collapse`, `oeis_live.py`,
+  and `drift_check.py` are untouched; all published claims stand as-is.
+- Battery after the change: 55 stress · 31 certify · 16 conjecture ·
+  16 fuzz · 11 MCP · 12 twins · certify property grid · internal benchmark
+  (zero false confidence) · live-OEIS 20 verified / 0 false · drift GREEN
+  (42 surfaces agree) · Chiron 12/12 · Chiron reproducibility ·
+  monolith sweep 49/49 selftest-bearing modules through the fold.
+
 ## 0.5.1 — 2026-07-07
 
 **A live false stamp on the seed, caught by an extended external OEIS probe and

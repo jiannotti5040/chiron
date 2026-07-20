@@ -38,8 +38,15 @@ bounded), `percentage`, `primality` (deterministic Miller–Rabin below
 B is N`; unambiguous formats only, no year → refused), `aggregate`
 (sum/total/average/mean of a listed number set, exact rationals),
 `sequence_continuation` (generator recovered from the stated prefix with
-held-out proof, continuation compared exactly), `sequence` (bare integer
-runs, structural recovery or refusal).
+held-out proof, continuation compared exactly), `closed_form`
+(`a(n) = <expr> matches t0, t1, ...`, optional `(n from k)` offset; the
+expression — integers, `n`, `+ - * / ^` with constant exponents ≤ 64 —
+is evaluated in exact rational arithmetic at EVERY index and must equal
+every listed term; a pole or non-integer value at a required index is a
+refutation; parse failures and bound violations are refusals. This is the
+claim shape `primus.conjecture` emits, so guess-and-prove output
+round-trips through the gate), `sequence` (bare integer runs, structural
+recovery or refusal).
 
 **Deliberately not judged:** approximations (`sqrt(2) = 1.414` is neither
 verified nor refuted — it is not extracted; the gate refuses to grade

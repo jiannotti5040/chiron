@@ -64,6 +64,36 @@ TOOLS = [
         },
     },
     {
+        "name": "conjecture",
+        "description": (
+            "Guess-and-prove closed-form recovery for an integer sequence. "
+            "The exact engine goes first; if it abstains, a genetic-"
+            "programming proposer (gplearn, optional dependency) suggests "
+            "closed forms and each is checked in exact rational arithmetic "
+            "against EVERY term, including a holdout suffix the search "
+            "never saw. VERIFIED means exact reproduction of the given "
+            "data (never a claim about the true generator — the "
+            "certificate's caveat says so); REFUSED means no candidate "
+            "survived, or gplearn is not installed. The stochastic "
+            "proposer never stamps; only the exact verifier does."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "terms": {
+                    "description": "Integer sequence (array or whitespace/"
+                                   "comma-separated string).",
+                    "anyOf": [
+                        {"type": "string"},
+                        {"type": "array", "items": {"type": "integer"}},
+                    ],
+                },
+                "seed": {"type": "integer", "description": "RNG seed (default 0)."},
+            },
+            "required": ["terms"],
+        },
+    },
+    {
         "name": "collapse",
         "description": (
             "Recover the minimal generator beneath a codified surface under "
@@ -124,7 +154,22 @@ def _tool_collapse(args: Dict[str, Any]) -> Dict[str, Any]:
             "isError": False}
 
 
-_IMPL = {"certify": _tool_certify, "collapse": _tool_collapse}
+def _tool_conjecture(args: Dict[str, Any]) -> Dict[str, Any]:
+    from primus.conjecture import conjecture, render
+
+    raw = args["terms"]
+    if isinstance(raw, list):
+        terms = [int(x) for x in raw]
+    else:
+        terms = [int(x) for x in re.findall(r"-?\d+", str(raw))]
+    cert = conjecture(terms, seed=int(args.get("seed", 0)))
+    return {"content": [{"type": "text", "text": render(cert)}],
+            "structuredContent": cert,
+            "isError": False}
+
+
+_IMPL = {"certify": _tool_certify, "collapse": _tool_collapse,
+         "conjecture": _tool_conjecture}
 
 
 # ------------------------------------------------------------- JSON-RPC core

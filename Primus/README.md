@@ -53,6 +53,24 @@ echo "17*3 = 51 and 2+2 = 5" | primus certify - --json --gate
 primus selftest
 ```
 
+## Guess-and-prove — `primus.conjecture` (optional)
+
+The symbolic-regression baseline this project benchmarks against
+(SYMREG_RESULTS.md) can also serve it: `primus conjecture "0 1 128 2187 …"`
+lets a gplearn genetic-programming proposer suggest closed forms for an
+input the engine refuses — and stamps a candidate ONLY if, after snapping
+its float constants to exact integers/rationals, it reproduces every
+supplied term exactly in rational arithmetic, including a holdout suffix
+the search never saw. The stochastic proposer never stamps; the exact
+verifier does, and the certificate says exactly what was proven (fit to
+the given data — never the true generator). Without `pip install
+primus-intelligence[conjecture]` the stage degrades to an honest REFUSED.
+A verified conjecture emits the claim `a(n) = <expr> matches <terms>`,
+which the certify gate checks independently as the `closed_form` claim
+kind — guess-and-prove output round-trips through the gate. On the live
+OEIS corpus the gate converted the raw regressor's 27 wrong answers into
+26 refusals + 3 exact stamps, with zero stamped-wrong (SYMREG_RESULTS.md).
+
 ## The MCP server — the gate as agent infrastructure
 
 `primus-mcp` serves both operations over the Model Context Protocol (stdio,
@@ -152,3 +170,6 @@ ambiguity work in `../Infectatrum`.
 Python 3.9+ with `numpy`. Everything runs offline; no network, no API keys
 (`oeis_live.py` is the one deliberate exception — it exists to fetch external
 ground truth). `__pycache__` folders are auto-generated and safe to delete.
+The guess-and-prove stage (`primus.conjecture`) optionally uses
+`gplearn` + `scikit-learn` (`pip install primus-intelligence[conjecture]`);
+absent, it refuses honestly and everything else is unaffected.
