@@ -43,6 +43,7 @@ from primus.engine import (  # noqa: F401
     OWNER,
 )
 from primus.certify import certify, extract_claims  # noqa: F401
+from primus.conjecture import conjecture, verify_closed_form  # noqa: F401
 
 # Single source of version truth is pyproject.toml; read it from the
 # installed package metadata, with a fallback for raw source-tree use.
@@ -50,12 +51,13 @@ try:
     from importlib.metadata import version as _pkg_version
     __version__ = _pkg_version("primus-intelligence")
 except Exception:  # not installed (e.g. sys.path use via the shim)
-    __version__ = "0.5.0+source"
+    __version__ = "0.6.0+source"
 
 __all__ = [
     "collapse", "same_family", "same_generator", "same_structure", "cast",
     "transcode", "build_record_translator", "discover_twins",
     "CombinatorialSpace", "TwinBijection", "make_twin", "compose_spaces",
     "caramuel_twin_spaces", "Invariant", "InvariantError", "OWNER",
-    "certify", "extract_claims", "__version__",
+    "certify", "extract_claims", "conjecture", "verify_closed_form",
+    "__version__",
 ]

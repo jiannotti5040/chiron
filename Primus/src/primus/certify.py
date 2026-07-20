@@ -21,7 +21,9 @@ Checkable claim kinds (schema primus.certificate/2): integer/rational
 arithmetic including powers (``a op b = c``, ``c = a op b``), percentages,
 primality/compositeness, binomial coefficients, gcd/lcm, modular arithmetic,
 date arithmetic (days after/before, days between), sums/totals/averages of
-listed numbers, integer-sequence continuations, and bare integer runs
+listed numbers, integer-sequence continuations, closed-form formulas
+(``a(n) = <expr> matches <terms>``, checked exactly at every index via
+:func:`primus.conjecture.verify_closed_form`), and bare integer runs
 (structural recovery with held-out proof via :func:`primus.engine.collapse`).
 
 What is deliberately NOT judged: approximations ("sqrt(2) = 1.414" is
@@ -82,6 +84,9 @@ _RE_PERCENT = re.compile(
 _RE_CONTINUATION = re.compile(
     rf"({_SEQ})\s*(?:,)?\s*(?:continues?\s+as|followed\s+by|"
     rf"next\s+(?:terms?|numbers?|values?)\s+(?:is|are)|then\s+comes?)\s*[:]?\s*({_SEQ}|-?\d+)", re.I)
+_RE_CLOSED_FORM = re.compile(
+    rf"a\(n\)\s*=\s*([0-9n()+\-*/^ ]{{1,200}}?)\s*"
+    rf"(?:\(\s*n\s+from\s+(-?\d{{1,9}})\s*\)\s*)?matches\s+({_SEQ})")
 _RE_RUN = re.compile(r"(?:-?\d+\s*[, ]\s*){4,}-?\d+")
 _RE_PRIME = re.compile(r"(?<!\d)(\d+)\s+is\s+(?:a\s+|an\s+)?(not\s+)?(prime|composite)\b", re.I)
 _RE_CHOOSE = re.compile(
@@ -217,6 +222,29 @@ def _status(ok: Optional[bool]) -> str:
 
 
 # ----------------------------------------------------------- claim checkers
+def _claims_closed_form(text, add):
+    """`a(n) = <expr> matches t0, t1, ...` — the expression is checked at
+    EVERY index in exact rational arithmetic (n from 0 unless `(n from k)`
+    is stated). The guess-and-prove layer (primus.conjecture) emits exactly
+    this claim shape, so its output round-trips through this gate."""
+    from primus.conjecture import verify_closed_form
+    for m in _find(_RE_CLOSED_FORM, text, r"a\(n\)", 200 + 22 * MAX_SEQ_TERMS):
+        expr = m.group(1).strip()
+        offset = int(m.group(2)) if m.group(2) else 0
+        seq = _ints(m.group(3))
+        detail: Dict[str, Any] = {"expression": expr, "offset": offset,
+                                  "n_terms": len(seq)}
+        if len(seq) > MAX_SEQ_TERMS:
+            add(m, "closed_form", "REFUSED",
+                {"reason": f"run exceeds the {MAX_SEQ_TERMS}-term per-claim bound"})
+            continue
+        v = verify_closed_form(expr, seq, offset=offset)
+        for k in ("reason", "expected", "got", "n"):
+            if k in v:
+                detail[k] = v[k]
+        add(m, "closed_form", v["status"], detail)
+
+
 def _claims_continuation(text, add):
     for m in _find(_RE_CONTINUATION, text, r"continues?|followed|next|then\s+comes?", 22 * MAX_SEQ_TERMS):
         prefix, claimed = _ints(m.group(1)), _ints(m.group(2))
@@ -403,6 +431,7 @@ def _extract_claims(text: str) -> Tuple[List[Dict[str, Any]], List[Tuple[int, in
         consumed.append(m.span())
 
     # specificity order: structured kinds first, generic number-runs last
+    _claims_closed_form(text, add)
     _claims_continuation(text, add)
     _claims_dates(text, add)
     _claims_aggregate(text, add)
@@ -541,6 +570,14 @@ def _selftest() -> int:
          counts("the total of 12, 15 and 20 is 47")["verified"] == 1)
     gate("average verified exactly", counts("the average of 2, 4 and 9 is 5")["verified"] == 1)
     gate("average refuted", counts("the average of 2, 4 and 9 is 6")["refuted"] == 1)
+    gate("closed form verified (a(n) = n*n + 1)",
+         counts("a(n) = n*n + 1 matches 1, 2, 5, 10, 17")["verified"] == 1)
+    gate("closed form refuted with counterexample",
+         counts("a(n) = n*n + 1 matches 1, 2, 5, 10, 18")["refuted"] == 1)
+    gate("closed form with offset verified (n from 1)",
+         counts("a(n) = n*n (n from 1) matches 1, 4, 9, 16")["verified"] == 1)
+    gate("closed form beyond bounds refused (n^70)",
+         counts("a(n) = n^70 matches 1, 2, 3")["refused"] == 1)
     c = counts("The sequence 1 1 2 3 5 8 13 continues as 21, 34")
     gate("true continuation verified", c["verified"] == 1)
     gate("false continuation refuted",
@@ -558,7 +595,7 @@ def _selftest() -> int:
          counts(f"{big} + 1 = 1{'0' * (MAX_INT_DIGITS + 10)}")["refused"] == 1)
     cert = certify("2+2=4. " * 5)
     gate("coverage reported and sane", 0.0 < cert["coverage"] <= 1.0)
-    print(f"  certify gates: {27 - fails}/27 passed")
+    print(f"  certify gates: {31 - fails}/31 passed")
     return fails
 
 

@@ -90,6 +90,18 @@ def main():
          cert["counts"]["refuted"] == 1 and cert["counts"]["verified"] == 2)
     gate("coverage small when text is mostly noise", cert["coverage"] < 0.10)
 
+    # 4b. the closed_form scan under attack (anchor-windowed like the rest)
+    cert, dt = timed("a(n) = " + "(" * 4000 + "n" + ")" * 4000 + " matches 1, 2, 3")
+    gate("closed-form paren bomb: bounded time, nothing falsely verified",
+         dt < BUDGET_S and cert["counts"]["verified"] == 0)
+    cert, dt = timed("a(n) = n matches 0, 1, 2. " * 2000)
+    gate("closed-form anchor flood: claim cap + bounded time",
+         dt < BUDGET_S and cert["counts"]["checkable"] <= MAX_CLAIMS)
+    planted_cf = f"{noise[:800]} a(n) = n*n + 1 matches 1, 2, 5, 10, 17 {noise[800:]}"
+    cert, _ = timed(planted_cf)
+    gate("planted closed form survives noise: verified exactly once",
+         cert["counts"]["verified"] == 1)
+
     # 5. determinism (modulo timestamp/attestation)
     a, b = certify(planted), certify(planted)
     for k in ("created_utc", "attestation"):
@@ -102,7 +114,7 @@ def main():
          cert["counts"]["refuted"] + cert["counts"]["refused"] +
          cert["counts"]["verified"] == cert["counts"]["checkable"])
 
-    print(f"\n  {13 - FAILS}/13 fuzz gates passed")
+    print(f"\n  {16 - FAILS}/16 fuzz gates passed")
     return 1 if FAILS else 0
 
 

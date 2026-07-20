@@ -65,6 +65,11 @@ def main():
         {"jsonrpc": "2.0", "id": 6, "method": "tools/call",
          "params": {"name": "no_such_tool", "arguments": {}}},
         {"jsonrpc": "2.0", "id": 7, "method": "ping"},
+        # conjecture on an engine-stamped surface: fast and deterministic —
+        # the GP proposer must NOT be consulted (source == "engine")
+        {"jsonrpc": "2.0", "id": 8, "method": "tools/call",
+         "params": {"name": "conjecture",
+                    "arguments": {"terms": "0 1 4 9 16 25 36 49 64 81 100 121"}}},
     ]
     r = run_session(msgs)
 
@@ -75,8 +80,8 @@ def main():
          init.get("protocolVersion") == "2025-06-18")
 
     tools = {t["name"] for t in r.get(2, {}).get("result", {}).get("tools", [])}
-    gate("tools/list exposes exactly {certify, collapse}",
-         tools == {"certify", "collapse"})
+    gate("tools/list exposes exactly {certify, conjecture, collapse}",
+         tools == {"certify", "conjecture", "collapse"})
 
     cert = r.get(3, {}).get("result", {}).get("structuredContent", {})
     counts = cert.get("counts", {})
@@ -99,7 +104,11 @@ def main():
          r.get(6, {}).get("error", {}).get("code") == -32602)
     gate("ping answered", r.get(7, {}).get("result") == {})
 
-    print(f"\n  {10 - FAILS}/10 MCP handshake gates passed")
+    conj = r.get(8, {}).get("result", {}).get("structuredContent", {})
+    gate("conjecture: engine-stamped squares, proposer not consulted",
+         conj.get("status") == "VERIFIED" and conj.get("source") == "engine")
+
+    print(f"\n  {11 - FAILS}/11 MCP handshake gates passed")
     return 1 if FAILS else 0
 
 

@@ -8,7 +8,9 @@ primus.cli — the command-line front door.
     primus collapse --json "3 1 4 1 5 9 2 6"   machine-readable (abstains here)
     primus certify "2+2=5 and 2 4 6 8 continues as 10"
     echo "<model output>" | primus certify -   certify stdin (agent tool-call)
-    primus selftest                            engine + certify gates
+    primus conjecture "0 1 128 2187 16384 ..."  guess-and-prove: GP proposes,
+                                               the exact gate stamps or refuses
+    primus selftest                            engine + certify + conjecture gates
     primus version
 """
 from __future__ import annotations
@@ -75,6 +77,21 @@ def _cmd_certify(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_conjecture(args: argparse.Namespace) -> int:
+    from primus.conjecture import conjecture, render
+
+    raw = _read_text(args.surface)
+    ints = [int(x) for x in re.findall(r"-?\d+", raw)]
+    cert = conjecture(ints, seed=args.seed, population=args.population,
+                      generations=args.generations, holdout=args.holdout,
+                      restarts=args.restarts)
+    if args.json:
+        print(json.dumps(cert, indent=2, default=str))
+    else:
+        print(render(cert))
+    return 0 if cert["status"] == "VERIFIED" or not args.strict else 1
+
+
 def _cmd_selftest(_args: argparse.Namespace) -> int:
     from primus.certify import _selftest
     from primus.engine import InvariantError, collapse
@@ -101,6 +118,9 @@ def _cmd_selftest(_args: argparse.Namespace) -> int:
         gate("empty surface raises, not crashes", True)
     print("certify gates:")
     fails += _selftest()
+    print("conjecture gates:")
+    from primus.conjecture import _selftest as _conjecture_selftest
+    fails += _conjecture_selftest()
     print(f"PRIMUS {'GREEN' if fails == 0 else 'RED'} — "
           f"{'all gates passed' if fails == 0 else f'{fails} gate(s) failed'}")
     return 1 if fails else 0
@@ -138,6 +158,22 @@ def main(argv=None) -> int:
                    help="pipeline mode: certify each input line, emit one "
                         "hash-chained certificate per line (chain head on stderr)")
     c.set_defaults(fn=_cmd_certify)
+
+    c = sub.add_parser("conjecture",
+                       help="guess-and-prove: a GP proposer behind the exact "
+                            "gate — stamps only what verifies exactly")
+    c.add_argument("surface", help="integers ('0 1 128 2187 ...'); '-' for stdin")
+    c.add_argument("--json", action="store_true", help="machine-readable output")
+    c.add_argument("--seed", type=int, default=0)
+    c.add_argument("--population", type=int, default=1500)
+    c.add_argument("--generations", type=int, default=20)
+    c.add_argument("--holdout", type=int, default=4,
+                   help="terms withheld from the search and required to "
+                        "match exactly (default 4)")
+    c.add_argument("--restarts", type=int, default=2)
+    c.add_argument("--strict", action="store_true",
+                   help="exit 1 unless a closed form was exactly verified")
+    c.set_defaults(fn=_cmd_conjecture)
 
     c = sub.add_parser("selftest", help="run the built-in gates")
     c.set_defaults(fn=_cmd_selftest)

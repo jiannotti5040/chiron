@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "primus-intelligence"
-version = "0.5.1"
+version = "0.6.0"
 description = "Exact invariant recovery with held-out verification and refusal — collapse codified surfaces to their minimal generators, and certify the checkable claims in LLM/agent output."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -24,6 +24,11 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Mathematics",
 ]
 dependencies = ["numpy>=1.22"]
+
+[project.optional-dependencies]
+# guess-and-prove: the gplearn proposer behind the exact gate
+# (primus.conjecture degrades to an honest REFUSED without it)
+conjecture = ["gplearn>=0.4.2", "scikit-learn>=1.3"]
 
 [project.scripts]
 primus = "primus.cli:main"
