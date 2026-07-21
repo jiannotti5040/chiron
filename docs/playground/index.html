@@ -24,6 +24,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chiron — verification that refuses</title>
 <meta name="description" content="Paste any integer sequence and watch a real verification engine prove it on held-out terms — or refuse. Exact arithmetic, running in your browser, nothing faked. Refusal is the product.">
+<link rel="canonical" href="https://jiannotti5040.github.io/chiron/playground/">
+<meta property="og:title" content="Chiron live demo — exact or refuse">
+<meta property="og:description" content="Check a supported AI claim with the live engine, or recover a sequence rule and test it on held-out terms.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jiannotti5040.github.io/chiron/playground/">
+<meta property="og:image" content="https://jiannotti5040.github.io/chiron/assets/chiron-social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jiannotti5040.github.io/chiron/assets/chiron-social.jpg">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
 <style>
   :root {
@@ -69,8 +79,9 @@
   }
   .brand { font-weight: 700; letter-spacing: .14em; font-size: .82rem; color: var(--text); }
   .brand .dot { color: var(--accent); }
-  .bar nav { display: flex; gap: 20px; font-size: .88rem; }
+  .bar nav { display: flex; align-items: center; gap: 20px; font-size: .88rem; }
   .bar nav a { color: var(--dim); }
+  .bar nav .nav-cta { color: #0a0c10; background: var(--accent); border-radius: 8px; padding: 7px 11px; font-weight: 750; }
 
   /* hero */
   .hero { padding: 26px 0 20px; text-align: center; }
@@ -88,6 +99,9 @@
   .hero p.lead { font-size: clamp(1rem, 2vw, 1.12rem); color: var(--dim); max-width: 620px; margin: 0 auto 8px; }
   .hero p.sub { font-size: .88rem; color: var(--dimmer); margin: 12px auto 0; }
   .hero .sub code { font-family: var(--mono); color: var(--dim); }
+  .hero-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+  .hero-actions a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border: 1px solid var(--line-2); border-radius: 9px; color: var(--text); background: var(--panel); text-decoration: none; font-size: .86rem; font-weight: 750; }
+  .hero-actions a.primary { color: var(--bg); background: var(--accent); border-color: var(--accent); }
 
   /* the demo card */
   .demo {
@@ -95,6 +109,49 @@
     border: 1px solid var(--line-2); border-radius: 18px; padding: 22px;
     box-shadow: 0 24px 70px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.03);
   }
+  .claim-demo {
+    margin: 30px 0 10px; background: linear-gradient(145deg, rgba(124,156,255,.13), var(--panel));
+    border: 1px solid rgba(124,156,255,.5); border-radius: 18px; padding: 24px;
+    box-shadow: 0 24px 70px -34px rgba(64,96,215,.58), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .claim-head { display: flex; gap: 18px; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; margin-bottom: 16px; }
+  .claim-head h2 { margin: 2px 0 4px; font-size: 1.35rem; letter-spacing: -.02em; }
+  .claim-head p { max-width: 620px; margin: 0; color: var(--dim); font-size: .92rem; }
+  .live-pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px; color: var(--accent); background: rgba(124,156,255,.1); border: 1px solid rgba(124,156,255,.33); border-radius: 100px; font: 700 .7rem/1 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+  .live-pill::before { content: "●"; color: var(--green); font-size: .66rem; }
+  .claim-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+  .claim-chip { background: rgba(255,255,255,.04); color: var(--dim); border: 1px solid var(--line-2); border-radius: 100px; padding: 7px 11px; font: .8rem var(--sans); cursor: pointer; }
+  .claim-chip:hover { color: var(--text); border-color: var(--accent); }
+  #claim-input { display: block; width: 100%; min-height: 92px; resize: vertical; background: var(--bg); color: var(--text); border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 16px; font: .94rem/1.5 var(--mono); }
+  #claim-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,156,255,.15); }
+  .claim-runrow { display: flex; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  #certify { background: linear-gradient(180deg, var(--accent), #5f7ff0); color: #0a0c10; border: none; border-radius: 10px; min-height: 42px; padding: 0 17px; font: 750 .9rem var(--sans); cursor: pointer; }
+  #certify:disabled { opacity: .55; cursor: wait; }
+  .claim-note { color: var(--dimmer); font-size: .79rem; }
+  #claim-result { margin-top: 16px; }
+  .claim-verdict { border: 1px solid var(--line); border-radius: 14px; padding: 19px; background: var(--bg); animation: rise .35s cubic-bezier(.2,.7,.2,1); }
+  .claim-verdict h3 { margin: 0; font-size: 1.18rem; }
+  .claim-verdict h3.good { color: var(--green); }
+  .claim-verdict h3.bad { color: #ff9b90; }
+  .claim-summary { margin: 7px 0 0; color: var(--dim); font-size: .92rem; }
+  .claim-stats { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .claim-stat { padding: 5px 9px; border-radius: 100px; color: var(--dim); background: var(--panel-2); border: 1px solid var(--line); font: .74rem var(--mono); }
+  .claim-stat.good { color: var(--green); border-color: var(--green-line); background: var(--green-deep); }
+  .claim-stat.bad { color: #ff9b90; border-color: #80352e; background: #301613; }
+  .claim-list { display: grid; gap: 8px; }
+  .claim-row { display: flex; justify-content: space-between; gap: 14px; align-items: baseline; padding: 11px 13px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); font-size: .88rem; }
+  .claim-row .claim-text { color: var(--text); font-family: var(--mono); overflow-wrap: anywhere; }
+  .claim-row .claim-status { flex: none; font: 750 .73rem var(--mono); letter-spacing: .04em; }
+  .claim-row.verified .claim-status { color: var(--green); }
+  .claim-row.refuted .claim-status { color: #ff9b90; }
+  .claim-row.refused .claim-status { color: var(--amber); }
+  .coverage-note { margin: 13px 0 0; color: var(--dimmer); font-size: .82rem; }
+  .conversion { margin-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; border: 1px solid rgba(124,156,255,.35); border-radius: 12px; padding: 15px; background: rgba(124,156,255,.07); }
+  .conversion b { display: block; font-size: .92rem; }
+  .conversion span { display: block; color: var(--dim); font-size: .82rem; }
+  .conversion-links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .conversion a { display: inline-flex; align-items: center; min-height: 34px; padding: 0 10px; border-radius: 7px; color: var(--text); border: 1px solid var(--line-2); background: var(--panel); font-size: .82rem; font-weight: 700; text-decoration: none; }
+  .conversion a.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
   .demo .label { font-size: .74rem; letter-spacing: .12em; color: var(--dimmer); text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
   .engine-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
   .toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--line-2); border-radius: 100px; padding: 3px; gap: 2px; }
@@ -231,6 +288,19 @@
   .honesty p { margin: 0; color: var(--dim); font-size: .9rem; }
   .honesty a { white-space: nowrap; }
 
+  .workflow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+  .workflow-card { position: relative; min-height: 175px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 17px; }
+  .workflow-card .step { color: var(--accent); font: 750 .72rem var(--mono); letter-spacing: .08em; }
+  .workflow-card h4 { margin: 12px 0 7px; font-size: 1rem; }
+  .workflow-card p { margin: 0; color: var(--dim); font-size: .85rem; }
+  .workflow-card.route { border-color: rgba(124,156,255,.5); background: linear-gradient(145deg, rgba(124,156,255,.12), var(--panel)); }
+  .workflow-card code { font-family: var(--mono); color: var(--text); font-size: .8rem; }
+
+  .recovery { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; border: 1px solid rgba(124,156,255,.38); border-radius: 11px; padding: 14px; background: rgba(124,156,255,.07); }
+  .recovery b { display: block; color: var(--text); font-size: .9rem; }
+  .recovery span { display: block; color: var(--dim); font-size: .82rem; max-width: 510px; }
+  .recovery button { flex: none; min-height: 36px; padding: 0 11px; color: var(--bg); background: var(--accent); border: 1px solid var(--accent); border-radius: 8px; font: 750 .8rem var(--sans); cursor: pointer; }
+
   details.gates { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; background: var(--panel); }
   details.gates summary { cursor: pointer; color: var(--accent); font-size: .92rem; }
   details.gates p { color: var(--dim); font-size: .88rem; }
@@ -242,7 +312,7 @@
   footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
 
   @media (max-width: 720px) {
-    .why, .tiers { grid-template-columns: 1fr; }
+    .why, .tiers, .workflow-grid { grid-template-columns: 1fr; }
     .runrow { flex-direction: column; }
     #run { padding: 14px; }
     .bar nav { gap: 14px; }
@@ -252,25 +322,48 @@
 <body>
 
 <header class="bar">
-  <div class="brand">CHIRON<span class="dot">.</span></div>
+  <a class="brand" href="../">CHIRON<span class="dot">.</span></a>
   <nav>
+    <a href="../">How it works</a>
     <a href="https://github.com/jiannotti5040/chiron">GitHub</a>
-    <a href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Pricing</a>
+    <a class="nav-cta" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Commercial access</a>
   </nav>
 </header>
 
 <main class="wrap">
 
   <div class="hero">
-    <span class="eyebrow">VERIFICATION THAT REFUSES</span>
-    <h1>Paste a sequence.<br>Watch it prove itself — or refuse.</h1>
-    <p class="lead">Most AI answers everything in the same confident voice. This engine recovers the exact rule behind your numbers, proves it on terms it was never shown, and <b style="color:var(--text)">flatly refuses when it can't</b>.</p>
-    <p class="sub">Real Python running in your browser via WebAssembly — <code>no server, nothing faked</code>. Every verdict below is the engine deciding.</p>
+    <span class="eyebrow">EXACT-OR-REFUSE EVIDENCE GATE</span>
+    <h1>Check a machine claim.<br>See exactly what it can prove.</h1>
+    <p class="lead">Confidence is not evidence. Chiron checks the claims it can prove exactly, <b style="color:var(--text)">refutes what is false</b>, and leaves everything outside that boundary explicitly uncertified.</p>
+    <p class="sub">Try a public, live licensed-engine check below — or use the sequence lab to see held-out proof in action.</p>
+    <div class="hero-actions"><a class="primary" href="#claim-checker">Check a claim live</a><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Get commercial access</a></div>
   </div>
+
+  <section class="claim-demo" id="claim-checker" aria-labelledby="claim-title">
+    <div class="claim-head">
+      <div>
+        <span class="live-pill">live licensed engine</span>
+        <h2 id="claim-title">Check a claim from an AI output</h2>
+        <p>Chiron extracts supported, exactly checkable claims and reports each one as VERIFIED, REFUTED, or REFUSED. Free-form remainder is never silently approved.</p>
+      </div>
+    </div>
+    <div class="claim-chips" aria-label="Claim examples">
+      <button class="claim-chip" data-claim="97 is prime and 2+2=5">Catch a false claim</button>
+      <button class="claim-chip" data-claim="The sum of 2 and 3 is 5.">Verify an exact claim</button>
+      <button class="claim-chip" data-claim="The average of 4, 8, and 12 is 8.">Check an aggregate</button>
+    </div>
+    <textarea id="claim-input" spellcheck="false" autocomplete="off" aria-label="Machine claim to check">97 is prime and 2+2=5</textarea>
+    <div class="claim-runrow">
+      <button id="certify">Check claims</button>
+      <span class="claim-note">This calls the public demo endpoint. Do not send confidential or personal data.</span>
+    </div>
+    <div id="claim-result" aria-live="polite"></div>
+  </section>
 
   <div class="demo">
     <div class="engine-row">
-      <div class="label" style="margin:0">Try it — pick an example or paste your own integers</div>
+      <div class="label" style="margin:0">Sequence lab — recover a rule, then test it on withheld terms</div>
       <div class="toggle" id="engine-toggle" role="tablist" aria-label="Which engine runs">
         <button class="opt active" data-engine="core" role="tab" aria-selected="true">Demo core<span class="hint">in your browser</span></button>
         <button class="opt" data-engine="live" role="tab" aria-selected="false">Licensed engine<span class="hint">live · the real one</span></button>
@@ -295,11 +388,23 @@
 
   <section class="blk">
     <div class="kicker">Why a refusal is the feature</div>
-    <h3>A stamp is worth something only because it can be withheld.</h3>
+    <h3>A pass is useful only when the system can also say “not proven.”</h3>
     <div class="why" style="margin-top:20px">
-      <div class="card"><div class="n">01</div><h4>It proves, not guesses</h4><p>A rule is stamped only when it exactly predicts held-out terms it never saw — <code style="font-family:var(--mono);font-size:.82rem">==</code>, not a tolerance.</p></div>
-      <div class="card"><div class="n">02</div><h4>It says "I don't know"</h4><p>Fed the primes, it finds a formula that fits every number you gave it — and still refuses, because that formula fails the terms you didn't.</p></div>
-      <div class="card"><div class="n">03</div><h4>Zero false verifications</h4><p>On external data the stamp has never been wrong. That's the whole product: correct, or silent — never confidently wrong.</p></div>
+      <div class="card"><div class="n">01</div><h4>It checks, not guesses</h4><p>For supported claims, verdicts are exact. For sequences, a rule is stamped only when it predicts held-out terms it never saw — <code style="font-family:var(--mono);font-size:.82rem">==</code>, not a tolerance.</p></div>
+      <div class="card"><div class="n">02</div><h4>It exposes the boundary</h4><p>Fed the primes, it can recover a formula and still decline to stamp it. In claim checking, free-form remainder stays explicitly uncertified.</p></div>
+      <div class="card"><div class="n">03</div><h4>Its public proof is testable</h4><p>The current frozen external eval has 22 stamped outputs, all 22 externally correct, 0 false stamps, and 12 refusals. <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">Run it yourself →</a></p></div>
+    </div>
+  </section>
+
+  <section class="blk workflow-example">
+    <div class="kicker">What this becomes in a real workflow</div>
+    <h3>Turn a supported check into a release condition.</h3>
+    <p class="intro">Chiron is not an audit platform or a general answer judge. It is the small, inspectable gate a workflow can place around one independently checkable output.</p>
+    <div class="workflow-grid">
+      <article class="workflow-card"><div class="step">01 / CANDIDATE</div><h4>A system produces a structured claim.</h4><p>For example: an extracted total, a constrained calculation, or a recovered sequence rule.</p></article>
+      <article class="workflow-card"><div class="step">02 / EXACT CHECK</div><h4>Chiron checks only the supported boundary.</h4><p>It verifies exact evidence, refutes a false supported claim, or leaves the rest explicitly uncertified.</p></article>
+      <article class="workflow-card"><div class="step">03 / RECORD</div><h4>Keep the verdict and coverage.</h4><p>A machine-readable evidence record shows <code>VERIFIED</code>, <code>REFUTED</code>, or <code>REFUSED</code> and what was not covered.</p></article>
+      <article class="workflow-card route"><div class="step">04 / ROUTE</div><h4>Release only what earned it.</h4><p>A supported verified result can satisfy a defined gate. A refuted or refused result routes to the named human or wider review process.</p></article>
     </div>
   </section>
 
@@ -311,15 +416,15 @@
       <div class="tier">
         <div class="time">10 SECONDS</div>
         <h4>This page</h4>
-        <p>Paste anything and watch verify-or-refuse live, in your browser.</p>
-        <div class="proves"><b>Proves:</b> the contract on your own input. Not the licensed engine's full reach — this demo core is deliberately weaker.</div>
+        <p>Try a non-sensitive claim with the live checker, or a sequence with the browser demo core.</p>
+        <div class="proves"><b>Shows:</b> the stated contract on one limited test input. The browser core is deliberately weaker than the licensed engine.</div>
       </div>
       <div class="tier">
         <div class="time">2 MINUTES</div>
         <h4>Grade it yourself</h4>
         <div class="cmd">python3 eval/grade.py</div>
         <p>The licensed engine's frozen outputs, graded live against oeis.org — data the author doesn't control.</p>
-        <div class="proves"><b>Proves:</b> zero false stamps on external data. <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/ →</a></div>
+        <div class="proves"><b>Shows:</b> 22 stamped / 22 externally correct / 0 false stamps / 12 refusals in the current frozen external eval. <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/ →</a></div>
       </div>
       <div class="tier live">
         <div class="time">LIVE · THE REAL ENGINE</div>
@@ -328,14 +433,18 @@
 https://chiron-engine.onrender.com \
 collapse "1 1 2 3 5 8 13 21"</div>
         <p>The real engine over HTTP — certificate out, source never serialized, rate-limited.</p>
-        <div class="proves"><b>Proves:</b> the real engine on any input you choose. <a href="https://chiron-engine.onrender.com/health">endpoint →</a></div>
+        <div class="proves"><b>Shows:</b> the endpoint's contract on a limited input. It may refuse, rate-limit, or issue no certificate. <a href="https://chiron-engine.onrender.com/health">endpoint →</a></div>
       </div>
+    </div>
+    <div class="conversion">
+      <div><b>Need this gate inside your workflow?</b><span>Commercial access includes the full deterministic engine for organizational use, from $100/month.</span></div>
+      <div class="conversion-links"><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Talk through a use case</a><a class="primary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">See commercial access</a></div>
     </div>
   </section>
 
   <div class="honesty">
-    <h4>What this page runs, precisely</h4>
-    <p>The engine here is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a> — the public demo core, fetched verbatim and run by CPython-in-WebAssembly. It shares the licensed engine's contract but is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families, a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the <b style="color:var(--text)">licensed engine stamps</b> (graded in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>, reconciled in <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). What's identical in both: neither ever stamps what it cannot prove.</p>
+    <h4>What runs where, precisely</h4>
+    <p>The claim checker and “licensed engine” sequence mode call the public HTTP demo. The browser sequence core is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>, fetched verbatim and run by CPython-in-WebAssembly. It is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families and a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the licensed engine stamps (see <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a> and <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). The shared contract is narrower and more important: do not stamp what cannot be exactly supported.</p>
   </div>
 
   <details class="gates">
@@ -346,7 +455,7 @@ collapse "1 1 2 3 5 8 13 21"</div>
   </details>
 
   <footer>
-    <div>Correct, or silent — never confidently wrong.</div>
+    <div>Exact, or explicitly uncertified.</div>
     <div class="links">
       <a href="https://github.com/jiannotti5040/chiron">Repository</a>
       <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">Verify (eval/)</a>
@@ -369,6 +478,9 @@ const bootText = document.getElementById("boot-text");
 const runBtn = document.getElementById("run");
 const seqBox = document.getElementById("seq");
 const resultEl = document.getElementById("result");
+const claimBox = document.getElementById("claim-input");
+const certifyBtn = document.getElementById("certify");
+const claimResultEl = document.getElementById("claim-result");
 let pyodide = null, protoLoaded = false, engine = "core";
 
 async function fetchSource(name) {
@@ -388,15 +500,120 @@ async function init() {
     pyodide.FS.mkdirTree("/pkg");
     pyodide.FS.writeFile("/pkg/browser_core.py", src);
     pyodide.runPython("import sys; sys.path.insert(0, '/pkg'); import browser_core");
-    boot.classList.add("ready");
-    bootText.textContent = "engine live in this tab — " + src.length.toLocaleString() + " bytes of Python, fetched verbatim";
-    runBtn.disabled = false;
+    updateBootStatus(src.length);
   } catch (e) {
-    bootText.textContent = "boot failed: " + e.message;
+    if (engine === "live") {
+      boot.classList.add("ready");
+      bootText.textContent = "licensed engine selected — browser demo core was unavailable, but live checks can still run";
+      runBtn.disabled = false;
+    } else {
+      bootText.textContent = "boot failed: " + e.message;
+    }
   }
 }
 
-function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function updateBootStatus(sourceLength) {
+  if (engine === "live") {
+    boot.classList.add("ready");
+    bootText.textContent = "licensed engine selected — over HTTP; the first call may cold-start for up to ~40 seconds";
+    runBtn.disabled = false;
+    return;
+  }
+  if (pyodide) {
+    boot.classList.add("ready");
+    const size = sourceLength ? " — " + sourceLength.toLocaleString() + " bytes of Python, fetched verbatim" : "";
+    bootText.textContent = "demo core live in this tab" + size;
+    runBtn.disabled = false;
+    return;
+  }
+  boot.classList.remove("ready");
+  bootText.textContent = "booting the demo core…";
+  runBtn.disabled = true;
+}
+
+function selectEngine(nextEngine) {
+  engine = nextEngine;
+  document.querySelectorAll("#engine-toggle .opt").forEach(x => {
+    const on = x.dataset.engine === nextEngine;
+    x.classList.toggle("active", on);
+    x.setAttribute("aria-selected", on);
+  });
+  updateBootStatus();
+}
+
+async function requestLive(path, body) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 75000);
+  try {
+    const r = await fetch(LIVE_ENDPOINT + path, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body), signal: ctrl.signal,
+    });
+    const raw = await r.text();
+    let data;
+    try { data = raw ? JSON.parse(raw) : {}; }
+    catch (_) { throw new Error("The live engine returned a response that was not a certificate."); }
+    if (!r.ok) {
+      const detail = data.reason || data.error || data.detail || "no certificate was issued";
+      throw new Error("The live engine returned HTTP " + r.status + ": " + detail);
+    }
+    if (!data.certificate) throw new Error(data.reason || "The live engine returned no certificate.");
+    return data.certificate;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function renderLiveProblem(message) {
+  resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">…</div><div><h2>NO CERTIFICATE ISSUED</h2><span class="etag live">licensed engine · live</span></div></div>
+    <p class="expl">${esc(message)}</p><div class="refuse-note"><b>This is not a refusal verdict.</b> The public endpoint did not issue a certificate for this request. Try again shortly, use the browser demo core, or run the endpoint client from the repository.</div></div>`;
+}
+
+function renderClaim(cert) {
+  const counts = cert.counts || {};
+  const verified = Number(counts.verified || 0);
+  const refuted = Number(counts.refuted || 0);
+  const refused = Number(counts.refused || 0);
+  const checkable = Number(counts.checkable || 0);
+  const title = refuted ? "REFUTED CLAIM FOUND" : (verified ? "EXACT CHECK COMPLETE" : "NO EXACT CLAIM VERIFIED");
+  const titleClass = refuted ? "bad" : (verified ? "good" : "");
+  const rows = (cert.claims || []).map(claim => {
+    const statedStatus = String(claim.status || "REFUSED");
+    const status = ["verified", "refuted", "refused"].includes(statedStatus.toLowerCase())
+      ? statedStatus.toLowerCase() : "refused";
+    return `<div class="claim-row ${status}"><span class="claim-text">${esc(claim.text || "unsupported claim")}</span><span class="claim-status">${esc(statedStatus)}</span></div>`;
+  }).join("") || `<div class="claim-row refused"><span class="claim-text">No supported exact claim was found.</span><span class="claim-status">UNCERTIFIED</span></div>`;
+  const coverage = typeof cert.coverage === "number" ? Math.round(cert.coverage * 100) : null;
+  claimResultEl.innerHTML = `<div class="claim-verdict">
+    <span class="live-pill">live certificate</span>
+    <h3 class="${titleClass}">${title}</h3>
+    <p class="claim-summary">${esc(cert.verdict || "The live engine completed its check.")}</p>
+    <div class="claim-stats"><span class="claim-stat">${checkable} checkable</span><span class="claim-stat good">${verified} verified</span><span class="claim-stat bad">${refuted} refuted</span><span class="claim-stat">${refused} refused</span></div>
+    <div class="claim-list">${rows}</div>
+    <p class="coverage-note">${coverage === null ? "Only the listed claim-level results are certified." : "Coverage: " + coverage + "% of this text was recognized as exactly checkable. The remaining text is not certified."}</p>
+    <details class="raw"><summary>View the raw certificate</summary><pre>${esc(JSON.stringify(cert, null, 2))}</pre></details>
+    <div class="conversion"><div><b>Want this gate in your workflow?</b><span>The licensed engine is available for commercial use and offline deployment.</span></div><div class="conversion-links"><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Talk through a use case</a><a class="primary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">See plans</a></div></div>
+  </div>`;
+}
+
+function renderClaimProblem(message) {
+  claimResultEl.innerHTML = `<div class="claim-verdict"><h3>NO CERTIFICATE ISSUED</h3><p class="claim-summary">${esc(message)}</p><p class="coverage-note">This is an endpoint problem, not a VERIFIED, REFUTED, or REFUSED result.</p></div>`;
+}
+
+async function runCertify(text) {
+  if (!text.trim()) return;
+  certifyBtn.disabled = true;
+  claimResultEl.innerHTML = `<div class="waking"><span class="spinner"></span> checking supported claims with the licensed engine… <span class="wk-sub">(free-tier cold start may take up to ~40 seconds)</span></div>`;
+  try {
+    renderClaim(await requestLive("/certify", { text }));
+  } catch (e) {
+    renderClaimProblem(e.message || "The live engine could not complete this request.");
+  } finally {
+    certifyBtn.disabled = false;
+  }
+}
 
 function render(cert, source) {
   // Normalize across both engines: the demo core emits an explicit `status`;
@@ -424,7 +641,8 @@ function render(cert, source) {
     proof += `<div class="row"><span class="k">Commits next</span><span class="next-terms">${cert.next_terms.map(t => `<span>${esc(t)}</span>`).join("")}</span></div>`;
   }
 
-  const refuseNote = !verified ? `<div class="refuse-note"><b>This is the feature.</b> A system that only tells you what it can prove is a system you can build on. Everything else here is a refusal, stated plainly — not a confident guess dressed up as an answer.</div>` : "";
+  const refuseNote = !verified ? `<div class="refuse-note"><b>This is the feature.</b> A system that only stamps what it can prove is a system you can build on. This result is not verified; treat it as a candidate or review case, not a confident guess dressed up as an answer.</div>` : "";
+  const recovery = source === "core" && !verified ? `<div class="recovery"><div><b>This smaller browser core did not stamp this sequence.</b><span>The licensed engine supports more hypothesis families. Try the same non-sensitive sequence there; it may still refuse.</span></div><button id="try-live-engine" type="button">Try in licensed engine</button></div>` : "";
   const nextNote = (verified && cert.next_terms) ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
   const falsify = cert.what_would_falsify ? `<div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify)}</div>` : "";
 
@@ -438,9 +656,15 @@ function render(cert, source) {
       ${nextNote}
       <div class="proof">${proof}</div>
       ${refuseNote}
+      ${recovery}
       ${falsify}
       <details class="raw"><summary>View the raw certificate</summary><pre>${esc(JSON.stringify(cert, null, 2))}</pre></details>
     </div>`;
+  const tryLiveBtn = document.getElementById("try-live-engine");
+  if (tryLiveBtn) tryLiveBtn.addEventListener("click", () => {
+    selectEngine("live");
+    run(seqBox.value);
+  });
   requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 
@@ -451,23 +675,10 @@ function runCore(text) {
 
 async function runLive(text) {
   resultEl.innerHTML = `<div class="waking"><span class="spinner"></span> waking the licensed engine and running your input… <span class="wk-sub">(free-tier cold start — up to ~40s the first time)</span></div>`;
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 75000);
   try {
-    const r = await fetch(LIVE_ENDPOINT + "/collapse", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ surface: text }), signal: ctrl.signal,
-    });
-    clearTimeout(timer);
-    const data = await r.json();
-    if (data.certificate) render(data.certificate, "live");
-    else render({ status: "REFUSED", explanation: data.reason || "the engine refused this input" }, "live");
+    render(await requestLive("/collapse", { surface: text }), "live");
   } catch (e) {
-    clearTimeout(timer);
-    resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">…</div><div><h2>ENGINE UNREACHABLE</h2></div></div>
-      <p class="expl">Couldn't reach the live engine (a free-tier instance — it may be waking, or briefly down).</p>
-      <div class="refuse-note">Run it from a shell instead — same engine, any input:<br>
-      <code style="font-family:var(--mono);font-size:.82rem">python3 eval/remote.py --url ${LIVE_ENDPOINT} collapse "${esc(text)}"</code></div></div>`;
+    renderLiveProblem(e.message || "The live engine could not complete this request.");
   }
 }
 
@@ -484,16 +695,7 @@ async function run(text) {
   runBtn.disabled = (engine === "core" && !pyodide);
 }
 
-document.querySelectorAll("#engine-toggle .opt").forEach(o => o.addEventListener("click", () => {
-  engine = o.dataset.engine;
-  document.querySelectorAll("#engine-toggle .opt").forEach(x => {
-    const on = x === o; x.classList.toggle("active", on); x.setAttribute("aria-selected", on);
-  });
-  runBtn.disabled = (engine === "core" && !pyodide);
-  bootText.textContent = engine === "live"
-    ? "the real licensed engine — over HTTP, source never serialized (first call may cold-start ~40s)"
-    : (pyodide ? "engine live in this tab — the public demo core, fetched verbatim" : "booting the demo core…");
-}));
+document.querySelectorAll("#engine-toggle .opt").forEach(o => o.addEventListener("click", () => selectEngine(o.dataset.engine)));
 
 document.querySelectorAll(".preset").forEach(b => b.addEventListener("click", () => {
   let s = b.dataset.seq;
@@ -503,6 +705,12 @@ document.querySelectorAll(".preset").forEach(b => b.addEventListener("click", ()
 }));
 runBtn.addEventListener("click", () => run(seqBox.value));
 seqBox.addEventListener("keydown", e => { if (e.key === "Enter") run(seqBox.value); });
+certifyBtn.addEventListener("click", () => runCertify(claimBox.value));
+claimBox.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") runCertify(claimBox.value); });
+document.querySelectorAll(".claim-chip").forEach(b => b.addEventListener("click", () => {
+  claimBox.value = b.dataset.claim;
+  runCertify(claimBox.value);
+}));
 
 document.getElementById("gates-btn").addEventListener("click", async () => {
   const out = document.getElementById("gates-out");

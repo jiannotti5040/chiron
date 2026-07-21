@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jiannotti5040.github.io/chiron/sitemap.xml
