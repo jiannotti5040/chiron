@@ -1,0 +1,11 @@
+# The endpoint image needs ONLY the Primus package. Exclude everything else
+# from the Docker build context — including the untracked Xcode folder, the
+# monolith, UMA, and all engine material not needed to serve certify/collapse.
+*
+!Primus/
+# ...and trim noise from within Primus/ itself.
+Primus/outputs/
+Primus/__pycache__/
+**/__pycache__/
+**/*.pyc
+Primus/.pytest_cache/
