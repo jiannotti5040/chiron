@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "primus-intelligence"
-version = "0.6.0"
+version = "0.6.1"
 description = "Exact invariant recovery with held-out verification and refusal — collapse codified surfaces to their minimal generators, and certify the checkable claims in LLM/agent output."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -33,6 +33,7 @@ conjecture = ["gplearn>=0.4.2", "scikit-learn>=1.3"]
 [project.scripts]
 primus = "primus.cli:main"
 primus-mcp = "primus.mcp_server:main"
+primus-serve = "primus.engine_server:main"
 
 [project.urls]
 Homepage = "https://github.com/jiannotti5040/chiron-vault"
