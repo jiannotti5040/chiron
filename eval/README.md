@@ -61,10 +61,11 @@ arbitrary input yourself before licensing. The engine's own gate battery
 runs post-purchase. This eval reduces the pre-purchase gap from "trust
 the philosophy" to "verify the headline property on data you choose."
 
-One more rung is live: the licensed engine is served over HTTP (request in,
-certificate out, hard rate limits, engine source never serialized — 18/18
-endpoint gates), and [`remote.py`](remote.py) in this folder is the stdlib
-client. Run the **real engine** on input you choose, before paying:
+One more rung is live: a currently deployed licensed engine is served over
+HTTP (request in, certificate out, hard rate limits, engine source never
+serialized — 18/18 endpoint gates), and [`remote.py`](remote.py) in this
+folder is the stdlib client. Run the **real engine** on input you choose,
+before paying:
 
 ```
 python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
@@ -74,6 +75,10 @@ python3 eval/remote.py --url https://chiron-engine.onrender.com certify "2+2=5, 
 
 That is a demo instance on a free tier: it's rate-limited (per-IP 20/min),
 refuses anything over budget, and the first request after idle may take
-~30 s to wake. It is the real engine, not the browser demo core — the same
-one graded above. `remote.py` works against any deployment, so the mechanism
-outlives any one URL.
+~30 s to wake. It is the real engine, not the browser demo core, but it is a
+moving deployment rather than a claim of byte identity with the frozen 0.6.0
+evaluation above. Check `/health` for its currently deployed version. The
+frozen evaluation remains the dated, hash-bound artifact supporting the
+22-stamped claim; the endpoint demonstrates current behavior on
+non-sensitive input. `remote.py` works against any deployment, so the
+mechanism outlives any one URL.

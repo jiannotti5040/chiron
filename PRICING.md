@@ -39,14 +39,15 @@ Individual and Team are self-serve. Business includes an onboarding call; Enterp
 
 For a larger deployment or a use case that needs a conversation before purchase, email [jiannotti1@gmail.com](mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access). Do not send payment details by email.
 
-## Buy
+## Start a commercial evaluation
 
-Self-serve plans are billed monthly via Stripe; card statements read `THRUPUT CHIRON`:
+Commercial access is currently opened through a short fit conversation while
+the private-vault delivery verification is being finalized. That is deliberate:
+we will not take a card payment until the payer-email and GitHub-account
+verification path has passed its live acceptance test.
 
-- **[Individual — $100/month](https://buy.stripe.com/7sYaEX1817df9047KR67S0c)**
-- **[Team — $500/month](https://buy.stripe.com/8x29AT03X9lna486GN67S0d)**
-- **[Business — $2,000/month](https://buy.stripe.com/fZufZh5oh4134JO4yF67S0e)**
+Email [jiannotti1@gmail.com](mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access) with the structured output you need to gate, the independent check available, and your expected seat count. We will confirm fit, the applicable tier, and the delivery path before asking for payment.
 
-**Business Scale** (up to $10,000/month) and **Enterprise** (custom, above that) start with a short conversation so the license matches your size and needs: [jiannotti1@gmail.com](mailto:jiannotti1@gmail.com?subject=Chiron%20Business%20Scale%20or%20Enterprise).
+**Business Scale** (up to $10,000/month) and **Enterprise** (custom, above that) always begin this way so the license matches your size and needs.
 
 > Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
