@@ -1,274 +1,466 @@
 <!DOCTYPE html>
 <!--
-  Chiron browser playground.
+  Chiron playground — the product demo.
 
-  WHAT THIS PAGE RUNS, exactly: prototype/browser_core.py — the public demo
-  core — executed by CPython compiled to WebAssembly (Pyodide), fetched
-  verbatim from this repository at load time. There is no second copy of the
-  core to drift, no server, and no JavaScript reimplementation: the refusals
-  you see are the Python file refusing. The "26 gates" button additionally
-  fetches and runs prototype/primus_prototype.py, the architecture prototype.
+  WHAT RUNS: prototype/browser_core.py (the public demo core), fetched verbatim
+  and executed by CPython-in-WebAssembly (Pyodide). Every verdict on this page
+  is that Python file deciding — no JavaScript reimplementation, no server, no
+  faked outputs. The "26 gates" panel additionally fetches and runs the actual
+  prototype/primus_prototype.py battery in-tab.
 
-  WHAT THIS PAGE IS NOT: the licensed engine. The demo core shares the
-  licensed engine's contract (exact arithmetic, stamp only on exact held-out
-  proof, refuse otherwise) but is strictly weaker — fewer hypothesis
-  families, a more conservative evidence rule. The licensed engine's outputs
-  on external data are graded in eval/ (see the README).
+  WHAT THIS IS NOT: the licensed engine. The demo core shares the licensed
+  engine's contract (exact arithmetic, stamp only on exact held-out proof,
+  refuse otherwise) and is strictly weaker by design. The real licensed engine
+  is graded in eval/ and runs live at chiron-engine.onrender.com.
 
-  Serving: needs HTTP (fetch is blocked on file://).
-    local:  python3 -m http.server  (from the repo root), then
-            http://localhost:8000/docs/playground/
-    hosted: GitHub Pages serving /docs — live at
-            https://jiannotti5040.github.io/chiron/playground/
-
-  The .py files in THIS directory are byte-identical copies of the canonical
-  files in prototype/ (Pages serves only docs/, so same-origin copies keep
-  the page self-contained). CI enforces the identity with cmp on every push
-  — a drifted copy fails the build, so there is no second version to trust.
-  Fetch order: ./ (same origin), then ../../prototype/ (local dev from repo
-  root), then raw.githubusercontent.com as a last resort.
+  Served over HTTP (fetch is blocked on file://). Live: GitHub Pages at
+  https://jiannotti5040.github.io/chiron/playground/  — or locally:
+  python3 -m http.server (from repo root) then /docs/playground/.
+  The .py files here are CI-verified byte-identical copies of prototype/.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chiron — verify or refuse, live</title>
-<meta name="description" content="Paste any integer sequence and watch a real Python verification core prove it on held-out terms — or refuse. Exact arithmetic, no server, refusal over confidence.">
+<title>Chiron — verification that refuses</title>
+<meta name="description" content="Paste any integer sequence and watch a real verification engine prove it on held-out terms — or refuse. Exact arithmetic, running in your browser, nothing faked. Refusal is the product.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
 <style>
   :root {
-    --bg: #0d1117; --panel: #161b22; --line: #30363d;
-    --text: #e6edf3; --dim: #8b949e;
-    --green: #3fb950; --green-bg: #12261a;
-    --amber: #d29922; --amber-bg: #2a2109;
-    --accent: #58a6ff;
+    --bg: #0a0c10;
+    --bg-2: #0f131a;
+    --panel: #141a23;
+    --panel-2: #1a212c;
+    --line: #232c39;
+    --line-2: #2e3a4b;
+    --text: #eef2f7;
+    --dim: #9aa7b8;
+    --dimmer: #6b7688;
+    --accent: #7c9cff;
+    --accent-2: #a98cff;
+    --green: #3fdd85;
+    --green-deep: #0f2a1c;
+    --green-line: #1f6b45;
+    --amber: #ffc24b;
+    --amber-deep: #2c220a;
+    --amber-line: #6b551f;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
     margin: 0; background: var(--bg); color: var(--text);
-    font: 16px/1.55 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(120% 80% at 50% -10%, rgba(124,156,255,.10), transparent 55%),
+      radial-gradient(80% 60% at 90% 0%, rgba(169,140,255,.07), transparent 50%);
+    background-attachment: fixed;
   }
-  main { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
-  h1 { font-size: 1.9rem; margin: 0 0 6px; }
-  h1 small { color: var(--dim); font-weight: 400; font-size: 1rem; display: block; margin-top: 4px; }
-  .what-runs {
-    border: 1px solid var(--line); border-left: 4px solid var(--accent);
-    background: var(--panel); border-radius: 6px; padding: 12px 16px;
-    color: var(--dim); font-size: .92rem; margin: 18px 0 26px;
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 0 22px; }
+
+  /* top bar */
+  header.bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0; max-width: 920px; margin: 0 auto; padding-left: 22px; padding-right: 22px;
   }
-  .what-runs b { color: var(--text); }
-  .what-runs a { color: var(--accent); text-decoration: none; }
-  #boot { color: var(--dim); font-family: ui-monospace, Menlo, monospace; font-size: .85rem; margin: 8px 0 18px; }
-  .presets { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
-  button {
-    background: var(--panel); color: var(--text); border: 1px solid var(--line);
-    border-radius: 6px; padding: 9px 16px; font-size: .95rem; cursor: pointer;
+  .brand { font-weight: 700; letter-spacing: .14em; font-size: .82rem; color: var(--text); }
+  .brand .dot { color: var(--accent); }
+  .bar nav { display: flex; gap: 20px; font-size: .88rem; }
+  .bar nav a { color: var(--dim); }
+
+  /* hero */
+  .hero { padding: 26px 0 20px; text-align: center; }
+  .eyebrow {
+    display: inline-block; font-size: .72rem; letter-spacing: .22em; font-weight: 700;
+    color: var(--accent); border: 1px solid var(--line-2); border-radius: 100px;
+    padding: 5px 14px; margin-bottom: 18px; background: rgba(124,156,255,.06);
   }
-  button:hover:not(:disabled) { border-color: var(--accent); }
-  button:disabled { opacity: .45; cursor: wait; }
-  button .tag { font-size: .75rem; color: var(--dim); margin-left: 6px; }
-  .runrow { display: flex; gap: 10px; margin-bottom: 24px; }
+  .hero h1 {
+    font-size: clamp(1.9rem, 4.4vw, 2.7rem); line-height: 1.1; margin: 0 0 14px;
+    letter-spacing: -.02em; font-weight: 800;
+    background: linear-gradient(180deg, #ffffff, #b9c6da);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p.lead { font-size: clamp(1rem, 2vw, 1.12rem); color: var(--dim); max-width: 620px; margin: 0 auto 8px; }
+  .hero p.sub { font-size: .88rem; color: var(--dimmer); margin: 12px auto 0; }
+  .hero .sub code { font-family: var(--mono); color: var(--dim); }
+
+  /* the demo card */
+  .demo {
+    margin: 30px 0 10px; background: linear-gradient(180deg, var(--panel), var(--bg-2));
+    border: 1px solid var(--line-2); border-radius: 18px; padding: 22px;
+    box-shadow: 0 24px 70px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .demo .label { font-size: .74rem; letter-spacing: .12em; color: var(--dimmer); text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 14px; }
+  .chip {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--line-2);
+    border-radius: 100px; padding: 8px 15px; font-size: .9rem; cursor: pointer;
+    transition: border-color .15s, transform .1s, background .15s; font-family: var(--sans);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .chip:hover:not(:disabled) { border-color: var(--accent); transform: translateY(-1px); }
+  .chip:disabled { opacity: .4; cursor: wait; }
+  .chip .tag { font-size: .72rem; padding: 2px 7px; border-radius: 100px; font-weight: 700; letter-spacing: .02em; }
+  .chip .tag.v { color: var(--green); background: var(--green-deep); }
+  .chip .tag.r { color: var(--amber); background: var(--amber-deep); }
+  .runrow { display: flex; gap: 10px; }
   #seq {
-    flex: 1; background: var(--panel); color: var(--text);
-    border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px;
-    font: .95rem ui-monospace, Menlo, monospace;
+    flex: 1; min-width: 0; background: var(--bg); color: var(--text);
+    border: 1px solid var(--line-2); border-radius: 12px; padding: 14px 16px;
+    font-family: var(--mono); font-size: .96rem; transition: border-color .15s;
   }
-  #run { border-color: var(--accent); color: var(--accent); font-weight: 600; }
-  #verdict { display: none; border-radius: 8px; padding: 20px 24px; margin-bottom: 14px; }
-  #verdict.v { display: block; background: var(--green-bg); border: 1px solid var(--green); }
-  #verdict.r { display: block; background: var(--amber-bg); border: 1px solid var(--amber); }
-  #verdict h2 { margin: 0 0 8px; font-size: 1.5rem; letter-spacing: .5px; }
-  #verdict.v h2 { color: var(--green); }
-  #verdict.r h2 { color: var(--amber); }
-  #verdict p { margin: 6px 0; }
-  #verdict .why { color: var(--dim); font-size: .92rem; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
-  #cert {
-    display: none; background: var(--panel); border: 1px solid var(--line);
-    border-radius: 8px; padding: 16px; overflow-x: auto; margin-bottom: 30px;
-    font: .8rem/1.5 ui-monospace, Menlo, monospace; white-space: pre; color: var(--dim);
+  #seq:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,156,255,.15); }
+  #seq::placeholder { color: var(--dimmer); }
+  #run {
+    background: linear-gradient(180deg, var(--accent), #5f7ff0); color: #0a0c10;
+    border: none; border-radius: 12px; padding: 0 26px; font-size: .98rem; font-weight: 700;
+    cursor: pointer; font-family: var(--sans); transition: filter .15s, transform .1s;
   }
-  details { border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; margin-top: 30px; }
-  summary { cursor: pointer; color: var(--accent); }
-  #gates-out {
-    background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
-    margin-top: 12px; padding: 14px; max-height: 420px; overflow: auto;
-    font: .78rem/1.5 ui-monospace, Menlo, monospace; white-space: pre; color: var(--dim);
-    display: none;
+  #run:hover:not(:disabled) { filter: brightness(1.08); }
+  #run:active:not(:disabled) { transform: translateY(1px); }
+  #run:disabled { opacity: .5; cursor: wait; }
+
+  /* boot status */
+  #boot { margin-top: 14px; font-family: var(--mono); font-size: .82rem; color: var(--dimmer); display: flex; align-items: center; gap: 9px; }
+  .spinner { width: 13px; height: 13px; border: 2px solid var(--line-2); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #boot.ready .spinner { display: none; }
+  #boot.ready::before { content: "●"; color: var(--green); }
+
+  /* verdict */
+  #result { margin-top: 18px; scroll-margin-top: 76px; }
+  .verdict {
+    border-radius: 16px; padding: 26px; border: 1px solid var(--line);
+    animation: rise .45s cubic-bezier(.2,.7,.2,1);
   }
-  footer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--dim); font-size: .88rem; }
-  footer a { color: var(--accent); text-decoration: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .verdict.v { background: radial-gradient(120% 130% at 0% 0%, rgba(63,221,133,.10), transparent 60%), var(--panel); border-color: var(--green-line); }
+  .verdict.r { background: radial-gradient(120% 130% at 0% 0%, rgba(255,194,75,.10), transparent 60%), var(--panel); border-color: var(--amber-line); }
+  .stamp { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .stamp .glyph {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+    font-size: 1.5rem; font-weight: 800; flex: none;
+  }
+  .verdict.v .glyph { background: var(--green-deep); color: var(--green); border: 1px solid var(--green-line); }
+  .verdict.r .glyph { background: var(--amber-deep); color: var(--amber); border: 1px solid var(--amber-line); }
+  .verdict h2 { margin: 0; font-size: 1.5rem; letter-spacing: -.01em; }
+  .verdict.v h2 { color: var(--green); }
+  .verdict.r h2 { color: var(--amber); }
+  .stamp .badge-anim { animation: pop .5s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes pop { 0% { transform: scale(.4) rotate(-8deg); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+  .verdict .expl { color: var(--text); margin: 4px 0 0; font-size: 1.02rem; }
+  .verdict .sub-expl { color: var(--dim); font-size: .92rem; margin-top: 8px; }
+
+  .proof { margin-top: 18px; display: grid; gap: 10px; }
+  .proof .row {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 11px;
+    padding: 12px 15px; display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+  }
+  .proof .k { font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--dimmer); font-weight: 700; min-width: 130px; }
+  .proof .val { font-family: var(--mono); font-size: .92rem; color: var(--text); }
+  .proof .val.big { font-size: 1.05rem; }
+  .proof .val .ok { color: var(--green); }
+  .next-terms { display: flex; gap: 8px; flex-wrap: wrap; }
+  .next-terms span { background: var(--green-deep); color: var(--green); border: 1px solid var(--green-line); border-radius: 8px; padding: 4px 11px; font-family: var(--mono); font-weight: 700; }
+
+  .refuse-note {
+    margin-top: 18px; border-left: 3px solid var(--amber); background: var(--amber-deep);
+    border-radius: 0 11px 11px 0; padding: 14px 18px; color: var(--text); font-size: .95rem;
+  }
+  .refuse-note b { color: var(--amber); }
+
+  .falsify { margin-top: 16px; font-size: .86rem; color: var(--dimmer); border-top: 1px dashed var(--line-2); padding-top: 14px; }
+  .falsify b { color: var(--dim); }
+
+  details.raw { margin-top: 14px; }
+  details.raw summary { cursor: pointer; color: var(--accent); font-size: .86rem; list-style: none; display: inline-flex; align-items: center; gap: 6px; }
+  details.raw summary::-webkit-details-marker { display: none; }
+  details.raw summary::before { content: "▸"; transition: transform .15s; display: inline-block; }
+  details.raw[open] summary::before { transform: rotate(90deg); }
+  details.raw pre {
+    margin: 10px 0 0; background: var(--bg); border: 1px solid var(--line); border-radius: 11px;
+    padding: 14px; overflow-x: auto; font-family: var(--mono); font-size: .78rem; line-height: 1.55; color: var(--dim);
+  }
+  .placeholder { color: var(--dimmer); text-align: center; padding: 30px 10px; font-size: .95rem; }
+
+  /* sections */
+  section.blk { padding: 40px 0 8px; }
+  section.blk h3 { font-size: 1.4rem; letter-spacing: -.01em; margin: 0 0 6px; }
+  section.blk .kicker { color: var(--dimmer); font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; margin-bottom: 10px; }
+  section.blk p.intro { color: var(--dim); margin: 0 0 22px; max-width: 640px; }
+
+  .why { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .why .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+  .why .card .n { color: var(--accent); font-family: var(--mono); font-size: .8rem; font-weight: 700; margin-bottom: 8px; }
+  .why .card h4 { margin: 0 0 6px; font-size: 1.02rem; }
+  .why .card p { margin: 0; color: var(--dim); font-size: .9rem; }
+
+  .tiers { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .tier { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; }
+  .tier .time { font-family: var(--mono); font-size: .8rem; color: var(--accent); font-weight: 700; letter-spacing: .04em; }
+  .tier h4 { margin: 8px 0 8px; font-size: 1.05rem; }
+  .tier p { margin: 0 0 12px; color: var(--dim); font-size: .9rem; flex: 1; }
+  .tier .proves { font-size: .82rem; color: var(--dimmer); border-top: 1px solid var(--line); padding-top: 10px; }
+  .tier .proves b { color: var(--green); }
+  .tier code, .tiers code { font-family: var(--mono); font-size: .82rem; background: var(--bg); padding: 2px 6px; border-radius: 5px; color: var(--dim); border: 1px solid var(--line); }
+  .tier.live { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(124,156,255,.15), 0 20px 50px -30px rgba(124,156,255,.4); }
+  .tier .cmd { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-family: var(--mono); font-size: .72rem; color: var(--dim); overflow-x: auto; margin-bottom: 12px; white-space: pre; }
+
+  .honesty { margin-top: 30px; background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 0 14px 14px 0; padding: 18px 20px; }
+  .honesty h4 { margin: 0 0 8px; font-size: .98rem; }
+  .honesty p { margin: 0; color: var(--dim); font-size: .9rem; }
+  .honesty a { white-space: nowrap; }
+
+  details.gates { margin-top: 18px; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; background: var(--panel); }
+  details.gates summary { cursor: pointer; color: var(--accent); font-size: .92rem; }
+  details.gates p { color: var(--dim); font-size: .88rem; }
+  #gates-out { display: none; background: var(--bg); border: 1px solid var(--line); border-radius: 9px; margin-top: 12px; padding: 14px; max-height: 380px; overflow: auto; font-family: var(--mono); font-size: .76rem; line-height: 1.5; white-space: pre; color: var(--dim); }
+  #gates-btn { background: var(--panel-2); color: var(--text); border: 1px solid var(--line-2); border-radius: 9px; padding: 8px 15px; font-size: .88rem; cursor: pointer; font-family: var(--sans); }
+  #gates-btn:hover:not(:disabled) { border-color: var(--accent); }
+
+  footer { margin: 46px 0 60px; border-top: 1px solid var(--line); padding-top: 22px; color: var(--dimmer); font-size: .86rem; display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between; }
+  footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
+
+  @media (max-width: 720px) {
+    .why, .tiers { grid-template-columns: 1fr; }
+    .runrow { flex-direction: column; }
+    #run { padding: 14px; }
+    .bar nav { gap: 14px; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>Paste a sequence. Watch it prove — or refuse.
-    <small>The demo core runs in your browser: real Python, real refusals, no server.</small>
-  </h1>
 
-  <div class="what-runs">
-    <b>What this page runs:</b> <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>
-    — the repository's public demo core, fetched verbatim and executed by CPython-in-WebAssembly.
-    It shares the licensed engine's contract — exact arithmetic, a stamp only when the recovered rule
-    predicts held-out terms exactly, refusal otherwise — and is <b>strictly weaker</b>: fewer hypothesis
-    families, a more conservative evidence rule. It is <b>not</b> the licensed engine. The licensed
-    engine's frozen outputs, graded against oeis.org, are in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>.
+<header class="bar">
+  <div class="brand">CHIRON<span class="dot">.</span></div>
+  <nav>
+    <a href="https://github.com/jiannotti5040/chiron">GitHub</a>
+    <a href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Pricing</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <span class="eyebrow">VERIFICATION THAT REFUSES</span>
+    <h1>Paste a sequence.<br>Watch it prove itself — or refuse.</h1>
+    <p class="lead">Most AI answers everything in the same confident voice. This engine recovers the exact rule behind your numbers, proves it on terms it was never shown, and <b style="color:var(--text)">flatly refuses when it can't</b>.</p>
+    <p class="sub">Real Python running in your browser via WebAssembly — <code>no server, nothing faked</code>. Every verdict below is the engine deciding.</p>
   </div>
 
-  <div id="boot">booting Python…</div>
+  <div class="demo">
+    <div class="label">Try it — pick an example or paste your own integers</div>
+    <div class="chips" id="chips">
+      <button class="chip preset" data-seq="1 1 2 3 5 8 13 21 34 55 89 144">Fibonacci <span class="tag v">verifies</span></button>
+      <button class="chip preset" data-seq="1 4 9 16 25 36 49 64 81 100 121 144">Squares <span class="tag v">verifies</span></button>
+      <button class="chip preset" data-seq="2 3 5 7 11 13 17 19 23 29 31 37">Primes <span class="tag r">refuses</span></button>
+      <button class="chip preset" id="noise">Random noise <span class="tag r">refuses</span></button>
+    </div>
+    <div class="runrow">
+      <input id="seq" spellcheck="false" autocomplete="off" placeholder="e.g.  3 6 12 24 48 96 192 384 768 1536">
+      <button id="run" disabled>Run</button>
+    </div>
+    <div id="boot"><span class="spinner"></span><span id="boot-text">booting the engine…</span></div>
 
-  <div class="presets">
-    <button class="preset" data-seq="1 1 2 3 5 8 13 21 34 55 89 144">Fibonacci <span class="tag">verifies</span></button>
-    <button class="preset" data-seq="1 4 9 16 25 36 49 64 81 100 121 144">Squares <span class="tag">verifies</span></button>
-    <button class="preset" data-seq="2 3 5 7 11 13 17 19 23 29 31 37">Primes <span class="tag">refuses</span></button>
-    <button class="preset" id="noise">Random noise <span class="tag">refuses</span></button>
+    <div id="result">
+      <div class="placeholder">Pick <b style="color:var(--dim)">Fibonacci</b> to watch it verify, or <b style="color:var(--amber)">Primes</b> to watch it refuse — the refusal is the point.</div>
+    </div>
   </div>
 
-  <div class="runrow">
-    <input id="seq" spellcheck="false" placeholder="paste your own integers — e.g. 3 6 12 24 48 96 192 384 768 1536">
-    <button id="run" disabled>Run</button>
+  <section class="blk">
+    <div class="kicker">Why a refusal is the feature</div>
+    <h3>A stamp is worth something only because it can be withheld.</h3>
+    <div class="why" style="margin-top:20px">
+      <div class="card"><div class="n">01</div><h4>It proves, not guesses</h4><p>A rule is stamped only when it exactly predicts held-out terms it never saw — <code style="font-family:var(--mono);font-size:.82rem">==</code>, not a tolerance.</p></div>
+      <div class="card"><div class="n">02</div><h4>It says "I don't know"</h4><p>Fed the primes, it finds a formula that fits every number you gave it — and still refuses, because that formula fails the terms you didn't.</p></div>
+      <div class="card"><div class="n">03</div><h4>Zero false verifications</h4><p>On external data the stamp has never been wrong. That's the whole product: correct, or silent — never confidently wrong.</p></div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="kicker">How sure can you be — before paying?</div>
+    <h3>Three depths of proof. Each says what it does and doesn't show.</h3>
+    <p class="intro">The restraint is the brand — nothing here claims more than it proves.</p>
+    <div class="tiers">
+      <div class="tier">
+        <div class="time">10 SECONDS</div>
+        <h4>This page</h4>
+        <p>Paste anything and watch verify-or-refuse live, in your browser.</p>
+        <div class="proves"><b>Proves:</b> the contract on your own input. Not the licensed engine's full reach — this demo core is deliberately weaker.</div>
+      </div>
+      <div class="tier">
+        <div class="time">2 MINUTES</div>
+        <h4>Grade it yourself</h4>
+        <div class="cmd">python3 eval/grade.py</div>
+        <p>The licensed engine's frozen outputs, graded live against oeis.org — data the author doesn't control.</p>
+        <div class="proves"><b>Proves:</b> zero false stamps on external data. <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/ →</a></div>
+      </div>
+      <div class="tier live">
+        <div class="time">LIVE · THE REAL ENGINE</div>
+        <h4>Hit the licensed engine</h4>
+        <div class="cmd">python3 eval/remote.py --url \
+https://chiron-engine.onrender.com \
+collapse "1 1 2 3 5 8 13 21"</div>
+        <p>The real engine over HTTP — certificate out, source never serialized, rate-limited.</p>
+        <div class="proves"><b>Proves:</b> the real engine on any input you choose. <a href="https://chiron-engine.onrender.com/health">endpoint →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="honesty">
+    <h4>What this page runs, precisely</h4>
+    <p>The engine here is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a> — the public demo core, fetched verbatim and run by CPython-in-WebAssembly. It shares the licensed engine's contract but is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families, a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the <b style="color:var(--text)">licensed engine stamps</b> (graded in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>, reconciled in <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). What's identical in both: neither ever stamps what it cannot prove.</p>
   </div>
 
-  <div id="verdict"></div>
-  <div id="cert"></div>
-
-  <details>
-    <summary>Also in this repo: the architecture prototype and its 26-gate battery — run it in this tab</summary>
-    <p style="color:var(--dim); font-size:.9rem">
-      <code>prototype/primus_prototype.py</code> is the architecture discipline demo: membrane, seal,
-      determinism, adjacency law — and a certifier stub that <em>structurally cannot say VERIFIED</em>
-      (that is gate 26). This fetches the actual file and runs its battery here.
-    </p>
-    <button id="gates">Run the 26 gates</button>
+  <details class="gates">
+    <summary>Prove the discipline itself — run the architecture prototype's 26-gate battery, in this tab</summary>
+    <p><code style="font-family:var(--mono)">prototype/primus_prototype.py</code> enforces the membrane, the deterministic seal, the adjacency law — and a certifier stub that <em>structurally cannot say VERIFIED</em> (that's gate 26). This fetches the real file and runs its battery here.</p>
+    <button id="gates-btn">Run the 26 gates</button>
     <div id="gates-out"></div>
   </details>
 
   <footer>
-    Sequences this core refuses (primes, Catalan, factorials…) are not all beyond the product:
-    the <b>licensed engine</b> stamps Catalan, factorials, Tribonacci and more — graded on external
-    data in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>, reconciled in
-    <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">docs/BATTERIES.md</a>.
-    What is identical in both: neither ever stamps what it cannot prove.
-    To remove "the author picked the corpus" from the eval too, run
-    <a href="https://github.com/jiannotti5040/chiron/blob/main/eval/challenge.py">eval/challenge.py</a>
-    on sequences <em>you</em> choose.
-    · <a href="https://github.com/jiannotti5040/chiron">repository</a>
+    <div>Correct, or silent — never confidently wrong.</div>
+    <div class="links">
+      <a href="https://github.com/jiannotti5040/chiron">Repository</a>
+      <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">Verify (eval/)</a>
+      <a href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Pricing</a>
+    </div>
   </footer>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
 const SOURCES = [
   "./",                 // same-origin copy, CI-enforced byte-identical to prototype/
-  "../../prototype/",   // canonical file, resolves when serving the repo root locally
+  "../../prototype/",   // canonical file when serving the repo root locally
   "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/",
 ];
 const boot = document.getElementById("boot");
+const bootText = document.getElementById("boot-text");
 const runBtn = document.getElementById("run");
 const seqBox = document.getElementById("seq");
-const verdict = document.getElementById("verdict");
-const certBox = document.getElementById("cert");
+const resultEl = document.getElementById("result");
 let pyodide = null, protoLoaded = false;
 
 async function fetchSource(name) {
   for (const base of SOURCES) {
-    try {
-      const r = await fetch(base + name, {cache: "no-store"});
-      if (r.ok) return await r.text();
-    } catch (e) { /* try next */ }
+    try { const r = await fetch(base + name, {cache: "no-store"}); if (r.ok) return await r.text(); }
+    catch (e) { /* next */ }
   }
-  throw new Error("could not fetch " + name + " (serve this page over HTTP from the repo)");
+  throw new Error("could not fetch " + name + " — serve this page over HTTP");
 }
 
 async function init() {
   try {
-    boot.textContent = "booting Python (Pyodide)…";
+    bootText.textContent = "booting Python (Pyodide)…";
     pyodide = await loadPyodide();
-    boot.textContent = "fetching prototype/browser_core.py from the repository…";
+    bootText.textContent = "fetching the engine (browser_core.py)…";
     const src = await fetchSource("browser_core.py");
     pyodide.FS.mkdirTree("/pkg");
     pyodide.FS.writeFile("/pkg/browser_core.py", src);
     pyodide.runPython("import sys; sys.path.insert(0, '/pkg'); import browser_core");
-    boot.textContent = "ready — the demo core is live in this tab (" +
-      src.length.toLocaleString() + " bytes of Python, fetched verbatim).";
+    boot.classList.add("ready");
+    bootText.textContent = "engine live in this tab — " + src.length.toLocaleString() + " bytes of Python, fetched verbatim";
     runBtn.disabled = false;
   } catch (e) {
-    boot.textContent = "boot failed: " + e.message;
+    bootText.textContent = "boot failed: " + e.message;
   }
 }
 
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
 function render(cert) {
-  const v = cert.status === "VERIFIED";
-  verdict.className = v ? "v" : "r";
-  let html = v
-    ? "<h2>VERIFIED — proven on terms it never saw</h2>"
-    : (cert.status === "recovered_unstamped"
-        ? "<h2>NOT STAMPED — a fit is not a proof</h2>"
-        : "<h2>REFUSED — it will not guess</h2>");
-  html += "<p>" + cert.explanation + "</p>";
-  if (v && cert.next_terms) {
-    html += "<p><b>Committed next terms:</b> <code>" + cert.next_terms.join(", ") +
-      "</code> — if the true sequence disagrees, this certificate is falsified.</p>";
+  const verified = cert.status === "VERIFIED";
+  const refused = cert.status === "REFUSED";
+  const kind = verified ? "v" : "r";
+  const glyph = verified ? "✓" : (refused ? "⊘" : "≈");
+  const title = verified ? "VERIFIED" : (refused ? "REFUSED" : "NOT STAMPED");
+  const titleSub = verified ? "proven on terms it never saw"
+                  : (refused ? "it will not guess" : "a fit is not a proof");
+
+  let proof = "";
+  if (verified) {
+    const held = (cert.held_out || []).join(", ");
+    const pred = (cert.predicted || []).join(", ");
+    proof += `<div class="row"><span class="k">Recovered rule</span><span class="val big">${esc(cert.model_class || "")}</span></div>`;
+    proof += `<div class="row"><span class="k">Held-out proof</span><span class="val">it never saw <b>[${esc(held)}]</b> · predicted <b>[${esc(pred)}]</b> <span class="ok">✓ exact</span></span></div>`;
+    if (cert.next_terms) {
+      proof += `<div class="row"><span class="k">Commits next</span><span class="next-terms">${cert.next_terms.map(t => `<span>${esc(t)}</span>`).join("")}</span></div>`;
+    }
+  } else if (cert.model_class) {
+    proof += `<div class="row"><span class="k">It recovered</span><span class="val big">${esc(cert.model_class)}</span></div>`;
+    proof += `<div class="row"><span class="k">…and still refused</span><span class="val">${esc(cert.reason || "held-out check failed")}</span></div>`;
   }
-  if (!v) {
-    html += "<div class='why'><b>Why refusing is the feature:</b> most systems answer every " +
-      "input in the same confident voice. This one stakes a claim only when it can prove the " +
-      "claim on data it was never shown — everything else is a refusal, stated plainly. " +
-      "A system that only tells you what it can prove is a system you can build on.</div>";
-  }
-  verdict.innerHTML = html;
-  certBox.style.display = "block";
-  certBox.textContent = JSON.stringify(cert, null, 2);
+
+  const refuseNote = !verified ? `<div class="refuse-note"><b>This is the feature.</b> A system that only tells you what it can prove is a system you can build on. Everything else here is a refusal, stated plainly — not a confident guess dressed up as an answer.</div>` : "";
+
+  const nextNote = (verified && cert.next_terms)
+    ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
+
+  resultEl.innerHTML = `
+    <div class="verdict ${kind}">
+      <div class="stamp">
+        <div class="glyph badge-anim">${glyph}</div>
+        <div><h2>${title}</h2></div>
+      </div>
+      <p class="expl">${esc(cert.explanation || "")}</p>
+      ${nextNote}
+      <div class="proof">${proof}</div>
+      ${refuseNote}
+      <div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify || "")}</div>
+      <details class="raw"><summary>View the raw certificate</summary><pre>${esc(JSON.stringify(cert, null, 2))}</pre></details>
+    </div>`;
+  // bring the verdict into view (scroll-margin-top handles the offset)
+  requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 
 async function run(text) {
+  if (!pyodide) return;
   runBtn.disabled = true;
   try {
-    const fn = pyodide.globals.get("browser_core").collapse_text;
-    const out = fn(text);
+    const out = pyodide.globals.get("browser_core").collapse_text(text);
     render(JSON.parse(out));
   } catch (e) {
-    verdict.className = "r";
-    verdict.innerHTML = "<h2>ERROR</h2><p>" + e.message + "</p>";
+    resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">!</div><div><h2>ERROR</h2></div></div><p class="expl">${esc(e.message)}</p></div>`;
   }
   runBtn.disabled = false;
 }
 
 document.querySelectorAll(".preset").forEach(b => b.addEventListener("click", () => {
   let s = b.dataset.seq;
-  if (b.id === "noise") {
-    s = Array.from({length: 12}, () => Math.floor(Math.random() * 97)).join(" ");
-  }
+  if (b.id === "noise") s = Array.from({length: 12}, () => Math.floor(Math.random() * 97)).join(" ");
   seqBox.value = s;
-  if (pyodide) run(s);
+  run(s);
 }));
 runBtn.addEventListener("click", () => run(seqBox.value));
-seqBox.addEventListener("keydown", e => { if (e.key === "Enter" && pyodide) run(seqBox.value); });
+seqBox.addEventListener("keydown", e => { if (e.key === "Enter") run(seqBox.value); });
 
-document.getElementById("gates").addEventListener("click", async () => {
+document.getElementById("gates-btn").addEventListener("click", async () => {
   const out = document.getElementById("gates-out");
-  const btn = document.getElementById("gates");
-  btn.disabled = true;
-  out.style.display = "block";
-  out.textContent = "fetching prototype/primus_prototype.py…";
+  const btn = document.getElementById("gates-btn");
+  btn.disabled = true; out.style.display = "block"; out.textContent = "fetching prototype/primus_prototype.py…";
   try {
     if (!protoLoaded) {
       const src = await fetchSource("primus_prototype.py");
       pyodide.FS.writeFile("/pkg/primus_prototype.py", src);
-      out.textContent = "loading numpy (used by one gate; a pure-Python fallback exists)…";
-      try { await pyodide.loadPackage("numpy"); } catch (e) { /* fallback path inside the file */ }
+      out.textContent = "loading numpy (one gate uses it; a pure-Python fallback exists)…";
+      try { await pyodide.loadPackage("numpy"); } catch (e) {}
       protoLoaded = true;
     }
     out.textContent = "running the 26-gate battery…\n";
     let buf = [];
-    pyodide.setStdout({batched: s => { buf.push(s); }});
-    const code = pyodide.runPython(
-      "import primus_prototype\nprimus_prototype.run_selftest()");
+    pyodide.setStdout({batched: s => buf.push(s)});
+    const code = pyodide.runPython("import primus_prototype\nprimus_prototype.run_selftest()");
     pyodide.setStdout();
-    out.textContent = buf.join("\n") + "\n\nexit code: " + code +
-      (code === 0 ? "  (all gates green — this battery ran in your browser, on the fetched file)" : "");
-  } catch (e) {
-    out.textContent = "failed: " + e.message;
-  }
+    out.textContent = buf.join("\n") + "\n\nexit code: " + code + (code === 0 ? "  — all gates green, run in your browser on the fetched file" : "");
+  } catch (e) { out.textContent = "failed: " + e.message; }
   btn.disabled = false;
 });
 
