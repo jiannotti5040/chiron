@@ -11,15 +11,14 @@ stdlib client is the public half: point it at a running endpoint and get
 the real engine's verify-or-refuse on input YOU choose — the strongest
 possible pre-purchase eval when an endpoint URL is published.
 
-No public endpoint URL is promised by this file's existence. When one is
-live, it will be listed in this folder's README. Until then, this client
-works against any deployment of the licensed endpoint (or a licensee's own:
+A live demo instance runs at https://chiron-engine.onrender.com (free tier:
+rate-limited, refuses over budget, ~30 s cold start after idle). This client
+also works against any other deployment (or a licensee's own:
 `PYTHONPATH=src python3 -m primus.engine_server` in the vault).
 
-    python3 remote.py --url http://127.0.0.1:8790 health
-    python3 remote.py --url http://127.0.0.1:8790 collapse "1 1 2 3 5 8 13 21"
-    python3 remote.py --url http://127.0.0.1:8790 certify "97 is prime and 2+2=5"
-    python3 remote.py --url http://127.0.0.1:8790 conjecture "1 3 6 10 15 21 28 36"
+    python3 remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"
+    python3 remote.py --url https://chiron-engine.onrender.com certify "97 is prime and 2+2=5"
+    python3 remote.py --url http://127.0.0.1:8790 conjecture "1 3 6 10 15 21 28 36"   # local instance
 
 Auth: if the endpoint requires a bearer token, set CHIRON_API_TOKEN.
 Exit codes: 0 on any honest answer (including refusals — refusal is a

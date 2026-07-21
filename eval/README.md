@@ -61,9 +61,19 @@ arbitrary input yourself before licensing. The engine's own gate battery
 runs post-purchase. This eval reduces the pre-purchase gap from "trust
 the philosophy" to "verify the headline property on data you choose."
 
-One more rung exists when a live endpoint is up: the licensed engine can be
-served over HTTP (request in, certificate out, hard rate limits, engine
-source never serialized — 18/18 endpoint gates), and [`remote.py`](remote.py)
-in this folder is the stdlib client. **No public endpoint URL is live right
-now**; if one goes up it will be listed here, and then "run the engine on
-input you choose" moves into the pre-purchase tier too.
+One more rung is live: the licensed engine is served over HTTP (request in,
+certificate out, hard rate limits, engine source never serialized — 18/18
+endpoint gates), and [`remote.py`](remote.py) in this folder is the stdlib
+client. Run the **real engine** on input you choose, before paying:
+
+```
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+python3 eval/remote.py --url https://chiron-engine.onrender.com certify "2+2=5, 97 is prime"
+```
+
+That is a demo instance on a free tier: it's rate-limited (per-IP 20/min),
+refuses anything over budget, and the first request after idle may take
+~30 s to wake. It is the real engine, not the browser demo core — the same
+one graded above. `remote.py` works against any deployment, so the mechanism
+outlives any one URL.
