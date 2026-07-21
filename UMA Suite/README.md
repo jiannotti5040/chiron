@@ -26,7 +26,7 @@ UMA_complete_suite_v4/
 │   │   ├── RSLS_specification.md              (NEW v4 -- consolidated spec)
 │   │   └── RSLS_menger_substrate.md           (NEW v4 -- Menger argument)
 │   │
-│   ├── tests/                        # 104/104 passing
+│   ├── tests/                        # 136/136 passing (2026-07-21: +12 jacobian)
 │   │   ├── test_sanity.py                     (v3, 11 tests)
 │   │   ├── test_semantic.py                   (v3, 19 tests)
 │   │   ├── test_rsls.py                       (NEW v4, 19 tests)
@@ -172,7 +172,7 @@ unzip UMA_complete_suite_v4.zip
 cd UMA_complete_suite_v4/uma_build_v4
 
 # Verify the build
-python3 -m pytest tests/ -v                  # 104/104 should pass
+python3 -m pytest tests/ -v                  # 136/136 should pass (3 @slow deselected)
 
 # Run the canonical v3 pipeline (closes at step 34 with seed=42)
 python3 examples/run_pipeline.py
@@ -191,7 +191,7 @@ python3 examples/rsls_frame_dragging.py      # THE STAGE-5 POC
 ## Test results (final)
 
 ```
-====================== 104 passed, 2 deselected in 12.84s ======================
+====================== 136 passed, 3 deselected ======================
 ```
 
 - 11 sanity tests (v3)
