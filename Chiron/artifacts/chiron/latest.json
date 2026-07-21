@@ -5,8 +5,8 @@
   "script": "chiron",
   "purpose": "prove the Chiron core: exact MDL invariant recovery, held-out verification, refusal, certification, and bounded agency in one file",
   "verified": true,
-  "generated_utc": "2026-07-21T12:53:04Z",
-  "commit": "61d249ef50c3bd610df564fc2b86a171c09f719d",
+  "generated_utc": "2026-07-21T21:05:29Z",
+  "commit": "eabc82011beec9be3630a961f3ae9a00fda9533f",
   "machine_view": {
     "core_gates_total": 12,
     "core_gates_passed": 12,
@@ -21,5 +21,5 @@
     "residual": "n/a",
     "confidence": "high"
   },
-  "self_hash": "35d13e6527ef9a64"
+  "self_hash": "0cf3a24b087cbb7e"
 }
