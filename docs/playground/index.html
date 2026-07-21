@@ -96,6 +96,17 @@
     box-shadow: 0 24px 70px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.03);
   }
   .demo .label { font-size: .74rem; letter-spacing: .12em; color: var(--dimmer); text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+  .engine-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
+  .toggle { display: inline-flex; background: var(--bg); border: 1px solid var(--line-2); border-radius: 100px; padding: 3px; gap: 2px; }
+  .toggle .opt {
+    background: transparent; color: var(--dim); border: none; cursor: pointer;
+    border-radius: 100px; padding: 7px 14px; font-family: var(--sans); font-size: .84rem; font-weight: 600;
+    display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; transition: background .15s, color .15s;
+  }
+  .toggle .opt .hint { font-size: .66rem; font-weight: 500; color: var(--dimmer); letter-spacing: .02em; margin-top: 2px; }
+  .toggle .opt.active { background: var(--panel-2); color: var(--text); box-shadow: 0 1px 0 rgba(255,255,255,.04); }
+  .toggle .opt.active .hint { color: var(--accent); }
+  .toggle .opt:hover:not(.active) { color: var(--text); }
   .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 14px; }
   .chip {
     background: var(--panel-2); color: var(--text); border: 1px solid var(--line-2);
@@ -149,6 +160,10 @@
   .verdict.v .glyph { background: var(--green-deep); color: var(--green); border: 1px solid var(--green-line); }
   .verdict.r .glyph { background: var(--amber-deep); color: var(--amber); border: 1px solid var(--amber-line); }
   .verdict h2 { margin: 0; font-size: 1.5rem; letter-spacing: -.01em; }
+  .etag { display: inline-block; margin-top: 3px; font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--dimmer); }
+  .etag.live { color: var(--accent); }
+  .waking { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--dim); font-size: .95rem; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+  .waking .wk-sub { color: var(--dimmer); font-size: .84rem; }
   .verdict.v h2 { color: var(--green); }
   .verdict.r h2 { color: var(--amber); }
   .stamp .badge-anim { animation: pop .5s cubic-bezier(.2,1.6,.4,1) both; }
@@ -254,7 +269,13 @@
   </div>
 
   <div class="demo">
-    <div class="label">Try it — pick an example or paste your own integers</div>
+    <div class="engine-row">
+      <div class="label" style="margin:0">Try it — pick an example or paste your own integers</div>
+      <div class="toggle" id="engine-toggle" role="tablist" aria-label="Which engine runs">
+        <button class="opt active" data-engine="core" role="tab" aria-selected="true">Demo core<span class="hint">in your browser</span></button>
+        <button class="opt" data-engine="live" role="tab" aria-selected="false">Licensed engine<span class="hint">live · the real one</span></button>
+      </div>
+    </div>
     <div class="chips" id="chips">
       <button class="chip preset" data-seq="1 1 2 3 5 8 13 21 34 55 89 144">Fibonacci <span class="tag v">verifies</span></button>
       <button class="chip preset" data-seq="1 4 9 16 25 36 49 64 81 100 121 144">Squares <span class="tag v">verifies</span></button>
@@ -342,12 +363,13 @@ const SOURCES = [
   "../../prototype/",   // canonical file when serving the repo root locally
   "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/",
 ];
+const LIVE_ENDPOINT = "https://chiron-engine.onrender.com";
 const boot = document.getElementById("boot");
 const bootText = document.getElementById("boot-text");
 const runBtn = document.getElementById("run");
 const seqBox = document.getElementById("seq");
 const resultEl = document.getElementById("result");
-let pyodide = null, protoLoaded = false;
+let pyodide = null, protoLoaded = false, engine = "core";
 
 async function fetchSource(name) {
   for (const base of SOURCES) {
@@ -376,62 +398,102 @@ async function init() {
 
 function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
 
-function render(cert) {
-  const verified = cert.status === "VERIFIED";
+function render(cert, source) {
+  // Normalize across both engines: the demo core emits an explicit `status`;
+  // the licensed engine emits `verified` (collapse never "REFUSES" — it either
+  // proves on held-out terms or honestly does not stamp).
+  const verified = cert.status ? cert.status === "VERIFIED" : cert.verified === true;
   const refused = cert.status === "REFUSED";
   const kind = verified ? "v" : "r";
   const glyph = verified ? "✓" : (refused ? "⊘" : "≈");
   const title = verified ? "VERIFIED" : (refused ? "REFUSED" : "NOT STAMPED");
-  const titleSub = verified ? "proven on terms it never saw"
-                  : (refused ? "it will not guess" : "a fit is not a proof");
+  const engineTag = source === "live"
+    ? `<span class="etag live">licensed engine · live</span>`
+    : `<span class="etag">demo core · in your browser</span>`;
 
   let proof = "";
-  if (verified) {
-    const held = (cert.held_out || []).join(", ");
-    const pred = (cert.predicted || []).join(", ");
-    proof += `<div class="row"><span class="k">Recovered rule</span><span class="val big">${esc(cert.model_class || "")}</span></div>`;
-    proof += `<div class="row"><span class="k">Held-out proof</span><span class="val">it never saw <b>[${esc(held)}]</b> · predicted <b>[${esc(pred)}]</b> <span class="ok">✓ exact</span></span></div>`;
-    if (cert.next_terms) {
-      proof += `<div class="row"><span class="k">Commits next</span><span class="next-terms">${cert.next_terms.map(t => `<span>${esc(t)}</span>`).join("")}</span></div>`;
-    }
-  } else if (cert.model_class) {
-    proof += `<div class="row"><span class="k">It recovered</span><span class="val big">${esc(cert.model_class)}</span></div>`;
-    proof += `<div class="row"><span class="k">…and still refused</span><span class="val">${esc(cert.reason || "held-out check failed")}</span></div>`;
+  if (cert.model_class) proof += `<div class="row"><span class="k">Recovered rule</span><span class="val big">${esc(cert.model_class)}</span></div>`;
+  if (verified && cert.held_out) {
+    proof += `<div class="row"><span class="k">Held-out proof</span><span class="val">never saw <b>[${esc((cert.held_out||[]).join(", "))}]</b> · predicted <b>[${esc((cert.predicted||[]).join(", "))}]</b> <span class="ok">✓ exact</span></span></div>`;
+  } else if (verified && (cert.compression_ratio || cert.exact)) {
+    proof += `<div class="row"><span class="k">How</span><span class="val">exact arithmetic${cert.compression_ratio ? ` · compresses ${Math.round(cert.surface_bits||0)}→${Math.round(cert.model_bits||0)} bits` : ""} · predicts held-out terms exactly <span class="ok">✓</span></span></div>`;
+  } else if (!verified && cert.model_class) {
+    proof += `<div class="row"><span class="k">…and still refused</span><span class="val">${esc(cert.reason || "held-out prediction did not confirm")}</span></div>`;
+  }
+  if (cert.next_terms) {
+    proof += `<div class="row"><span class="k">Commits next</span><span class="next-terms">${cert.next_terms.map(t => `<span>${esc(t)}</span>`).join("")}</span></div>`;
   }
 
   const refuseNote = !verified ? `<div class="refuse-note"><b>This is the feature.</b> A system that only tells you what it can prove is a system you can build on. Everything else here is a refusal, stated plainly — not a confident guess dressed up as an answer.</div>` : "";
-
-  const nextNote = (verified && cert.next_terms)
-    ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
+  const nextNote = (verified && cert.next_terms) ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
+  const falsify = cert.what_would_falsify ? `<div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify)}</div>` : "";
 
   resultEl.innerHTML = `
     <div class="verdict ${kind}">
       <div class="stamp">
         <div class="glyph badge-anim">${glyph}</div>
-        <div><h2>${title}</h2></div>
+        <div><h2>${title}</h2>${engineTag}</div>
       </div>
       <p class="expl">${esc(cert.explanation || "")}</p>
       ${nextNote}
       <div class="proof">${proof}</div>
       ${refuseNote}
-      <div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify || "")}</div>
+      ${falsify}
       <details class="raw"><summary>View the raw certificate</summary><pre>${esc(JSON.stringify(cert, null, 2))}</pre></details>
     </div>`;
-  // bring the verdict into view (scroll-margin-top handles the offset)
   requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 
+function runCore(text) {
+  const out = pyodide.globals.get("browser_core").collapse_text(text);
+  render(JSON.parse(out), "core");
+}
+
+async function runLive(text) {
+  resultEl.innerHTML = `<div class="waking"><span class="spinner"></span> waking the licensed engine and running your input… <span class="wk-sub">(free-tier cold start — up to ~40s the first time)</span></div>`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 75000);
+  try {
+    const r = await fetch(LIVE_ENDPOINT + "/collapse", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ surface: text }), signal: ctrl.signal,
+    });
+    clearTimeout(timer);
+    const data = await r.json();
+    if (data.certificate) render(data.certificate, "live");
+    else render({ status: "REFUSED", explanation: data.reason || "the engine refused this input" }, "live");
+  } catch (e) {
+    clearTimeout(timer);
+    resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">…</div><div><h2>ENGINE UNREACHABLE</h2></div></div>
+      <p class="expl">Couldn't reach the live engine (a free-tier instance — it may be waking, or briefly down).</p>
+      <div class="refuse-note">Run it from a shell instead — same engine, any input:<br>
+      <code style="font-family:var(--mono);font-size:.82rem">python3 eval/remote.py --url ${LIVE_ENDPOINT} collapse "${esc(text)}"</code></div></div>`;
+  }
+}
+
 async function run(text) {
-  if (!pyodide) return;
+  if (!text.trim()) return;
+  if (engine === "core" && !pyodide) return;
   runBtn.disabled = true;
   try {
-    const out = pyodide.globals.get("browser_core").collapse_text(text);
-    render(JSON.parse(out));
+    if (engine === "live") await runLive(text);
+    else runCore(text);
   } catch (e) {
     resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">!</div><div><h2>ERROR</h2></div></div><p class="expl">${esc(e.message)}</p></div>`;
   }
-  runBtn.disabled = false;
+  runBtn.disabled = (engine === "core" && !pyodide);
 }
+
+document.querySelectorAll("#engine-toggle .opt").forEach(o => o.addEventListener("click", () => {
+  engine = o.dataset.engine;
+  document.querySelectorAll("#engine-toggle .opt").forEach(x => {
+    const on = x === o; x.classList.toggle("active", on); x.setAttribute("aria-selected", on);
+  });
+  runBtn.disabled = (engine === "core" && !pyodide);
+  bootText.textContent = engine === "live"
+    ? "the real licensed engine — over HTTP, source never serialized (first call may cold-start ~40s)"
+    : (pyodide ? "engine live in this tab — the public demo core, fetched verbatim" : "booting the demo core…");
+}));
 
 document.querySelectorAll(".preset").forEach(b => b.addEventListener("click", () => {
   let s = b.dataset.seq;
