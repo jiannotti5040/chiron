@@ -65,9 +65,19 @@ A006318    holonomic_r2_p1               8/8   externally CORRECT
 *Proves:* the headline property itself — the licensed engine's frozen, hash-bound outputs contain
 zero stamps that external data contradicts; and with [`eval/challenge.py`](eval/challenge.py) you
 can run the same protocol on sequences **you** choose. *Does not prove:* that everything gets
-stamped (12 of 34 are refusals — that is the design), or that you can run the engine yourself
-pre-purchase. The protocol and its one residual assumption are stated plainly in
-[`eval/README.md`](eval/README.md).
+stamped (12 of 34 are refusals — that is the design). The protocol and its one residual assumption
+are stated plainly in [`eval/README.md`](eval/README.md).
+
+And if you want the **real engine on your own input, right now** — a live demo endpoint runs it:
+
+```
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+```
+
+The licensed engine, served over HTTP — certificate out, source never serialized, rate-limited,
+refuses over budget (18/18 endpoint gates). It's a free-tier demo instance (~30 s cold start after
+idle); `remote.py` works against any deployment.
 
 ### 30 minutes — run every public battery and read the reconciled map
 
