@@ -210,6 +210,8 @@ Everything above is backed by gates you can run, not adjectives. On the current 
 
 **Verify the headline property before paying: [`eval/`](eval/)** — the engine's frozen predictions on 34 public OEIS sequences (12 terms shown, 8 held-out terms per stamp), graded live against oeis.org by a stdlib script, tamper-evident, **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals** on the 2026-07-21 freeze. `eval/challenge.py` lets you run the same protocol on sequences *you* choose. No engine code ships; outputs are what zero-false is a property of.
 
+**How it compares to symbolic regression: [`docs/SYMREG.md`](docs/SYMREG.md)** — Primus 18 exact / 0 wrong / 11 refused vs PySR's 5 exact / 24 wrong on the same live-OEIS protocol; both the dated original runs and a 2026-07-21 reproduction, identical counts. The regressor must always answer; the refusals are the difference being sold.
+
 **Every gate count in this project, reconciled on one page: [`docs/BATTERIES.md`](docs/BATTERIES.md)** — each battery, what it covers, where it runs (public prototype / vault / single file), and which tier you can verify before paying. If two numbers ever disagree, that page wins.
 
 Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**. The governance stance: **[`docs/GOVERNANCE.md`](docs/GOVERNANCE.md)**. Why it refuses: **[`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md)**.
