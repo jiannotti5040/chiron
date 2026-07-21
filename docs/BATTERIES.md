@@ -32,6 +32,7 @@ the engine itself on arbitrary input.
 | `primus selftest` | engine 4 + certificate layer 31 + guess-and-prove conjecture layer 16 | **51/51** |
 | Certify fuzz | hostile input: floods, bombs, bounds, noise-stability, determinism | **16/16** |
 | MCP handshake | the live server process over real stdio JSON-RPC | **11/11** |
+| HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): verify/refuse round-trips, over-budget refusals at the certify bounds, rate limits, auth, and the no-leak rule (no traceback or source path in any hostile response) | **18/18** |
 | Twin cross-lock | exact combinatorial corpus agreement | **12/12** |
 | Certify property grid | soundness invariant across a generated grid | pass, 0 violations |
 | Internal benchmark | recovery + precision, zero false confidence | pass |

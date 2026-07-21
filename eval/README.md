@@ -60,3 +60,10 @@ arbitrary input yourself before licensing. The engine's own gate battery
 (the vault tiers in [`../docs/BATTERIES.md`](../docs/BATTERIES.md)) still
 runs post-purchase. This eval reduces the pre-purchase gap from "trust
 the philosophy" to "verify the headline property on data you choose."
+
+One more rung exists when a live endpoint is up: the licensed engine can be
+served over HTTP (request in, certificate out, hard rate limits, engine
+source never serialized — 18/18 endpoint gates), and [`remote.py`](remote.py)
+in this folder is the stdlib client. **No public endpoint URL is live right
+now**; if one goes up it will be listed here, and then "run the engine on
+input you choose" moves into the pre-purchase tier too.
