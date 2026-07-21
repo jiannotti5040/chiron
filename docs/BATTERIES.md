@@ -14,9 +14,12 @@ and the other page is stale — tell us.
 | Battery | Covers | Where | Count |
 |---|---|---|---|
 | Prototype selftest (`prototype/primus_prototype.py selftest`) | the recover / verify / **refuse** core discipline; the JDICert stub that structurally cannot say VERIFIED | this repo, one file, Python 3 + numpy | **26/26** |
+| **Public eval build** (`eval/grade.py`) | the engine's **headline property itself** — frozen engine outputs (12 terms shown, exact predictions for terms 13..20 or refusal) graded against oeis.org **live**; tamper-evident freeze (commit + sha256); `eval/challenge.py` lets you grade sequences **you** choose | this repo, stdlib only, no engine code | **22 stamped / 22 externally correct / 0 false stamps / 12 refusals** (freeze 2026-07-21) |
 
-That is the honest boundary of pre-purchase verification today: you can
-verify the discipline and a working core, not the full engine.
+That is the pre-purchase verification boundary today: the discipline, a
+working core, and the zero-false property verified on external data —
+including data you pick. What you still cannot do before licensing is run
+the engine itself on arbitrary input.
 
 ## Tier 2 — the vault build (delivered with a license) — as most recently run, 2026-07-21
 
@@ -54,15 +57,15 @@ verify the discipline and a working core, not the full engine.
 
 ## How to read the two tiers honestly
 
-Tier 1 is verifiable before any money moves. Tier 2 is the thing being
-sold; its numbers are reproduced on every change (`bin/chiron test` after
-licensing) and the **external** row — live-OEIS, zero false verifications
-on data the author didn't produce — is the property the whole project is
-named for. We know "trust us, it's green in private" is exactly the claim
-this project exists to reject; closing that gap further (a runnable eval
-build that demonstrates zero-false on a held-out public suite without
-shipping the engine) is the roadmap's next credibility item, stated here
-so the gap is at least never hidden.
+Tier 1 is verifiable before any money moves — and since 2026-07-21 that
+includes the headline property itself: the [`eval/`](../eval/) build
+grades the engine's frozen outputs against oeis.org live, with a
+buyer-chosen challenge mode that removes the "author picked the corpus"
+objection (protocol and residual assumptions stated plainly in
+[`eval/README.md`](../eval/README.md)). Tier 2 is the thing being sold;
+its numbers are reproduced on every change (`bin/chiron test` after
+licensing). "Trust us, it's green in private" is exactly the claim this
+project exists to reject; the eval build is that rejection made runnable.
 
 *Single-file scope, precisely: the standalone 5/5 runs from one file with
 no vault beside it; the 49/49 sweep includes modules (servers, packaged
