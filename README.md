@@ -2,9 +2,12 @@
 
 ### The verification layer for machine intelligence.
 
+[![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
+[![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
+
 Chiron recovers the exact rule behind data, proves it on evidence the rule never saw, and **refuses to answer when it cannot prove** — then leaves a signed, falsifiable certificate of what it did and why.
 
-Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict** — and the verdict is policed by live external testing. On the current published gates, Chiron produces zero false verifications. Earlier external runs did catch false stamps — a 109-sequence OEIS sweep found 3; they were published the same night and fixed at the root within hours, and the re-run grades **44 verified, all externally correct, zero false**. When Chiron cannot prove a claim exactly, it says so instead of guessing. The record is stronger for having been falsified and repaired in the open.
+Most AI systems assert. They produce an output and you trust it. Chiron inverts that: an output is not a right, it is a **verdict** — and the verdict is policed by live external testing. On the current battery (2026-07-21): **22 stamped / 22 externally correct / 0 false stamps** on the frozen public eval, graded live against oeis.org — and the badges above re-prove that in public CI on every push and every week. The zero has been earned, not kept: a 109-sequence OEIS sweep once caught 3 false stamps; they were published the same night, fixed at the root within hours, and that sweep's re-run graded 44 verified, zero false. When Chiron cannot prove a claim exactly, it says so instead of guessing. The record is stronger for having been falsified and repaired in the open.
 
 **You are not buying code. You are buying certainty about machine output.**
 
@@ -15,7 +18,76 @@ Most AI systems assert. They produce an output and you trust it. Chiron inverts 
 
 ---
 
-## See it in 30 seconds
+## Verify it yourself — three depths, no purchase
+
+Each tier says exactly what it proves and what it does not. That restraint is the product.
+
+### 10 seconds — watch it refuse, in your browser
+
+**[The playground](docs/playground/)**: paste any integer sequence and watch a real Python core
+verify-or-refuse live — Fibonacci verifies, primes are refused with the reason, and the certificate
+renders in full. The page fetches [`prototype/browser_core.py`](prototype/browser_core.py) verbatim
+and runs it via CPython-in-WebAssembly; there is no server and no JavaScript reimplementation.
+
+*Proves:* the contract, live on your input — exact arithmetic, a stamp only on exact held-out
+prediction, refusal otherwise. *Does not prove:* the licensed engine's reach — the demo core is
+strictly weaker by design (it refuses Tribonacci, Catalan and factorials, which the engine stamps).
+
+Hosted via GitHub Pages from `docs/` (Settings → Pages → `main` / `docs`) at
+`https://jiannotti5040.github.io/chiron/playground/`; or locally, no install:
+`python3 -m http.server` from the repo root, then `http://localhost:8000/docs/playground/`.
+
+### 2 minutes — grade the engine against ground truth the author does not control
+
+```
+git clone https://github.com/jiannotti5040/chiron && cd chiron
+python3 eval/grade.py        # live oeis.org; add --cache eval/oeis_snapshot_2026-07-07.json for offline
+```
+
+Real session, 2026-07-21, output unedited (18 mid-table rows elided, every one reads "externally CORRECT"):
+
+```
+frozen file: engine 0.6.0+source  frozen 2026-07-21T11:26:51+00:00  commit 1652af0acc
+tamper check: recomputed rows sha256 MATCHES the recorded one
+ground truth: LIVE from oeis.org (b-files, ~1 req/s — the strong mode)
+
+A-number   model class                 graded  verdict
+A000032    linear_recurrence_order2      8/8   externally CORRECT
+A000045    linear_recurrence_order2      8/8   externally CORRECT
+   ...
+A006318    holonomic_r2_p1               8/8   externally CORRECT
+
+  stamped 22   externally correct 22   ungraded 0   refused (honest abstentions) 12
+  FALSE STAMPS: 0   <- the number this eval exists to check
+  RESULT: PASS — zero false verifications on external data
+```
+
+*Proves:* the headline property itself — the licensed engine's frozen, hash-bound outputs contain
+zero stamps that external data contradicts; and with [`eval/challenge.py`](eval/challenge.py) you
+can run the same protocol on sequences **you** choose. *Does not prove:* that everything gets
+stamped (12 of 34 are refusals — that is the design), or that you can run the engine yourself
+pre-purchase. The protocol and its one residual assumption are stated plainly in
+[`eval/README.md`](eval/README.md).
+
+### 30 minutes — run every public battery and read the reconciled map
+
+```
+./demo.sh          # prototype 26 gates + demo core 17 gates + the frozen-output grade
+./demo.sh --live   # the same, plus the live oeis.org grade
+```
+
+Then read **[`docs/BATTERIES.md`](docs/BATTERIES.md)** — every gate count in the project on one
+page, tiered by what you can verify before paying — and **[`docs/GATES.md`](docs/GATES.md)** for
+how to read the numbers honestly.
+
+*Proves:* every public claim in this README, reproduced on your machine, and exactly which claims
+are only provable post-license (the vault tiers). *Does not prove:* the vault batteries themselves —
+those run with the licensed engine (`bin/chiron test`), and this repo says so rather than asserting
+them on trust.
+
+---
+
+## The licensed engine, in 30 seconds
 
 Chiron is handed six numbers and asked for the rule. It finds one, then **checks itself against held-out terms it was not given**:
 
@@ -148,8 +220,8 @@ And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)*
 
 ## Start
 
-1. **Read** the two demos above and open [`examples/`](examples/) — real, regenerable output.
-2. **Run** the [`prototype/`](prototype/) to watch it verify and refuse on your machine.
+1. **Open** the [playground](docs/playground/) — paste a sequence, watch it verify or refuse, in your browser.
+2. **Run** `./demo.sh` — every public battery plus the frozen-output grade, one command; then [`eval/grade.py`](eval/grade.py) live for the strong mode.
 3. **License** the full engine when you have a decision you need to be able to prove: **[Pricing](PRICING.md)**.
 
 > Required Notice: Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
