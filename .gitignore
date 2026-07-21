@@ -92,5 +92,5 @@ Resume*.docx
 **/.transcribe_env/
 *_temp_audio.wav
 
-# PySR run artifacts (bench_pysr.py)
-/outputs/
+# PySR run artifacts (bench_pysr.py) — anywhere, incl. Primus/outputs/
+outputs/

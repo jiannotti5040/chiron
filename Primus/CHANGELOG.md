@@ -2,6 +2,33 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.6.1 — 2026-07-21
+
+**The engine as a live HTTP endpoint — request in, certificate out, source
+never.** The verifier-that-refuses can now be served over HTTP for the
+strongest possible eval (the real engine on caller-chosen input) without
+shipping the engine.
+
+- **New module `primus.engine_server`** (+ `primus-serve` console script).
+  Stdlib `http.server` wrapper exposing `POST /collapse`, `POST /certify`,
+  `POST /conjecture`, and `GET /health`. The engine source is never
+  serialized: responses are certificate JSON only; engine exceptions become
+  a REFUSED envelope carrying the exception TYPE NAME alone (no messages, no
+  tracebacks, no source paths); `/health` is the only GET.
+- **Everything hostile meets a refusal, not a crash.** 128 KiB body cap;
+  sequence caps reuse the certify/conjecture bounds (`MAX_SEQ_TERMS = 256`);
+  sliding-window per-IP + global rate limits (429 + REFUSED); bounded
+  concurrency; optional bearer auth via `CHIRON_API_TOKEN`;
+  `CHIRON_TRUST_FORWARDED` for correct client IPs behind a proxy.
+- **`test_engine_server.py`** drives a real server process over real HTTP:
+  18/18 gates — verify/refuse round-trips for all three tools, the
+  over-budget refusals, rate limit, concurrency budget, auth on/off, and an
+  explicit no-leak assertion (no traceback or source path in any hostile
+  response). Added to the AGENTS.md battery.
+- **Deploy notes** in `DEPLOY_ENDPOINT.md` (Fly.io / Render, Dockerfile,
+  the env table). The public repo ships the client (`eval/remote.py`).
+- No stamping path changed. Full battery re-run green before release.
+
 ## 0.6.0 — 2026-07-20
 
 **Guess-and-prove: a stochastic proposer behind the exact gate.**
