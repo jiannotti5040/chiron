@@ -24,6 +24,10 @@ jobs:
           python-version: "3.12"
       - name: Install numpy (used by one prototype gate; pure-Python fallback exists)
         run: pip install numpy
+      - name: Playground copies are byte-identical to the canonical prototype files
+        run: |
+          cmp prototype/browser_core.py docs/playground/browser_core.py
+          cmp prototype/primus_prototype.py docs/playground/primus_prototype.py
       - name: Prototype selftest (expect 26/26)
         run: python3 prototype/primus_prototype.py selftest
       - name: Browser demo core selftest (expect 17/17)
