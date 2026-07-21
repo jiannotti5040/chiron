@@ -249,6 +249,34 @@
   .falsify { margin-top: 16px; font-size: .86rem; color: var(--dimmer); border-top: 1px dashed var(--line-2); padding-top: 14px; }
   .falsify b { color: var(--dim); }
 
+  /* Evidence Trace — Verified Ink's seam rendered from certificate data. */
+  .evidence-trace { margin-top: 18px; background: #0b1018; border: 1px solid var(--line-2); border-radius: 13px; padding: 17px; overflow: hidden; }
+  .trace-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .trace-kicker { color: var(--accent); font: 750 .68rem var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+  .trace-head h3 { margin: 4px 0 0; font-size: 1rem; color: var(--text); }
+  .trace-status { flex: none; border-radius: 100px; padding: 5px 8px; font: 750 .68rem var(--mono); letter-spacing: .05em; }
+  .trace-status.verified { color: var(--green); background: var(--green-deep); border: 1px solid var(--green-line); }
+  .trace-status.candidate { color: var(--amber); background: var(--amber-deep); border: 1px solid var(--amber-line); }
+  .trace-status.refused { color: var(--dimmer); background: var(--panel-2); border: 1px solid var(--line-2); }
+  .trace-explainer { margin: 10px 0 0; color: var(--dim); font-size: .84rem; max-width: 650px; }
+  .trace-svg { display: block; width: 100%; height: auto; min-height: 190px; margin-top: 10px; border: 1px solid rgba(46,58,75,.72); border-radius: 10px; background: radial-gradient(100% 120% at 0 0, rgba(124,156,255,.08), transparent 58%), var(--bg); }
+  .trace-legend { display: flex; flex-wrap: wrap; gap: 8px 13px; margin-top: 11px; color: var(--dimmer); font-size: .76rem; }
+  .trace-key { display: inline-flex; gap: 6px; align-items: center; }
+  .trace-key i { display: inline-block; width: 17px; height: 2px; background: var(--dimmer); border-radius: 2px; }
+  .trace-key i.actual { background: #9aa7b8; }
+  .trace-key i.earned { background: var(--green); height: 3px; }
+  .trace-key i.candidate { background: var(--amber); background-image: linear-gradient(90deg, transparent 35%, var(--amber) 35%, var(--amber) 65%, transparent 65%); }
+  .trace-key i.boundary { width: 2px; height: 14px; background: var(--accent); }
+  .trace-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 13px 0 0; }
+  .trace-stats div { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px; }
+  .trace-stats dt { color: var(--dimmer); font: .68rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+  .trace-stats dd { margin: 3px 0 0; color: var(--text); font-size: .82rem; }
+  .trace-data { margin-top: 12px; color: var(--dimmer); font-size: .78rem; }
+  .trace-data summary { cursor: pointer; color: var(--accent); }
+  .trace-data p { margin: 7px 0 0; line-height: 1.55; }
+  .trace-data code { color: var(--dim); font: .76rem/1.55 var(--mono); overflow-wrap: anywhere; }
+  .trace-origin { margin: 11px 0 0; color: var(--dimmer); font-size: .75rem; }
+
   details.raw { margin-top: 14px; }
   details.raw summary { cursor: pointer; color: var(--accent); font-size: .86rem; list-style: none; display: inline-flex; align-items: center; gap: 6px; }
   details.raw summary::-webkit-details-marker { display: none; }
@@ -312,7 +340,7 @@
   footer .links { display: flex; gap: 18px; flex-wrap: wrap; }
 
   @media (max-width: 720px) {
-    .why, .tiers, .workflow-grid { grid-template-columns: 1fr; }
+    .why, .tiers, .workflow-grid, .trace-stats { grid-template-columns: 1fr; }
     .runrow { flex-direction: column; }
     #run { padding: 14px; }
     .bar nav { gap: 14px; }
@@ -361,7 +389,7 @@
     <div id="claim-result" aria-live="polite"></div>
   </section>
 
-  <div class="demo">
+  <div class="demo" id="sequence-lab">
     <div class="engine-row">
       <div class="label" style="margin:0">Sequence lab — recover a rule, then test it on withheld terms</div>
       <div class="toggle" id="engine-toggle" role="tablist" aria-label="Which engine runs">
@@ -602,6 +630,98 @@ function renderClaimProblem(message) {
   claimResultEl.innerHTML = `<div class="claim-verdict"><h3>NO CERTIFICATE ISSUED</h3><p class="claim-summary">${esc(message)}</p><p class="coverage-note">This is an endpoint problem, not a VERIFIED, REFUTED, or REFUSED result.</p></div>`;
 }
 
+function traceNumber(value) {
+  if (typeof value === "string" && /^-?\d+\/-?\d+$/.test(value)) {
+    const [numerator, denominator] = value.split("/").map(Number);
+    return denominator ? numerator / denominator : NaN;
+  }
+  return Number(value);
+}
+
+function tracePath(points) {
+  return points.map((point, index) => `${index ? "L" : "M"}${point[0].toFixed(2)},${point[1].toFixed(2)}`).join(" ");
+}
+
+function renderEvidenceTrace(cert) {
+  const shown = Array.isArray(cert.shown) ? cert.shown : [];
+  const held = Array.isArray(cert.held_out) ? cert.held_out : [];
+  if (!shown.length || !held.length) return "";
+
+  const actual = [...shown, ...held].map(traceNumber);
+  if (!actual.every(Number.isFinite)) return "";
+  const predictedRaw = Array.isArray(cert.predicted) ? cert.predicted : [];
+  const predicted = predictedRaw.map(traceNumber);
+  const hasPrediction = predicted.length === held.length && predicted.every(Number.isFinite);
+  const state = cert.verified === true ? "verified"
+    : cert.status === "REFUSED" ? "refused" : "candidate";
+  // A refusal is intentionally graphically silent past the seam. Even if a
+  // future certificate schema carries exploratory values, they did not earn
+  // presentation as a continuation.
+  const usePrediction = state !== "refused" && hasPrediction;
+  const stateLabel = state === "verified" ? "CERTIFICATE ISSUED"
+    : state === "refused" ? "NO CANDIDATE" : "CANDIDATE ONLY";
+  const description = state === "verified"
+    ? `The candidate was fit on ${shown.length} shown terms, then exactly matched ${held.length} held-out term${held.length === 1 ? "" : "s"}.`
+    : state === "refused"
+      ? `The last ${held.length} term${held.length === 1 ? " was" : "s were"} held out from fitting. No candidate continuation is drawn because this result asserts none.`
+      : `The dashed path is a candidate only. It did not earn a certificate against the ${held.length} held-out term${held.length === 1 ? "" : "s"}.`;
+
+  const W = 720, H = 236, left = 36, right = 26, top = 30, bottom = 54;
+  const plotWidth = W - left - right, plotHeight = H - top - bottom;
+  const minValue = Math.min(...actual, ...(usePrediction ? predicted : []));
+  const maxValue = Math.max(...actual, ...(usePrediction ? predicted : []));
+  const range = Math.max(1, maxValue - minValue);
+  const xAt = index => left + (plotWidth * index / Math.max(1, actual.length - 1));
+  const yAt = value => top + ((maxValue - value) / range) * plotHeight;
+  const actualPoints = actual.map((value, index) => [xAt(index), yAt(value)]);
+  const shownPoints = actualPoints.slice(0, shown.length);
+  const heldPoints = [shownPoints[shownPoints.length - 1], ...actualPoints.slice(shown.length)];
+  const predictedPoints = usePrediction
+    ? [shownPoints[shownPoints.length - 1], ...predicted.map((value, index) => [xAt(shown.length + index), yAt(value)])]
+    : [];
+  const seamX = (xAt(shown.length - 1) + xAt(shown.length)) / 2;
+  const mismatchIndex = usePrediction && state !== "verified"
+    ? predicted.findIndex((value, index) => value !== actual[shown.length + index]) : -1;
+  const mismatch = mismatchIndex >= 0 ? actualPoints[shown.length + mismatchIndex] : null;
+  const end = state === "verified" ? predictedPoints[predictedPoints.length - 1] : null;
+  const svgDescription = state === "verified"
+    ? `Shown terms appear left of the held-out seam. The earned continuation exactly overlays the withheld terms on the right.`
+    : state === "refused"
+      ? `Shown terms stop at the held-out seam. The certificate contains no candidate continuation.`
+      : `Shown terms appear left of the seam. A dashed candidate diverges from the actual held-out terms and is not certified.`;
+  const heldActual = state === "refused" ? "" : `<path d="${tracePath(heldPoints)}" fill="none" stroke="#9aa7b8" stroke-width="1.7" stroke-dasharray="4 5"/>`;
+  const candidate = usePrediction
+    ? `<path d="${tracePath(predictedPoints)}" fill="none" stroke="${state === "verified" ? "#3fdd85" : "#ffc24b"}" stroke-width="${state === "verified" ? "3" : "2.2"}" ${state === "verified" ? "" : "stroke-dasharray=\"7 6\""}/>`
+    : "";
+  const mismatchMark = mismatch ? `<circle cx="${mismatch[0].toFixed(2)}" cy="${mismatch[1].toFixed(2)}" r="5" fill="#0b1018" stroke="#ff9b90" stroke-width="2"/><text x="${Math.min(W - 118, mismatch[0] + 9).toFixed(2)}" y="${Math.max(20, mismatch[1] - 9).toFixed(2)}" fill="#ffb6ae" font-size="11" font-family="ui-monospace, monospace">first mismatch</text>` : "";
+  const terminal = end ? `<circle cx="${end[0].toFixed(2)}" cy="${end[1].toFixed(2)}" r="5.2" fill="#3fdd85"/><text x="${Math.min(W - 96, end[0] + 10).toFixed(2)}" y="${Math.max(20, end[1] - 10).toFixed(2)}" fill="#7ff0ae" font-size="11" font-family="ui-monospace, monospace">earned</text>`
+    : `<circle cx="${shownPoints[shownPoints.length - 1][0].toFixed(2)}" cy="${shownPoints[shownPoints.length - 1][1].toFixed(2)}" r="5" fill="#0b1018" stroke="#aab4c2" stroke-width="1.8"/>`;
+  const predictionLegend = state === "verified"
+    ? `<span class="trace-key"><i class="earned"></i>earned continuation</span>`
+    : usePrediction ? `<span class="trace-key"><i class="candidate"></i>candidate only</span>` : "";
+
+  return `<section class="evidence-trace" aria-label="Evidence Trace">
+    <div class="trace-head"><div><div class="trace-kicker">Certificate view</div><h3>Evidence Trace</h3></div><span class="trace-status ${state}">${stateLabel}</span></div>
+    <p class="trace-explainer">${esc(description)}</p>
+    <svg class="trace-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(svgDescription)}"><title>Evidence Trace</title><desc>${esc(svgDescription)}</desc>
+      <line x1="${left}" y1="${top + plotHeight}" x2="${W - right}" y2="${top + plotHeight}" stroke="#2e3a4b" stroke-width="1"/>
+      <line x1="${seamX.toFixed(2)}" y1="${top - 3}" x2="${seamX.toFixed(2)}" y2="${top + plotHeight + 8}" stroke="#7c9cff" stroke-width="1.4" stroke-dasharray="4 4"/>
+      <text x="${left}" y="18" fill="#7c9cff" font-size="11" font-family="ui-monospace, monospace">SHOWN TO RECOVERY · ${shown.length} TERMS</text>
+      <text x="${Math.min(W - 158, seamX + 9).toFixed(2)}" y="18" fill="#9aa7b8" font-size="11" font-family="ui-monospace, monospace">HELD OUT · ${held.length} TERMS</text>
+      <path d="${tracePath(shownPoints)}" fill="none" stroke="#d7dde7" stroke-width="2.2"/>
+      ${heldActual}${candidate}${mismatchMark}${terminal}
+      ${shownPoints.map(point => `<circle cx="${point[0].toFixed(2)}" cy="${point[1].toFixed(2)}" r="2.3" fill="#d7dde7"/>`).join("")}
+      ${state !== "refused" ? actualPoints.slice(shown.length).map(point => `<circle cx="${point[0].toFixed(2)}" cy="${point[1].toFixed(2)}" r="2.3" fill="#9aa7b8"/>`).join("") : ""}
+      <text x="${left}" y="${H - 18}" fill="#6b7688" font-size="11" font-family="ui-monospace, monospace">fit surface</text>
+      <text x="${Math.min(W - 155, seamX + 9).toFixed(2)}" y="${H - 18}" fill="#6b7688" font-size="11" font-family="ui-monospace, monospace">evidence boundary</text>
+    </svg>
+    <div class="trace-legend"><span class="trace-key"><i></i>shown to recovery</span><span class="trace-key"><i class="actual"></i>actual held-out terms</span><span class="trace-key"><i class="boundary"></i>held-out seam</span>${predictionLegend}</div>
+    <dl class="trace-stats"><div><dt>Fit saw</dt><dd>${shown.length} term${shown.length === 1 ? "" : "s"}</dd></div><div><dt>Held out</dt><dd>${held.length} term${held.length === 1 ? "" : "s"}</dd></div><div><dt>Certificate</dt><dd>${stateLabel.toLowerCase()}</dd></div></dl>
+    <details class="trace-data"><summary>Read the exact certificate term split</summary><p><b>Shown to recovery:</b> <code>${esc(shown.join(", "))}</code><br><b>Held out:</b> <code>${esc(held.join(", "))}</code>${hasPrediction ? `<br><b>Candidate prediction:</b> <code>${esc(predictedRaw.join(", "))}</code>` : ""}</p></details>
+    <p class="trace-origin">A guide to certificate-backed evidence, not additional proof. Its seam comes from <a href="https://github.com/jiannotti5040/chiron/tree/main/VerifiedInk">Verified Ink</a>; the raw certificate remains authoritative.</p>
+  </section>`;
+}
+
 async function runCertify(text) {
   if (!text.trim()) return;
   certifyBtn.disabled = true;
@@ -645,6 +765,7 @@ function render(cert, source) {
   const recovery = source === "core" && !verified ? `<div class="recovery"><div><b>This smaller browser core did not stamp this sequence.</b><span>The licensed engine supports more hypothesis families. Try the same non-sensitive sequence there; it may still refuse.</span></div><button id="try-live-engine" type="button">Try in licensed engine</button></div>` : "";
   const nextNote = (verified && cert.next_terms) ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
   const falsify = cert.what_would_falsify ? `<div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify)}</div>` : "";
+  const evidenceTrace = renderEvidenceTrace(cert);
 
   resultEl.innerHTML = `
     <div class="verdict ${kind}">
@@ -655,6 +776,7 @@ function render(cert, source) {
       <p class="expl">${esc(cert.explanation || "")}</p>
       ${nextNote}
       <div class="proof">${proof}</div>
+      ${evidenceTrace}
       ${refuseNote}
       ${recovery}
       ${falsify}

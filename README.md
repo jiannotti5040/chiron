@@ -225,7 +225,7 @@ Everything above is backed by gates you can run, not adjectives. On the current 
 
 Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**. The governance stance: **[`docs/GOVERNANCE.md`](docs/GOVERNANCE.md)**. Why it refuses: **[`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md)**.
 
-And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)** — an essay on ink as verdict. It is in this repo on purpose: the aesthetic case for the same thesis the gates make mechanically — that a mark you cannot take back should never be made casually. Read it as the philosophy of the stamp; the code is the enforcement of it.
+And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)** — an essay on ink as verdict. It is in this repo on purpose: the aesthetic case for the same thesis the gates make mechanically — that a mark you cannot take back should never be made casually. Its **Evidence Trace** now appears in the sequence lab as a certificate-backed view of the shown/held-out seam; the visual explains the proof boundary, while the certificate remains authoritative. Read Verified Ink as the philosophy of the stamp; the code is the enforcement of it.
 
 ---
 
