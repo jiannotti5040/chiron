@@ -18,14 +18,23 @@
   Serving: needs HTTP (fetch is blocked on file://).
     local:  python3 -m http.server  (from the repo root), then
             http://localhost:8000/docs/playground/
-    hosted: GitHub Pages serving /docs — the page falls back to fetching the
-            core from raw.githubusercontent.com when the relative path 404s.
+    hosted: GitHub Pages serving /docs — live at
+            https://jiannotti5040.github.io/chiron/playground/
+
+  The .py files in THIS directory are byte-identical copies of the canonical
+  files in prototype/ (Pages serves only docs/, so same-origin copies keep
+  the page self-contained). CI enforces the identity with cmp on every push
+  — a drifted copy fails the build, so there is no second version to trust.
+  Fetch order: ./ (same origin), then ../../prototype/ (local dev from repo
+  root), then raw.githubusercontent.com as a last resort.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Chiron — verify or refuse, live</title>
+<meta name="description" content="Paste any integer sequence and watch a real Python verification core prove it on held-out terms — or refuse. Exact arithmetic, no server, refusal over confidence.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%85%3C/text%3E%3C/svg%3E">
 <style>
   :root {
     --bg: #0d1117; --panel: #161b22; --line: #30363d;
@@ -145,8 +154,11 @@
 
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
 <script>
-const LOCAL  = "../../prototype/";
-const REMOTE = "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/";
+const SOURCES = [
+  "./",                 // same-origin copy, CI-enforced byte-identical to prototype/
+  "../../prototype/",   // canonical file, resolves when serving the repo root locally
+  "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/",
+];
 const boot = document.getElementById("boot");
 const runBtn = document.getElementById("run");
 const seqBox = document.getElementById("seq");
@@ -155,7 +167,7 @@ const certBox = document.getElementById("cert");
 let pyodide = null, protoLoaded = false;
 
 async function fetchSource(name) {
-  for (const base of [LOCAL, REMOTE]) {
+  for (const base of SOURCES) {
     try {
       const r = await fetch(base + name, {cache: "no-store"});
       if (r.ok) return await r.text();
