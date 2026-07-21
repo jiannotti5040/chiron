@@ -60,7 +60,7 @@ and the statistical-reduction machinery to support it:
   `examples/rsls_frame_dragging.py`.
 - `tests/test_stage3.py` (16), `tests/test_srb.py` (9), and
   `tests/test_frame_dragging.py` (10). All pass; total now
-  **104/104 green** (2 slow ergodic-convergence tests deselected by
+  **136/136 green** (3 slow ergodic-convergence tests deselected by
   default).
 
 ### The Stage-5 numerical verdict
@@ -210,7 +210,7 @@ TensorBridge residual.
 python3 -m pytest tests/ -v
 ```
 
-104 tests pass (2 marked `@slow` are deselected by default):
+136 tests pass (3 marked `@slow` are deselected by default). 2026-07-21 addition: `uma/jacobian/` — exact verification of the 2026 Jacobian-conjecture counterexample (12 gates; see docs/JACOBIAN_COUNTEREXAMPLE.md). Earlier baseline:
 - 11 sanity tests (v3)
 - 19 semantic-engine tests (v3)
 - 19 RSLS tests (v4)
