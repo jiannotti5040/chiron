@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!--
+  Chiron browser playground.
+
+  WHAT THIS PAGE RUNS, exactly: prototype/browser_core.py — the public demo
+  core — executed by CPython compiled to WebAssembly (Pyodide), fetched
+  verbatim from this repository at load time. There is no second copy of the
+  core to drift, no server, and no JavaScript reimplementation: the refusals
+  you see are the Python file refusing. The "26 gates" button additionally
+  fetches and runs prototype/primus_prototype.py, the architecture prototype.
+
+  WHAT THIS PAGE IS NOT: the licensed engine. The demo core shares the
+  licensed engine's contract (exact arithmetic, stamp only on exact held-out
+  proof, refuse otherwise) but is strictly weaker — fewer hypothesis
+  families, a more conservative evidence rule. The licensed engine's outputs
+  on external data are graded in eval/ (see the README).
+
+  Serving: needs HTTP (fetch is blocked on file://).
+    local:  python3 -m http.server  (from the repo root), then
+            http://localhost:8000/docs/playground/
+    hosted: GitHub Pages serving /docs — the page falls back to fetching the
+            core from raw.githubusercontent.com when the relative path 404s.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chiron — verify or refuse, live</title>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --line: #30363d;
+    --text: #e6edf3; --dim: #8b949e;
+    --green: #3fb950; --green-bg: #12261a;
+    --amber: #d29922; --amber-bg: #2a2109;
+    --accent: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
+  h1 { font-size: 1.9rem; margin: 0 0 6px; }
+  h1 small { color: var(--dim); font-weight: 400; font-size: 1rem; display: block; margin-top: 4px; }
+  .what-runs {
+    border: 1px solid var(--line); border-left: 4px solid var(--accent);
+    background: var(--panel); border-radius: 6px; padding: 12px 16px;
+    color: var(--dim); font-size: .92rem; margin: 18px 0 26px;
+  }
+  .what-runs b { color: var(--text); }
+  .what-runs a { color: var(--accent); text-decoration: none; }
+  #boot { color: var(--dim); font-family: ui-monospace, Menlo, monospace; font-size: .85rem; margin: 8px 0 18px; }
+  .presets { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  button {
+    background: var(--panel); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 9px 16px; font-size: .95rem; cursor: pointer;
+  }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .45; cursor: wait; }
+  button .tag { font-size: .75rem; color: var(--dim); margin-left: 6px; }
+  .runrow { display: flex; gap: 10px; margin-bottom: 24px; }
+  #seq {
+    flex: 1; background: var(--panel); color: var(--text);
+    border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px;
+    font: .95rem ui-monospace, Menlo, monospace;
+  }
+  #run { border-color: var(--accent); color: var(--accent); font-weight: 600; }
+  #verdict { display: none; border-radius: 8px; padding: 20px 24px; margin-bottom: 14px; }
+  #verdict.v { display: block; background: var(--green-bg); border: 1px solid var(--green); }
+  #verdict.r { display: block; background: var(--amber-bg); border: 1px solid var(--amber); }
+  #verdict h2 { margin: 0 0 8px; font-size: 1.5rem; letter-spacing: .5px; }
+  #verdict.v h2 { color: var(--green); }
+  #verdict.r h2 { color: var(--amber); }
+  #verdict p { margin: 6px 0; }
+  #verdict .why { color: var(--dim); font-size: .92rem; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+  #cert {
+    display: none; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 8px; padding: 16px; overflow-x: auto; margin-bottom: 30px;
+    font: .8rem/1.5 ui-monospace, Menlo, monospace; white-space: pre; color: var(--dim);
+  }
+  details { border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; margin-top: 30px; }
+  summary { cursor: pointer; color: var(--accent); }
+  #gates-out {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+    margin-top: 12px; padding: 14px; max-height: 420px; overflow: auto;
+    font: .78rem/1.5 ui-monospace, Menlo, monospace; white-space: pre; color: var(--dim);
+    display: none;
+  }
+  footer { margin-top: 44px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--dim); font-size: .88rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Paste a sequence. Watch it prove — or refuse.
+    <small>The demo core runs in your browser: real Python, real refusals, no server.</small>
+  </h1>
+
+  <div class="what-runs">
+    <b>What this page runs:</b> <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>
+    — the repository's public demo core, fetched verbatim and executed by CPython-in-WebAssembly.
+    It shares the licensed engine's contract — exact arithmetic, a stamp only when the recovered rule
+    predicts held-out terms exactly, refusal otherwise — and is <b>strictly weaker</b>: fewer hypothesis
+    families, a more conservative evidence rule. It is <b>not</b> the licensed engine. The licensed
+    engine's frozen outputs, graded against oeis.org, are in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>.
+  </div>
+
+  <div id="boot">booting Python…</div>
+
+  <div class="presets">
+    <button class="preset" data-seq="1 1 2 3 5 8 13 21 34 55 89 144">Fibonacci <span class="tag">verifies</span></button>
+    <button class="preset" data-seq="1 4 9 16 25 36 49 64 81 100 121 144">Squares <span class="tag">verifies</span></button>
+    <button class="preset" data-seq="2 3 5 7 11 13 17 19 23 29 31 37">Primes <span class="tag">refuses</span></button>
+    <button class="preset" id="noise">Random noise <span class="tag">refuses</span></button>
+  </div>
+
+  <div class="runrow">
+    <input id="seq" spellcheck="false" placeholder="paste your own integers — e.g. 3 6 12 24 48 96 192 384 768 1536">
+    <button id="run" disabled>Run</button>
+  </div>
+
+  <div id="verdict"></div>
+  <div id="cert"></div>
+
+  <details>
+    <summary>Also in this repo: the architecture prototype and its 26-gate battery — run it in this tab</summary>
+    <p style="color:var(--dim); font-size:.9rem">
+      <code>prototype/primus_prototype.py</code> is the architecture discipline demo: membrane, seal,
+      determinism, adjacency law — and a certifier stub that <em>structurally cannot say VERIFIED</em>
+      (that is gate 26). This fetches the actual file and runs its battery here.
+    </p>
+    <button id="gates">Run the 26 gates</button>
+    <div id="gates-out"></div>
+  </details>
+
+  <footer>
+    Sequences this core refuses (primes, Catalan, factorials…) are not all beyond the product:
+    the <b>licensed engine</b> stamps Catalan, factorials, Tribonacci and more — graded on external
+    data in <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a>, reconciled in
+    <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">docs/BATTERIES.md</a>.
+    What is identical in both: neither ever stamps what it cannot prove.
+    · <a href="https://github.com/jiannotti5040/chiron">repository</a>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+<script>
+const LOCAL  = "../../prototype/";
+const REMOTE = "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/";
+const boot = document.getElementById("boot");
+const runBtn = document.getElementById("run");
+const seqBox = document.getElementById("seq");
+const verdict = document.getElementById("verdict");
+const certBox = document.getElementById("cert");
+let pyodide = null, protoLoaded = false;
+
+async function fetchSource(name) {
+  for (const base of [LOCAL, REMOTE]) {
+    try {
+      const r = await fetch(base + name, {cache: "no-store"});
+      if (r.ok) return await r.text();
+    } catch (e) { /* try next */ }
+  }
+  throw new Error("could not fetch " + name + " (serve this page over HTTP from the repo)");
+}
+
+async function init() {
+  try {
+    boot.textContent = "booting Python (Pyodide)…";
+    pyodide = await loadPyodide();
+    boot.textContent = "fetching prototype/browser_core.py from the repository…";
+    const src = await fetchSource("browser_core.py");
+    pyodide.FS.mkdirTree("/pkg");
+    pyodide.FS.writeFile("/pkg/browser_core.py", src);
+    pyodide.runPython("import sys; sys.path.insert(0, '/pkg'); import browser_core");
+    boot.textContent = "ready — the demo core is live in this tab (" +
+      src.length.toLocaleString() + " bytes of Python, fetched verbatim).";
+    runBtn.disabled = false;
+  } catch (e) {
+    boot.textContent = "boot failed: " + e.message;
+  }
+}
+
+function render(cert) {
+  const v = cert.status === "VERIFIED";
+  verdict.className = v ? "v" : "r";
+  let html = v
+    ? "<h2>VERIFIED — proven on terms it never saw</h2>"
+    : (cert.status === "recovered_unstamped"
+        ? "<h2>NOT STAMPED — a fit is not a proof</h2>"
+        : "<h2>REFUSED — it will not guess</h2>");
+  html += "<p>" + cert.explanation + "</p>";
+  if (v && cert.next_terms) {
+    html += "<p><b>Committed next terms:</b> <code>" + cert.next_terms.join(", ") +
+      "</code> — if the true sequence disagrees, this certificate is falsified.</p>";
+  }
+  if (!v) {
+    html += "<div class='why'><b>Why refusing is the feature:</b> most systems answer every " +
+      "input in the same confident voice. This one stakes a claim only when it can prove the " +
+      "claim on data it was never shown — everything else is a refusal, stated plainly. " +
+      "A system that only tells you what it can prove is a system you can build on.</div>";
+  }
+  verdict.innerHTML = html;
+  certBox.style.display = "block";
+  certBox.textContent = JSON.stringify(cert, null, 2);
+}
+
+async function run(text) {
+  runBtn.disabled = true;
+  try {
+    const fn = pyodide.globals.get("browser_core").collapse_text;
+    const out = fn(text);
+    render(JSON.parse(out));
+  } catch (e) {
+    verdict.className = "r";
+    verdict.innerHTML = "<h2>ERROR</h2><p>" + e.message + "</p>";
+  }
+  runBtn.disabled = false;
+}
+
+document.querySelectorAll(".preset").forEach(b => b.addEventListener("click", () => {
+  let s = b.dataset.seq;
+  if (b.id === "noise") {
+    s = Array.from({length: 12}, () => Math.floor(Math.random() * 97)).join(" ");
+  }
+  seqBox.value = s;
+  if (pyodide) run(s);
+}));
+runBtn.addEventListener("click", () => run(seqBox.value));
+seqBox.addEventListener("keydown", e => { if (e.key === "Enter" && pyodide) run(seqBox.value); });
+
+document.getElementById("gates").addEventListener("click", async () => {
+  const out = document.getElementById("gates-out");
+  const btn = document.getElementById("gates");
+  btn.disabled = true;
+  out.style.display = "block";
+  out.textContent = "fetching prototype/primus_prototype.py…";
+  try {
+    if (!protoLoaded) {
+      const src = await fetchSource("primus_prototype.py");
+      pyodide.FS.writeFile("/pkg/primus_prototype.py", src);
+      out.textContent = "loading numpy (used by one gate; a pure-Python fallback exists)…";
+      try { await pyodide.loadPackage("numpy"); } catch (e) { /* fallback path inside the file */ }
+      protoLoaded = true;
+    }
+    out.textContent = "running the 26-gate battery…\n";
+    let buf = [];
+    pyodide.setStdout({batched: s => { buf.push(s); }});
+    const code = pyodide.runPython(
+      "import primus_prototype\nprimus_prototype.run_selftest()");
+    pyodide.setStdout();
+    out.textContent = buf.join("\n") + "\n\nexit code: " + code +
+      (code === 0 ? "  (all gates green — this battery ran in your browser, on the fetched file)" : "");
+  } catch (e) {
+    out.textContent = "failed: " + e.message;
+  }
+  btn.disabled = false;
+});
+
+init();
+</script>
+</body>
+</html>
