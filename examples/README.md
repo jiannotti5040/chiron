@@ -16,16 +16,16 @@ Input: `2 3 5 7 11 13 17` (the primes). Chiron finds a model that reproduces
 every term you gave it — and then **refuses to stamp it** because its prediction
 of the held-out terms failed (0/2). Status: `recovered_unstamped`,
 `verified: false`. This is the whole product in one file: a system that fits the
-data but tells you it cannot prove the rule. Nothing else in the market
-volunteers "I don't know" this precisely.
+data but tells you it cannot prove the rule. The point is the contract: a fit
+without held-out support remains a candidate, not a verdict.
 
 ### `certificate.json` — the artifact you keep
-Every run can emit a signed certificate: a **machine view** (the exact evidence),
+Every run can emit a certificate with a self-hash: a **machine view** (the exact evidence),
 a **human view** (what was found, why it's believed, and the confidence), and —
 required on every certificate — **`what_would_falsify`**, the specific thing that
 would prove the claim wrong. A claim you cannot state a refutation for is not
-allowed to be certified. This is the object an auditor, a regulator, or your own
-future engineer can check.
+allowed to be certified. This is the object a reviewer or your own future
+engineer can inspect and replay.
 
 ---
 

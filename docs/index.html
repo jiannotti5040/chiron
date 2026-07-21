@@ -1,16 +1,328 @@
 <!DOCTYPE html>
-<!-- Site root of the GitHub Pages deployment (serving /docs) — the front
-     door is the playground; everything else on this site is markdown best
-     read on GitHub itself. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=playground/">
-<link rel="canonical" href="playground/">
-<title>Chiron</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chiron — make AI outputs earn trust</title>
+<meta name="description" content="Chiron verifies the machine claims it can prove exactly, refutes what is false, and refuses the rest. Try the live claim checker before you buy.">
+<link rel="canonical" href="https://jiannotti5040.github.io/chiron/">
+<meta property="og:title" content="Chiron — make AI outputs earn trust">
+<meta property="og:description" content="A proof gate for AI outputs: VERIFIED, REFUTED, or REFUSED — with explicit limits.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jiannotti5040.github.io/chiron/">
+<meta property="og:image" content="https://jiannotti5040.github.io/chiron/assets/chiron-social.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://jiannotti5040.github.io/chiron/assets/chiron-social.jpg">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Chiron",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web, Python",
+  "url": "https://jiannotti5040.github.io/chiron/",
+  "description": "An exact-or-refuse evidence gate for supported structured AI outputs.",
+  "featureList": [
+    "Exact claim checking with VERIFIED, REFUTED, or REFUSED results",
+    "Held-out verification for supported sequence-rule recovery",
+    "Claim-level coverage and explicit uncertified remainder"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I test Chiron first?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the live claim checker, run the public demo core, and grade the published frozen outputs against public ground truth before buying."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does the demo see my data?",
+      "acceptedAnswer": {"@type": "Answer", "text": "The browser sequence core runs locally. The claim checker and licensed-engine toggle call a public live endpoint, so use only non-sensitive test inputs."}
+    },
+    {
+      "@type": "Question",
+      "name": "What happens after checkout?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Checkout collects a requested GitHub username. Delivery is confirmed with the purchaser at the checkout email before a private-repository invitation is granted. See pricing for exact tier terms."}
+    }
+  ]
+}
+</script>
+<style>
+  :root {
+    --ink: #081017;
+    --ink-soft: #10202b;
+    --paper: #f7f7f2;
+    --paper-deep: #e8ede9;
+    --line: rgba(8, 16, 23, .14);
+    --muted: #52616c;
+    --blue: #2555e8;
+    --blue-dark: #183cae;
+    --green: #047857;
+    --green-bg: #d9f6e9;
+    --amber: #9a5800;
+    --amber-bg: #fff0c8;
+    --coral: #b42318;
+    --coral-bg: #ffe5e1;
+    --max: 1120px;
+    --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; color: var(--ink); background: var(--paper); font: 16px/1.55 var(--sans); }
+  a { color: inherit; }
+  .shell { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+  .nav { display: flex; min-height: 76px; align-items: center; justify-content: space-between; gap: 24px; }
+  .brand { color: var(--ink); text-decoration: none; font-weight: 850; letter-spacing: .13em; font-size: .88rem; }
+  .brand i { color: var(--blue); font-style: normal; }
+  .nav-links { display: flex; align-items: center; gap: 20px; color: var(--muted); font-size: .92rem; }
+  .nav-links a { text-decoration: none; }
+  .nav-links a:hover { color: var(--blue); }
+  .nav-cta, .button { display: inline-flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 8px; padding: 0 18px; text-decoration: none; font-weight: 760; transition: transform .16s ease, box-shadow .16s ease, background .16s ease; }
+  .nav-cta { min-height: 38px; color: white; background: var(--ink); }
+  .button:hover, .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(8, 16, 23, .16); }
+  .button.primary { color: white; background: var(--blue); }
+  .button.secondary { border: 1px solid var(--line); color: var(--ink); background: white; }
+  .button.ghost { color: white; border: 1px solid rgba(255,255,255,.24); }
+  .hero { padding: 68px 0 66px; color: white; background: var(--ink); overflow: hidden; position: relative; }
+  .hero::after { content: ""; position: absolute; width: 700px; height: 700px; border-radius: 50%; top: -430px; right: -160px; background: radial-gradient(circle, rgba(65,113,255,.58), rgba(65,113,255,0) 68%); pointer-events: none; }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(340px, .8fr); align-items: center; gap: 58px; position: relative; z-index: 1; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #b8c8ff; font: 750 .72rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
+  .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #72f0bf; box-shadow: 0 0 0 5px rgba(114,240,191,.13); }
+  h1 { max-width: 720px; margin: 16px 0 20px; font-size: clamp(2.65rem, 5.4vw, 5rem); letter-spacing: -.065em; line-height: .98; }
+  .hero-copy { max-width: 610px; margin: 0; color: #c1ccd7; font-size: clamp(1.05rem, 1.8vw, 1.2rem); }
+  .hero-copy strong { color: white; }
+  .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .micro { margin: 15px 0 0; color: #92a1b2; font-size: .83rem; }
+  .certificate { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.055); border-radius: 14px; padding: 22px; box-shadow: 0 30px 64px rgba(0,0,0,.25); backdrop-filter: blur(5px); }
+  .cert-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 700 .72rem/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; color: #aebdca; }
+  .live { color: #72f0bf; }
+  .verdict { display: flex; align-items: center; gap: 13px; margin: 22px 0 18px; }
+  .seal { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%; color: #052819; background: #72f0bf; font-weight: 900; }
+  .verdict b { display: block; color: #72f0bf; font-size: 1.25rem; letter-spacing: .03em; }
+  .verdict span { display: block; color: #aebdca; font-size: .82rem; }
+  .claim-line { padding: 12px 0; border-top: 1px solid rgba(255,255,255,.12); color: #dce4ec; font: .84rem/1.45 var(--mono); }
+  .claim-line em { color: #72f0bf; font-style: normal; }
+  .cert-foot { margin: 16px 0 0; color: #9aa9b8; font-size: .78rem; }
+  .proof-strip { border-bottom: 1px solid var(--line); background: #fff; }
+  .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .proof-stat { padding: 22px 25px; border-left: 1px solid var(--line); }
+  .proof-stat:first-child { border-left: 0; }
+  .proof-stat b { display: block; font-size: 1.36rem; letter-spacing: -.035em; }
+  .proof-stat span { color: var(--muted); font-size: .85rem; }
+  .proof-stat a { color: var(--blue); }
+  section { padding: 92px 0; }
+  .section-label { margin: 0 0 11px; color: var(--blue); font: 750 .72rem/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
+  h2 { max-width: 790px; margin: 0; font-size: clamp(2rem, 3.6vw, 3.4rem); letter-spacing: -.055em; line-height: 1.05; }
+  .section-lead { max-width: 730px; margin: 18px 0 0; color: var(--muted); font-size: 1.08rem; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 38px; }
+  .step { min-height: 250px; border: 1px solid var(--line); border-radius: 12px; padding: 25px; background: white; }
+  .step-no { color: var(--blue); font: 700 .78rem/1 var(--mono); letter-spacing: .08em; }
+  .step h3 { margin: 32px 0 9px; font-size: 1.22rem; letter-spacing: -.025em; }
+  .step p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .step a { color: var(--blue); font-weight: 700; }
+  .band { color: white; background: #143042; }
+  .band-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .84fr); gap: 60px; align-items: start; }
+  .band .section-label { color: #92c9ff; }
+  .band h2 { color: white; }
+  .band .section-lead { color: #c1d2dd; }
+  .limits { display: grid; gap: 12px; }
+  .limit { padding: 17px 18px; border-radius: 10px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); }
+  .limit b { display: block; margin-bottom: 3px; color: white; }
+  .limit span { color: #c1d2dd; font-size: .9rem; }
+  .fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px; }
+  .fit { border-radius: 12px; padding: 28px; }
+  .fit.good { color: #063a2b; background: var(--green-bg); }
+  .fit.not { color: #5f3600; background: var(--amber-bg); }
+  .fit h3 { margin: 0 0 10px; font-size: 1.2rem; }
+  .fit ul { margin: 0; padding-left: 20px; }
+  .fit li + li { margin-top: 7px; }
+  .commercial { border-top: 1px solid var(--line); background: var(--paper-deep); }
+  .commercial-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 58px; align-items: end; }
+  .commercial-card { padding: 25px; background: white; border: 1px solid var(--line); border-radius: 12px; }
+  .commercial-card b { display: block; font-size: 1.3rem; letter-spacing: -.03em; }
+  .commercial-card p { color: var(--muted); margin: 10px 0 18px; font-size: .93rem; }
+  .commercial-card .button { width: 100%; }
+  .faq { padding-top: 0; }
+  .faq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .faq h3 { margin: 0 0 7px; font-size: 1rem; }
+  .faq p { margin: 0; color: var(--muted); font-size: .9rem; }
+  footer { padding: 34px 0 42px; color: #b8c4cd; background: var(--ink); }
+  .footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: .85rem; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
+  .footer a { text-decoration: none; }
+  .footer a:hover { color: white; }
+  @media (max-width: 800px) {
+    .hero-grid, .band-grid, .commercial-grid { grid-template-columns: 1fr; gap: 34px; }
+    .hero { padding: 52px 0; }
+    .steps, .faq-grid { grid-template-columns: 1fr; }
+    .step { min-height: auto; }
+    .fit-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 580px) {
+    .shell { width: min(var(--max), calc(100% - 30px)); }
+    .nav { min-height: 64px; }
+    .nav-links { display: none; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .proof-stat, .proof-stat:first-child { border-left: 0; border-top: 1px solid var(--line); }
+    .proof-stat:first-child { border-top: 0; }
+    section { padding: 62px 0; }
+    .footer { align-items: flex-start; flex-direction: column; }
+  }
+</style>
 </head>
 <body>
-<p><a href="playground/">Chiron playground — paste a sequence, watch it verify or refuse</a></p>
-<p><a href="https://github.com/jiannotti5040/chiron">github.com/jiannotti5040/chiron</a></p>
+  <div class="shell nav">
+    <a class="brand" href="./">CHIRON<i>.</i></a>
+    <nav class="nav-links" aria-label="Primary navigation">
+      <a href="#how-it-works">How it works</a>
+      <a href="#proof">Proof</a>
+      <a href="https://github.com/jiannotti5040/chiron">GitHub</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Commercial access</a>
+  </div>
+
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Proof gates for AI outputs</p>
+          <h1>Make AI outputs earn the right to be trusted.</h1>
+          <p class="hero-copy">Chiron checks the claims it can prove exactly, <strong>refutes what is false</strong>, and refuses the rest. Every result carries the evidence and the boundary of what was not certified.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="playground/#claim-checker">Check a claim live</a>
+            <a class="button ghost" href="#proof">See the proof protocol</a>
+          </div>
+          <p class="micro">Use the public demo for non-sensitive test inputs only. It is a live service, not a general-purpose truth oracle.</p>
+        </div>
+        <aside class="certificate" aria-label="Example Chiron certificate">
+          <div class="cert-top"><span>Chiron certificate</span><span class="live">● exact check</span></div>
+          <div class="verdict"><span class="seal">✓</span><div><b>REFUTED</b><span>with a machine-readable reason</span></div></div>
+          <div class="claim-line">“97 is prime” <em>VERIFIED</em></div>
+          <div class="claim-line">“2 + 2 = 5” <span style="color:#ffb4aa">REFUTED</span></div>
+          <p class="cert-foot">Uncheckable free text stays explicitly uncertified. That limit is part of the result.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="proof-strip" id="proof">
+      <div class="shell proof-grid">
+        <div class="proof-stat"><b>22 / 22</b><span>published stamped outputs correct in the current external eval</span></div>
+        <div class="proof-stat"><b>0</b><span>false stamps in that <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">published frozen eval</a></span></div>
+        <div class="proof-stat"><b>12 refusals</b><span>because abstention is preferable to an unsupported stamp</span></div>
+      </div>
+    </div>
+
+    <section id="how-it-works">
+      <div class="shell">
+        <p class="section-label">What the product does</p>
+        <h2>A decision gate—not another confidence score.</h2>
+        <p class="section-lead">Use Chiron when a system needs to distinguish a claim it can support from one it cannot. It is built for exact, inspectable checks and explicit refusal—not plausible-looking output.</p>
+        <div class="steps">
+          <article class="step">
+            <div class="step-no">01 / INPUT</div>
+            <h3>Send the claim or structured surface.</h3>
+            <p>Try a machine-generated mathematical or factual claim in the live checker, or give the engine a sequence whose rule needs to be recovered.</p>
+          </article>
+          <article class="step">
+            <div class="step-no">02 / VERDICT</div>
+            <h3>Get VERIFIED, REFUTED, or REFUSED.</h3>
+            <p>Chiron checks only the portion it can handle exactly. It does not bless the surrounding prose just because one statement passed.</p>
+          </article>
+          <article class="step">
+            <div class="step-no">03 / EVIDENCE</div>
+            <h3>Keep the reason, not just the answer.</h3>
+            <p>Results include the discovered rule or claim-level status, a machine-readable evidence record, and the limits of coverage. <a href="playground/#claim-checker">Try it live →</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="shell band-grid">
+        <div>
+          <p class="section-label">The important constraint</p>
+          <h2>Honest scope is a feature, not a footnote.</h2>
+          <p class="section-lead">A system that says “verified” when it only recognized part of the input is worse than no system at all. Chiron surfaces coverage and leaves uncheckable material unblessed.</p>
+        </div>
+        <div class="limits">
+          <div class="limit"><b>It can check</b><span>Supported exact claim types and structured patterns, with an explanation of the verdict.</span></div>
+          <div class="limit"><b>It will refuse</b><span>Inputs outside its proof methods, ambiguous evidence, or work beyond the configured budget.</span></div>
+          <div class="limit"><b>It does not claim</b><span>To certify all free-form language, business judgment, legal compliance, or safety in the abstract.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="shell">
+        <p class="section-label">Who gets value now</p>
+        <h2>For teams that need evidence before an output becomes an action.</h2>
+        <div class="fit-grid">
+          <article class="fit good">
+            <h3>A strong fit</h3>
+            <ul>
+              <li>AI product engineers who need a gate around supported claims.</li>
+              <li>Evaluation owners who need reproducible pass, fail, and abstain records.</li>
+              <li>Teams that want a deterministic engine they can run offline under a commercial license.</li>
+            </ul>
+          </article>
+          <article class="fit not">
+            <h3>Not the promise</h3>
+            <ul>
+              <li>A generic hallucination score or a replacement for domain experts.</li>
+              <li>A legal, regulatory, or security conclusion about arbitrary text.</li>
+              <li>A black-box “trust us” layer that silently turns uncertainty into approval.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="commercial">
+      <div class="shell commercial-grid">
+        <div>
+          <p class="section-label">Commercial use</p>
+          <h2>Move from a public proof to your own workflow.</h2>
+          <p class="section-lead">Commercial access includes the full, self-contained Chiron engine, the right to run and adapt it for your organization, and a path to contribute changes back without weakening the certified core.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">See plans and buy access</a>
+            <a class="button secondary" href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Talk through a use case</a>
+          </div>
+        </div>
+        <aside class="commercial-card">
+          <b>Start where the proof is useful.</b>
+          <p>Individual commercial access starts at $100/month. Team and business options add seats and deployment support. Checkout records the GitHub account requested for confirmed delivery.</p>
+          <a class="button secondary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">View commercial access</a>
+        </aside>
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="shell faq-grid">
+        <article><h3>Can I test it first?</h3><p>Yes. Use the live claim checker, run the public demo core, and grade the published frozen outputs against public ground truth before buying.</p></article>
+        <article><h3>Does the demo see my data?</h3><p>The browser sequence core runs locally. The claim checker and licensed-engine toggle call a public live endpoint, so use only non-sensitive test inputs.</p></article>
+        <article><h3>What happens after checkout?</h3><p>Checkout collects a requested GitHub username. Delivery is confirmed with the purchaser at the checkout email before a private-repository invitation is granted. See pricing for the exact tier terms.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="shell footer">
+      <span>CHIRON. Correct, refuted, or explicitly unknown.</span>
+      <div class="footer-links">
+        <a href="playground/">Live demo</a>
+        <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">Public eval</a>
+        <a href="https://github.com/jiannotti5040/chiron">GitHub</a>
+        <a href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Pricing</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

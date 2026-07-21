@@ -16,7 +16,8 @@ library versions, which matched the original runs exactly.
 Same as the external validation: both systems see the **first 12 terms** of
 each of 29 live-fetched OEIS sequences (corpus fetched 2026-07-04, before the
 newest engine layer existed); the grade is **exact** prediction of the next 4
-terms. Primus may refuse; a regressor structurally always answers.
+terms. Primus may refuse; the raw regression configurations evaluated here emit
+a candidate on every row.
 
 ## Primus vs PySR
 
@@ -26,7 +27,7 @@ Original run 2026-07-12 (PySR deterministic serial, `niterations=40`, seed 0);
 | | exact 4/4 | wrong | refused |
 |---|---|---|---|
 | **Primus** | **18** | **0** | 11 |
-| PySR | 5 | 24 | — (cannot refuse) |
+| PySR (raw configuration) | 5 | 24 | — (no abstention rule in this run) |
 
 PySR's five exact hits are precisely the polynomial-expressible rows:
 triangular numbers, squares, cubes, oblong, and quarter-squares. Everything
@@ -67,12 +68,12 @@ became a refusal, and **nothing stamped was externally wrong**.
 
 It is a comparison of **contracts**, not curve-fitting skill or compute
 budgets (the gated run spends up to two GP fits per sequence against the raw
-run's one). A regressor targets approximate fit and must return its best
-guess; on sequences with no recoverable closed form (primes, partitions,
-Bell, Thue–Morse, d(n), φ(n)) the best possible regressor output is still a
-confident wrong answer. Primus converts every one of those into a refusal.
-Calibrated confidence — not recovery breadth — is the property being sold,
-and it is the one a regressor structurally cannot match.
+run's one). A raw regressor targets approximate fit and returns its best
+candidate; on sequences with no recoverable closed form (primes, partitions,
+Bell, Thue–Morse, d(n), φ(n)), that candidate can be wrong. In this published
+protocol, Primus turned those unsupported candidates into refusals. A caller
+can put an abstention layer around a regressor; Chiron's distinction is that
+held-out exact verification and abstention are native to the evaluated contract.
 
 ## Reproduce it
 

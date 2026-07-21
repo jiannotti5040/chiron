@@ -1,7 +1,7 @@
 # Architecture
 
 Chiron is a set of independently-runnable engines that share one spine: exact
-recovery, held-out verification, refusal, and a signed certificate. In the
+recovery, held-out verification, refusal, and a certificate carrying a self-hash. In the
 licensed engine they are folded into **one self-contained deterministic file**
 (`chiron_monolith.py`) that runs offline with nothing to install — the whole
 system as a single drag-and-drop artifact, plus an operator dashboard.
