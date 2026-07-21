@@ -33,9 +33,9 @@ and runs it via CPython-in-WebAssembly; there is no server and no JavaScript rei
 prediction, refusal otherwise. *Does not prove:* the licensed engine's reach — the demo core is
 strictly weaker by design (it refuses Tribonacci, Catalan and factorials, which the engine stamps).
 
-Hosted via GitHub Pages from `docs/` (Settings → Pages → `main` / `docs`) at
-`https://jiannotti5040.github.io/chiron/playground/`; or locally, no install:
-`python3 -m http.server` from the repo root, then `http://localhost:8000/docs/playground/`.
+**Live now: [jiannotti5040.github.io/chiron/playground](https://jiannotti5040.github.io/chiron/playground/)** —
+or locally, no install: `python3 -m http.server` from the repo root, then
+`http://localhost:8000/docs/playground/`.
 
 ### 2 minutes — grade the engine against ground truth the author does not control
 
