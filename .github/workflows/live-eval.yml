@@ -1,0 +1,25 @@
+# The zero-false claim, re-verified weekly against ground truth the author
+# does not control: grade.py fetches b-files LIVE from oeis.org (politely,
+# ~1 request/second) and counts false stamps in the frozen engine outputs.
+#
+# This runs on a schedule, in public logs, so the claim is standing evidence
+# rather than a one-time screenshot. If OEIS ever contradicts a stamped
+# prediction, this badge goes red — and stays red until the miss is
+# published and fixed at the root, which is this project's stated practice.
+name: live-eval
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"   # Mondays 06:17 UTC
+  workflow_dispatch:
+
+jobs:
+  live-grade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Grade frozen engine outputs LIVE against oeis.org (expect 0 false stamps)
+        run: python3 eval/grade.py
