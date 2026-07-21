@@ -14,6 +14,7 @@ and the other page is stale — tell us.
 | Battery | Covers | Where | Count |
 |---|---|---|---|
 | Prototype selftest (`prototype/primus_prototype.py selftest`) | the recover / verify / **refuse** core discipline; the JDICert stub that structurally cannot say VERIFIED | this repo, one file, Python 3 + numpy | **26/26** |
+| Browser demo core (`prototype/browser_core.py selftest`) | the [playground](playground/)'s verify-or-refuse core: exact arithmetic, stamp only on exact held-out prediction, h ≥ p evidence rule, floats refused not rounded — **strictly weaker than the licensed engine by design** (it refuses Tribonacci/Catalan/factorials the engine stamps) | this repo, one file, stdlib only — the same file the browser runs | **17/17** |
 | **Public eval build** (`eval/grade.py`) | the engine's **headline property itself** — frozen engine outputs (12 terms shown, exact predictions for terms 13..20 or refusal) graded against oeis.org **live**; tamper-evident freeze (commit + sha256); `eval/challenge.py` lets you grade sequences **you** choose | this repo, stdlib only, no engine code | **22 stamped / 22 externally correct / 0 false stamps / 12 refusals** (freeze 2026-07-21) |
 
 That is the pre-purchase verification boundary today: the discipline, a

@@ -107,6 +107,38 @@ Dependencies: **numpy only** (standard library otherwise). No network. Offline.
 
 ---
 
+## `browser_core.py` — the playground's demo core (what it is, exactly)
+
+The browser playground at [`../docs/playground/`](../docs/playground/) needed a
+sequence verify-or-refuse core that can legally ship in this public repo. This
+architecture prototype deliberately contains none (its certifier refuses
+everything — that is gate 26), and the licensed engine's source does not ship
+here. So the playground runs **`browser_core.py`**: a small public demo core
+written for that page, with its own gate battery.
+
+Honest scope, stated the same way GATES.md states it:
+
+- **Same contract as the licensed engine:** exact integer/Fraction arithmetic
+  only, a stamp only when the recovered rule predicts held-out terms exactly
+  (`==`, not a tolerance), refusal otherwise. Zero false verifications binds
+  here too.
+- **Not the licensed engine, not derived from vault source, strictly weaker:**
+  five hypothesis families (constant, arithmetic, geometric, polynomial ≤ deg 4,
+  linear recurrence ≤ order 3) against the engine's much larger set, and a more
+  conservative evidence rule (held-out count must be ≥ parameter count, with
+  recurrences counting coefficients *and* seeds). The licensed engine stamps
+  Tribonacci, Catalan, and factorials from 12 terms; this core **refuses** them.
+  Where the two disagree, this core refuses more — never stamps more.
+- **Gated:** `python3 browser_core.py selftest` — **17/17**, including gates
+  that it refuses order-3 fits at 12 terms, never stamps a corrupted held-out
+  term, refuses floats rather than rounding, and stays exact past 2^53.
+
+The licensed engine's real outputs on external data are graded in
+[`../eval/`](../eval/); every count is reconciled in
+[`../docs/BATTERIES.md`](../docs/BATTERIES.md).
+
+---
+
 ## The seams to the real engines (where integration plugs in)
 
 These are the honest stubs that **abstain** today and are the exact points to
