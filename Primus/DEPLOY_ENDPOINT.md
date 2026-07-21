@@ -64,13 +64,39 @@ fly deploy
 curl https://chiron-engine.fly.dev/health
 ```
 
-## Render
+## Render (Blueprint — the committed path)
 
-New → Web Service → "Deploy from a Git repository" is NOT recommended (the
-vault is private and Render would hold a clone); prefer "Deploy an existing
-image" from a private registry you push the image to. Set the env table
-above in the dashboard; health check path `/health`; instance type Starter
-is plenty (the engine is CPU-light at these budgets).
+A `render.yaml` Blueprint and a `Dockerfile` live at the vault root, so Render
+can provision the whole service from this repo. Steps:
+
+1. Render dashboard → **New → Blueprint**.
+2. **Connect a repository** → authorize Render's GitHub app for `chiron-vault`
+   (this grants Render read access to the private repo so it can build — the
+   running service still exposes only the API, never source).
+3. Pick this repo; Render reads `render.yaml` and shows the `chiron-engine`
+   web service. Click **Apply**.
+4. First build takes a few minutes (numpy install). When it's live, hit
+   `https://chiron-engine.onrender.com/health` (exact host shown in the
+   dashboard).
+
+The Blueprint is **open by design** (no token — the value is public eval on
+caller input) but bounded: per-IP 20/min, global 120/min, concurrency 2, the
+certify input caps, REFUSED over budget. To lock it down, add
+`CHIRON_API_TOKEN` in the dashboard (Environment tab) — no code redeploy — and
+clients send `Authorization: Bearer <token>`. `gplearn` is intentionally not
+installed, so `/conjecture` honestly REFUSES when the exact engine abstains;
+add it to the Dockerfile if you want GP proposals (costs memory on free tier).
+
+Free instance note: it spins down after ~15 min idle and cold-starts on the
+next request (a few seconds). Fine for a demo; bump `plan` in `render.yaml`
+for always-on.
+
+### Alternative: prebuilt image (keeps Render off the source repo)
+
+If you'd rather not give Render read access to the repo, build locally/in CI
+and push to a registry (GHCR), then point a Render service at
+`runtime: image`. The image still contains the engine (any runner does), but
+Render never clones the repo. More steps; the Blueprint above is simpler.
 
 ## Smoke, from anywhere
 
