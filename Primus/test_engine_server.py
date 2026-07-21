@@ -83,6 +83,19 @@ def main():
              sorted(health["tools"]) == ["certify", "collapse", "conjecture"],
              repr(health))
 
+        # CORS — a browser must be able to preflight and read the response
+        preflight = urllib.request.Request(base + "/collapse", method="OPTIONS")
+        try:
+            with urllib.request.urlopen(preflight, timeout=10) as r:
+                pf_code, pf_acao = r.status, r.headers.get("Access-Control-Allow-Origin")
+        except urllib.error.HTTPError as e:
+            pf_code, pf_acao = e.code, e.headers.get("Access-Control-Allow-Origin")
+        gate("CORS preflight (OPTIONS) -> 204 + Allow-Origin *",
+             pf_code == 204 and pf_acao == "*", f"{pf_code} {pf_acao}")
+        with urllib.request.urlopen(base + "/health", timeout=10) as r:
+            acao = r.headers.get("Access-Control-Allow-Origin")
+        gate("CORS Allow-Origin header on normal responses", acao == "*", repr(acao))
+
         code, r = call(base, "/collapse", {"surface": "1 1 2 3 5 8 13 21 34 55 89 144"})
         gate("collapse: fibonacci VERIFIED via string surface",
              code == 200 and r["certificate"]["verified"] is True and

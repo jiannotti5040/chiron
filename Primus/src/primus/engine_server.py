@@ -16,6 +16,8 @@ TYPE NAME only (no messages, no tracebacks), and the only GET route is
   * per-IP and global rate limits (sliding minute window; 429 + REFUSED)
   * bounded concurrency (excess concurrent requests get 429 immediately)
   * optional bearer auth: set CHIRON_API_TOKEN and every POST requires it
+  * permissive CORS (Allow-Origin *) so a browser can call it directly — safe
+    because the API is read-only, cookieless, and carries no ambient authority
 
 Endpoints (all request/response bodies are JSON):
 
@@ -186,12 +188,21 @@ class Handler(BaseHTTPRequestHandler):
                 return fwd.split(",")[0].strip()
         return self.client_address[0]
 
+    def _cors(self) -> None:
+        # A public read-only compute API with no cookies and no ambient
+        # authority: a permissive CORS policy lets a browser (the playground)
+        # call it directly, and grants no capability a curl couldn't already.
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
     def _send(self, code: int, obj: Dict[str, Any]) -> None:
         data = json.dumps(obj, separators=(",", ":"), default=str).encode()
         self.send_response(code)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-store")
+        self._cors()
         self.end_headers()
         self.wfile.write(data)
 
@@ -200,6 +211,15 @@ class Handler(BaseHTTPRequestHandler):
                          (self._client_key(), fmt % args))
 
     # -- routes -------------------------------------------------------------
+    def do_OPTIONS(self):
+        # CORS preflight — a browser mechanism, so it is exempt from auth and
+        # rate limits (it carries no body and performs no work).
+        self.send_response(204)
+        self._cors()
+        self.send_header("Access-Control-Max-Age", "86400")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
+
     def do_GET(self):
         if self.path == "/health":
             import primus

@@ -2,6 +2,20 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.6.2 — 2026-07-21
+
+**The endpoint speaks CORS — the browser playground can call the real engine
+directly.** So a buyer can run the licensed engine on their own input from the
+demo page, not just from a shell.
+
+- `primus.engine_server` now sends a permissive CORS policy (`Allow-Origin *`,
+  `GET/POST/OPTIONS`) and answers the browser preflight (`OPTIONS` → 204),
+  exempt from auth and rate limits (it carries no body and does no work).
+  Safe by construction: the API is read-only, cookieless, and grants no
+  capability a `curl` couldn't already reach.
+- `test_engine_server.py`: **20/20** (added the preflight + Allow-Origin gates).
+- No stamping path touched; full battery re-run green under 0.6.2.
+
 ## 0.6.1 — 2026-07-21
 
 **The engine as a live HTTP endpoint — request in, certificate out, source
