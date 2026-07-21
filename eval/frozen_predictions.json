@@ -1,0 +1,952 @@
+{
+ "schema": "primus.eval-freeze/1",
+ "engine": {
+  "name": "primus",
+  "version": "0.6.0+source"
+ },
+ "protocol": {
+  "shown_terms": 12,
+  "frozen_predictions_per_stamp": 8,
+  "statement": "the engine saw ONLY the first 12 terms of each sequence; every stamped row freezes its exact predictions for terms 13..20; refusals are frozen as refusals"
+ },
+ "frozen_utc": "2026-07-21T11:26:51+00:00",
+ "generated_at_commit": "1652af0acca74e2dc2a9a4dca0c04963a6d283ca",
+ "corpus_provenance": "Extended 2026-07-07. The original 28 (from oeis_corpus_cache.json) are unchanged. 7 sequences added as POST-DEVELOPMENT probes; the list was fixed before any grading (5 in-class targets + 2 out-of-class refusal controls). Terms fetched live this session from oeis.org per-sequence b-files. External ground truth; nothing generated locally.",
+ "rows_sha256": "da28f50892af0dfbbeca6db7539c5c8acf1cdca9797ba973951f8078b03432fe",
+ "rows": [
+  {
+   "anum": "A000005",
+   "name": "d(n), number of divisors",
+   "shown": [
+    1,
+    2,
+    2,
+    3,
+    2,
+    4,
+    2,
+    4,
+    3,
+    4,
+    2,
+    6
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_3",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000010",
+   "name": "Euler totient phi(n)",
+   "shown": [
+    1,
+    1,
+    2,
+    2,
+    4,
+    2,
+    6,
+    4,
+    6,
+    4,
+    10,
+    4
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000032",
+   "name": "Lucas",
+   "shown": [
+    2,
+    1,
+    3,
+    4,
+    7,
+    11,
+    18,
+    29,
+    47,
+    76,
+    123,
+    199
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    322,
+    521,
+    843,
+    1364,
+    2207,
+    3571,
+    5778,
+    9349
+   ]
+  },
+  {
+   "anum": "A000040",
+   "name": "Primes",
+   "shown": [
+    2,
+    3,
+    5,
+    7,
+    11,
+    13,
+    17,
+    19,
+    23,
+    29,
+    31,
+    37
+   ],
+   "status": "REFUSED",
+   "model_class": "power_law",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000041",
+   "name": "Partitions",
+   "shown": [
+    1,
+    1,
+    2,
+    3,
+    5,
+    7,
+    11,
+    15,
+    22,
+    30,
+    42,
+    56
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000045",
+   "name": "Fibonacci",
+   "shown": [
+    0,
+    1,
+    1,
+    2,
+    3,
+    5,
+    8,
+    13,
+    21,
+    34,
+    55,
+    89
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    144,
+    233,
+    377,
+    610,
+    987,
+    1597,
+    2584,
+    4181
+   ]
+  },
+  {
+   "anum": "A000073",
+   "name": "Tribonacci",
+   "shown": [
+    0,
+    0,
+    1,
+    1,
+    2,
+    4,
+    7,
+    13,
+    24,
+    44,
+    81,
+    149
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order3",
+   "predicted_from_term": 13,
+   "predicted": [
+    274,
+    504,
+    927,
+    1705,
+    3136,
+    5768,
+    10609,
+    19513
+   ]
+  },
+  {
+   "anum": "A000079",
+   "name": "Powers of 2",
+   "shown": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    256,
+    512,
+    1024,
+    2048
+   ],
+   "status": "VERIFIED",
+   "model_class": "geometric",
+   "predicted_from_term": 13,
+   "predicted": [
+    4096,
+    8192,
+    16384,
+    32768,
+    65536,
+    131072,
+    262144,
+    524288
+   ]
+  },
+  {
+   "anum": "A000108",
+   "name": "Catalan",
+   "shown": [
+    1,
+    1,
+    2,
+    5,
+    14,
+    42,
+    132,
+    429,
+    1430,
+    4862,
+    16796,
+    58786
+   ],
+   "status": "VERIFIED",
+   "model_class": "holonomic_r1_p1",
+   "predicted_from_term": 13,
+   "predicted": [
+    208012,
+    742900,
+    2674440,
+    9694845,
+    35357670,
+    129644790,
+    477638700,
+    1767263190
+   ]
+  },
+  {
+   "anum": "A000110",
+   "name": "Bell numbers",
+   "shown": [
+    1,
+    1,
+    2,
+    5,
+    15,
+    52,
+    203,
+    877,
+    4140,
+    21147,
+    115975,
+    678570
+   ],
+   "status": "REFUSED",
+   "model_class": "holonomic_r1_p1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000129",
+   "name": "Pell",
+   "shown": [
+    0,
+    1,
+    2,
+    5,
+    12,
+    29,
+    70,
+    169,
+    408,
+    985,
+    2378,
+    5741
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    13860,
+    33461,
+    80782,
+    195025,
+    470832,
+    1136689,
+    2744210,
+    6625109
+   ]
+  },
+  {
+   "anum": "A000142",
+   "name": "Factorials",
+   "shown": [
+    1,
+    1,
+    2,
+    6,
+    24,
+    120,
+    720,
+    5040,
+    40320,
+    362880,
+    3628800,
+    39916800
+   ],
+   "status": "VERIFIED",
+   "model_class": "multiplicative_ratio",
+   "predicted_from_term": 13,
+   "predicted": [
+    479001600,
+    6227020800,
+    87178291200,
+    1307674368000,
+    20922789888000,
+    355687428096000,
+    6402373705728000,
+    121645100408832000
+   ]
+  },
+  {
+   "anum": "A000172",
+   "name": "Franel numbers Sum C(n,k)^3",
+   "shown": [
+    1,
+    2,
+    10,
+    56,
+    346,
+    2252,
+    15184,
+    104960,
+    739162,
+    5280932,
+    38165260,
+    278415920
+   ],
+   "status": "REFUSED",
+   "model_class": "holonomic_r2_p2",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000203",
+   "name": "sigma(n), sum of divisors",
+   "shown": [
+    1,
+    3,
+    4,
+    7,
+    6,
+    12,
+    8,
+    15,
+    13,
+    18,
+    12,
+    28
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000217",
+   "name": "Triangular numbers",
+   "shown": [
+    0,
+    1,
+    3,
+    6,
+    10,
+    15,
+    21,
+    28,
+    36,
+    45,
+    55,
+    66
+   ],
+   "status": "VERIFIED",
+   "model_class": "polynomial_deg2",
+   "predicted_from_term": 13,
+   "predicted": [
+    78,
+    91,
+    105,
+    120,
+    136,
+    153,
+    171,
+    190
+   ]
+  },
+  {
+   "anum": "A000225",
+   "name": "Mersenne 2^n - 1",
+   "shown": [
+    0,
+    1,
+    3,
+    7,
+    15,
+    31,
+    63,
+    127,
+    255,
+    511,
+    1023,
+    2047
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    4095,
+    8191,
+    16383,
+    32767,
+    65535,
+    131071,
+    262143,
+    524287
+   ]
+  },
+  {
+   "anum": "A000244",
+   "name": "Powers of 3",
+   "shown": [
+    1,
+    3,
+    9,
+    27,
+    81,
+    243,
+    729,
+    2187,
+    6561,
+    19683,
+    59049,
+    177147
+   ],
+   "status": "VERIFIED",
+   "model_class": "geometric",
+   "predicted_from_term": 13,
+   "predicted": [
+    531441,
+    1594323,
+    4782969,
+    14348907,
+    43046721,
+    129140163,
+    387420489,
+    1162261467
+   ]
+  },
+  {
+   "anum": "A000290",
+   "name": "Squares",
+   "shown": [
+    0,
+    1,
+    4,
+    9,
+    16,
+    25,
+    36,
+    49,
+    64,
+    81,
+    100,
+    121
+   ],
+   "status": "VERIFIED",
+   "model_class": "polynomial_deg2",
+   "predicted_from_term": 13,
+   "predicted": [
+    144,
+    169,
+    196,
+    225,
+    256,
+    289,
+    324,
+    361
+   ]
+  },
+  {
+   "anum": "A000302",
+   "name": "Powers of 4",
+   "shown": [
+    1,
+    4,
+    16,
+    64,
+    256,
+    1024,
+    4096,
+    16384,
+    65536,
+    262144,
+    1048576,
+    4194304
+   ],
+   "status": "VERIFIED",
+   "model_class": "geometric",
+   "predicted_from_term": 13,
+   "predicted": [
+    16777216,
+    67108864,
+    268435456,
+    1073741824,
+    4294967296,
+    17179869184,
+    68719476736,
+    274877906944
+   ]
+  },
+  {
+   "anum": "A000326",
+   "name": "Pentagonal numbers",
+   "shown": [
+    0,
+    1,
+    5,
+    12,
+    22,
+    35,
+    51,
+    70,
+    92,
+    117,
+    145,
+    176
+   ],
+   "status": "VERIFIED",
+   "model_class": "polynomial_deg2",
+   "predicted_from_term": 13,
+   "predicted": [
+    210,
+    247,
+    287,
+    330,
+    376,
+    425,
+    477,
+    532
+   ]
+  },
+  {
+   "anum": "A000578",
+   "name": "Cubes",
+   "shown": [
+    0,
+    1,
+    8,
+    27,
+    64,
+    125,
+    216,
+    343,
+    512,
+    729,
+    1000,
+    1331
+   ],
+   "status": "VERIFIED",
+   "model_class": "polynomial_deg3",
+   "predicted_from_term": 13,
+   "predicted": [
+    1728,
+    2197,
+    2744,
+    3375,
+    4096,
+    4913,
+    5832,
+    6859
+   ]
+  },
+  {
+   "anum": "A000796",
+   "name": "Decimal digits of Pi",
+   "shown": [
+    3,
+    1,
+    4,
+    1,
+    5,
+    9,
+    2,
+    6,
+    5,
+    3,
+    5,
+    8
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A000984",
+   "name": "Central binomial coefficients",
+   "shown": [
+    1,
+    2,
+    6,
+    20,
+    70,
+    252,
+    924,
+    3432,
+    12870,
+    48620,
+    184756,
+    705432
+   ],
+   "status": "VERIFIED",
+   "model_class": "holonomic_r1_p1",
+   "predicted_from_term": 13,
+   "predicted": [
+    2704156,
+    10400600,
+    40116600,
+    155117520,
+    601080390,
+    2333606220,
+    9075135300,
+    35345263800
+   ]
+  },
+  {
+   "anum": "A001006",
+   "name": "Motzkin",
+   "shown": [
+    1,
+    1,
+    2,
+    4,
+    9,
+    21,
+    51,
+    127,
+    323,
+    835,
+    2188,
+    5798
+   ],
+   "status": "VERIFIED",
+   "model_class": "holonomic_r2_p1",
+   "predicted_from_term": 13,
+   "predicted": [
+    15511,
+    41835,
+    113634,
+    310572,
+    853467,
+    2356779,
+    6536382,
+    18199284
+   ]
+  },
+  {
+   "anum": "A001045",
+   "name": "Jacobsthal",
+   "shown": [
+    0,
+    1,
+    1,
+    3,
+    5,
+    11,
+    21,
+    43,
+    85,
+    171,
+    341,
+    683
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    1365,
+    2731,
+    5461,
+    10923,
+    21845,
+    43691,
+    87381,
+    174763
+   ]
+  },
+  {
+   "anum": "A001333",
+   "name": "Numerators of continued fraction convergents to sqrt(2)",
+   "shown": [
+    1,
+    1,
+    3,
+    7,
+    17,
+    41,
+    99,
+    239,
+    577,
+    1393,
+    3363,
+    8119
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    19601,
+    47321,
+    114243,
+    275807,
+    665857,
+    1607521,
+    3880899,
+    9369319
+   ]
+  },
+  {
+   "anum": "A002203",
+   "name": "Companion Pell (Pell-Lucas)",
+   "shown": [
+    2,
+    2,
+    6,
+    14,
+    34,
+    82,
+    198,
+    478,
+    1154,
+    2786,
+    6726,
+    16238
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    39202,
+    94642,
+    228486,
+    551614,
+    1331714,
+    3215042,
+    7761798,
+    18738638
+   ]
+  },
+  {
+   "anum": "A002275",
+   "name": "Repunits",
+   "shown": [
+    0,
+    1,
+    11,
+    111,
+    1111,
+    11111,
+    111111,
+    1111111,
+    11111111,
+    111111111,
+    1111111111,
+    11111111111
+   ],
+   "status": "VERIFIED",
+   "model_class": "linear_recurrence_order2",
+   "predicted_from_term": 13,
+   "predicted": [
+    111111111111,
+    1111111111111,
+    11111111111111,
+    111111111111111,
+    1111111111111111,
+    11111111111111111,
+    111111111111111111,
+    1111111111111111111
+   ]
+  },
+  {
+   "anum": "A002378",
+   "name": "Oblong numbers",
+   "shown": [
+    0,
+    2,
+    6,
+    12,
+    20,
+    30,
+    42,
+    56,
+    72,
+    90,
+    110,
+    132
+   ],
+   "status": "VERIFIED",
+   "model_class": "polynomial_deg2",
+   "predicted_from_term": 13,
+   "predicted": [
+    156,
+    182,
+    210,
+    240,
+    272,
+    306,
+    342,
+    380
+   ]
+  },
+  {
+   "anum": "A002487",
+   "name": "Stern's diatomic",
+   "shown": [
+    0,
+    1,
+    1,
+    2,
+    1,
+    3,
+    2,
+    3,
+    1,
+    4,
+    3,
+    5
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_3",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A002620",
+   "name": "Quarter-squares",
+   "shown": [
+    0,
+    0,
+    1,
+    2,
+    4,
+    6,
+    9,
+    12,
+    16,
+    20,
+    25,
+    30
+   ],
+   "status": "REFUSED",
+   "model_class": "linear_recurrence_order4",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A005259",
+   "name": "Apery numbers a(n) = Sum C(n,k)^2 C(n+k,k)^2",
+   "shown": [
+    1,
+    5,
+    73,
+    1445,
+    33001,
+    819005,
+    21460825,
+    584307365,
+    16367912425,
+    468690849005,
+    13657436403073,
+    403676083788125
+   ],
+   "status": "REFUSED",
+   "model_class": "holonomic_r1_p1",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  },
+  {
+   "anum": "A006318",
+   "name": "Large Schroeder numbers",
+   "shown": [
+    1,
+    2,
+    6,
+    22,
+    90,
+    394,
+    1806,
+    8558,
+    41586,
+    206098,
+    1037718,
+    5293446
+   ],
+   "status": "VERIFIED",
+   "model_class": "holonomic_r2_p1",
+   "predicted_from_term": 13,
+   "predicted": [
+    27297738,
+    142078746,
+    745387038,
+    3937603038,
+    20927156706,
+    111818026018,
+    600318853926,
+    3236724317174
+   ]
+  },
+  {
+   "anum": "A010060",
+   "name": "Thue-Morse",
+   "shown": [
+    0,
+    1,
+    1,
+    0,
+    1,
+    0,
+    0,
+    1,
+    1,
+    0,
+    0,
+    1
+   ],
+   "status": "REFUSED",
+   "model_class": "periodic_3",
+   "reason": "no exactly-verified generator at 12 shown terms; refusing rather than guessing"
+  }
+ ]
+}
