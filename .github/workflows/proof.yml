@@ -1,0 +1,32 @@
+# The public proof, re-run on every push.
+#
+# Three commands, the same ones a buyer runs locally:
+#   1. prototype selftest      — 26 gates, incl. "the stub can never say VERIFIED"
+#   2. browser demo core gates — 17 gates, incl. "no stamp without exact held-out proof"
+#   3. eval grade (pinned)     — zero FALSE STAMPS on the frozen engine outputs
+#
+# grade.py exits 1 on any false stamp and 2 on a tampered freeze, so a red
+# badge here means the headline claim failed in public. That is the point.
+name: proof
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numpy (used by one prototype gate; pure-Python fallback exists)
+        run: pip install numpy
+      - name: Prototype selftest (expect 26/26)
+        run: python3 prototype/primus_prototype.py selftest
+      - name: Browser demo core selftest (expect 17/17)
+        run: python3 prototype/browser_core.py selftest
+      - name: Grade frozen engine outputs against the pinned OEIS snapshot (expect 0 false stamps)
+        run: python3 eval/grade.py --cache eval/oeis_snapshot_2026-07-07.json
