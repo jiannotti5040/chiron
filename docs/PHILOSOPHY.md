@@ -1,24 +1,22 @@
 # Why Chiron refuses
 
-Every other tool in this space is built to answer. Chiron is built to answer
-*or refuse*, and to know the difference exactly. That single inversion is the
-whole design.
+Chiron is built to answer *or refuse* within an exact, stated boundary. That is
+the design: a candidate is not accepted just because it looks plausible.
 
-## The one inviolable property: zero false verifications
+## The target property: no unsupported verifications
 
-A change to Chiron that makes any engine stamp something it cannot exactly prove
-is wrong — even if every benchmark number improves. This is not a tuning
-preference; it is the contract. The entire value of a `verified` stamp is that a
-lie is never allowed to stand: the stamp is policed by live external testing,
-and on the occasions that testing has caught a false stamp, the miss was
-published the same night and fixed at the root — never quietly absorbed. The
-current external battery grades 44 verified, all correct, zero false. A stamp
-whose failures are hunted, published, and repaired in the open is the only kind
-whose true stamps you can tell from luck.
+A change that makes an engine stamp something it cannot exactly prove is a
+defect — even if every benchmark number improves. This is not a tuning
+preference; it is the contract. The value of a `verified` stamp depends on
+external tests that can catch false ones. The current published frozen
+evaluation grades **22 stamped / 22 externally correct / 0 false stamps / 12
+refusals**. An earlier 109-sequence sweep caught three false stamps; the misses
+were published, repaired, and re-run with 44 verified and zero false. That
+record is evidence of a process, not a claim of infallibility.
 
-So Chiron would rather say **REFUSED** than risk a false **VERIFIED**. Refusal is
-a feature, not a failure. A calculator that is right 99% of the time is useless
-for anything that matters, because you never know which 1% you're holding.
+So Chiron would rather say **REFUSED** than issue an unsupported **VERIFIED**.
+Refusal is a feature, not a failure, when the alternative is a result that
+cannot carry its own evidence.
 
 ## What "exact" means here
 
