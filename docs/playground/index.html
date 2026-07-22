@@ -856,6 +856,30 @@ document.getElementById("gates-btn").addEventListener("click", async () => {
   btn.disabled = false;
 });
 
+// ---- privacy-friendly analytics (GoatCounter — no cookies, no personal data) ----
+// Turn it on: sign up free at goatcounter.com, pick a code, put it below.
+// Empty string = OFF (nothing loads, zero requests, zero tracking).
+const GC_CODE = "";  // e.g. "chiron"  ->  https://chiron.goatcounter.com
+if (GC_CODE) {
+  const gs = document.createElement("script");
+  gs.async = true; gs.src = "//gc.zgo.at/count.js";
+  gs.setAttribute("data-goatcounter", "https://" + GC_CODE + ".goatcounter.com/count");
+  document.head.appendChild(gs);
+}
+function track(name) {
+  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title: name, event: true }); } catch (e) {}
+}
+// which examples people run, when they switch to the real engine, and Pricing clicks
+document.addEventListener("click", (e) => {
+  const t = e.target.closest && e.target.closest("a, button"); if (!t) return;
+  const href = (t.getAttribute && t.getAttribute("href")) || "";
+  if (/PRICING\.md/i.test(href)) track("click:pricing");
+  else if (/\/eval/i.test(href)) track("click:eval");
+  else if (t.classList && t.classList.contains("preset")) track("preset:" + (t.textContent || "").trim().split("\n")[0].slice(0, 24));
+  else if (t.closest && t.closest("#engine-toggle")) track("engine:" + (t.dataset ? t.dataset.engine : ""));
+  else if (t.id === "run") track("run:" + (typeof engine !== "undefined" ? engine : ""));
+}, true);
+
 init();
 </script>
 </body>
