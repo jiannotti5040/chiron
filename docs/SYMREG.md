@@ -13,11 +13,19 @@ library versions, which matched the original runs exactly.
 
 ## Protocol
 
-Same as the external validation: both systems see the **first 12 terms** of
-each of 29 live-fetched OEIS sequences (corpus fetched 2026-07-04, before the
-newest engine layer existed); the grade is **exact** prediction of the next 4
-terms. Primus may refuse; the raw regression configurations evaluated here emit
-a candidate on every row.
+Both systems see the **first 12 terms** of each of 29 live-fetched OEIS
+sequences (corpus fetched 2026-07-04, before the newest engine layer existed);
+the grade is **exact** prediction of the next 4 terms. Primus may refuse; the
+raw regression configurations evaluated here emit a candidate on every row.
+
+> **These counts are not the `oeis_live.py` counts, and should not be added to
+> them.** [`BATTERIES.md`](BATTERIES.md) records the external OEIS validation as
+> *20 verified / 0 false / n=29* — a different battery with a different scoring
+> rule (it counts every row the engine stamped and external data then confirmed).
+> The head-to-head below scores only **exact 4/4 continuation under the shared
+> comparison harness**, which is stricter, so its Primus column reads 18. Same
+> corpus size, two different questions. What is identical in both, and is the
+> only claim either makes: **0 wrong stamps.**
 
 ## Primus vs PySR
 

@@ -3,12 +3,12 @@
 Chiron's claims are backed by gate batteries you can run, not by adjectives. This
 page records the current results honestly, including their scope and limits.
 
-## Current build — 2026-07-16, Python 3.14
+## Current build — 2026-07-21, Python 3.14
 
 | Gate battery | Result | What it proves |
 |---|---|---|
 | **Standalone core smoke** (the monolith as one file, no vault beside it) | **5/5** | semic 56/56 · chiron core (incl. JDICert 280/280) · density-emotion 8/8 · semic-energy 8/8 · epistemic 13/13 |
-| **Full folded sweep** (in-repo) | **48/48** | every selftest-bearing module runs green through the fold (49/49 on the 2026-07-21 build — the sweep grows with the spine; the reconciled map of every battery lives in [BATTERIES.md](BATTERIES.md)) |
+| **Full folded sweep** (in-repo) | **49/49** | every selftest-bearing module runs green through the fold (the sweep grows with the spine; the reconciled map of every battery lives in [BATTERIES.md](BATTERIES.md)) |
 | **Invariant-operation stress probes** | **23/23** | recovery, refusal, adversarial inputs, cipher inversion, structural equivalence |
 | **Pipeline composer** | **7/7** | chain/team/swarm compose correctly; an unknown component fails safe; never a false verify |
 | **Documented-command smoke** | **9/9** | every command printed in the manual runs exactly as written |
@@ -18,7 +18,7 @@ page records the current results honestly, including their scope and limits.
 
 The **standalone** number (5/5) is the certified core-engine battery running from
 the single monolith file with no supporting tree. The broader in-repo sweep
-(48/48) includes orchestration and serving modules — live servers, the packaged
+(49/49) includes orchestration and serving modules — live servers, the packaged
 seed, growth/state tooling — which need the full `chiron-vault` install to run.
 We state the standalone claim as exactly what it is: the core engines, proven in
 one file. We do not claim the servers run from the single file, because they
