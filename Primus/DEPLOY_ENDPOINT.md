@@ -1,7 +1,7 @@
 # Deploying the engine endpoint (Fly.io / Render notes)
 
 **Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see LICENSE.md).**
-Status: implemented-and-tested locally (`test_engine_server.py`, 18/18 over
+Status: implemented-and-tested locally (`test_engine_server.py`, 33/33 over
 real HTTP). These are deploy NOTES — nothing below has been provisioned;
 deploying is an explicit owner action.
 
@@ -10,8 +10,11 @@ deploying is an explicit owner action.
 `primus.engine_server` — request in, certificate out. The engine source is
 in the container but is **never serialized**: responses are certificate JSON
 only; exceptions surface as a REFUSED envelope carrying the exception type
-name, never a message or traceback; the only GET route is `/health`; there
-is no file serving of any kind. Hard budgets at the door: 128 KiB bodies,
+name, never a message or traceback; routing is a closed table with no
+catch-all (`GET /`, `GET /health`, and the three tool POSTs — anything else
+is a 404, a wrong method is a 405 with `Allow:`); no error path ever emits
+HTML, a traceback, or an echo of the caller's request; there is no file
+serving of any kind. Hard budgets at the door: 128 KiB bodies,
 the certify/conjecture sequence caps (256 terms), per-IP and global
 rate limits, bounded concurrency — everything over budget is REFUSED.
 
