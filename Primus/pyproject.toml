@@ -36,7 +36,13 @@ primus-mcp = "primus.mcp_server:main"
 primus-serve = "primus.engine_server:main"
 
 [project.urls]
-Homepage = "https://github.com/jiannotti5040/chiron-vault"
+# NOTE: these must all point at PUBLIC destinations. chiron-vault is private;
+# linking it from PyPI sends every visitor to a 404.
+Homepage = "https://github.com/jiannotti5040/chiron"
+Repository = "https://github.com/jiannotti5040/chiron"
+Documentation = "https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md"
+"Live demo" = "https://jiannotti5040.github.io/chiron/"
+"Public eval" = "https://github.com/jiannotti5040/chiron/tree/main/eval"
 
 [tool.setuptools]
 # PolyForm NC *requires* the notice to travel with the code: embed the
