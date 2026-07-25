@@ -287,6 +287,12 @@
     padding: 14px; overflow-x: auto; font-family: var(--mono); font-size: .78rem; line-height: 1.55; color: var(--dim);
   }
   .placeholder { color: var(--dimmer); text-align: center; padding: 30px 10px; font-size: .95rem; }
+  .fi-note { color: var(--dimmer); font-size: .84rem; letter-spacing: .02em; margin: 0 0 12px; text-align: center; }
+  #result .verdict + .verdict { margin-top: 14px; }
+  .gap-upsell { margin-top: 14px; border: 1px solid var(--accent); border-left-width: 3px;
+    border-radius: 0 14px 14px 0; background: rgba(124,156,255,.07); padding: 18px 20px; }
+  .gap-upsell b { color: var(--text); }
+  .gap-upsell p { color: var(--dim); font-size: .92rem; margin: 8px 0 14px; }
 
   /* sections */
   section.blk { padding: 40px 0 8px; }
@@ -554,6 +560,7 @@ function updateBootStatus(sourceLength) {
     const size = sourceLength ? " — " + sourceLength.toLocaleString() + " bytes of Python, fetched verbatim" : "";
     bootText.textContent = "demo core live in this tab" + size;
     runBtn.disabled = false;
+    if (!firstImpressionDone) { firstImpressionDone = true; firstImpression(); }
     return;
   }
   boot.classList.remove("ready");
@@ -787,12 +794,69 @@ function render(cert, source) {
     selectEngine("live");
     run(seqBox.value);
   });
-  requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
+  if (!suppressScroll) requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
+}
+
+// Sequences the LICENSED engine stamps but the in-browser demo core cannot.
+// This is a deliberate capability gap (the demo core carries five hypothesis
+// families and a stricter evidence rule), so a refusal here is correct — but
+// a dead end is bad UX. Name the case, say why, and offer the real engine.
+const KNOWN_GAP = [
+  { key: "1,1,2,4,7,13,24,44",     name: "Tribonacci",
+    why: "an order-3 recurrence needs more held-out terms than 12 shown terms leave over, so the demo core's evidence rule refuses to stamp it" },
+  { key: "1,1,2,5,14,42,132,429",  name: "Catalan numbers",
+    why: "these are holonomic, a hypothesis family the demo core does not carry" },
+  { key: "1,1,2,6,24,120,720,5040", name: "factorials",
+    why: "a multiplicative-ratio rule, a hypothesis family the demo core does not carry" },
+];
+
+function knownGap(text) {
+  const k = (text.trim().replace(/,/g, " ").split(/\s+/).slice(0, 8)).join(",");
+  return KNOWN_GAP.find(g => g.key === k) || null;
 }
 
 function runCore(text) {
   const out = pyodide.globals.get("browser_core").collapse_text(text);
-  render(JSON.parse(out), "core");
+  const cert = JSON.parse(out);
+  render(cert, "core");
+  // If the demo core declined something the licensed engine stamps, say so
+  // explicitly and make the live engine one click away.
+  const gap = (cert.status !== "VERIFIED") ? knownGap(text) : null;
+  if (gap) {
+    const el = document.createElement("div");
+    el.className = "gap-upsell";
+    el.innerHTML =
+      `<b>This one is a known limit of the in-browser demo core, not of the engine.</b>` +
+      `<p>You entered <b>${esc(gap.name)}</b>. The demo core declined because ${esc(gap.why)}. ` +
+      `The licensed engine carries that family and stamps this sequence on held-out proof. ` +
+      `It refused rather than guess — which is the contract working, not failing.</p>` +
+      `<button class="button primary" id="gap-live">Run the same input on the licensed engine →</button>`;
+    resultEl.appendChild(el);
+    const btn = document.getElementById("gap-live");
+    if (btn) btn.addEventListener("click", () => { selectEngine("live"); run(text); });
+  }
+}
+
+// First impression: run BOTH a verify and a refusal through the real core on
+// load, so nobody has to type to see what the thing does. Both certificates
+// below are produced by browser_core.py in this tab — neither is canned.
+let suppressScroll = false, firstImpressionDone = false;
+async function firstImpression() {
+  if (!pyodide) return;
+  suppressScroll = true;
+  try {
+    runCore("1 4 9 16 25 36 49 64 81 100 121 144");
+    const verified = resultEl.innerHTML;
+    runCore("2 3 5 7 11 13 17 19 23 29 31 37");
+    const refused = resultEl.innerHTML;
+    resultEl.innerHTML =
+      `<div class="fi-note">Two inputs, one core, two honest answers — both produced just now in this tab:</div>`
+      + verified + refused;
+  } catch (e) {
+    /* leave the placeholder; never fake a result */
+  } finally {
+    suppressScroll = false;
+  }
 }
 
 async function runLive(text) {
