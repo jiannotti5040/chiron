@@ -1,6 +1,6 @@
 # Primus — the installable seed
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](https://github.com/jiannotti5040/chiron/blob/main/LICENSE.md)).**
 
 Primus is the clean, auditable core of the whole vault, now shipped as a
 Python package: **exact invariant recovery with held-out verification and
@@ -32,7 +32,7 @@ inv.explanation     # what was recovered, why it is believed
 and every checkable claim comes back **VERIFIED**, **REFUTED**, or
 **REFUSED**; the free-text remainder is reported as unverifiable, never
 blessed. Checkable kinds (schema `primus.certificate/2`, contract in
-[SCHEMA.md](SCHEMA.md)): exact arithmetic incl. powers, percentages,
+`SCHEMA.md`, shipped in the licensed vault): exact arithmetic incl. powers, percentages,
 primality, binomials, gcd/lcm, modular and date arithmetic, sums/averages,
 sequence continuations, and integer runs. Gate an agent on `refuted == 0`,
 then read `coverage` before trusting the pass — a passing gate means
@@ -131,23 +131,23 @@ python3 test_invariant_engine.py
 **`benchmark.py`** — the proving run: feeds the engine known-generator
 sequences, shows it part of each, and grades whether the rule it recovered
 predicts terms it never saw. Results in
-[BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md): recovery 98%, precision 100%,
+[the reconciled battery map](https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md): recovery 98%, precision 100%,
 zero false confidence.
 
 **`oeis_live.py`** — the *external* proving run: the same held-out discipline
 against sequences fetched live from OEIS rather than a self-generated bank.
 Results and the honest miss list in
-[EXTERNAL_VALIDATION.md](EXTERNAL_VALIDATION.md).
+[the public external eval](https://github.com/jiannotti5040/chiron/tree/main/eval).
 
 **`bench_symreg_external.py` / `bench_pysr.py`** — head-to-head against
 established symbolic-regression baselines (gplearn results in
-[SYMREG_RESULTS.md](SYMREG_RESULTS.md); PySR harness included, runs wherever
+[docs/SYMREG.md](https://github.com/jiannotti5040/chiron/blob/main/docs/SYMREG.md); PySR harness included, runs wherever
 PySR is installed).
 
 **`test_certify_fuzz.py`** — adversarial gates: hostile input must crash
 nothing, respect every work bound, and never flip a planted verdict. The
 fuzzer has already earned its keep twice (a sequence-flood DoS and a
-quadratic scan cost, both found and fixed — see [CHANGELOG.md](CHANGELOG.md)).
+quadratic scan cost, both found and fixed — see `CHANGELOG.md`, shipped in the licensed vault).
 
 **`test_mcp_server.py`** — the MCP protocol handshake against the live
 subprocess.
