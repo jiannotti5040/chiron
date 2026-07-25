@@ -17,7 +17,7 @@ and the other page is stale — tell us.
 | Browser demo core (`prototype/browser_core.py selftest`) | the [playground](playground/)'s verify-or-refuse core: exact arithmetic, stamp only on exact held-out prediction, h ≥ p evidence rule, floats refused not rounded — **strictly weaker than the licensed engine by design** (it refuses Tribonacci/Catalan/factorials the engine stamps) | this repo, one file, stdlib only — the same file the browser runs | **17/17** |
 | **Public eval build** (`eval/grade.py`) | the engine's **headline property itself** — frozen engine outputs (12 terms shown, exact predictions for terms 13..20 or refusal) graded against oeis.org **live**; tamper-evident freeze (commit + sha256); `eval/challenge.py` lets you grade sequences **you** choose | this repo, stdlib only, no engine code | **22 stamped / 22 externally correct / 0 false stamps / 12 refusals** (freeze 2026-07-21) |
 
-| Live engine endpoint (`eval/remote.py --url https://chiron-engine.onrender.com`) | the **real licensed engine** over HTTP — verifies supported sequence inputs or explicitly does not stamp them; source never serialized, rate-limited, refuses over budget | a hosted demo instance (free tier; ~30 s cold start) | 18/18 endpoint gates |
+| Live engine endpoint (`eval/remote.py --url https://chiron-engine.onrender.com`) | the **real licensed engine** over HTTP — verifies supported sequence inputs or explicitly does not stamp them; source never serialized, rate-limited, refuses over budget | a hosted demo instance (free tier; ~30 s cold start) | 33/33 endpoint gates |
 
 That is the pre-purchase verification boundary today: the discipline, a
 working core, the zero-false property verified on the published external
@@ -35,7 +35,7 @@ still arrive only with a license.
 | `primus selftest` | engine 4 + certificate layer 31 + guess-and-prove conjecture layer 16 | **51/51** |
 | Certify fuzz | hostile input: floods, bombs, bounds, noise-stability, determinism | **16/16** |
 | MCP handshake | the live server process over real stdio JSON-RPC | **11/11** |
-| HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): verify/refuse round-trips, over-budget refusals at the certify bounds, rate limits, auth, and the no-leak rule (no traceback or source path in any hostile response) | **18/18** |
+| HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): verify/refuse round-trips, over-budget refusals at the certify bounds, rate limits, auth, and the no-leak rule (no traceback or source path in any hostile response); closed route table (404 / 405 + Allow), adversarial-JSON bounded refusal, log hygiene | **33/33** |
 | Twin cross-lock | exact combinatorial corpus agreement | **12/12** |
 | Certify property grid | soundness invariant across a generated grid | pass, 0 violations |
 | Internal benchmark | recovery + precision, zero false confidence | pass |
@@ -58,7 +58,14 @@ still arrive only with a license.
 
 | Battery | Covers | Count |
 |---|---|---|
-| UMA pytest suite | dynamics/RSLS/semantic + **exact verification of the 2026 Jacobian-conjecture counterexample** (det J ≡ −2 as a polynomial identity; exact two-point collision; controls) | **136/136** (3 `@slow` deselected) |
+| UMA pytest suite | dynamics/RSLS/semantic + both AI-produced conjecture refutations below | **151/151** (3 `@slow` deselected) — run 2026-07-23 |
+| ↳ **2026 Jacobian-conjecture counterexample** (Alpöge / Claude Fable 5) | det J ≡ −2 as an exact polynomial identity over ℚ; exact two-point collision denying injectivity; positive + discrimination controls | **12/12** |
+| ↳ **2026 Dinitz–Garg–Goemans cost-conjecture counterexample** (Rybin / GPT-5.6 Pro) | fractional flow feasible at cost **58**; all 2³ unsplittable routings enumerated, cheapest congestion-admissible one costs **60**; exhaustive sweep of the published family (**456/456** admissible instances refute); zero-cost and infeasible-flow discrimination controls | **15/15** |
+
+Both counterexample batteries are exact-integer / exact-rational, with no
+solver, no floats and no network. Their **outputs** — including what they
+refuse to certify (provenance, minimality, the Jacobian n = 2 case, peer
+review) — are published at [`AI_CLAIMS.md`](AI_CLAIMS.md).
 
 ## How to read the two tiers honestly
 
