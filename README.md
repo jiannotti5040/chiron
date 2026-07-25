@@ -23,6 +23,27 @@ On the current published frozen external eval (2026-07-21): **22 stamped / 22 ex
 
 ---
 
+## Worked example: two conjectures fell to AI this month. We checked both.
+
+In July 2026 an AI system produced a counterexample to the **Jacobian conjecture**
+(open since 1939); days later another produced one to **Goemans' unsplittable-flow
+cost conjecture** (open since the 1990s). Both were announced ahead of peer review.
+Somebody still has to decide whether the arithmetic is real.
+
+| | Checked | Result |
+|---|---|---|
+| **Jacobian** (Alpöge / Claude Fable 5) | `det J ≡ −2` as an exact polynomial identity over ℚ; a two-point rational collision denying injectivity | **12/12 gates** |
+| **Dinitz–Garg–Goemans** (Rybin / GPT-5.6 Pro) | fractional flow feasible at cost **58**; all 2³ unsplittable routings enumerated; cheapest congestion-admissible one costs **60** | **15/15 gates** |
+| **The whole DGG family** | every admissible instance with `b ≤ 25` — **456** of them — refutes, exhaustively, in exact integers | **456/456** |
+
+Exact rational and integer arithmetic. No solver, no floats, no network. And
+five things deliberately **left uncertified**: provenance, minimality, the
+Jacobian `n = 2` case, the DGG theorem itself, and peer review.
+
+**[Read what was verified — and what was refused →](docs/AI_CLAIMS.md)**
+
+---
+
 ## Verify it yourself — three depths, no purchase
 
 Each tier says exactly what it proves and what it does not. That restraint is the product.
@@ -75,7 +96,7 @@ python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 
 ```
 
 The licensed engine, served over HTTP — certificate out, source never serialized, rate-limited,
-refuses over budget (18/18 endpoint gates). It's a free-tier demo instance (~30 s cold start after
+refuses over budget (33/33 endpoint gates). It's a free-tier demo instance (~30 s cold start after
 idle); `remote.py` works against any deployment.
 
 ### 30 minutes — run every public battery and read the reconciled map
@@ -219,7 +240,7 @@ Everything above is backed by gates you can run, not adjectives. On the current 
 
 **Verify the headline property before paying: [`eval/`](eval/)** — the engine's frozen predictions on 34 public OEIS sequences (12 terms shown, 8 held-out terms per stamp), graded live against oeis.org by a stdlib script, tamper-evident, **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals** on the 2026-07-21 freeze. `eval/challenge.py` lets you run the same protocol on sequences *you* choose. No engine code ships; outputs are what zero-false is a property of.
 
-**How it compares to symbolic regression: [`docs/SYMREG.md`](docs/SYMREG.md)** — Primus 18 exact / 0 wrong / 11 refused vs PySR's 5 exact / 24 wrong on the same published live-OEIS protocol; both the dated original runs and a 2026-07-21 reproduction have identical counts. The distinction is not that a user cannot wrap another tool with an abstention rule; it is that held-out exact verification and native refusal are part of Chiron’s contract.
+**How it compares to symbolic regression: [`docs/SYMREG.md`](docs/SYMREG.md)** — under the head-to-head harness (stricter than the `oeis_live` battery: exact 4/4 continuation only, so its Primus column reads 18 where BATTERIES records 20 verified) Primus scores 18 exact / 0 wrong / 11 refused against PySR's 5 exact / 24 wrong; both the dated original runs and a 2026-07-21 reproduction have identical counts. The distinction is not that a user cannot wrap another tool with an abstention rule; it is that held-out exact verification and native refusal are part of Chiron’s contract.
 
 **Every gate count in this project, reconciled on one page: [`docs/BATTERIES.md`](docs/BATTERIES.md)** — each battery, what it covers, where it runs (public prototype / vault / single file), and which tier you can verify before paying. If two numbers ever disagree, that page wins.
 
