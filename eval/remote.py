@@ -30,11 +30,21 @@ import argparse
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.request
 
 
-def call(url: str, path: str, body=None, timeout: int = 120):
+#: the public demo runs on a free tier that suspends when idle. The first
+#: request after a nap has to wait for a container to boot, which can look
+#: like a hang or an empty reply. Retry politely and SAY SO, rather than
+#: leaving the caller staring at nothing.
+COLD_START_TRIES = 3
+COLD_START_BACKOFF_S = 15
+
+
+def _once(url: str, path: str, body, timeout: int):
+    """One attempt. Returns (status, obj) or raises for a transport failure."""
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(url.rstrip("/") + path, data=data,
                                  method="POST" if data else "GET")
@@ -44,12 +54,41 @@ def call(url: str, path: str, body=None, timeout: int = 120):
         req.add_header("Authorization", f"Bearer {token}")
     try:
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return r.status, json.loads(r.read().decode())
+            raw = r.read().decode()
+            if not raw.strip():
+                raise ValueError("empty body")           # cold start: retry
+            return r.status, json.loads(raw)
     except urllib.error.HTTPError as e:
+        # An HTTP error carrying a JSON refusal envelope is a RESULT, not a
+        # failure — the endpoint answered. Return it; do not retry.
         try:
             return e.code, json.loads(e.read().decode())
         except Exception:
+            if e.code in (502, 503, 504):               # gateway still waking
+                raise
             return e.code, {"status": "TRANSPORT_ERROR", "reason": f"HTTP {e.code}"}
+
+
+def call(url: str, path: str, body=None, timeout: int = 120):
+    """Call the endpoint, tolerating a free-tier cold start.
+
+    Never hangs silently and never dumps a traceback: on repeated failure it
+    returns a plain refusal-shaped object naming the transport problem only.
+    """
+    last = None
+    for attempt in range(1, COLD_START_TRIES + 1):
+        try:
+            return _once(url, path, body, timeout)
+        except Exception as exc:                         # transport-level only
+            last = type(exc).__name__
+            if attempt < COLD_START_TRIES:
+                print(f"waking the free-tier demo instance (~30s)… "
+                      f"attempt {attempt}/{COLD_START_TRIES}", file=sys.stderr)
+                time.sleep(COLD_START_BACKOFF_S)
+    return 0, {"status": "TRANSPORT_ERROR",
+               "reason": (f"no response after {COLD_START_TRIES} attempts "
+                          f"({last}). The demo instance may be down; the "
+                          f"endpoint is a free-tier convenience, not an SLA.")}
 
 
 def main(argv=None) -> int:
