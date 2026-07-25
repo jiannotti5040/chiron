@@ -65,8 +65,9 @@ SATOR is distinguishable     : True
 
 ## What's coded and gated (26/26 green)
 
-The prototype's own gate battery — honestly **26 gates**, *not* the vault's real
-97 — enforces:
+The prototype's own gate battery — honestly **26 gates**, and not the vault's
+batteries, which are reconciled in
+[../docs/BATTERIES.md](../docs/BATTERIES.md) — enforces:
 
 - **L1/L2 Membrane** — the Well is the sole I/O valve; exactly two destinations
   (Well, Congress); publication must pass the JDICert valve.
