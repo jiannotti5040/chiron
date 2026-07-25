@@ -2,6 +2,56 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.6.3 — 2026-07-25
+
+**The endpoint's front door is a closed table, and every error path is a
+clean refusal.** Hardening only — no stamping path touched, no verdict
+changed. Prompted by production log evidence (an unmapped skill-shaped path
+being probed, and a platform health checker polling `/health` ~1×/sec).
+
+- **Explicit route table, no catch-all.** `GET /`, `GET /health`,
+  `POST /collapse|/certify|/conjecture` and nothing else. An unmapped path
+  is `404 {"error":"not found","valid_routes":[…]}`; a mapped path with the
+  wrong method is `405 {"error":"method not allowed","allow":["POST"]}` with
+  a matching `Allow:` response header. `GET /` is a new short banner
+  (routes + budgets, nothing about the box). Query strings no longer defeat
+  routing — `/health?probe=1` is `/health` (it used to 404).
+- **The stdlib's HTML error page is gone.** `PUT`/`TRACE`/unknown verbs used
+  to fall through to `http.server`'s default page, which returns `501` with
+  `Content-Type: text/html` and **echoes the caller's method back**
+  (`Message: Unsupported method ('PUT').`). All error paths now emit
+  fixed-string JSON; nothing derived from the request is ever reflected.
+- **Adversarial JSON is now a bounded refusal, not a dropped connection.** A
+  ~120 KB body of 60 000-deep nested arrays raised an uncaught
+  `RecursionError` inside `json.loads`, killing the connection with no
+  response and printing a traceback server-side. It is now a clean `400`.
+- **Top-level handler.** Any unexpected exception returns
+  `500 {"error":"internal error"}`; the detail and traceback go to the
+  operator's stderr and nowhere else. Verified by fault injection.
+- **Log hygiene.** `/health` is no longer access-logged (set
+  `CHIRON_LOG_HEALTH=1` to restore), so a 1/sec platform probe cannot bury
+  real traffic — the access log is a usable human-detector again. Real
+  requests log one structured line: client IP, method, normalized path
+  (never the query string), status, and the input **length + a truncated
+  SHA-256** — never the caller's input verbatim. A trusted
+  `X-Forwarded-For` is scrubbed to address characters so it cannot forge a
+  log line.
+- **Rate limit verified, not assumed.** The documented per-IP budget was
+  already wired and enforcing; the battery now *proves* it trips with a
+  clean JSON `429` on all three tools (`/collapse`, `/certify`,
+  `/conjecture`) rather than on `/collapse` alone.
+- CORS behaviour is unchanged and still gated: `Allow-Origin *` on every
+  response class including errors, `OPTIONS` preflight → 204 on all five
+  routed paths. The browser playground keeps working.
+- `test_engine_server.py`: **33/33** (was 20/20 — 13 new gates). The new
+  gates were checked against the pre-hardening server and 12 of them fail
+  there, so they bite rather than decorate.
+- Honest caveat: the reported "unmapped path returned 200" catch-all does
+  **not** reproduce against this source — `/cockroachdb:reviewing-cluster-health`
+  already returned 404 here. The closed route table and its regression gate
+  were added anyway; if a 200 was really observed in production, it came
+  from something in front of this process, not from it.
+
 ## 0.6.2 — 2026-07-21
 
 **The endpoint speaks CORS — the browser playground can call the real engine

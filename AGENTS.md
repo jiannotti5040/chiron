@@ -23,7 +23,7 @@ cd Primus
 python3 test_invariant_engine.py         # stress gates (55/55)
 python3 test_certify_fuzz.py             # adversarial certify gates (13/13)
 python3 test_mcp_server.py               # MCP protocol gates (10/10)
-python3 test_engine_server.py            # HTTP endpoint gates (18/18)
+python3 test_engine_server.py            # HTTP endpoint gates (33/33)
 python3 benchmark.py                     # internal proving run
 python3 oeis_live.py                     # EXTERNAL validation (cached corpus)
 python3 drift_check.py                   # seed vs Chiron differential
