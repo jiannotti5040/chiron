@@ -32,16 +32,23 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[0] / "Primus" / "src"))
 
 from oeis_novelty import (  # noqa: E402
-    MIN_DATA_TERMS, MIN_GROWTH_RATIO, SHOWN_TERMS, NAME_PATTERNS, growth_ratio,
+    MIN_DATA_TERMS, MIN_GROWTH_RATIO, SHOWN_TERMS, documented, growth_ratio,
 )
 
 CACHE = HERE / ".oeis_cache"
 
+
 # Keywords are not in the bulk dumps, so the keyword gate runs in stage 2.
-# What IS available offline: the terms and the name -- and the name is where
-# the previous attempt's blind spot was, so it is checked here, for free,
-# across the whole corpus.
-NAME_RE = re.compile("|".join(f"(?:{p})" for p in NAME_PATTERNS), re.I)
+# What IS available offline is the name -- and the name is exactly where the
+# previous attempt was blind, so it is checked here, for free, corpus-wide.
+#
+# This calls the SAME documented() that Filter 0/0b validated, restricted to
+# the name field, rather than a second hand-written regex. That matters: a
+# separately-tuned pre-filter could silently drop a sequence stage 2 would
+# have kept, and no gate would ever catch it. By construction this drops only
+# what stage 2 would drop on name evidence alone.
+def name_states_rule(nm):
+    return documented({"name": nm})[0]
 
 # Names that mark a structurally trivial class, catchable without keywords.
 TRIVIAL_NAME_RE = re.compile(
@@ -124,7 +131,7 @@ def main():
         if TRIVIAL_NAME_RE.search(nm):
             by_trivial += 1
             continue
-        if NAME_RE.search(nm):
+        if name_states_rule(nm):
             by_name += 1
             continue
         kept.append((num, mc, nm))
