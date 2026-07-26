@@ -311,6 +311,59 @@ CONTROLS_DOCUMENTED = [
 ]
 
 
+# Filter 0 above only proves the detector has no FALSE NEGATIVES. A detector
+# that called everything documented would pass it perfectly and then report
+# zero survivors -- a vacuous zero. These are the opposite control: entries
+# with no rule stated anywhere, which the detector must call UNDOCUMENTED.
+# Without this, a null result from this search would mean nothing.
+CONTROLS_UNDOCUMENTED = [
+    ("bare definitional name, nothing else",
+     {"name": "Number of ways to place n nonattacking queens on an n X n board.",
+      "keyword": "nonn,hard"}),
+    ("prose comment, no rule",
+     {"name": "Primes p such that p+2 is also prime.",
+      "comment": ["These are the lesser of twin primes. - _Some Author_"],
+      "keyword": "nonn"}),
+    ("xref that is only a Cf. list",
+     {"name": "Number of distinct prime factors of n!.",
+      "xref": ["Cf. A000142, A001221."], "keyword": "nonn"}),
+    ("program that is a brute-force search, no closed form",
+     {"name": "Numbers whose digits sum to a perfect square.",
+      "program": ['(PARI) for(n=1,100, if(issquare(sumdigits(n)), print1(n", ")))'],
+      "keyword": "nonn"}),
+    ("example showing terms, not a formula",
+     {"name": "Number of partitions of n into distinct parts.",
+      "example": ["a(5) = 3 because 5 = 4+1 = 3+2."], "keyword": "nonn"}),
+    ("link with no recurrence index",
+     {"name": "Number of self-avoiding walks on a square lattice.",
+      "link": ['A. Author, <a href="/A001411/b001411.txt">Table of n, a(n)</a>'],
+      "keyword": "nonn,walk"}),
+]
+
+
+def filter0b():
+    """The detector must also be able to say NO, or a zero result is vacuous."""
+    print("\n" + "=" * 74)
+    print("FILTER 0b -- the detector must DISCRIMINATE, not just say 'documented'")
+    print("=" * 74)
+    bad = []
+    for why, e in CONTROLS_UNDOCUMENTED:
+        ok, reason = documented(e)
+        print(f"  [{'FAIL' if ok else 'PASS'}  ] {why}")
+        if ok:
+            print(f"           wrongly documented via: {reason[:70]}")
+            bad.append(why)
+    print()
+    if bad:
+        print(f"FILTER 0b FAILED -- {len(bad)} false positives. The detector is")
+        print("over-broad, so a zero result would be VACUOUS. ABANDONING.")
+        return False
+    print(f"FILTER 0b PASSED -- {len(CONTROLS_UNDOCUMENTED)}/"
+          f"{len(CONTROLS_UNDOCUMENTED)} correctly NOT-documented.")
+    print("The detector discriminates both ways; a zero result is meaningful.")
+    return True
+
+
 def filter0():
     print("=" * 74)
     print("FILTER 0 -- validate the detector against KNOWN-DOCUMENTED entries")
@@ -340,8 +393,7 @@ def filter0():
         return False
     print(f"FILTER 0 PASSED -- {len(CONTROLS_DOCUMENTED)}/{len(CONTROLS_DOCUMENTED)} "
           "documented entries correctly classified.")
-    print("The detector may now be trusted for a real run.")
-    return True
+    return filter0b()
 
 
 # ---------------------------------------------------------------------------
