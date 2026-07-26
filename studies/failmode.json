@@ -1,0 +1,62 @@
+{
+ "arithmetic": [
+  51,
+  20
+ ],
+ "linear_recurrence_order2": [
+  31,
+  3
+ ],
+ "linear_recurrence_order3": [
+  89,
+  4
+ ],
+ "geometric": [
+  6,
+  0
+ ],
+ "polynomial_deg2": [
+  46,
+  5
+ ],
+ "holonomic_r1_p1": [
+  10,
+  4
+ ],
+ "polynomial_deg3": [
+  71,
+  0
+ ],
+ "polynomial_deg4": [
+  52,
+  0
+ ],
+ "holonomic_r1_p2": [
+  9,
+  8
+ ],
+ "holonomic_r2_p1": [
+  80,
+  18
+ ],
+ "polynomial_deg5": [
+  21,
+  0
+ ],
+ "polynomial_deg6": [
+  27,
+  0
+ ],
+ "periodic_4": [
+  5,
+  0
+ ],
+ "periodic_5": [
+  4,
+  3
+ ],
+ "periodic_3": [
+  2,
+  1
+ ]
+}

@@ -1,0 +1,6806 @@
+{
+ "total_confirmed": 12581,
+ "protocol": "14 terms shown; rule then predicted every remaining OEIS term exactly",
+ "top": [
+  {
+   "anum": "A328943",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 116,
+   "params": "{'unit': [2.0, 3.0, 4.0, 5.0], 'period': 4}",
+   "first_terms": [
+    2,
+    3,
+    4,
+    5,
+    2,
+    3,
+    4,
+    5
+   ]
+  },
+  {
+   "anum": "A131670",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 103,
+   "params": "{'unit': [1.0, 0.0, -1.0, 0.0, 1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    0,
+    1,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A131729",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 100,
+   "params": "{'unit': [0.0, 1.0, -1.0, 1.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    1,
+    0,
+    1,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A383449",
+   "model_class": "holonomic_r1_p3",
+   "shown": 14,
+   "heldout_confirmed": 97,
+   "params": "{'poly_coeffs': [[426, 277, -256, 33], [-426, 213, -32, 5]], 'order': 1, 'pdeg': 3, 'exact': True}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    5,
+    13,
+    25,
+    25,
+    0
+   ]
+  },
+  {
+   "anum": "A230074",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 96,
+   "params": "{'unit': [1.0, -2.0, 1.0, 0.0], 'period': 4}",
+   "first_terms": [
+    1,
+    -2,
+    1,
+    0,
+    1,
+    -2,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A102560",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 95,
+   "params": "{'unit': [1.0, 0.0, 0.0, -1.0], 'period': 4}",
+   "first_terms": [
+    1,
+    0,
+    0,
+    -1,
+    1,
+    0,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A185453",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 95,
+   "params": "{'unit': [1.0, 3.0, 8.0, 4.0, 2.0], 'period': 5}",
+   "first_terms": [
+    1,
+    3,
+    8,
+    4,
+    2,
+    1,
+    3,
+    8
+   ]
+  },
+  {
+   "anum": "A131800",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 94,
+   "params": "{'unit': [1.0, 2.0, 5.0, 6.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    5,
+    6,
+    1,
+    2,
+    5,
+    6
+   ]
+  },
+  {
+   "anum": "A131806",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 94,
+   "params": "{'unit': [0.0, 2.0, 4.0, 6.0], 'period': 4}",
+   "first_terms": [
+    0,
+    2,
+    4,
+    6,
+    0,
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "anum": "A132951",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 94,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, 3.0, 1.0]}",
+   "first_terms": [
+    1,
+    3,
+    1,
+    -1,
+    -3,
+    -1,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A211662",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 93,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[-1.3352716951272773e-14, 0.7000000000000018, -0.10000000000000028], [-1.1242780972965853e-14, -0.699999999999998, 0.09999999999999999]]}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A069782",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 93,
+   "params": "{'newton_coeffs': [1, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A261012",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 92,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [-1.0, 0.0, 1.0]}",
+   "first_terms": [
+    -1,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A274981",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 92,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [1.0, 4.0]}",
+   "first_terms": [
+    1,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A163804",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 92,
+   "params": "{'coeffs': [0.0, -1.0, -1.0], 'seeds': [1.0, -1.0, 1.0]}",
+   "first_terms": [
+    1,
+    -1,
+    1,
+    0,
+    -1,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A100401",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 3.0, 9.0]}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9
+   ]
+  },
+  {
+   "anum": "A100402",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 4.0, 7.0], 'period': 3}",
+   "first_terms": [
+    1,
+    4,
+    7,
+    1,
+    4,
+    7,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A100403",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 6.0, 9.0]}",
+   "first_terms": [
+    1,
+    6,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9
+   ]
+  },
+  {
+   "anum": "A101272",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'order': 2, 'coeff_degree': 1, 'polys': [[-0.39605901719066866, 0.09901475429766737], [0.7921180343813391, -0.1980295085953354], [-0.3960590171906703, 0.09901475429766794]]}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A102283",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, -1.0], 'period': 3}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    0,
+    1,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A103947",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, 4.0, 3.0]}",
+   "first_terms": [
+    1,
+    4,
+    3,
+    4,
+    3,
+    4,
+    3,
+    4
+   ]
+  },
+  {
+   "anum": "A105384",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, -1.0, 0.0, 0.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    0,
+    0,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "anum": "A106510",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, -1.0], 'seeds': [1.0, 1.0, -1.0]}",
+   "first_terms": [
+    1,
+    1,
+    -1,
+    0,
+    1,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A109718",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 0.0, 3.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    0,
+    3
+   ]
+  },
+  {
+   "anum": "A113311",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 3.0, 4.0]}",
+   "first_terms": [
+    1,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "anum": "A115291",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'poly_coeffs': [[2, -1], [-4, 0], [2, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    4,
+    7,
+    8,
+    8,
+    8,
+    8,
+    8
+   ]
+  },
+  {
+   "anum": "A117569",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 0.0], 'seeds': [1.0, 1.0, 0.0]}",
+   "first_terms": [
+    1,
+    1,
+    0,
+    -1,
+    0,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A128834",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [0.0, 1.0]}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A130706",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [1.0, 2.0]}",
+   "first_terms": [
+    1,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A130713",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, 2.0, 1.0]}",
+   "first_terms": [
+    1,
+    2,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A130779",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, 1.0, 2.0]}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A131026",
+   "model_class": "periodic_6",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [2.0, 2.0, 1.0, 0.0, 0.0, 1.0], 'period': 6}",
+   "first_terms": [
+    2,
+    2,
+    1,
+    0,
+    0,
+    1,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A131027",
+   "model_class": "periodic_6",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [4.0, 3.0, 1.0, 0.0, 1.0, 3.0], 'period': 6}",
+   "first_terms": [
+    4,
+    3,
+    1,
+    0,
+    1,
+    3,
+    4,
+    3
+   ]
+  },
+  {
+   "anum": "A131028",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [7.0, 4.0, 1.0]}",
+   "first_terms": [
+    7,
+    4,
+    1,
+    1,
+    4,
+    7,
+    7,
+    4
+   ]
+  },
+  {
+   "anum": "A131598",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [2.0, 5.0, 8.0], 'period': 3}",
+   "first_terms": [
+    2,
+    5,
+    8,
+    2,
+    5,
+    8,
+    2,
+    5
+   ]
+  },
+  {
+   "anum": "A131712",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 3.0, 7.0, 9.0], 'period': 4}",
+   "first_terms": [
+    1,
+    3,
+    7,
+    9,
+    1,
+    3,
+    7,
+    9
+   ]
+  },
+  {
+   "anum": "A131743",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 0.0, 2.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    0,
+    2,
+    0,
+    1,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A131756",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [2.0, -1.0, 3.0], 'period': 3}",
+   "first_terms": [
+    2,
+    -1,
+    3,
+    2,
+    -1,
+    3,
+    2,
+    -1
+   ]
+  },
+  {
+   "anum": "A133368",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 1.0, 3.0, 7.0, 3.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    3,
+    7,
+    3,
+    1,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A134451",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [0.0, 1.0, 2.0]}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    1,
+    2,
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A135033",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [2.0, 4.0, 6.0, 8.0, 0.0], 'period': 5}",
+   "first_terms": [
+    2,
+    4,
+    6,
+    8,
+    0,
+    2,
+    4,
+    6
+   ]
+  },
+  {
+   "anum": "A138034",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 1.0, 3.0]}",
+   "first_terms": [
+    1,
+    1,
+    3,
+    2,
+    -1,
+    -3,
+    -2,
+    1
+   ]
+  },
+  {
+   "anum": "A141518",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 3.0, 5.0, 7.0, 9.0], 'period': 5}",
+   "first_terms": [
+    1,
+    3,
+    5,
+    7,
+    9,
+    1,
+    3,
+    5
+   ]
+  },
+  {
+   "anum": "A236213",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'poly_coeffs': [[-2, 1], [1, -1], [1, 0]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    4,
+    2,
+    6,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A287765",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 3.0, 5.0, 3.0], 'period': 4}",
+   "first_terms": [
+    1,
+    3,
+    5,
+    3,
+    1,
+    3,
+    5,
+    3
+   ]
+  },
+  {
+   "anum": "A053796",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 2.0, 1.0, 2.0, 0.0], 'period': 5}",
+   "first_terms": [
+    0,
+    2,
+    1,
+    2,
+    0,
+    0,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A063042",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [3.0, 7.0, 36.0, 18.0, 9.0], 'period': 5}",
+   "first_terms": [
+    3,
+    7,
+    36,
+    18,
+    9,
+    3,
+    7,
+    36
+   ]
+  },
+  {
+   "anum": "A068073",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 2.0, 3.0, 2.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    2,
+    1,
+    2,
+    3,
+    2
+   ]
+  },
+  {
+   "anum": "A069705",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 2.0, 4.0], 'period': 3}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    1,
+    2,
+    4,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A070402",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 2.0, 4.0, 3.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    3,
+    1,
+    2,
+    4,
+    3
+   ]
+  },
+  {
+   "anum": "A070403",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 7.0, 4.0], 'period': 3}",
+   "first_terms": [
+    1,
+    7,
+    4,
+    1,
+    7,
+    4,
+    1,
+    7
+   ]
+  },
+  {
+   "anum": "A076824",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 1.0, 3.0, 5.0, 3.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    3,
+    5,
+    3,
+    1,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A076839",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 1.0, 2.0, 3.0, 2.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    3,
+    2,
+    1,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A077750",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 2.0, 6.0, 4.0], 'period': 4}",
+   "first_terms": [
+    0,
+    2,
+    6,
+    4,
+    0,
+    2,
+    6,
+    4
+   ]
+  },
+  {
+   "anum": "A080425",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 2.0, 1.0], 'period': 3}",
+   "first_terms": [
+    0,
+    2,
+    1,
+    0,
+    2,
+    1,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A084099",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 0.0], 'seeds': [1.0, 2.0, 0.0]}",
+   "first_terms": [
+    1,
+    2,
+    0,
+    -2,
+    0,
+    2,
+    0,
+    -2
+   ]
+  },
+  {
+   "anum": "A084104",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [1.0, 4.0, 7.0]}",
+   "first_terms": [
+    1,
+    4,
+    7,
+    7,
+    4,
+    1,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A091086",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 2.0, 5.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    5,
+    0,
+    1,
+    2,
+    5
+   ]
+  },
+  {
+   "anum": "A092202",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 0.0, -1.0, 0.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    0,
+    -1,
+    0,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A094328",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [4.0, 5.0, 7.0, 9.0, 6.0], 'period': 5}",
+   "first_terms": [
+    4,
+    5,
+    7,
+    9,
+    6,
+    4,
+    5,
+    7
+   ]
+  },
+  {
+   "anum": "A096230",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [9.0, 7.0, 5.0, 3.0, 1.0], 'period': 5}",
+   "first_terms": [
+    9,
+    7,
+    5,
+    3,
+    1,
+    9,
+    7,
+    5
+   ]
+  },
+  {
+   "anum": "A010872",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 2.0], 'period': 3}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    0,
+    1,
+    2,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A010882",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 2.0, 3.0], 'period': 3}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    1,
+    2,
+    3,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A152855",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 2.0, 0.0, 2.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    2,
+    0,
+    2,
+    0,
+    1,
+    2,
+    0
+   ]
+  },
+  {
+   "anum": "A152889",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 0.0, 4.0, 0.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    0,
+    4,
+    0,
+    0,
+    1,
+    0,
+    4
+   ]
+  },
+  {
+   "anum": "A152892",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 3.0, 1.0, 0.0, 1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    3,
+    1,
+    0,
+    1,
+    0,
+    3,
+    1
+   ]
+  },
+  {
+   "anum": "A152898",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 4.0, 0.0, 0.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    4,
+    0,
+    0,
+    0,
+    1,
+    4,
+    0
+   ]
+  },
+  {
+   "anum": "A153727",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 4.0, 2.0], 'period': 3}",
+   "first_terms": [
+    1,
+    4,
+    2,
+    1,
+    4,
+    2,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A156174",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, -1.0, 1.0, -1.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    -1,
+    1,
+    -1,
+    0,
+    1,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A156752",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[-4.1240491567615016e-14, 0.6708203932499387, -0.22360679774997808], [1.3046832988172903e-14, -0.6708203932499357, 0.2236067977499778]]}",
+   "first_terms": [
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  {
+   "anum": "A163805",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 0.0], 'seeds': [1.0, -1.0, 0.0]}",
+   "first_terms": [
+    1,
+    -1,
+    0,
+    1,
+    0,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A163806",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 1.0, 1.0]}",
+   "first_terms": [
+    1,
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A163810",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, -1.0, -1.0]}",
+   "first_terms": [
+    1,
+    -1,
+    -1,
+    0,
+    1,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A164360",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [5.0, 4.0, 3.0], 'period': 3}",
+   "first_terms": [
+    5,
+    4,
+    3,
+    5,
+    4,
+    3,
+    5,
+    4
+   ]
+  },
+  {
+   "anum": "A166926",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, 2.0, 4.0]}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A167176",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 1.0, 8.0], 'period': 3}",
+   "first_terms": [
+    0,
+    1,
+    8,
+    0,
+    1,
+    8,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A167373",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, -1.0], 'seeds': [1.0, 3.0, -1.0]}",
+   "first_terms": [
+    1,
+    3,
+    -1,
+    -2,
+    3,
+    -1,
+    -2,
+    3
+   ]
+  },
+  {
+   "anum": "A167876",
+   "model_class": "holonomic_r1_p1",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'poly_coeffs': [[-6, 2], [2, 1]], 'order': 1, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    3,
+    4,
+    2,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A167891",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, 4.0, 2.0]}",
+   "first_terms": [
+    1,
+    4,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A168608",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [4.0, 9.0, 6.0]}",
+   "first_terms": [
+    4,
+    9,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A169585",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [1.0, 3.0]}",
+   "first_terms": [
+    1,
+    3,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A176742",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'coeffs': [0.0, -1.0, 0.0], 'seeds': [1.0, 0.0, -2.0]}",
+   "first_terms": [
+    1,
+    0,
+    -2,
+    0,
+    2,
+    0,
+    -2,
+    0
+   ]
+  },
+  {
+   "anum": "A176895",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [1.0, 4.0, 2.0, 4.0], 'period': 4}",
+   "first_terms": [
+    1,
+    4,
+    2,
+    4,
+    1,
+    4,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A177154",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [0.0, 8.0, 6.0, 4.0, 2.0], 'period': 5}",
+   "first_terms": [
+    0,
+    8,
+    6,
+    4,
+    2,
+    0,
+    8,
+    6
+   ]
+  },
+  {
+   "anum": "A180853",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 91,
+   "params": "{'unit': [4.0, 6.0, 9.0, 7.0, 5.0], 'period': 5}",
+   "first_terms": [
+    4,
+    6,
+    9,
+    7,
+    5,
+    4,
+    6,
+    9
+   ]
+  },
+  {
+   "anum": "A130731",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 90,
+   "params": "{'unit': [1.0, 2.0, 0.0, 0.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    0,
+    0,
+    1,
+    2,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A135169",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 90,
+   "params": "{'unit': [1.0, 5.0, 9.0, 5.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    9,
+    5,
+    1,
+    5,
+    9,
+    5
+   ]
+  },
+  {
+   "anum": "A167858",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 89,
+   "params": "{'poly_coeffs': [[-28, -13, 5], [6, 2, 6]], 'order': 1, 'pdeg': 2, 'exact': True}",
+   "first_terms": [
+    3,
+    14,
+    36,
+    36,
+    12,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A130848",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [2.0, 5.0]}",
+   "first_terms": [
+    2,
+    5,
+    3,
+    -2,
+    -5,
+    -3,
+    2,
+    5
+   ]
+  },
+  {
+   "anum": "A132367",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, 1.0, 2.0]}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    -1,
+    -1,
+    -2,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A132429",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'unit': [3.0, 1.0, -1.0, -3.0], 'period': 4}",
+   "first_terms": [
+    3,
+    1,
+    -1,
+    -3,
+    3,
+    1,
+    -1,
+    -3
+   ]
+  },
+  {
+   "anum": "A132708",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [4.0, 2.0, 1.0]}",
+   "first_terms": [
+    4,
+    2,
+    1,
+    -4,
+    -2,
+    -1,
+    4,
+    2
+   ]
+  },
+  {
+   "anum": "A275615",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'unit': [1.0, 9.0, 8.0], 'period': 3}",
+   "first_terms": [
+    1,
+    9,
+    8,
+    1,
+    9,
+    8,
+    1,
+    9
+   ]
+  },
+  {
+   "anum": "A278105",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [3.0, 1.0, 1.0]}",
+   "first_terms": [
+    3,
+    1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A062157",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [0.0, -1.0], 'seeds': [0.0, 1.0]}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A087204",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [2.0, 1.0]}",
+   "first_terms": [
+    2,
+    1,
+    -1,
+    -2,
+    -1,
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A010892",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, 1.0]}",
+   "first_terms": [
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A151798",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 88,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 2.0, 4.0]}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "anum": "A109008",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [4.0, 1.0, 2.0, 1.0], 'period': 4}",
+   "first_terms": [
+    4,
+    1,
+    2,
+    1,
+    4,
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A256958",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'newton_coeffs': [-50, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    -50,
+    -49,
+    -48,
+    -47,
+    -46,
+    -45,
+    -44,
+    -43
+   ]
+  },
+  {
+   "anum": "A070352",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [1.0, 3.0, 4.0, 2.0], 'period': 4}",
+   "first_terms": [
+    1,
+    3,
+    4,
+    2,
+    1,
+    3,
+    4,
+    2
+   ]
+  },
+  {
+   "anum": "A070367",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [1.0, 5.0, 3.0, 4.0, 9.0], 'period': 5}",
+   "first_terms": [
+    1,
+    5,
+    3,
+    4,
+    9,
+    1,
+    5,
+    3
+   ]
+  },
+  {
+   "anum": "A070430",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [0.0, 1.0, 4.0, 4.0, 1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    4,
+    4,
+    1,
+    0,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A070432",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [0.0, 1.0, 4.0, 1.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    4,
+    1,
+    0,
+    1,
+    4,
+    1
+   ]
+  },
+  {
+   "anum": "A070471",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [0.0, 1.0, 3.0, 2.0, 4.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    3,
+    2,
+    4,
+    0,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A070690",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [0.0, 1.0, 3.0, 2.0, 4.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    3,
+    2,
+    4,
+    0,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A080891",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [0.0, 1.0, -1.0, -1.0, 1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    -1,
+    1,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "anum": "A089146",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'unit': [4.0, 1.0, 8.0, 1.0], 'period': 4}",
+   "first_terms": [
+    4,
+    1,
+    8,
+    1,
+    4,
+    1,
+    8,
+    1
+   ]
+  },
+  {
+   "anum": "A096582",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'newton_coeffs': [100, -1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    100,
+    99,
+    98,
+    97,
+    96,
+    95,
+    94,
+    93
+   ]
+  },
+  {
+   "anum": "A158411",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 87,
+   "params": "{'order': 2, 'coeff_degree': 1, 'polys': [[0.3872983346207409, -0.12909944487358035], [-0.7745966692414828, 0.2581988897471618], [0.3872983346207421, -0.12909944487358135]]}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "anum": "A119522",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, -8.0, -27.0]}",
+   "first_terms": [
+    1,
+    -8,
+    -27,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A130659",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'unit': [0.0, 1.0, 2.0, 4.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    4,
+    0,
+    1,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A130793",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'unit': [1.0, 3.0, 5.0], 'period': 3}",
+   "first_terms": [
+    1,
+    3,
+    5,
+    1,
+    3,
+    5,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A130794",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'unit': [1.0, 5.0, 3.0], 'period': 3}",
+   "first_terms": [
+    1,
+    5,
+    3,
+    1,
+    5,
+    3,
+    1,
+    5
+   ]
+  },
+  {
+   "anum": "A225000",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'poly_coeffs': [[-11, -5], [-5, 0], [6, 5]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    2,
+    4,
+    7,
+    9,
+    12,
+    14,
+    17,
+    19
+   ]
+  },
+  {
+   "anum": "A278313",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'unit': [1.0, 2.0, 3.0, 1.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    1,
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "anum": "A059855",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, 2.0, 5.0]}",
+   "first_terms": [
+    1,
+    2,
+    5,
+    2,
+    5,
+    2,
+    5,
+    2
+   ]
+  },
+  {
+   "anum": "A021817",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 86,
+   "params": "{'unit': [0.0, 0.0, 1.0, 2.0, 3.0], 'period': 5}",
+   "first_terms": [
+    0,
+    0,
+    1,
+    2,
+    3,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A101000",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 1.0, 3.0], 'period': 3}",
+   "first_terms": [
+    0,
+    1,
+    3,
+    0,
+    1,
+    3,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A132677",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [1.0, 2.0, -3.0], 'period': 3}",
+   "first_terms": [
+    1,
+    2,
+    -3,
+    1,
+    2,
+    -3,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A138019",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [1.0, 1.0, 0.0, -1.0, -1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    0,
+    -1,
+    -1,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A140081",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 1.0, 1.0, 2.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    2,
+    0,
+    1,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A142464",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [3.0, 6.0, 1.0]}",
+   "first_terms": [
+    3,
+    6,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A020773",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [2.0, 5.0]}",
+   "first_terms": [
+    2,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A020821",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, 2.0, 5.0]}",
+   "first_terms": [
+    1,
+    2,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A021016",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [0.0, 8.0, 3.0]}",
+   "first_terms": [
+    0,
+    8,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  {
+   "anum": "A021026",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [0.0, 4.0, 5.0]}",
+   "first_terms": [
+    0,
+    4,
+    5,
+    4,
+    5,
+    4,
+    5,
+    4
+   ]
+  },
+  {
+   "anum": "A021031",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 3.0, 7.0], 'period': 3}",
+   "first_terms": [
+    0,
+    3,
+    7,
+    0,
+    3,
+    7,
+    0,
+    3
+   ]
+  },
+  {
+   "anum": "A021040",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [0.0, 2.0, 7.0]}",
+   "first_terms": [
+    0,
+    2,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7
+   ]
+  },
+  {
+   "anum": "A021041",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 2.0, 7.0], 'period': 3}",
+   "first_terms": [
+    0,
+    2,
+    7,
+    0,
+    2,
+    7,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A021043",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [0.0, 2.0, 5.0]}",
+   "first_terms": [
+    0,
+    2,
+    5,
+    6,
+    4,
+    1,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A021045",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 2.0, 4.0, 3.0, 9.0], 'period': 5}",
+   "first_terms": [
+    0,
+    2,
+    4,
+    3,
+    9,
+    0,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A021059",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [0.0, 1.0, 8.0]}",
+   "first_terms": [
+    0,
+    1,
+    8,
+    1,
+    8,
+    1,
+    8,
+    1
+   ]
+  },
+  {
+   "anum": "A021067",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [0.0, 1.0, 5.0]}",
+   "first_terms": [
+    0,
+    1,
+    5,
+    8,
+    7,
+    3,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A021070",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [0.0, 1.0, 5.0]}",
+   "first_terms": [
+    0,
+    1,
+    5,
+    1,
+    5,
+    1,
+    5,
+    1
+   ]
+  },
+  {
+   "anum": "A021127",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 0.0, 8.0, 1.0, 3.0], 'period': 5}",
+   "first_terms": [
+    0,
+    0,
+    8,
+    1,
+    3,
+    0,
+    0,
+    8
+   ]
+  },
+  {
+   "anum": "A021275",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 0.0, 3.0, 6.0, 9.0], 'period': 5}",
+   "first_terms": [
+    0,
+    0,
+    3,
+    6,
+    9,
+    0,
+    0,
+    3
+   ]
+  },
+  {
+   "anum": "A021277",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [0.0, 0.0, 3.0]}",
+   "first_terms": [
+    0,
+    0,
+    3,
+    6,
+    6,
+    3,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A021373",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'unit': [0.0, 0.0, 2.0, 7.0, 1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    0,
+    2,
+    7,
+    1,
+    0,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A021823",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [0.0, 0.0, 1.0]}",
+   "first_terms": [
+    0,
+    0,
+    1,
+    2,
+    2,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A152623",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [1.0, 5.0]}",
+   "first_terms": [
+    1,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A152624",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [3.0, 5.0]}",
+   "first_terms": [
+    3,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A152627",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 85,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [7.0, 5.0]}",
+   "first_terms": [
+    7,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A130130",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 84,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [0.0, 1.0, 2.0]}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A114563",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 83,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[-0.6611675281217109, 0.019649208034275167, 0.022516859562828912], [0.6466363783274857, -0.37521191441063834, 0.05515263297701105]]}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    9,
+    207,
+    1630,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A329679",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 83,
+   "params": "{'poly_coeffs': [[24, -6], [-6, -2], [-18, 13]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    1,
+    1,
+    2,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A218245",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 83,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[0.0, -0.6933752452815363, 0.13867504905630743], [6.118750734349553e-16, 0.6933752452815364, -0.13867504905630723]]}",
+   "first_terms": [
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A131556",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 82,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, -2.0, 1.0]}",
+   "first_terms": [
+    1,
+    -2,
+    1,
+    -1,
+    2,
+    -1,
+    1,
+    -2
+   ]
+  },
+  {
+   "anum": "A135448",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 82,
+   "params": "{'unit': [1.0, 5.0, 3.0, 4.0, -2.0], 'period': 5}",
+   "first_terms": [
+    1,
+    5,
+    3,
+    4,
+    -2,
+    1,
+    5,
+    3
+   ]
+  },
+  {
+   "anum": "A135449",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 82,
+   "params": "{'unit': [1.0, 9.0, -7.0, 3.0, 5.0], 'period': 5}",
+   "first_terms": [
+    1,
+    9,
+    -7,
+    3,
+    5,
+    1,
+    9,
+    -7
+   ]
+  },
+  {
+   "anum": "A101455",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'coeffs': [-1.0, 0.0], 'seeds': [0.0, 1.0]}",
+   "first_terms": [
+    0,
+    1,
+    0,
+    -1,
+    0,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A132419",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, 1.0, -2.0]}",
+   "first_terms": [
+    1,
+    1,
+    -2,
+    -1,
+    -1,
+    2,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A135352",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'unit': [1.0, 2.0, 2.0, 1.0, 3.0], 'period': 5}",
+   "first_terms": [
+    1,
+    2,
+    2,
+    1,
+    3,
+    1,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A070355",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'unit': [1.0, 3.0, 9.0, 5.0, 15.0], 'period': 5}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    5,
+    15,
+    1,
+    3,
+    9
+   ]
+  },
+  {
+   "anum": "A092220",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [0.0, 1.0, -1.0]}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    0,
+    -1,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A168429",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 81,
+   "params": "{'unit': [1.0, 4.0, 5.0, 9.0, 3.0], 'period': 5}",
+   "first_terms": [
+    1,
+    4,
+    5,
+    9,
+    3,
+    1,
+    4,
+    5
+   ]
+  },
+  {
+   "anum": "A215036",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 80,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [2.0, 1.0, 0.0]}",
+   "first_terms": [
+    2,
+    1,
+    0,
+    1,
+    0,
+    1,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A223082",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 80,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[0.0, -0.059434736919779234, 0.014858684229944859], [0.7279064872605202, -0.6660234763035443, 0.15103511633664218]]}",
+   "first_terms": [
+    9,
+    0,
+    0,
+    2,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A056594",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 80,
+   "params": "{'coeffs': [-1.0, 0.0], 'seeds': [1.0, 0.0]}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    0,
+    1,
+    0,
+    -1,
+    0
+   ]
+  },
+  {
+   "anum": "A070375",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 80,
+   "params": "{'unit': [1.0, 5.0, 3.0, 15.0, 9.0], 'period': 5}",
+   "first_terms": [
+    1,
+    5,
+    3,
+    15,
+    9,
+    1,
+    5,
+    3
+   ]
+  },
+  {
+   "anum": "A168428",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 80,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, 4.0, 6.0]}",
+   "first_terms": [
+    1,
+    4,
+    6,
+    4,
+    6,
+    4,
+    6,
+    4
+   ]
+  },
+  {
+   "anum": "A146160",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 4.0, 1.0, 16.0], 'period': 4}",
+   "first_terms": [
+    1,
+    4,
+    1,
+    16,
+    1,
+    4,
+    1,
+    16
+   ]
+  },
+  {
+   "anum": "A069468",
+   "model_class": "holonomic_r1_p1",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'order': 1, 'coeff_degree': 1, 'polys': [[-0.9933230777113674, 0.11036923087371617], [0.03341247253051668, -0.0033915839601050004]]}",
+   "first_terms": [
+    0,
+    1,
+    3,
+    17,
+    68,
+    807,
+    5310,
+    121536
+   ]
+  },
+  {
+   "anum": "A070341",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 3.0, 9.0, 5.0, 4.0], 'period': 5}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    5,
+    4,
+    1,
+    3,
+    9
+   ]
+  },
+  {
+   "anum": "A070354",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 3.0, 9.0, 11.0], 'period': 4}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    11,
+    1,
+    3,
+    9,
+    11
+   ]
+  },
+  {
+   "anum": "A070368",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 5.0, 12.0, 8.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    12,
+    8,
+    1,
+    5,
+    12,
+    8
+   ]
+  },
+  {
+   "anum": "A070370",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 5.0, 9.0, 13.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    9,
+    13,
+    1,
+    5,
+    9,
+    13
+   ]
+  },
+  {
+   "anum": "A070386",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 5.0, 25.0, 8.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    25,
+    8,
+    1,
+    5,
+    25,
+    8
+   ]
+  },
+  {
+   "anum": "A070406",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 7.0, 4.0, 13.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    4,
+    13,
+    1,
+    7,
+    4,
+    13
+   ]
+  },
+  {
+   "anum": "A070423",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 7.0, 9.0, 23.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    9,
+    23,
+    1,
+    7,
+    9,
+    23
+   ]
+  },
+  {
+   "anum": "A168399",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 79,
+   "params": "{'unit': [1.0, 3.0, 9.0], 'period': 3}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    1,
+    3,
+    9,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A131731",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 78,
+   "params": "{'unit': [2.0, -3.0, 4.0, -3.0], 'period': 4}",
+   "first_terms": [
+    2,
+    -3,
+    4,
+    -3,
+    2,
+    -3,
+    4,
+    -3
+   ]
+  },
+  {
+   "anum": "A033322",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 78,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [2.0, 1.0]}",
+   "first_terms": [
+    2,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A033325",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 78,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[0.3005640869913747, -0.1753290507449687, 0.025047007249281276], [-0.7514102174784367, 0.5510341594841865, -0.10018802899712473]]}",
+   "first_terms": [
+    5,
+    2,
+    1,
+    1,
+    1,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A033327",
+   "model_class": "holonomic_r1_p3",
+   "shown": 14,
+   "heldout_confirmed": 78,
+   "params": "{'poly_coeffs': [[-450, -357, 378, -51], [1050, -113, -258, 41]], 'order': 1, 'pdeg': 3, 'exact': True}",
+   "first_terms": [
+    7,
+    3,
+    2,
+    1,
+    1,
+    1,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A157810",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 78,
+   "params": "{'unit': [2.0, 1.0, 3.0, 2.0], 'period': 4}",
+   "first_terms": [
+    2,
+    1,
+    3,
+    2,
+    2,
+    1,
+    3,
+    2
+   ]
+  },
+  {
+   "anum": "A105385",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 77,
+   "params": "{'unit': [1.0, 0.0, -1.0, 0.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    0,
+    0,
+    1,
+    0,
+    -1
+   ]
+  },
+  {
+   "anum": "A217515",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 77,
+   "params": "{'unit': [6.0, 4.0, 3.0], 'period': 3}",
+   "first_terms": [
+    6,
+    4,
+    3,
+    6,
+    4,
+    3,
+    6,
+    4
+   ]
+  },
+  {
+   "anum": "A184334",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 77,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 2.0, 2.0]}",
+   "first_terms": [
+    1,
+    2,
+    2,
+    0,
+    -2,
+    -2,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A110551",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [1.0, 3.0, 5.0]}",
+   "first_terms": [
+    1,
+    3,
+    5,
+    5,
+    3,
+    1,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A057078",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [1.0, 0.0, -1.0], 'period': 3}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    1,
+    0,
+    -1,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A057079",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, 2.0]}",
+   "first_terms": [
+    1,
+    2,
+    1,
+    -1,
+    -2,
+    -1,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A070353",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [1.0, 3.0, 9.0]}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    13,
+    11,
+    5,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A070369",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [1.0, 5.0, 11.0]}",
+   "first_terms": [
+    1,
+    5,
+    11,
+    13,
+    9,
+    3,
+    1,
+    5
+   ]
+  },
+  {
+   "anum": "A070421",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [1.0, 7.0, 11.0], 'period': 3}",
+   "first_terms": [
+    1,
+    7,
+    11,
+    1,
+    7,
+    11,
+    1,
+    7
+   ]
+  },
+  {
+   "anum": "A079757",
+   "model_class": "periodic_6",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [1.0, 0.0, -2.0, 3.0, -2.0, 0.0], 'period': 6}",
+   "first_terms": [
+    1,
+    0,
+    -2,
+    3,
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A084103",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 3.0, 3.0]}",
+   "first_terms": [
+    1,
+    3,
+    3,
+    0,
+    -3,
+    -3,
+    0,
+    3
+   ]
+  },
+  {
+   "anum": "A049347",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [1.0, -1.0, 0.0], 'period': 3}",
+   "first_terms": [
+    1,
+    -1,
+    0,
+    1,
+    -1,
+    0,
+    1,
+    -1
+   ]
+  },
+  {
+   "anum": "A152890",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [4.0, 1.0, 4.0, 0.0, 1.0], 'period': 5}",
+   "first_terms": [
+    4,
+    1,
+    4,
+    0,
+    1,
+    4,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A152893",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [3.0, 3.0, 0.0, 0.0, 4.0], 'period': 5}",
+   "first_terms": [
+    3,
+    3,
+    0,
+    0,
+    4,
+    3,
+    3,
+    0
+   ]
+  },
+  {
+   "anum": "A165662",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [4.0, 4.0, 8.0, 6.0, 8.0], 'period': 5}",
+   "first_terms": [
+    4,
+    4,
+    8,
+    6,
+    8,
+    4,
+    4,
+    8
+   ]
+  },
+  {
+   "anum": "A175922",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 76,
+   "params": "{'unit': [1.0, 1.0, 2.0, -1.0, 2.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    -1,
+    2,
+    1,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A071279",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 75,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [12.0, 8.0, 6.0]}",
+   "first_terms": [
+    12,
+    8,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A132400",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 74,
+   "params": "{'unit': [1.0, 5.0, 3.0, 1.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    3,
+    1,
+    1,
+    5,
+    3,
+    1
+   ]
+  },
+  {
+   "anum": "A269222",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 74,
+   "params": "{'unit': [1.0, 9.0, 8.0, 9.0], 'period': 4}",
+   "first_terms": [
+    1,
+    9,
+    8,
+    9,
+    1,
+    9,
+    8,
+    9
+   ]
+  },
+  {
+   "anum": "A097062",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 74,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [1.0, -1.0, 3.0]}",
+   "first_terms": [
+    1,
+    -1,
+    3,
+    1,
+    5,
+    3,
+    7,
+    5
+   ]
+  },
+  {
+   "anum": "A182215",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 74,
+   "params": "{'unit': [2.0, 4.0, 4.0, 5.0], 'period': 4}",
+   "first_terms": [
+    2,
+    4,
+    4,
+    5,
+    2,
+    4,
+    4,
+    5
+   ]
+  },
+  {
+   "anum": "A105367",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [1.0, 0.0, 0.0, -1.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    0,
+    0,
+    -1,
+    0,
+    1,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A113975",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [2.0, 5.0, 6.0]}",
+   "first_terms": [
+    2,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A134201",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 2.0, 6.0]}",
+   "first_terms": [
+    1,
+    2,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A136188",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [3.0, 5.0, 8.0]}",
+   "first_terms": [
+    3,
+    5,
+    8,
+    5,
+    8,
+    5,
+    8,
+    5
+   ]
+  },
+  {
+   "anum": "A146989",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [15.0, 2.0, 1.0, 13.0, 1.0], 'period': 5}",
+   "first_terms": [
+    15,
+    2,
+    1,
+    13,
+    1,
+    15,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A300403",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[0.4364357804719973, -0.5455447255899785, 0.10910894511799539], [-0.4364357804719805, 0.5455447255899764, -0.10910894511799524]]}",
+   "first_terms": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A300659",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'poly_coeffs': [[-132, -3, 9], [132, -89, 20]], 'order': 1, 'pdeg': 2, 'exact': True}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    6,
+    8,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A301755",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [3.0, 7.0, 5.0]}",
+   "first_terms": [
+    3,
+    7,
+    5,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A070390",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [1.0, 5.0, 25.0, 37.0, 9.0], 'period': 5}",
+   "first_terms": [
+    1,
+    5,
+    25,
+    37,
+    9,
+    1,
+    5,
+    25
+   ]
+  },
+  {
+   "anum": "A070609",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [0.0, 1.0, 7.0, 18.0, 24.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    7,
+    18,
+    24,
+    0,
+    1,
+    7
+   ]
+  },
+  {
+   "anum": "A073532",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[-0.9304565449628042, 0.31931009948579403, -0.025375377372367964], [0.17028099143363998, -0.05140634656414685, 0.003088691432791225]]}",
+   "first_terms": [
+    4,
+    20,
+    97,
+    510,
+    2529,
+    10239,
+    33950,
+    90510
+   ]
+  },
+  {
+   "anum": "A073636",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [1.0, 8.0, 9.0], 'period': 3}",
+   "first_terms": [
+    1,
+    8,
+    9,
+    1,
+    8,
+    9,
+    1,
+    8
+   ]
+  },
+  {
+   "anum": "A152894",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [0.0, 0.0, 1.0, 4.0, 0.0], 'period': 5}",
+   "first_terms": [
+    0,
+    0,
+    1,
+    4,
+    0,
+    0,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A154870",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [7.0, 5.0, 1.0]}",
+   "first_terms": [
+    7,
+    5,
+    1,
+    -7,
+    -5,
+    -1,
+    7,
+    5
+   ]
+  },
+  {
+   "anum": "A158459",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [0.0, 3.0, 2.0, 1.0], 'period': 4}",
+   "first_terms": [
+    0,
+    3,
+    2,
+    1,
+    0,
+    3,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A158799",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 2.0, 3.0]}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3
+   ]
+  },
+  {
+   "anum": "A175833",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [4.0, 7.0, 11.0], 'period': 3}",
+   "first_terms": [
+    4,
+    7,
+    11,
+    4,
+    7,
+    11,
+    4,
+    7
+   ]
+  },
+  {
+   "anum": "A186684",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [0.0, 1.0, 7.0]}",
+   "first_terms": [
+    0,
+    1,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7
+   ]
+  },
+  {
+   "anum": "A191759",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 73,
+   "params": "{'unit': [1.0, 9.0, 5.0, 9.0, 1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    9,
+    5,
+    9,
+    1,
+    1,
+    9,
+    5
+   ]
+  },
+  {
+   "anum": "A130784",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [1.0, 3.0, 2.0], 'period': 3}",
+   "first_terms": [
+    1,
+    3,
+    2,
+    1,
+    3,
+    2,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A135537",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [7.0, 5.0, 2.0, 4.0], 'period': 4}",
+   "first_terms": [
+    7,
+    5,
+    2,
+    4,
+    7,
+    5,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A143025",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [1.0, 8.0, 2.0, 8.0], 'period': 4}",
+   "first_terms": [
+    1,
+    8,
+    2,
+    8,
+    1,
+    8,
+    2,
+    8
+   ]
+  },
+  {
+   "anum": "A211669",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[4.892770090044829e-14, -0.6974858324629158, 0.11624763874381905], [-7.090238090594596e-15, 0.6974858324629153, -0.11624763874381899]]}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A263013",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'coeffs': [0.0, 0.0, 0.0], 'seeds': [1.0, -1.0, 1.0]}",
+   "first_terms": [
+    1,
+    -1,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A285476",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'coeffs': [0.0, 0.0], 'seeds': [1.0, 10.0]}",
+   "first_terms": [
+    1,
+    10,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A027656",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'poly_coeffs': [[-4, -1], [0, 0], [2, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    0,
+    2,
+    0,
+    3,
+    0,
+    4,
+    0
+   ]
+  },
+  {
+   "anum": "A155158",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [1.0, 5.0, 7.0, 3.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    7,
+    3,
+    1,
+    5,
+    7,
+    3
+   ]
+  },
+  {
+   "anum": "A177002",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [1.0, 2.0, 4.0, 2.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    2,
+    1,
+    2,
+    4,
+    2
+   ]
+  },
+  {
+   "anum": "A187466",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 72,
+   "params": "{'unit': [1.0, 9.0, 4.0, 3.0, 5.0], 'period': 5}",
+   "first_terms": [
+    1,
+    9,
+    4,
+    3,
+    5,
+    1,
+    9,
+    4
+   ]
+  },
+  {
+   "anum": "A113779",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'unit': [17.0, 9.0, 8.0], 'period': 3}",
+   "first_terms": [
+    17,
+    9,
+    8,
+    17,
+    9,
+    8,
+    17,
+    9
+   ]
+  },
+  {
+   "anum": "A134824",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [0.0, 1.0, -1.0]}",
+   "first_terms": [
+    0,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1
+   ]
+  },
+  {
+   "anum": "A145924",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'unit': [9.0, 3.0, 5.0, 5.0, 3.0], 'period': 5}",
+   "first_terms": [
+    9,
+    3,
+    5,
+    5,
+    3,
+    9,
+    3,
+    5
+   ]
+  },
+  {
+   "anum": "A329502",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 4.0, 6.0]}",
+   "first_terms": [
+    1,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A226797",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'poly_coeffs': [[44171736, -35153022, 6027522], [-9014640, 3674635, 788983]], 'order': 1, 'pdeg': 2, 'exact': True}",
+   "first_terms": [
+    10,
+    49,
+    162,
+    220,
+    170,
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A007877",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 71,
+   "params": "{'unit': [0.0, 1.0, 2.0, 1.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    1,
+    0,
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A119910",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, 3.0]}",
+   "first_terms": [
+    1,
+    3,
+    2,
+    -1,
+    -3,
+    -2,
+    1,
+    3
+   ]
+  },
+  {
+   "anum": "A070376",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 5.0, 25.0, 21.0], 'period': 4}",
+   "first_terms": [
+    1,
+    5,
+    25,
+    21,
+    1,
+    5,
+    25,
+    21
+   ]
+  },
+  {
+   "anum": "A070400",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 6.0, 36.0, 31.0], 'period': 4}",
+   "first_terms": [
+    1,
+    6,
+    36,
+    31,
+    1,
+    6,
+    36,
+    31
+   ]
+  },
+  {
+   "anum": "A070410",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 7.0, 24.0, 18.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    24,
+    18,
+    1,
+    7,
+    24,
+    18
+   ]
+  },
+  {
+   "anum": "A070414",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 7.0, 19.0, 13.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    19,
+    13,
+    1,
+    7,
+    19,
+    13
+   ]
+  },
+  {
+   "anum": "A070416",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 7.0, 17.0, 23.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    17,
+    23,
+    1,
+    7,
+    17,
+    23
+   ]
+  },
+  {
+   "anum": "A072988",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, 3.0, 10.0]}",
+   "first_terms": [
+    1,
+    3,
+    10,
+    3,
+    10,
+    3,
+    10,
+    3
+   ]
+  },
+  {
+   "anum": "A164965",
+   "model_class": "periodic_6",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 2.0, 2.0, 1.0, 0.0, 0.0], 'period': 6}",
+   "first_terms": [
+    1,
+    2,
+    2,
+    1,
+    0,
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A177499",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 70,
+   "params": "{'unit': [1.0, 16.0, 4.0, 16.0], 'period': 4}",
+   "first_terms": [
+    1,
+    16,
+    4,
+    16,
+    1,
+    16,
+    4,
+    16
+   ]
+  },
+  {
+   "anum": "A109265",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 69,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 0.0, -2.0]}",
+   "first_terms": [
+    1,
+    0,
+    -2,
+    -2,
+    0,
+    2,
+    2,
+    0
+   ]
+  },
+  {
+   "anum": "A348776",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 69,
+   "params": "{'poly_coeffs': [[-3, 3], [3, -7], [-1, 4]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    2,
+    3,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A199634",
+   "model_class": "holonomic_r1_p2",
+   "shown": 14,
+   "heldout_confirmed": 69,
+   "params": "{'order': 1, 'coeff_degree': 2, 'polys': [[-0.00011962798620952923, -0.0464550074956772, 0.021824432871334277], [0.7316393361860428, -0.6688211847332407, 0.12144017743249952]]}",
+   "first_terms": [
+    3265920,
+    534,
+    74,
+    13,
+    8,
+    6,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A214395",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 68,
+   "params": "{'unit': [5.0, 9.0, 2.0], 'period': 3}",
+   "first_terms": [
+    5,
+    9,
+    2,
+    5,
+    9,
+    2,
+    5,
+    9
+   ]
+  },
+  {
+   "anum": "A267319",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 68,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [46.0, 1.0, 45.0]}",
+   "first_terms": [
+    46,
+    1,
+    45,
+    1,
+    45,
+    1,
+    45,
+    1
+   ]
+  },
+  {
+   "anum": "A105368",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, -1.0, 0.0, -1.0, 1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    -1,
+    0,
+    -1,
+    1,
+    1,
+    -1,
+    0
+   ]
+  },
+  {
+   "anum": "A317945",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'newton_coeffs': [1, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A001148",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, 3.0, 9.0, 7.0], 'period': 4}",
+   "first_terms": [
+    1,
+    3,
+    9,
+    7,
+    1,
+    3,
+    9,
+    7
+   ]
+  },
+  {
+   "anum": "A001903",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, 7.0, 9.0, 3.0], 'period': 4}",
+   "first_terms": [
+    1,
+    7,
+    9,
+    3,
+    1,
+    7,
+    9,
+    3
+   ]
+  },
+  {
+   "anum": "A060566",
+   "model_class": "polynomial_deg2",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'newton_coeffs': [1601, -78, 2], 'degree': 2, 'exact': True}",
+   "first_terms": [
+    1601,
+    1523,
+    1447,
+    1373,
+    1301,
+    1231,
+    1163,
+    1097
+   ]
+  },
+  {
+   "anum": "A010873",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [0.0, 1.0, 2.0, 3.0], 'period': 4}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    3,
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "anum": "A010874",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [0.0, 1.0, 2.0, 3.0, 4.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A010883",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, 2.0, 3.0, 4.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    1,
+    2,
+    3,
+    4
+   ]
+  },
+  {
+   "anum": "A010884",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, 2.0, 3.0, 4.0, 5.0], 'period': 5}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    1,
+    2,
+    3
+   ]
+  },
+  {
+   "anum": "A010891",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, -1.0, 0.0, 0.0, 0.0], 'period': 5}",
+   "first_terms": [
+    1,
+    -1,
+    0,
+    0,
+    0,
+    1,
+    -1,
+    0
+   ]
+  },
+  {
+   "anum": "A015171",
+   "model_class": "holonomic_r1_p1",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'order': 1, 'coeff_degree': 1, 'polys': [[0.6974858324629155, -0.11624763874381924], [0.697485832462916, -0.11624763874381937]]}",
+   "first_terms": [
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A040005",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [2.0, 1.0, 4.0]}",
+   "first_terms": [
+    2,
+    1,
+    4,
+    1,
+    4,
+    1,
+    4,
+    1
+   ]
+  },
+  {
+   "anum": "A040008",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [3.0, 2.0, 6.0]}",
+   "first_terms": [
+    3,
+    2,
+    6,
+    2,
+    6,
+    2,
+    6,
+    2
+   ]
+  },
+  {
+   "anum": "A040011",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [3.0, 1.0, 6.0]}",
+   "first_terms": [
+    3,
+    1,
+    6,
+    1,
+    6,
+    1,
+    6,
+    1
+   ]
+  },
+  {
+   "anum": "A040015",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [4.0, 2.0, 8.0]}",
+   "first_terms": [
+    4,
+    2,
+    8,
+    2,
+    8,
+    2,
+    8,
+    2
+   ]
+  },
+  {
+   "anum": "A040019",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [4.0, 1.0, 8.0]}",
+   "first_terms": [
+    4,
+    1,
+    8,
+    1,
+    8,
+    1,
+    8,
+    1
+   ]
+  },
+  {
+   "anum": "A382713",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, 4.0, 2.0]}",
+   "first_terms": [
+    1,
+    4,
+    2,
+    4,
+    2,
+    4,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A173635",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 67,
+   "params": "{'unit': [1.0, 1.0, 4.0, 4.0, 2.0], 'period': 5}",
+   "first_terms": [
+    1,
+    1,
+    4,
+    4,
+    2,
+    1,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A101101",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'coeffs': [0.0, 0.0, 1.0], 'seeds': [1.0, 5.0, 6.0]}",
+   "first_terms": [
+    1,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  {
+   "anum": "A131379",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [1.0, 0.0, -1.0, 1.0], 'period': 4}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    1,
+    1,
+    0,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A133145",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [1.0, 2.0, 4.0, 8.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    8,
+    1,
+    2,
+    4,
+    8
+   ]
+  },
+  {
+   "anum": "A134012",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [1.0, 6.0, 11.0, 6.0, 1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    6,
+    11,
+    6,
+    1,
+    1,
+    6,
+    11
+   ]
+  },
+  {
+   "anum": "A139788",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [1.0, 7.0, 3.0, 9.0, 5.0], 'period': 5}",
+   "first_terms": [
+    1,
+    7,
+    3,
+    9,
+    5,
+    1,
+    7,
+    3
+   ]
+  },
+  {
+   "anum": "A216178",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [4.0, 1.0, 0.0, -3.0], 'period': 4}",
+   "first_terms": [
+    4,
+    1,
+    0,
+    -3,
+    4,
+    1,
+    0,
+    -3
+   ]
+  },
+  {
+   "anum": "A219977",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [1.0, -1.0, 0.0, 0.0], 'period': 4}",
+   "first_terms": [
+    1,
+    -1,
+    0,
+    0,
+    1,
+    -1,
+    0,
+    0
+   ]
+  },
+  {
+   "anum": "A007945",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [2.0, 3.0, 0.0]}",
+   "first_terms": [
+    2,
+    3,
+    0,
+    -4,
+    -5,
+    -2,
+    2,
+    3
+   ]
+  },
+  {
+   "anum": "A049071",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [0.0, 3.0, -2.0]}",
+   "first_terms": [
+    0,
+    3,
+    -2,
+    3,
+    -2,
+    3,
+    -2,
+    3
+   ]
+  },
+  {
+   "anum": "A357130",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'poly_coeffs': [[-11, -4], [-4, 0], [7, 4]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    4,
+    3,
+    8,
+    7,
+    12,
+    11,
+    16,
+    15
+   ]
+  },
+  {
+   "anum": "A158607",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 66,
+   "params": "{'unit': [9.0, 11.0, 13.0, 5.0, 7.0], 'period': 5}",
+   "first_terms": [
+    9,
+    11,
+    13,
+    5,
+    7,
+    9,
+    11,
+    13
+   ]
+  },
+  {
+   "anum": "A122876",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 65,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 1.0, 2.0]}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    1,
+    -1,
+    -2,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A131030",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 65,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [16.0, 7.0, 7.0]}",
+   "first_terms": [
+    16,
+    7,
+    7,
+    16,
+    25,
+    25,
+    16,
+    7
+   ]
+  },
+  {
+   "anum": "A070397",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 65,
+   "params": "{'unit': [1.0, 6.0, 11.0, 16.0, 21.0], 'period': 5}",
+   "first_terms": [
+    1,
+    6,
+    11,
+    16,
+    21,
+    1,
+    6,
+    11
+   ]
+  },
+  {
+   "anum": "A105812",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [0.0, 0.0, -1.0], 'seeds': [1.0, 0.0, -1.0]}",
+   "first_terms": [
+    1,
+    0,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    1
+   ]
+  },
+  {
+   "anum": "A112030",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [-1.0, 0.0], 'seeds': [3.0, 1.0]}",
+   "first_terms": [
+    3,
+    1,
+    -3,
+    -1,
+    3,
+    1,
+    -3,
+    -1
+   ]
+  },
+  {
+   "anum": "A130806",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, 4.0]}",
+   "first_terms": [
+    1,
+    4,
+    3,
+    -1,
+    -4,
+    -3,
+    1,
+    4
+   ]
+  },
+  {
+   "anum": "A131969",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [3.0, -2.0, 6.0]}",
+   "first_terms": [
+    3,
+    -2,
+    6,
+    -3,
+    2,
+    -6,
+    3,
+    -2
+   ]
+  },
+  {
+   "anum": "A132798",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [0.0, 2.0, 1.0]}",
+   "first_terms": [
+    0,
+    2,
+    1,
+    0,
+    -2,
+    -1,
+    0,
+    2
+   ]
+  },
+  {
+   "anum": "A133513",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [0.0, 1.0, -3.0]}",
+   "first_terms": [
+    0,
+    1,
+    -3,
+    0,
+    -1,
+    3,
+    0,
+    1
+   ]
+  },
+  {
+   "anum": "A134990",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'poly_coeffs': [[5, -2], [2, 0], [-7, 2]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    8,
+    15,
+    10,
+    13,
+    12,
+    11,
+    14,
+    9
+   ]
+  },
+  {
+   "anum": "A001477",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'newton_coeffs': [0, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ]
+  },
+  {
+   "anum": "A271378",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'unit': [1.0, 5.0, 25.0], 'period': 3}",
+   "first_terms": [
+    1,
+    5,
+    25,
+    1,
+    5,
+    25,
+    1,
+    5
+   ]
+  },
+  {
+   "anum": "A070388",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'coeffs': [1.0, -2.0, 2.0], 'seeds': [1.0, 5.0, 25.0]}",
+   "first_terms": [
+    1,
+    5,
+    25,
+    41,
+    37,
+    17,
+    1,
+    5
+   ]
+  },
+  {
+   "anum": "A091720",
+   "model_class": "periodic_3",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'unit': [8.0, 34.0, 17.0], 'period': 3}",
+   "first_terms": [
+    8,
+    34,
+    17,
+    8,
+    34,
+    17,
+    8,
+    34
+   ]
+  },
+  {
+   "anum": "A177898",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 64,
+   "params": "{'poly_coeffs': [[-10, -3], [-3, 0], [7, 3]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    6,
+    4,
+    9,
+    7,
+    12,
+    10,
+    15
+   ]
+  },
+  {
+   "anum": "A244895",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 63,
+   "params": "{'unit': [0.0, 1.0, 1.0, -1.0, -1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    -1,
+    -1,
+    0,
+    1,
+    1
+   ]
+  },
+  {
+   "anum": "A000027",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 63,
+   "params": "{'newton_coeffs': [1, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A060747",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 63,
+   "params": "{'newton_coeffs': [-1, 2], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    -1,
+    1,
+    3,
+    5,
+    7,
+    9,
+    11,
+    13
+   ]
+  },
+  {
+   "anum": "A087156",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 63,
+   "params": "{'coeffs': [0.0, -1.0, 2.0], 'seeds': [0.0, 2.0, 3.0]}",
+   "first_terms": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A182214",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 63,
+   "params": "{'unit': [3.0, 2.0, 2.0, 4.0], 'period': 4}",
+   "first_terms": [
+    3,
+    2,
+    2,
+    4,
+    3,
+    2,
+    2,
+    4
+   ]
+  },
+  {
+   "anum": "A110654",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [0.0, 1.0, 1.0]}",
+   "first_terms": [
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4
+   ]
+  },
+  {
+   "anum": "A117444",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'unit': [0.0, 1.0, 2.0, -2.0, -1.0], 'period': 5}",
+   "first_terms": [
+    0,
+    1,
+    2,
+    -2,
+    -1,
+    0,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A133186",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'unit': [1.0, 2.0, 1.0, -4.0], 'period': 4}",
+   "first_terms": [
+    1,
+    2,
+    1,
+    -4,
+    1,
+    2,
+    1,
+    -4
+   ]
+  },
+  {
+   "anum": "A057174",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'poly_coeffs': [[-1, -2], [2, 0], [-1, 2]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    0,
+    5,
+    -2,
+    7,
+    -4
+   ]
+  },
+  {
+   "anum": "A065475",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'coeffs': [0.0, -1.0, 2.0], 'seeds': [1.0, 3.0, 4.0]}",
+   "first_terms": [
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ]
+  },
+  {
+   "anum": "A174737",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 62,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [2.0, -1.0]}",
+   "first_terms": [
+    2,
+    -1,
+    -3,
+    -2,
+    1,
+    3,
+    2,
+    -1
+   ]
+  },
+  {
+   "anum": "A100051",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, -1.0, 1.0], 'seeds': [1.0, 1.0, -1.0]}",
+   "first_terms": [
+    1,
+    1,
+    -1,
+    -2,
+    -1,
+    1,
+    2,
+    1
+   ]
+  },
+  {
+   "anum": "A100219",
+   "model_class": "periodic_6",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [1.0, 0.0, -2.0, -3.0, -2.0, 0.0], 'period': 6}",
+   "first_terms": [
+    1,
+    0,
+    -2,
+    -3,
+    -2,
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "anum": "A108812",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [1.0, 11.0, 21.0, 31.0, 41.0], 'period': 5}",
+   "first_terms": [
+    1,
+    11,
+    21,
+    31,
+    41,
+    1,
+    11,
+    21
+   ]
+  },
+  {
+   "anum": "A117373",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, -2.0]}",
+   "first_terms": [
+    1,
+    -2,
+    -3,
+    -1,
+    2,
+    3,
+    1,
+    -2
+   ]
+  },
+  {
+   "anum": "A131738",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, -1.0, -2.0], 'seeds': [0.0, -2.0, 3.0]}",
+   "first_terms": [
+    0,
+    -2,
+    3,
+    -4,
+    5,
+    -6,
+    7,
+    -8
+   ]
+  },
+  {
+   "anum": "A137501",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [1.0, 1.0, -1.0], 'seeds': [0.0, 0.0, 2.0]}",
+   "first_terms": [
+    0,
+    0,
+    2,
+    -2,
+    4,
+    -4,
+    6,
+    -6
+   ]
+  },
+  {
+   "anum": "A303502",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'newton_coeffs': [1, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ]
+  },
+  {
+   "anum": "A266973",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [1.0, 4.0, 16.0, 13.0], 'period': 4}",
+   "first_terms": [
+    1,
+    4,
+    16,
+    13,
+    1,
+    4,
+    16,
+    13
+   ]
+  },
+  {
+   "anum": "A280193",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [1.0, -1.0, 2.0]}",
+   "first_terms": [
+    1,
+    -1,
+    2,
+    -1,
+    2,
+    -1,
+    2,
+    -1
+   ]
+  },
+  {
+   "anum": "A280560",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, -1.0], 'seeds': [1.0, -2.0]}",
+   "first_terms": [
+    1,
+    -2,
+    2,
+    -2,
+    2,
+    -2,
+    2,
+    -2
+   ]
+  },
+  {
+   "anum": "A283896",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [91.0, 2.0, 180.0]}",
+   "first_terms": [
+    91,
+    2,
+    180,
+    2,
+    180,
+    2,
+    180,
+    2
+   ]
+  },
+  {
+   "anum": "A084964",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [2.0, 0.0, 3.0]}",
+   "first_terms": [
+    2,
+    0,
+    3,
+    1,
+    4,
+    2,
+    5,
+    3
+   ]
+  },
+  {
+   "anum": "A091722",
+   "model_class": "periodic_4",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [4.0, 36.0, 55.0, 23.0], 'period': 4}",
+   "first_terms": [
+    4,
+    36,
+    55,
+    23,
+    4,
+    36,
+    55,
+    23
+   ]
+  },
+  {
+   "anum": "A097065",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [1.0, -1.0, 2.0]}",
+   "first_terms": [
+    1,
+    -1,
+    2,
+    0,
+    3,
+    1,
+    4,
+    2
+   ]
+  },
+  {
+   "anum": "A003079",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [5.0, 14.0, 7.0, 20.0, 10.0], 'period': 5}",
+   "first_terms": [
+    5,
+    14,
+    7,
+    20,
+    10,
+    5,
+    14,
+    7
+   ]
+  },
+  {
+   "anum": "A008619",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'poly_coeffs': [[-3, -1], [-1, 0], [2, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    4,
+    4
+   ]
+  },
+  {
+   "anum": "A009056",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'newton_coeffs': [3, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ]
+  },
+  {
+   "anum": "A020705",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'newton_coeffs': [4, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+   ]
+  },
+  {
+   "anum": "A023443",
+   "model_class": "arithmetic",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'newton_coeffs': [-1, 1], 'degree': 1, 'exact': True}",
+   "first_terms": [
+    -1,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ]
+  },
+  {
+   "anum": "A028242",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [1.0, 0.0, 2.0]}",
+   "first_terms": [
+    1,
+    0,
+    2,
+    1,
+    3,
+    2,
+    4,
+    3
+   ]
+  },
+  {
+   "anum": "A030451",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [0.0, 2.0, 1.0]}",
+   "first_terms": [
+    0,
+    2,
+    1,
+    3,
+    2,
+    4,
+    3,
+    5
+   ]
+  },
+  {
+   "anum": "A040185",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [14.0, 7.0, 28.0]}",
+   "first_terms": [
+    14,
+    7,
+    28,
+    7,
+    28,
+    7,
+    28,
+    7
+   ]
+  },
+  {
+   "anum": "A040188",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [14.0, 4.0, 28.0]}",
+   "first_terms": [
+    14,
+    4,
+    28,
+    4,
+    28,
+    4,
+    28,
+    4
+   ]
+  },
+  {
+   "anum": "A040195",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [14.0, 2.0, 28.0]}",
+   "first_terms": [
+    14,
+    2,
+    28,
+    2,
+    28,
+    2,
+    28,
+    2
+   ]
+  },
+  {
+   "anum": "A040209",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [14.0, 1.0, 28.0]}",
+   "first_terms": [
+    14,
+    1,
+    28,
+    1,
+    28,
+    1,
+    28,
+    1
+   ]
+  },
+  {
+   "anum": "A040214",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [15.0, 6.0, 30.0]}",
+   "first_terms": [
+    15,
+    6,
+    30,
+    6,
+    30,
+    6,
+    30,
+    6
+   ]
+  },
+  {
+   "anum": "A040215",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [15.0, 5.0, 30.0]}",
+   "first_terms": [
+    15,
+    5,
+    30,
+    5,
+    30,
+    5,
+    30,
+    5
+   ]
+  },
+  {
+   "anum": "A040219",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [15.0, 3.0, 30.0]}",
+   "first_terms": [
+    15,
+    3,
+    30,
+    3,
+    30,
+    3,
+    30,
+    3
+   ]
+  },
+  {
+   "anum": "A040224",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [15.0, 2.0, 30.0]}",
+   "first_terms": [
+    15,
+    2,
+    30,
+    2,
+    30,
+    2,
+    30,
+    2
+   ]
+  },
+  {
+   "anum": "A040239",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [15.0, 1.0, 30.0]}",
+   "first_terms": [
+    15,
+    1,
+    30,
+    1,
+    30,
+    1,
+    30,
+    1
+   ]
+  },
+  {
+   "anum": "A040243",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [16.0, 8.0, 32.0]}",
+   "first_terms": [
+    16,
+    8,
+    32,
+    8,
+    32,
+    8,
+    32,
+    8
+   ]
+  },
+  {
+   "anum": "A040247",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [16.0, 4.0, 32.0]}",
+   "first_terms": [
+    16,
+    4,
+    32,
+    4,
+    32,
+    4,
+    32,
+    4
+   ]
+  },
+  {
+   "anum": "A040255",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [16.0, 2.0, 32.0]}",
+   "first_terms": [
+    16,
+    2,
+    32,
+    2,
+    32,
+    2,
+    32,
+    2
+   ]
+  },
+  {
+   "anum": "A040271",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [16.0, 1.0, 32.0]}",
+   "first_terms": [
+    16,
+    1,
+    32,
+    1,
+    32,
+    1,
+    32,
+    1
+   ]
+  },
+  {
+   "anum": "A040288",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [17.0, 2.0, 34.0]}",
+   "first_terms": [
+    17,
+    2,
+    34,
+    2,
+    34,
+    2,
+    34,
+    2
+   ]
+  },
+  {
+   "anum": "A040305",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [17.0, 1.0, 34.0]}",
+   "first_terms": [
+    17,
+    1,
+    34,
+    1,
+    34,
+    1,
+    34,
+    1
+   ]
+  },
+  {
+   "anum": "A040309",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 9.0, 36.0]}",
+   "first_terms": [
+    18,
+    9,
+    36,
+    9,
+    36,
+    9,
+    36,
+    9
+   ]
+  },
+  {
+   "anum": "A040311",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 6.0, 36.0]}",
+   "first_terms": [
+    18,
+    6,
+    36,
+    6,
+    36,
+    6,
+    36,
+    6
+   ]
+  },
+  {
+   "anum": "A040314",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 4.0, 36.0]}",
+   "first_terms": [
+    18,
+    4,
+    36,
+    4,
+    36,
+    4,
+    36,
+    4
+   ]
+  },
+  {
+   "anum": "A040317",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 3.0, 36.0]}",
+   "first_terms": [
+    18,
+    3,
+    36,
+    3,
+    36,
+    3,
+    36,
+    3
+   ]
+  },
+  {
+   "anum": "A040323",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 2.0, 36.0]}",
+   "first_terms": [
+    18,
+    2,
+    36,
+    2,
+    36,
+    2,
+    36,
+    2
+   ]
+  },
+  {
+   "anum": "A040341",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [18.0, 1.0, 36.0]}",
+   "first_terms": [
+    18,
+    1,
+    36,
+    1,
+    36,
+    1,
+    36,
+    1
+   ]
+  },
+  {
+   "anum": "A040360",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [19.0, 2.0, 38.0]}",
+   "first_terms": [
+    19,
+    2,
+    38,
+    2,
+    38,
+    2,
+    38,
+    2
+   ]
+  },
+  {
+   "anum": "A040379",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [19.0, 1.0, 38.0]}",
+   "first_terms": [
+    19,
+    1,
+    38,
+    1,
+    38,
+    1,
+    38,
+    1
+   ]
+  },
+  {
+   "anum": "A040384",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [20.0, 8.0, 40.0]}",
+   "first_terms": [
+    20,
+    8,
+    40,
+    8,
+    40,
+    8,
+    40,
+    8
+   ]
+  },
+  {
+   "anum": "A040387",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [20.0, 5.0, 40.0]}",
+   "first_terms": [
+    20,
+    5,
+    40,
+    5,
+    40,
+    5,
+    40,
+    5
+   ]
+  },
+  {
+   "anum": "A040389",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [20.0, 4.0, 40.0]}",
+   "first_terms": [
+    20,
+    4,
+    40,
+    4,
+    40,
+    4,
+    40,
+    4
+   ]
+  },
+  {
+   "anum": "A040399",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [20.0, 2.0, 40.0]}",
+   "first_terms": [
+    20,
+    2,
+    40,
+    2,
+    40,
+    2,
+    40,
+    2
+   ]
+  },
+  {
+   "anum": "A040419",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [20.0, 1.0, 40.0]}",
+   "first_terms": [
+    20,
+    1,
+    40,
+    1,
+    40,
+    1,
+    40,
+    1
+   ]
+  },
+  {
+   "anum": "A040425",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [21.0, 7.0, 42.0]}",
+   "first_terms": [
+    21,
+    7,
+    42,
+    7,
+    42,
+    7,
+    42,
+    7
+   ]
+  },
+  {
+   "anum": "A040426",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [21.0, 6.0, 42.0]}",
+   "first_terms": [
+    21,
+    6,
+    42,
+    6,
+    42,
+    6,
+    42,
+    6
+   ]
+  },
+  {
+   "anum": "A040433",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [21.0, 3.0, 42.0]}",
+   "first_terms": [
+    21,
+    3,
+    42,
+    3,
+    42,
+    3,
+    42,
+    3
+   ]
+  },
+  {
+   "anum": "A040440",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [21.0, 2.0, 42.0]}",
+   "first_terms": [
+    21,
+    2,
+    42,
+    2,
+    42,
+    2,
+    42,
+    2
+   ]
+  },
+  {
+   "anum": "A040461",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [21.0, 1.0, 42.0]}",
+   "first_terms": [
+    21,
+    1,
+    42,
+    1,
+    42,
+    1,
+    42,
+    1
+   ]
+  },
+  {
+   "anum": "A040472",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [22.0, 4.0, 44.0]}",
+   "first_terms": [
+    22,
+    4,
+    44,
+    4,
+    44,
+    4,
+    44,
+    4
+   ]
+  },
+  {
+   "anum": "A040483",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [22.0, 2.0, 44.0]}",
+   "first_terms": [
+    22,
+    2,
+    44,
+    2,
+    44,
+    2,
+    44,
+    2
+   ]
+  },
+  {
+   "anum": "A040505",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [22.0, 1.0, 44.0]}",
+   "first_terms": [
+    22,
+    1,
+    44,
+    1,
+    44,
+    1,
+    44,
+    1
+   ]
+  },
+  {
+   "anum": "A040528",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [23.0, 2.0, 46.0]}",
+   "first_terms": [
+    23,
+    2,
+    46,
+    2,
+    46,
+    2,
+    46,
+    2
+   ]
+  },
+  {
+   "anum": "A040551",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [23.0, 1.0, 46.0]}",
+   "first_terms": [
+    23,
+    1,
+    46,
+    1,
+    46,
+    1,
+    46,
+    1
+   ]
+  },
+  {
+   "anum": "A040557",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 8.0, 48.0]}",
+   "first_terms": [
+    24,
+    8,
+    48,
+    8,
+    48,
+    8,
+    48,
+    8
+   ]
+  },
+  {
+   "anum": "A040559",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 6.0, 48.0]}",
+   "first_terms": [
+    24,
+    6,
+    48,
+    6,
+    48,
+    6,
+    48,
+    6
+   ]
+  },
+  {
+   "anum": "A040563",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 4.0, 48.0]}",
+   "first_terms": [
+    24,
+    4,
+    48,
+    4,
+    48,
+    4,
+    48,
+    4
+   ]
+  },
+  {
+   "anum": "A040567",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 3.0, 48.0]}",
+   "first_terms": [
+    24,
+    3,
+    48,
+    3,
+    48,
+    3,
+    48,
+    3
+   ]
+  },
+  {
+   "anum": "A040575",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 2.0, 48.0]}",
+   "first_terms": [
+    24,
+    2,
+    48,
+    2,
+    48,
+    2,
+    48,
+    2
+   ]
+  },
+  {
+   "anum": "A040599",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [24.0, 1.0, 48.0]}",
+   "first_terms": [
+    24,
+    1,
+    48,
+    1,
+    48,
+    1,
+    48,
+    1
+   ]
+  },
+  {
+   "anum": "A040609",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [25.0, 5.0, 50.0]}",
+   "first_terms": [
+    25,
+    5,
+    50,
+    5,
+    50,
+    5,
+    50,
+    5
+   ]
+  },
+  {
+   "anum": "A040624",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [25.0, 2.0, 50.0]}",
+   "first_terms": [
+    25,
+    2,
+    50,
+    2,
+    50,
+    2,
+    50,
+    2
+   ]
+  },
+  {
+   "anum": "A040649",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [25.0, 1.0, 50.0]}",
+   "first_terms": [
+    25,
+    1,
+    50,
+    1,
+    50,
+    1,
+    50,
+    1
+   ]
+  },
+  {
+   "anum": "A040662",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [26.0, 4.0, 52.0]}",
+   "first_terms": [
+    26,
+    4,
+    52,
+    4,
+    52,
+    4,
+    52,
+    4
+   ]
+  },
+  {
+   "anum": "A040675",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [26.0, 2.0, 52.0]}",
+   "first_terms": [
+    26,
+    2,
+    52,
+    2,
+    52,
+    2,
+    52,
+    2
+   ]
+  },
+  {
+   "anum": "A040701",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [26.0, 1.0, 52.0]}",
+   "first_terms": [
+    26,
+    1,
+    52,
+    1,
+    52,
+    1,
+    52,
+    1
+   ]
+  },
+  {
+   "anum": "A040707",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [27.0, 9.0, 54.0]}",
+   "first_terms": [
+    27,
+    9,
+    54,
+    9,
+    54,
+    9,
+    54,
+    9
+   ]
+  },
+  {
+   "anum": "A040710",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [27.0, 6.0, 54.0]}",
+   "first_terms": [
+    27,
+    6,
+    54,
+    6,
+    54,
+    6,
+    54,
+    6
+   ]
+  },
+  {
+   "anum": "A040719",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [27.0, 3.0, 54.0]}",
+   "first_terms": [
+    27,
+    3,
+    54,
+    3,
+    54,
+    3,
+    54,
+    3
+   ]
+  },
+  {
+   "anum": "A040728",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [27.0, 2.0, 54.0]}",
+   "first_terms": [
+    27,
+    2,
+    54,
+    2,
+    54,
+    2,
+    54,
+    2
+   ]
+  },
+  {
+   "anum": "A040755",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [27.0, 1.0, 54.0]}",
+   "first_terms": [
+    27,
+    1,
+    54,
+    1,
+    54,
+    1,
+    54,
+    1
+   ]
+  },
+  {
+   "anum": "A040762",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [28.0, 8.0, 56.0]}",
+   "first_terms": [
+    28,
+    8,
+    56,
+    8,
+    56,
+    8,
+    56,
+    8
+   ]
+  },
+  {
+   "anum": "A040763",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [28.0, 7.0, 56.0]}",
+   "first_terms": [
+    28,
+    7,
+    56,
+    7,
+    56,
+    7,
+    56,
+    7
+   ]
+  },
+  {
+   "anum": "A040769",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [28.0, 4.0, 56.0]}",
+   "first_terms": [
+    28,
+    4,
+    56,
+    4,
+    56,
+    4,
+    56,
+    4
+   ]
+  },
+  {
+   "anum": "A040783",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [28.0, 2.0, 56.0]}",
+   "first_terms": [
+    28,
+    2,
+    56,
+    2,
+    56,
+    2,
+    56,
+    2
+   ]
+  },
+  {
+   "anum": "A040811",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [28.0, 1.0, 56.0]}",
+   "first_terms": [
+    28,
+    1,
+    56,
+    1,
+    56,
+    1,
+    56,
+    1
+   ]
+  },
+  {
+   "anum": "A040840",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [29.0, 2.0, 58.0]}",
+   "first_terms": [
+    29,
+    2,
+    58,
+    2,
+    58,
+    2,
+    58,
+    2
+   ]
+  },
+  {
+   "anum": "A040869",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [29.0, 1.0, 58.0]}",
+   "first_terms": [
+    29,
+    1,
+    58,
+    1,
+    58,
+    1,
+    58,
+    1
+   ]
+  },
+  {
+   "anum": "A040879",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 6.0, 60.0]}",
+   "first_terms": [
+    30,
+    6,
+    60,
+    6,
+    60,
+    6,
+    60,
+    6
+   ]
+  },
+  {
+   "anum": "A040881",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 5.0, 60.0]}",
+   "first_terms": [
+    30,
+    5,
+    60,
+    5,
+    60,
+    5,
+    60,
+    5
+   ]
+  },
+  {
+   "anum": "A040884",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 4.0, 60.0]}",
+   "first_terms": [
+    30,
+    4,
+    60,
+    4,
+    60,
+    4,
+    60,
+    4
+   ]
+  },
+  {
+   "anum": "A040889",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 3.0, 60.0]}",
+   "first_terms": [
+    30,
+    3,
+    60,
+    3,
+    60,
+    3,
+    60,
+    3
+   ]
+  },
+  {
+   "anum": "A040899",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 2.0, 60.0]}",
+   "first_terms": [
+    30,
+    2,
+    60,
+    2,
+    60,
+    2,
+    60,
+    2
+   ]
+  },
+  {
+   "anum": "A040929",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [30.0, 1.0, 60.0]}",
+   "first_terms": [
+    30,
+    1,
+    60,
+    1,
+    60,
+    1,
+    60,
+    1
+   ]
+  },
+  {
+   "anum": "A040960",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [0.0, 1.0, 0.0], 'seeds': [31.0, 2.0, 62.0]}",
+   "first_terms": [
+    31,
+    2,
+    62,
+    2,
+    62,
+    2,
+    62,
+    2
+   ]
+  },
+  {
+   "anum": "A152832",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'poly_coeffs': [[-2, -1], [-1, 0], [1, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    -2,
+    3,
+    -1,
+    4,
+    0,
+    5,
+    1,
+    6
+   ]
+  },
+  {
+   "anum": "A152833",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'poly_coeffs': [[-2, -1], [-1, 0], [1, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    -3,
+    4,
+    -2,
+    5,
+    -1,
+    6,
+    0,
+    7
+   ]
+  },
+  {
+   "anum": "A168230",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'coeffs': [-1.0, 1.0, 1.0], 'seeds': [0.0, 4.0, 1.0]}",
+   "first_terms": [
+    0,
+    4,
+    1,
+    5,
+    2,
+    6,
+    3,
+    7
+   ]
+  },
+  {
+   "anum": "A175921",
+   "model_class": "periodic_5",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'unit': [1.0, 2.0, 2.0, -1.0, 1.0], 'period': 5}",
+   "first_terms": [
+    1,
+    2,
+    2,
+    -1,
+    1,
+    1,
+    2,
+    2
+   ]
+  },
+  {
+   "anum": "A193356",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 61,
+   "params": "{'poly_coeffs': [[-3, -1], [0, 0], [1, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    1,
+    0,
+    3,
+    0,
+    5,
+    0,
+    7,
+    0
+   ]
+  },
+  {
+   "anum": "A117378",
+   "model_class": "linear_recurrence_order2",
+   "shown": 14,
+   "heldout_confirmed": 60,
+   "params": "{'coeffs': [-1.0, 1.0], 'seeds': [1.0, -3.0]}",
+   "first_terms": [
+    1,
+    -3,
+    -4,
+    -1,
+    3,
+    4,
+    1,
+    -3
+   ]
+  },
+  {
+   "anum": "A131714",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 60,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, -2.0, 2.0]}",
+   "first_terms": [
+    1,
+    -2,
+    2,
+    -1,
+    2,
+    -2,
+    1,
+    -2
+   ]
+  },
+  {
+   "anum": "A132954",
+   "model_class": "linear_recurrence_order3",
+   "shown": 14,
+   "heldout_confirmed": 60,
+   "params": "{'coeffs': [-1.0, 0.0, 0.0], 'seeds': [1.0, 2.0, 4.0]}",
+   "first_terms": [
+    1,
+    2,
+    4,
+    -1,
+    -2,
+    -4,
+    1,
+    2
+   ]
+  },
+  {
+   "anum": "A137235",
+   "model_class": "holonomic_r2_p1",
+   "shown": 14,
+   "heldout_confirmed": 60,
+   "params": "{'poly_coeffs': [[-8, -1], [-1, 0], [7, 1]], 'order': 2, 'pdeg': 1, 'exact': True}",
+   "first_terms": [
+    6,
+    1,
+    7,
+    2,
+    8,
+    3,
+    9,
+    4
+   ]
+  }
+ ]
+}

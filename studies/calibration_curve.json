@@ -1,0 +1,66 @@
+[
+ {
+  "shown": 10,
+  "stamped": 143,
+  "survived": 52,
+  "failed": 91,
+  "survival_rate": 0.36363636363636365,
+  "refused": 2357
+ },
+ {
+  "shown": 12,
+  "stamped": 127,
+  "survived": 76,
+  "failed": 51,
+  "survival_rate": 0.5984251968503937,
+  "refused": 2373
+ },
+ {
+  "shown": 14,
+  "stamped": 117,
+  "survived": 81,
+  "failed": 36,
+  "survival_rate": 0.6923076923076923,
+  "refused": 2383
+ },
+ {
+  "shown": 18,
+  "stamped": 165,
+  "survived": 109,
+  "failed": 56,
+  "survival_rate": 0.6606060606060606,
+  "refused": 2335
+ },
+ {
+  "shown": 22,
+  "stamped": 166,
+  "survived": 119,
+  "failed": 47,
+  "survival_rate": 0.7168674698795181,
+  "refused": 2334
+ },
+ {
+  "shown": 26,
+  "stamped": 150,
+  "survived": 115,
+  "failed": 35,
+  "survival_rate": 0.7666666666666667,
+  "refused": 2350
+ },
+ {
+  "shown": 30,
+  "stamped": 148,
+  "survived": 114,
+  "failed": 34,
+  "survival_rate": 0.7702702702702703,
+  "refused": 2352
+ },
+ {
+  "shown": 34,
+  "stamped": 137,
+  "survived": 117,
+  "failed": 20,
+  "survival_rate": 0.8540145985401459,
+  "refused": 2363
+ }
+]
