@@ -5,9 +5,9 @@
 [![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
 [![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
 
-Chiron is a **proof-carrying acceptance gate** for the part of an AI output that can be checked exactly. It recovers constrained rules from data, verifies supported claims, refutes false ones, and **refuses to stamp what it cannot prove**. The result is a self-hash-bearing evidence record that says both what passed and what remained uncertified.
+Chiron is a **proof-carrying acceptance gate** for the part of a machine output that can be checked exactly. It recovers constrained rules from data, verifies supported claims, refutes false ones, and **refuses to stamp what it cannot prove**. The result is a self-hash-bearing evidence record stating both what passed and what remained uncertified.
 
-Use it when a confidence score is not a release criterion: structured numerical output, a rule recovered from data, or another supported checkable claim where a false pass is more costly than a human review. Chiron is **not** a general truth oracle, a replacement for experts, or a way to certify arbitrary free-form text.
+Use it where a confidence score is not a release criterion: structured numerical output, a rule recovered from data, or any supported checkable claim where a false pass costs more than a human review. Chiron is **not** a general truth oracle, a replacement for experts, or a way to certify arbitrary free-form text — and it is built so you cannot mistake it for one.
 
 On the current published frozen external eval (2026-07-21): **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals**, graded live against OEIS ground truth. That is a bounded, reproducible result—not a promise about every possible input. A prior 109-sequence sweep caught 3 false stamps; they were published and fixed at the root, then re-run with 44 verified and zero false. The public CI badges above keep the published proof path testable.
 
@@ -23,24 +23,83 @@ On the current published frozen external eval (2026-07-21): **22 stamped / 22 ex
 
 ---
 
-## Worked example: two conjectures fell to AI this month. We checked both.
+## The bottleneck is no longer discovery. It is verification.
 
-In July 2026 an AI system produced a counterexample to the **Jacobian conjecture**
-(open since 1939); days later another produced one to **Goemans' unsplittable-flow
-cost conjecture** (open since the 1990s). Both were announced ahead of peer review.
-Somebody still has to decide whether the arithmetic is real.
+In July 2026 an AI system produced a counterexample to the **Jacobian conjecture**,
+open since 1939. Days later another produced one to the **Dinitz–Garg–Goemans
+conjecture**, open since the 1990s. Both were announced ahead of peer review.
+Follow-on families and fresh counterexamples in adjacent problems arrived within
+the week.
 
-| | Checked | Result |
+Machines can now generate candidate mathematics faster than people can check it.
+Proof assistants are one answer, but formalization is expensive. Computer algebra
+is another, but it does not tell you what it failed to establish. The open
+question is narrower and more practical:
+
+> **When a machine announces a result, which parts of it can be checked exactly,
+> right now — and which parts must a human still own?**
+
+That question is what Chiron answers, and the refusals are as much of the answer
+as the checks.
+
+### Two announced counterexamples, ingested and checked
+
+| | What was checked | Result |
 |---|---|---|
 | **Jacobian** (Alpöge / Claude Fable 5) | `det J ≡ −2` as an exact polynomial identity over ℚ; a two-point rational collision denying injectivity | **12/12 gates** |
 | **Dinitz–Garg–Goemans** (Rybin / GPT-5.6 Pro) | fractional flow feasible at cost **58**; all 2³ unsplittable routings enumerated; cheapest congestion-admissible one costs **60** | **15/15 gates** |
 | **The whole DGG family** | every admissible instance with `b ≤ 25` — **456** of them — refutes, exhaustively, in exact integers | **456/456** |
 
-Exact rational and integer arithmetic. No solver, no floats, no network. And
-five things deliberately **left uncertified**: provenance, minimality, the
-Jacobian `n = 2` case, the DGG theorem itself, and peer review.
+Exact rational and integer arithmetic. No solver, no floats, no network.
+
+The claim is deliberately narrow, and the wording is the point: Chiron
+**independently certified the finite computational claims constituting each
+published counterexample, under the encoded formulation.** It did not certify
+either conjecture false. Provenance, minimality, the Jacobian `n = 2` case, the
+DGG theorem itself, and peer review are all **outside certificate scope** and are
+recorded as refusals.
+
+The Jacobian map now has an independent Isabelle/HOL formalization, so checking it
+adds no missing mathematical fact. What it demonstrates is a systems property: a
+general-purpose verifier, **not written for either conjecture**, ingested both and
+recovered their decisive finite obligations.
 
 **[Read what was verified — and what was refused →](docs/AI_CLAIMS.md)**
+
+### The same contract, run across 3,195 open conjectures
+
+Two hand-picked results prove little on their own. So the same engine was pointed
+at [`google-deepmind/formal-conjectures`](https://github.com/google-deepmind/formal-conjectures)
+— 850 Lean files spanning Erdős problems, Hilbert problems, Millennium problems and
+OEIS conjectures — and asked the only question it is entitled to ask of each:
+*is there a finite exact obligation here that I can discharge?*
+
+| Verdict | Theorems | |
+|---|---:|---|
+| `REFUSED-NEEDS-LEAN` | 1,545 | 48.4% |
+| `REFUSED-INFINITARY` | 922 | 28.9% |
+| `REFUSED-NO-ANSWER` | 426 | 13.3% |
+| **`FINITE-CHECKABLE`** | **302** | **9.5%** |
+
+**Chiron refuses 90.5% of this corpus, and that is the correct answer.** Open
+conjectures are open precisely because they are not finitely checkable. A tool
+reporting a high success rate here would be broken, not capable.
+
+The calibration check is that the classifier never sees the corpus's own labels,
+yet independently rediscovers them. Theorems DeepMind tags `test` account for 215
+of the 302 finite-checkable obligations — 71% of everything Chiron can discharge
+comes from the 18% of the corpus that is sanity checks. Meanwhile `research open`
+returns **432 infinitary and 418 unanswered against just 18 finite**.
+
+Of the OEIS-referencing subset, **35 concrete obligations were discharged against
+live oeis.org data with zero contradictions**, and 21 statements were refused.
+
+Reproduce the corpus numbers yourself — no licence, no engine, no account:
+
+```bash
+git clone --depth 1 https://github.com/google-deepmind/formal-conjectures
+python3 eval/conjecture_triage.py triage formal-conjectures
+```
 
 ---
 
