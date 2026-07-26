@@ -121,14 +121,114 @@ the window breaks it. That is a specific, fixable weakness — not a vague
 
 ---
 
+## 4b. Can the engine predict its own failures? Yes — and it already had the signal.
+
+The previous sections describe the problem. This section fixes it.
+
+Every stamp was re-run with its **full certificate captured**, then labelled
+by whether it survived. If some feature the engine already computes separates
+survivors from failures, the engine can report calibrated confidence instead
+of a bare verdict.
+
+**n = 2,351 stamps. 2,002 survived, 349 failed (85.2% baseline).**
+
+| feature (median) | survived | failed | separation |
+|---|---|---|---|
+| **growth ratio** a(last)/a(first) | **4,330** | **7.5** | 577× |
+| **max \|term\| shown** | 19,841 | 13 | 1,526× |
+| **MDL compression_ratio** | **5.41** | **3.27** | 1.65× |
+| model_bits | 67.7 | 75.4 | — |
+| fit_score | 1.000 | 1.000 | **none** |
+| residual_bits | 0.000 | 0.000 | **none** |
+
+Two results here.
+
+**`fit_score` and `residual_bits` separate nothing.** Every stamp fits its
+data perfectly — that is what earning a stamp means. Goodness-of-fit carries
+zero information about generalisation. Any system using fit quality as a
+confidence proxy is reading a constant.
+
+**Growth is the dominant predictor**, by three orders of magnitude. This is
+information-theoretic, not incidental: a rapidly growing sequence *constrains*
+its generator — few rules can match 14 terms of explosive growth. A flat,
+bounded sequence admits thousands of rules that agree on any short prefix and
+diverge after. **High-entropy data is safer to induct from than low-entropy
+data**, which is the opposite of the usual intuition.
+
+### The gate this implies
+
+Sweeping thresholds over the same 2,351 stamps:
+
+| gate | precision | stamps kept | failures remaining |
+|---|---|---|---|
+| *(none — baseline)* | 85.2% | 100% | 349 |
+| compression_ratio ≥ 3.65 | 92.4% | 78% | 140 |
+| max \|term\| ≥ 1,920 | 97.9% | 63% | 31 |
+| **growth ≥ 755** | **99.6%** | **59%** | **6** |
+| **compression ≥ 2 AND growth ≥ 500** | **99.5%** | **64%** | **8** |
+
+**The failure rate falls from 14.8% to 0.5% — a ~30× reduction — while
+retaining roughly two-thirds of all stamps.**
+
+The engine was already computing `compression_ratio` and discarding it as a
+confidence signal. Growth it was not computing at all.
+
+### Shipped, not just reported
+
+This is implemented in the engine as of **v0.7.0**:
+
+- `structure["growth_ratio"]` is recorded on every numeric collapse.
+- `Invariant.generalization_band` returns `high` / `medium` / `low` /
+  `not_stamped`, using the thresholds measured above.
+- `to_dict()` carries the band, so it appears in every certificate.
+
+**Nothing about what stamps changed.** `verified` is untouched — this
+annotates stamps already earned. The engine does not stamp one additional
+sequence because of this work.
+
+Behaviour on real input:
+
+```
+Factorials             verified=True   band=high        growth=3.1e9
+Catalan                verified=True   band=high        growth=371450
+Fibonacci              verified=True   band=medium      growth=234
+squares                verified=True   band=medium      growth=98.5
+A000195 floor(log n)   verified=True   band=low         growth=2.0
+primes                 verified=False  band=not_stamped
+```
+
+**The named failure mode now flags itself.** A000195 — the sequence
+identified in §4 as the archetypal false stamp — returns `band: low` without
+anyone special-casing it.
+
+### The regression the battery caught, immediately
+
+Adding `growth_ratio` to `structure` broke the stress battery: **52/55**.
+Three failures, all on *family* identity — two sequences from the same family
+at different scales no longer fingerprinted as the same family.
+
+Correct catch. `family_fingerprint` is hashed from `structure`, and growth is
+a property of the **surface**, not the skeleton. A surface value had leaked
+into a structural signature. Fingerprints now strip it (`_structural_only()`);
+back to **55/55**.
+
+Worth stating plainly: the gates caught the author's own regression within
+one run of introducing it. That is the same property this whole study
+measures, applied to the study itself.
+
+---
+
 ## 5. What this means for anyone using an exact-or-refuse gate
 
 1. **Report evidence with the verdict.** "VERIFIED (14 terms)" and
    "VERIFIED (34 terms)" are different claims.
-2. **Set the evidence bar per family.** A degree-4 polynomial at 14 terms was
+2. **Gate on growth, not on fit.** Fit quality is a constant among stamps and
+   carries no signal. Growth of the supplied surface predicts generalisation
+   by three orders of magnitude, and gating on it cuts failures ~30×.
+3. **Set the evidence bar per family.** A degree-4 polynomial at 14 terms was
    right 100% of the time here. A low-order holonomic fit was right half the
    time. One threshold for both is the wrong design.
-3. **A refusal rate of 66.5% is a feature.** The engine declined two-thirds
+4. **A refusal rate of 66.5% is a feature.** The engine declined two-thirds
    of OEIS. Any system stamping most of that corpus from 14 terms is not
    being careful — it is guessing with extra steps.
 
@@ -156,7 +256,13 @@ the window breaks it. That is a specific, fixable weakness — not a vague
 python3 studies/discover.py 1 400000   # the full sweep (parallelise by range)
 python3 studies/calibrate.py           # the calibration curve
 python3 studies/failmode.py            # per-family survival
+python3 studies/separator.py           # feature separation + the gate
 ```
+
+Data shipped alongside: [`calibration_curve.json`](calibration_curve.json),
+[`failmode.json`](failmode.json), [`separator_analysis.json`](separator_analysis.json),
+[`oeis_confirmed_rules.json`](oeis_confirmed_rules.json) (12,581 confirmed
+recoveries).
 
 Requires the licensed engine. The corpus is the public OEIS `stripped` file.
 
@@ -171,3 +277,8 @@ that makes the tool weaker on paper: **12.8% of stamps did not survive.**
 A verification project that publishes only its successes has not understood
 its own thesis. The measurement above is what a stamp is worth — stated
 plainly, with the curve, the failing families, and the named failure mode.
+
+And the failure number is what made the engine better. Chasing *why* 12.8%
+failed produced the growth predictor, the 30× gate, and `generalization_band`
+in v0.7.0. The success number, 12,581 recovered rules, produced nothing but a
+headline.

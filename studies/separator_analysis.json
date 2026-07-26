@@ -1,0 +1,39 @@
+{
+ "n_stamps": 2351,
+ "survived": 2002,
+ "failed": 349,
+ "median_features": {
+  "growth": {
+   "survived": 4330.0,
+   "failed": 7.5
+  },
+  "max_abs": {
+   "survived": 19841.5,
+   "failed": 13
+  },
+  "compression_ratio": {
+   "survived": 5.4095,
+   "failed": 3.273
+  },
+  "model_bits": {
+   "survived": 67.685,
+   "failed": 75.41
+  },
+  "surface_bits": {
+   "survived": 357.505,
+   "failed": 392.84
+  }
+ },
+ "gate_results": {
+  "baseline_survival": 0.8516,
+  "growth_ge_755": {
+   "precision": 0.996,
+   "kept_share": 0.593
+  },
+  "compression_ge_2_and_growth_ge_500": {
+   "precision": 0.995,
+   "kept_share": 0.64,
+   "failures": 8
+  }
+ }
+}
