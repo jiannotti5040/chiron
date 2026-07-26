@@ -1,0 +1,69 @@
+# The balance-sheet beat: re-run the exact identity check every quarter,
+# in public, on data nobody here controls.
+#
+# Assets == LiabilitiesAndStockholdersEquity is an identity every filed
+# balance sheet must satisfy. This job checks every SEC filer that reports
+# both, publishes the ones that don't tie, and — the part that matters —
+# publishes the refusal count alongside them.
+#
+# It costs nothing, needs no key, and produces a citable artifact on a
+# schedule. Findings land as a committed JSON file plus a job summary you
+# can link.
+name: sec-quarterly
+
+on:
+  schedule:
+    - cron: "23 11 5 1,4,7,10 *"   # 5th of Jan/Apr/Jul/Oct, after filing waves
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  balance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run the exact balance-sheet identity check
+        id: run
+        run: |
+          python3 studies/sec_balance_check.py | tee run.log
+          echo "---"
+          test -f sec_identity_violations.json || echo "[]" > sec_identity_violations.json
+
+      - name: Publish the findings as a job summary
+        run: |
+          {
+            echo "## SEC balance-sheet identity check"
+            echo
+            echo '`Assets == LiabilitiesAndStockholdersEquity`, exact integers,'
+            echo 'same accession and same instant. Refusals counted, not hidden.'
+            echo
+            echo '```'
+            grep -E "checked|EXACT|VIOLATIONS|REFUSED|rate" run.log || true
+            echo '```'
+            echo
+            echo "### Filings that do not balance"
+            echo '```'
+            sed -n '/DOES NOT BALANCE/,/violations ->/p' run.log || true
+            echo '```'
+            echo
+            echo "_Alleges nothing about any filer: a tagging error and a"
+            echo "reporting error are indistinguishable from outside._"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit the dated findings
+        run: |
+          STAMP=$(date -u +%Y-%m-%d)
+          mkdir -p studies/quarterly
+          cp sec_identity_violations.json "studies/quarterly/sec_balance_${STAMP}.json"
+          cp run.log "studies/quarterly/sec_balance_${STAMP}.log"
+          git config user.name "Jacob Iannotti"
+          git config user.email "jiannotti1@gmail.com"
+          git add studies/quarterly/
+          git diff --staged --quiet || git commit -m "SEC balance-sheet beat: ${STAMP} run"
+          git push
