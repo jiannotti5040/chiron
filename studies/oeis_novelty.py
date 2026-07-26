@@ -107,6 +107,14 @@ MMA_MARKERS = ("LinearRecurrence[", "PadRight[{}", "CoefficientList[Series[",
                "RecurrenceTable[", "DifferenceRoot[")
 
 NAME_PATTERNS = [
+    # Found by A181477, whose name reads "a(n) has generating function
+    # 1/((1-x)^k*(1-x^2)^(k*(k-1)/2)) for k=5." The G.f. patterns below all
+    # require the literal abbreviation; spelled out, it sailed through as a
+    # false survivor. Same failure shape as the original A279538 bug.
+    r"\bgenerating function\b",
+    r"\bexponential generating function\b",
+    r"\brecurrence\b",
+    r"\bclosed form\b",
     # UNANCHORED on purpose. OEIS names routinely read "Powers of 2: a(n) = 2^n"
     # or "Triangular numbers: a(n) = binomial(n+1,2)" -- a descriptive phrase,
     # a colon, then the rule. An anchored ^a(n)= misses every one of those, and
@@ -138,6 +146,24 @@ BODY_PATTERNS = [
 CONJ_PREFIX = re.compile(r"^\s*(Conjecture|Conjectural|Empirical)", re.I)
 
 
+# Base-dependent classes OEIS does not always keyword `base`. A286508 --
+# "Binary representation of the diagonal ... cellular automaton Rule 190" --
+# is keyworded only `nonn,easy`, so the keyword gate never saw it. Its terms
+# are binary strings read as decimal integers; any recovered "rule" is an
+# artifact of the writing, not a fact about the automaton.
+BASE_NAME_RE = re.compile(
+    r"^\s*(Binary|Decimal|Ternary|Hexadecimal|Base-?\d+)\s+(representation|expansion)\b"
+    r"|\bwritten in base\b|\bin base \d+\b|\bdigits? of\b", re.I)
+
+# "Row 4 of array in A265080", "Row sums of the triangular array at A249057".
+# For these the mathematics lives in the PARENT entry, which the detector was
+# never reading. Four of six survivors were this class.
+PARENT_RE = re.compile(
+    r"\b(?:Row|Column|Diagonal|Antidiagonal)s?\b[^.]{0,40}?\bA(\d{6})\b"
+    r"|\bRow sums? of\b[^.]{0,40}?\bA(\d{6})\b"
+    r"|\b(?:array|triangle|table)\b[^.]{0,20}?\b(?:in|at|of)\s+A(\d{6})\b", re.I)
+
+
 def _lines(entry, key):
     v = entry.get(key)
     if v is None:
@@ -145,8 +171,31 @@ def _lines(entry, key):
     return v if isinstance(v, list) else [v]
 
 
-def documented(entry):
+def parent_of(entry):
+    """A-number of the array/triangle this entry is a row of, or None."""
+    m = PARENT_RE.search(entry.get("name", "") or "")
+    if not m:
+        return None
+    g = next((x for x in m.groups() if x), None)
+    return int(g) if g else None
+
+
+def documented(entry, follow_parent=True):
     """Return (is_documented, reason). Ambiguity resolves to documented."""
+    # A base-representation sequence is an encoding artifact, not mathematics.
+    if BASE_NAME_RE.search(entry.get("name", "") or ""):
+        return True, f"base-representation artifact: {(entry.get('name') or '')[:70]}"
+
+    # A row of a documented array is documented BY that array. Follow it once
+    # (never recursively -- one hop is the real pattern and it cannot loop).
+    if follow_parent:
+        p = parent_of(entry)
+        if p is not None and p != entry.get("number"):
+            pe = entry_by_number(p)
+            if pe is not None:
+                ok, why = documented(pe, follow_parent=False)
+                if ok:
+                    return True, f"parent A{p:06d} documents it -> {why[:60]}"
     # 1. Highest precision: OEIS's own machine-readable recurrence index link.
     for ln in _lines(entry, "link"):
         if REC_LINK in ln:
@@ -191,6 +240,14 @@ def _get(url, binary=False):
     with urllib.request.urlopen(req, timeout=60) as r:
         raw = r.read()
     return raw if binary else raw.decode("utf-8", "replace")
+
+
+def entry_by_number(anum):
+    """entry() by A-number, tolerating fetch failure (used for parent lookup)."""
+    try:
+        return entry(anum)
+    except Exception:
+        return None
 
 
 def entry(anum, use_cache=True):
