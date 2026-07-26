@@ -64,6 +64,29 @@ you how much the gate could see. The tool is built so you cannot lose that disti
 
 ---
 
+## The calibration study: what a VERIFIED stamp is actually worth
+
+Verification systems report a binary verdict. Nobody publishes what that verdict is *worth*.
+We measured it across **all 397,772 OEIS sequences** — 14 terms shown, every stamp then tested
+against every term it never saw.
+
+| | |
+|---|---|
+| engine **refused** | 264,574 (66.5%) |
+| stamps that **survived** every unseen term | 12,581 |
+| stamps that **failed** | **1,844 (12.8%)** |
+
+Chasing that 12.8% produced the finding: **goodness-of-fit predicts nothing** (every stamp fits
+perfectly by construction), while **growth of the input predicts generalisation by three orders of
+magnitude**. Gating on it cuts the failure rate **14.8% → 0.5%** while keeping two-thirds of stamps
+— now shipped in the engine as `generalization_band`.
+
+**[Read the study →](studies/CALIBRATION.md)** · scripts and data included; every figure is
+reproducible.
+
+
+---
+
 ## Verify it yourself — three depths, no purchase
 
 Each tier says exactly what it proves and what it does not. That restraint is the product.
