@@ -44,6 +44,26 @@ Jacobian `n = 2` case, the DGG theorem itself, and peer review.
 
 ---
 
+## Use it in your agent — free, offline, 30 seconds
+
+Gate your own agent's output with the same engine. No key, no account, no repo access:
+
+```bash
+pip install primus-intelligence
+claude mcp add primus -- primus-mcp
+```
+
+Three MCP tools appear: **`certify`** (mark every checkable claim `VERIFIED` / `REFUTED` /
+`REFUSED`, and report the coverage boundary), **`collapse`** (recover an exact rule, proven on
+held-out terms, or refuse), **`conjecture`** (guess-and-prove behind an exact gate). Runs locally
+and offline; free for noncommercial use. Setup for Claude Desktop, Cursor and other clients:
+**[`docs/MCP.md`](docs/MCP.md)**.
+
+A `certify` pass means nothing checkable was refuted — *not* that the text is true. Coverage tells
+you how much the gate could see. The tool is built so you cannot lose that distinction.
+
+---
+
 ## Verify it yourself — three depths, no purchase
 
 Each tier says exactly what it proves and what it does not. That restraint is the product.
