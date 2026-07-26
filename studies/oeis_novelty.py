@@ -107,7 +107,13 @@ MMA_MARKERS = ("LinearRecurrence[", "PadRight[{}", "CoefficientList[Series[",
                "RecurrenceTable[", "DifferenceRoot[")
 
 NAME_PATTERNS = [
-    r"^\s*a\s*\(\s*n\s*\)\s*=",
+    # UNANCHORED on purpose. OEIS names routinely read "Powers of 2: a(n) = 2^n"
+    # or "Triangular numbers: a(n) = binomial(n+1,2)" -- a descriptive phrase,
+    # a colon, then the rule. An anchored ^a(n)= misses every one of those, and
+    # they are unambiguously documented. Widening this direction risks calling
+    # something documented that is not, which is why CONTROLS_UNDOCUMENTED
+    # gained cases that mention a(n) WITHOUT defining it.
+    r"\ba\s*\(\s*n\s*\)\s*=\s*\S",
     r"^\s*Expansion of",
     r"G\.f\.\s*[:=]", r"\bG\.f\.\s+is\b",
     r"E\.g\.f\.\s*[:=]", r"\bE\.g\.f\.\s+is\b",
@@ -308,6 +314,12 @@ CONTROLS_DOCUMENTED = [
     (45,     "Fibonacci -- documented in name, formula, comment, programs"),
     (108,    "Catalan -- documented via generating function"),
     (195,    "name has the proven closed form; formula field is CONJECTURAL only"),
+    # Real cases found during the run: descriptive phrase, colon, then the rule.
+    # An anchored ^a(n)= misses all of these.
+    (79,     "name: 'Powers of 2: a(n) = 2^n' -- rule after a colon"),
+    (244,    "name: 'Powers of 3: a(n) = 3^n'"),
+    (290,    "name: 'The squares: a(n) = n^2'"),
+    (217,    "name: 'Triangular numbers: a(n) = binomial(n+1,2) = n*(n+1)/2'"),
 ]
 
 
@@ -338,6 +350,16 @@ CONTROLS_UNDOCUMENTED = [
      {"name": "Number of self-avoiding walks on a square lattice.",
       "link": ['A. Author, <a href="/A001411/b001411.txt">Table of n, a(n)</a>'],
       "keyword": "nonn,walk"}),
+    # These three exist because NAME_PATTERNS was unanchored to catch names of
+    # the form "Powers of 2: a(n) = 2^n". Unanchoring risks matching a name
+    # that MENTIONS a(n) without defining it. It must not.
+    ("name mentions a(n) as a condition, does not define it",
+     {"name": "Numbers n such that a(n) is prime.", "keyword": "nonn"}),
+    ("name refers to another sequence's a(n)",
+     {"name": "Indices n for which A000045(n) is a perfect square.",
+      "keyword": "nonn"}),
+    ("name poses a question about a(n)",
+     {"name": "Smallest k such that a(k) exceeds n.", "keyword": "nonn"}),
 ]
 
 
@@ -401,7 +423,16 @@ def filter0():
 # ---------------------------------------------------------------------------
 
 def evaluate(anum, verbose=True):
-    """Return (verdict, detail). verdict 'SURVIVOR' means it passed every filter."""
+    """
+    Return (verdict, detail). 'SURVIVOR' means it passed every filter.
+
+    Filters run cheapest-first ON PURPOSE. Everything derivable from the entry
+    JSON (keywords, growth, documentation) is applied before the b-file is
+    fetched, because the b-file is a second network round trip and the
+    documentation check kills most candidates for free. Order does not affect
+    which sequences survive -- a survivor must pass all of them regardless --
+    it only affects how many requests OEIS is asked to serve.
+    """
     e = entry(anum)
     if e is None:
         return "no-entry", "could not fetch"
@@ -409,21 +440,27 @@ def evaluate(anum, verbose=True):
     kw = set((e.get("keyword") or "").split(","))
     name = (e.get("name") or "")[:70]
 
-    # Filter 3 -- structurally trivial classes
+    # Filter 3 -- structurally trivial classes (free)
     bad = kw & EXCLUDED_KEYWORDS
     if bad:
         return "excluded-keyword", f"{','.join(sorted(bad))} | {name}"
 
-    data = [int(x) for x in (e.get("data") or "").split(",") if x.strip().lstrip("-").isdigit()]
+    data = [int(x) for x in (e.get("data") or "").split(",")
+            if x.strip().lstrip("-").isdigit()]
     if len(data) < MIN_DATA_TERMS:
         return "too-short", f"{len(data)} terms in data | {name}"
 
-    # Filter 4 -- require growth
+    # Filter 4 -- require growth (free)
     g = growth_ratio(data)
     if g < MIN_GROWTH_RATIO:
         return "flat", f"growth {g:.1f} < {MIN_GROWTH_RATIO} | {name}"
 
-    # Filter 2 -- a REAL b-file, not a synthesized one
+    # Filter 5 -- already documented? (free, and kills most candidates)
+    doc, reason = documented(e)
+    if doc:
+        return "documented", f"{reason[:70]}"
+
+    # Filter 2 -- a REAL b-file, not one OEIS synthesized from `data` (1 request)
     terms, status = bfile(anum, len(data))
     if status != "real":
         return f"bfile-{status}", f"{len(terms)} terms vs {len(data)} in data | {name}"
@@ -433,11 +470,6 @@ def evaluate(anum, verbose=True):
     if inv is None:
         return "no-exact-recovery", f"{why} | {name}"
 
-    # Filter 5 -- is it already documented?
-    doc, reason = documented(e)
-    if doc:
-        return "documented", f"{reason[:70]}"
-
     return "SURVIVOR", (f"{inv.model_class} | {why} | bfile={len(terms)} "
                         f"data={len(data)} growth={g:.0f} | {name}")
 
@@ -446,17 +478,39 @@ def run(anums, label):
     print("=" * 74)
     print(f"RUN: {label}  ({len(anums)} candidates)")
     print("=" * 74)
+    sys.stdout.reconfigure(line_buffering=True)
+
+    # Resumable: a 3,000-candidate run at OEIS's politeness delay takes hours,
+    # and losing it to a transient network error would be pure waste.
+    ledger = CACHE / "sweep_ledger.tsv"
+    done = {}
+    if ledger.exists():
+        for ln in ledger.read_text().splitlines():
+            p = ln.split("\t")
+            if len(p) >= 3:
+                done[int(p[0])] = (p[1], p[2])
+        print(f"  resuming: {len(done)} already evaluated\n")
+
     tally, survivors = {}, []
-    for i, a in enumerate(anums, 1):
-        verdict, detail = evaluate(a)
-        tally[verdict] = tally.get(verdict, 0) + 1
-        if verdict == "SURVIVOR":
-            survivors.append((a, detail))
-            print(f"  *** SURVIVOR  A{a:06d}  {detail}")
-        else:
-            print(f"  [{verdict:18s}] A{a:06d}  {detail[:66]}")
-        if i % 25 == 0:
-            print(f"      -- {i}/{len(anums)} --")
+    with ledger.open("a") as log:
+        for i, a in enumerate(anums, 1):
+            if a in done:
+                verdict, detail = done[a]
+            else:
+                try:
+                    verdict, detail = evaluate(a)
+                except Exception as ex:          # never lose the run to one entry
+                    verdict, detail = "error", f"{type(ex).__name__}: {ex}"[:90]
+                log.write(f"{a}\t{verdict}\t{detail}\n")
+                log.flush()
+            tally[verdict] = tally.get(verdict, 0) + 1
+            if verdict == "SURVIVOR":
+                survivors.append((a, detail))
+                print(f"  *** SURVIVOR  A{a:06d}  {detail}")
+            if i % 100 == 0:
+                top = sorted(tally.items(), key=lambda x: -x[1])[:3]
+                print(f"      {i}/{len(anums)}  survivors={len(survivors)}  "
+                      + "  ".join(f"{k}={v}" for k, v in top))
 
     print("\n" + "-" * 74)
     for k in sorted(tally, key=lambda x: -tally[x]):
