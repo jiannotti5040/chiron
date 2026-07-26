@@ -1,7 +1,7 @@
-# I checked 16,990 SEC filings. 18 don't balance.
+# 376,616 balance sheets. 655 don't balance. Here's how they fail.
 
 **Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see [../LICENSE.md](../LICENSE.md)).**
-**Run: 2026-07-25, live against data.sec.gov. Reproducible with the script in this folder.**
+**Run: 2026-07-25, live against data.sec.gov. Reproducible — the scripts are in this folder.**
 
 Every balance sheet must satisfy one identity:
 
@@ -9,97 +9,131 @@ Every balance sheet must satisfy one identity:
 Assets == LiabilitiesAndStockholdersEquity
 ```
 
-Both are tagged concepts in XBRL. If they disagree inside a single filing, the
-balance sheet does not balance. I checked every SEC filer that reported both,
-across three quarterly instants, in exact integer arithmetic.
+Both are tagged XBRL concepts. If they disagree *inside a single filing*, that
+filing does not balance. I checked **every SEC filer that reported both, in
+every quarter from 2009 through 2025**, in exact integer arithmetic.
 
 ## Result
 
 | | |
 |---|---|
-| filings checked (both facts, same accession, same instant) | **16,990** |
-| tie exactly | **16,972** |
-| **do not tie** | **18** |
-| refused (one side missing, or period mismatch) | 929 |
-| exact-identity rate | **99.894%** |
+| filing-periods checked (both facts, same accession, same instant) | **376,616** |
+| tie exactly | **375,961** |
+| **do not tie** | **655** |
+| refused (one side missing, or period mismatch) | 26,909 |
+| exact-identity rate | **99.8261%** |
 
-### The 18
+Coverage: 68 quarterly instants, 2009Q1 → 2025Q4, ~5,000–8,000 filers each.
 
-| Company | Period end | Gap |
-|---|---|---|
-| American Resources Corporation | 2024-09-30 | **−$1,000,000** |
-| SUPERCOM LTD. | 2024-06-30 | −$2,000 |
-| NATIONAL BANKSHARES, INC. | 2024-12-31 | −$1,000 |
-| Twinlab Consolidated Holdings | 2024-12-31 | −$1,000 |
-| GEN Restaurant Group, Inc. | 2024-09-30 | −$1,000 |
-| FAT Brands Inc. | 2024-06-30 | −$1,000 |
-| Enertopia Corporation | 2024-11-30 | +$500 |
-| 11 others | various | ±$1–2 |
+## How they fail — the taxonomy
 
-Full records, with accession numbers so any one can be pulled and read:
-[`sec_balance_violations_2024.json`](sec_balance_violations_2024.json).
+Classifying the 655 by **exact ratio test only** (no fuzzy matching, no
+judgment calls):
 
-Most are immaterial rounding. One is a million dollars. **All eighteen are
-filed documents whose stated total assets differ from their stated total of
-liabilities and equity** — which is worth knowing whichever bucket it lands in.
-
-## The part that matters: 1,356 → 18
-
-The first rule I wrote was the textbook one:
-
-```
-Assets == Liabilities + StockholdersEquity
-```
-
-It produced **1,356 "violations."** Every one was wrong — not wrong about the
-data, wrong about *my rule*:
-
-| pass | rule | "findings" | what the drop actually was |
+| failure mode | count | share | test |
 |---|---|---|---|
-| 1 | Assets = Liabilities + Equity | 1,356 | — |
-| 2 | + noncontrolling interests | 204 | equity concept excluded minority interest |
-| 3 | + mezzanine / temporary equity | 81 | redeemable preferred sits in neither bucket |
-| 4 | the identity XBRL itself must satisfy | **18** | earlier passes compared across mismatched periods |
+| material, unexplained (> $1k) | 275 | 42.0% | no clean pattern |
+| rounding ($1–2) | 211 | 32.2% | \|gap\| ≤ 2 |
+| small (≤ $1k) | 121 | 18.5% | \|gap\| ≤ 1000 |
+| **sign flip** | **26** | 4.0% | L+E == exactly −Assets |
+| assets tagged zero | 14 | 2.1% | Assets == 0 |
+| L+E tagged zero | 6 | 0.9% | L+E == 0 |
+| **scale error** | **2** | 0.3% | exact power-of-ten ratio |
 
-**98.7% of my apparent findings were gaps in my own model.** KKR, Apollo,
-Blackstone, Exxon and 1,300 others were never wrong. My arithmetic was
-incomplete, and the honest move was to fix the rule rather than publish the
-list.
+### Sign flips — unambiguous, and some are enormous
 
-That loop is the entire method. Anyone can flag 1,356 anomalies with a
-spreadsheet. Producing 18 that survive challenge — and being able to show a
-client exactly which 1,338 you *declined* to call errors, and why — is the
-difference between a report that gets paid for and one that gets rebutted in
-the first meeting.
+`LiabilitiesAndStockholdersEquity` tagged as exactly the **negative** of
+`Assets`. There is no accounting interpretation of this; it is a defect.
+
+| filer | period | gap |
+|---|---|---|
+| **ENTERGY CORPORATION** | 2009-06-30 | **$72,970,440,000** |
+| GREAT WOLF RESORTS, INC. | 2012-03-31 | −$1,418,222,000 |
+| TEXAS PACIFIC LAND TRUST | 2011-06 / 2011-09 / 2012-06 | ~−$50,000,000 each |
+| CITIZENS CAPITAL CORP | 5 consecutive periods | ~$37,700,000 each |
+
+### Scale errors — off by exactly a power of ten
+
+| filer | period | gap | ratio |
+|---|---|---|---|
+| CANNABIS SCIENCE, INC. | 2013-06-30 | −$727,353,918 | 1000× |
+| Lightning Gaming, Inc. | 2018-12-31 | $33,828,300 | 10× |
+
+### Repeat offenders
+
+The same filer failing across multiple periods — a persistent process defect,
+not a one-off typo:
+
+```
+7x  AVANT TECHNOLOGIES INC.        6x  Chee Corp.
+7x  RADTEK, INC                    6x  CAMBELL INTERNATIONAL HOLDING CORP.
+6x  VITASPRING BIOMEDICAL CO. LTD. 5x  CITIZENS CAPITAL CORP
+5x  ROGUE ONE, INC.                5x  NATION ENERGY INC
+```
+
+Full records with accession numbers:
+[`sec_balance_2009_2025_full.json`](sec_balance_2009_2025_full.json) ·
+[`sec_balance_taxonomy.json`](sec_balance_taxonomy.json)
+
+## Who this is actually for
+
+**If you build anything quantitative on SEC XBRL data, these 655 filings are
+in your dataset and they are broken.** A sign-flipped $72.97B on Entergy, a
+1000× scale error on Cannabis Science, and 26,909 records where one side of
+the identity is simply absent. Screens, factor models, training corpora and
+research pipelines ingest these silently.
+
+This folder is the list, the failure taxonomy, and the script to regenerate
+both.
 
 ## What this does and does not claim
 
-- It does **not** allege misconduct, fraud, or restatement by any company
-  listed. A tagging error and a reporting error look identical from outside;
-  distinguishing them requires the filer's own records.
-- It does **not** check any other accounting relationship — only the single
-  identity above.
-- It **refused** 929 comparisons rather than guess at them. Those are counted
-  in the open, not dropped.
-- Rounding-scale gaps (±$1–2) are almost certainly presentation artifacts and
-  are reported as such rather than dressed up.
+- It does **not** allege misconduct, fraud, or restatement by any filer named.
+  A tagging error and a reporting error are **indistinguishable from outside**;
+  telling them apart requires the filer's own records. Most of these — the
+  2009–2012 cluster especially — are almost certainly XBRL tagging defects
+  from the early mandate years, not accounting problems.
+- It checks **one** identity. Not revenue, not cash flow, not disclosure.
+- It **refused** 26,909 comparisons rather than guess. Those are published in
+  the open, not dropped.
+- Pre-2009 filings are unstructured and out of scope. IFRS filers use a
+  different taxonomy and are not covered. Private companies do not file.
 
-## Reproduce it
+## The method is the point: 1,356 → 18 → 655
+
+My first rule was the textbook one, `Assets = Liabilities + StockholdersEquity`,
+on a single quarter. It produced **1,356 "violations."** Every one was wrong —
+not about the data, about **my rule**:
+
+| pass | rule | findings | what the drop was |
+|---|---|---|---|
+| 1 | Assets = Liabilities + Equity | 1,356 | — |
+| 2 | + noncontrolling interests | 204 | equity concept excluded minority interest |
+| 3 | + mezzanine / temporary equity | 81 | redeemable preferred is in neither bucket |
+| 4 | the identity XBRL itself must satisfy | **18** | earlier passes compared mismatched periods |
+| 5 | same rule, **all 68 quarters** | **655** | scope, not rule change |
+
+**98.7% of the apparent findings in pass 1 were gaps in my own model.** KKR,
+Apollo, Blackstone, Exxon and 1,300 others were never wrong. The honest move
+was to fix the rule and publish the refusals, not the list.
+
+That loop is the whole method. Anyone can flag 1,356 anomalies with a
+spreadsheet. Producing 655 that survive challenge across 17 years — and being
+able to show precisely which ones you *declined* to call errors, and why — is
+the difference between a report that gets paid for and one that dies in the
+first rebuttal.
+
+## Reproduce
 
 ```bash
-python3 studies/sec_balance_check.py
+python3 studies/sec_full_history.py    # the full 2009-2025 sweep (~5 min)
+python3 studies/classify.py            # the failure taxonomy
+python3 studies/sec_balance_check.py   # a fast 3-quarter version
 ```
 
-Stdlib only. Hits `data.sec.gov`'s public XBRL frames API. No key required —
-set a contact string in the User-Agent header, as the SEC asks.
+Stdlib only. Public XBRL frames API. No key — the SEC asks only for a contact
+string in the User-Agent, which the scripts set.
 
-## Why this is in a verification repo
-
-This project's claim is that a stamp is worth something only when it can be
-withheld. This study is that claim applied to 17,000 real documents: the
-useful output was not the 18 violations — it was the 1,338 refusals that came
-before them.
-
-The same loop, pointed at a company's own invoices, commissions, royalties or
-billing data — where a 0.1% exact-rule violation rate is real money — is
-[what the engine is for](../README.md).
+This check re-runs automatically every quarter in public CI
+([`sec-quarterly.yml`](../.github/workflows/sec-quarterly.yml)), so the record
+extends itself on data the author does not control.

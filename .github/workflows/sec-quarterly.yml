@@ -31,9 +31,9 @@ jobs:
       - name: Run the exact balance-sheet identity check
         id: run
         run: |
-          python3 studies/sec_balance_check.py | tee run.log
+          python3 studies/sec_full_history.py | tee run.log
           echo "---"
-          test -f sec_identity_violations.json || echo "[]" > sec_identity_violations.json
+          test -f sec_full_history.json || echo "{}" > sec_full_history.json
 
       - name: Publish the findings as a job summary
         run: |
@@ -60,7 +60,7 @@ jobs:
         run: |
           STAMP=$(date -u +%Y-%m-%d)
           mkdir -p studies/quarterly
-          cp sec_identity_violations.json "studies/quarterly/sec_balance_${STAMP}.json"
+          cp sec_full_history.json "studies/quarterly/sec_balance_${STAMP}.json"
           cp run.log "studies/quarterly/sec_balance_${STAMP}.log"
           git config user.name "Jacob Iannotti"
           git config user.email "jiannotti1@gmail.com"
