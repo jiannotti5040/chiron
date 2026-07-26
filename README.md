@@ -94,6 +94,34 @@ returns **432 infinitary and 418 unanswered against just 18 finite**.
 Of the OEIS-referencing subset, **35 concrete obligations were discharged against
 live oeis.org data with zero contradictions**, and 21 statements were refused.
 
+### What refusal buys you: the finite part of an open problem
+
+Refusing the general statement is not the end of the work. An existential falls
+to one witness and a universal to one counterexample, so many open conjectures
+have a finite core that can be searched exhaustively — which is exactly how DGG
+fell. Run against three open conjectures from the corpus, in exact integer
+arithmetic:
+
+| Open conjecture | Exhaustive search | Verdict |
+|---|---|---|
+| **A063880** — every member of `σ(n) = 2·usigma(n)` is `≡ 108 (mod 216)` | all **28,141** members below 10,000,000 | holds; no counterexample |
+| **A063880** — 108 is the only primitive term | same range | holds; 108 unique |
+| **Juggler** — every `n > 0` reaches 1 | all `n ≤ 20,000` | holds; longest run 166 steps |
+| **Gilbreath** — `dᵏ(0) = 1` for all `k > 0` | `k = 1 … 29,999` over 30,000 primes | holds |
+
+Each result is stamped `VERIFIED-TO-N`, **never as a proof**, and each general
+statement remains `REFUSED` — unbounded `n` is not enumerable. Reporting a
+bounded check as if it settled a conjecture is the precise failure this project
+exists to prevent, so the distinction is enforced in the verdict itself rather
+than left to the reader. Where the Juggler search hits its step cap it reports
+`REFUSED`, never `REFUTED`: failing to terminate within a bound is not evidence
+of divergence.
+
+Two details that show why the arithmetic is exact rather than floating-point:
+the enumerator is validated against all 40 of OEIS's published A063880 terms
+before it is trusted, and the Juggler trajectory from `n = 15845` peaks at a
+**~23,889-digit integer** — a float implementation goes wrong long before that.
+
 Reproduce the corpus numbers yourself — no licence, no engine, no account:
 
 ```bash
