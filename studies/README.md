@@ -86,6 +86,17 @@ research pipelines ingest these silently.
 This folder is the list, the failure taxonomy, and the script to regenerate
 both.
 
+## Prior art — this is not a discovery
+
+> **CORRECTION (2026-07-26, added after publication).** This study does not
+> uncover an unknown problem. **XBRL US operates a Data Quality Committee**
+> whose entire purpose is finding defects of exactly this kind; it has
+> published ~30 rule sets, and filers using them cut errors by 64%. Data
+> vendors clean raw XBRL for the same reason. What is offered here is a
+> *retrospective, reproducible catalogue with a published refusal count* — not
+> a finding the field was missing. The original framing overstated novelty and
+> is withdrawn.
+
 ## What this does and does not claim
 
 - It does **not** allege misconduct, fraud, or restatement by any filer named.

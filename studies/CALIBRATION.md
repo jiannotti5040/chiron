@@ -3,11 +3,19 @@
 **Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see [../LICENSE.md](../LICENSE.md)).**
 **Run: 2026-07-26. Engine: the licensed Chiron/Primus `collapse`. Reproducible — scripts in this folder.**
 
-Verification systems report a binary verdict: VERIFIED or not. Nobody
-publishes what that stamp is *worth* — how often a rule certified on the
-evidence shown actually survives evidence it never saw.
+> **CORRECTION (2026-07-26, added after publication).** An earlier version of
+> this page claimed the relationship measured here had never been quantified.
+> That claim was made without a literature check and is **withdrawn**. That
+> generalisation improves with evidence, and that model complexity relative to
+> sample size governs it, are foundational results in statistical learning
+> theory. What follows is a measurement of one engine on one corpus — useful
+> for calibrating *this* tool, not a new result. Treat every "novel" framing
+> below as retracted.
 
-This study measures it, on every sequence in the OEIS.
+Verification systems report a binary verdict: VERIFIED or not. This page
+measures what that verdict is worth for **this engine specifically** — how
+often a rule certified on the evidence shown survives evidence it never saw —
+across every sequence in the OEIS.
 
 ---
 
@@ -47,7 +55,9 @@ that.
 So the 1,844 are not broken promises. They are the measured size of the gap
 between *"fits everything you showed me"* and *"is the real rule."*
 
-That gap has never been quantified. Here it is.
+This page measures that gap for this engine. The general principle is not
+new; the specific numbers below are what the engine had not previously
+published about itself.
 
 ---
 
@@ -172,6 +182,16 @@ retaining roughly two-thirds of all stamps.**
 
 The engine was already computing `compression_ratio` and discarding it as a
 confidence signal. Growth it was not computing at all.
+
+### Shipped — with a failure of its own
+
+> **CORRECTION.** `generalization_band` was later tested on a different
+> population (candidate novel formulas checked against full OEIS b-files) and
+> **did not discriminate**: among stamps that died on more data the bands were
+> 24 low / 2 medium / 1 high; among survivors 17 low / 2 medium. Nearly
+> identical. The thresholds below are calibrated on the sweep corpus and
+> should not be assumed to transfer. This is a limitation of the feature, not
+> a property of it.
 
 ### Shipped, not just reported
 
