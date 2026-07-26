@@ -1,0 +1,28 @@
+CY2024Q4I: checked  6084  not-tying 6
+CY2024Q3I: checked  5375  not-tying 5
+CY2024Q2I: checked  5531  not-tying 7
+
+TOTAL CHECKED 16990   EXACT 16972   VIOLATIONS 18   REFUSED 929
+exact-identity rate: 99.894%
+
+=== FILINGS WHERE THE BALANCE SHEET DOES NOT BALANCE ===
+  American Resources Corporation     2024-09-30  gap $    -1,000,000 (0.47%)  0001477932-24-007457
+  SUPERCOM LTD.                      2024-06-30  gap $        -2,000 (0.00%)  0001178913-24-002926
+  NATIONAL BANKSHARES, INC.          2024-12-31  gap $        -1,000 (0.00%)  0001193125-26-128311
+  Twinlab Consolidated Holdings, Inc 2024-12-31  gap $        -1,000 (0.02%)  0001753926-26-000426
+  GEN Restaurant Group, Inc.         2024-09-30  gap $        -1,000 (0.00%)  0000950170-24-125450
+  FAT Brands Inc.                    2024-06-30  gap $        -1,000 (0.00%)  0001628280-24-034062
+  Enertopia Corporation              2024-11-30  gap $           500 (0.23%)  0001062993-25-000717
+  THE AWARENESS GROUP, INC.          2024-09-30  gap $            -2 (0.00%)  0001477932-26-002310
+  Battery Future Acquisition Corp.   2024-09-30  gap $             2 (0.00%)  0001929980-24-000550
+  PHI GROUP, INC.                    2024-12-31  gap $             1 (0.00%)  0001493152-25-007556
+  NATURALSHRIMP INCORPORATED         2024-12-31  gap $            -1 (0.00%)  0001641172-25-027039
+  TRANS AMERICAN AQUACULTURE, INC.   2024-12-31  gap $             1 (0.00%)  0001683168-26-000292
+  CYTOSORBENTS CORPORATION           2024-09-30  gap $             1 (0.00%)  0001410578-25-000591
+  DIVALL INSURED INCOME PROPERTIES 2 2024-06-30  gap $            -1 (0.00%)  0001493152-24-032041
+  CYTOSORBENTS CORPORATION           2024-06-30  gap $             1 (0.00%)  0001410578-25-000591
+  Lipella Pharmaceuticals Inc.       2024-06-30  gap $             1 (0.00%)  0001753926-24-001419
+  FIEE, INC                          2024-06-30  gap $            -1 (0.00%)  0001829126-25-005431
+  StepStone Private Credit Fund LLC  2024-06-30  gap $             1 (0.00%)  0001193125-24-200255
+
+18 violations -> sec_identity_violations.json

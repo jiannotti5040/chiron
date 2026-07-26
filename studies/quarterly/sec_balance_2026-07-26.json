@@ -1,0 +1,200 @@
+[
+ {
+  "period": "CY2024Q3I",
+  "cik": 1590715,
+  "name": "American Resources Corporation",
+  "accn": "0001477932-24-007457",
+  "end": "2024-09-30",
+  "assets": 211600853,
+  "L_plus_E": 212600853,
+  "gap": -1000000,
+  "rel": 0.004725878869684897
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1291855,
+  "name": "SUPERCOM LTD.",
+  "accn": "0001178913-24-002926",
+  "end": "2024-06-30",
+  "assets": 49573000,
+  "L_plus_E": 49575000,
+  "gap": -2000,
+  "rel": 4.034454239202792e-05
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 796534,
+  "name": "NATIONAL BANKSHARES, INC.",
+  "accn": "0001193125-26-128311",
+  "end": "2024-12-31",
+  "assets": 1811635000,
+  "L_plus_E": 1811636000,
+  "gap": -1000,
+  "rel": 5.519875692399407e-07
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 1590695,
+  "name": "Twinlab Consolidated Holdings, Inc.",
+  "accn": "0001753926-26-000426",
+  "end": "2024-12-31",
+  "assets": 6023000,
+  "L_plus_E": 6024000,
+  "gap": -1000,
+  "rel": 0.00016603021749958492
+ },
+ {
+  "period": "CY2024Q3I",
+  "cik": 1891856,
+  "name": "GEN Restaurant Group, Inc.",
+  "accn": "0000950170-24-125450",
+  "end": "2024-09-30",
+  "assets": 225706000,
+  "L_plus_E": 225707000,
+  "gap": -1000,
+  "rel": 4.4305423869990165e-06
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1705012,
+  "name": "FAT Brands Inc.",
+  "accn": "0001628280-24-034062",
+  "end": "2024-06-30",
+  "assets": 1356347000,
+  "L_plus_E": 1356348000,
+  "gap": -1000,
+  "rel": 7.372744585272058e-07
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 1346022,
+  "name": "Enertopia Corporation",
+  "accn": "0001062993-25-000717",
+  "end": "2024-11-30",
+  "assets": 218873,
+  "L_plus_E": 218373,
+  "gap": 500,
+  "rel": 0.002284429783481745
+ },
+ {
+  "period": "CY2024Q3I",
+  "cik": 1386044,
+  "name": "THE AWARENESS GROUP, INC.",
+  "accn": "0001477932-26-002310",
+  "end": "2024-09-30",
+  "assets": 10596445,
+  "L_plus_E": 10596447,
+  "gap": -2,
+  "rel": 1.8874254525928272e-07
+ },
+ {
+  "period": "CY2024Q3I",
+  "cik": 1880441,
+  "name": "Battery Future Acquisition Corp.",
+  "accn": "0001929980-24-000550",
+  "end": "2024-09-30",
+  "assets": 41910148,
+  "L_plus_E": 41910146,
+  "gap": 2,
+  "rel": 4.772113904250589e-08
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 704172,
+  "name": "PHI GROUP, INC.",
+  "accn": "0001493152-25-007556",
+  "end": "2024-12-31",
+  "assets": 39843,
+  "L_plus_E": 39842,
+  "gap": 1,
+  "rel": 2.5098511658258665e-05
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 1465470,
+  "name": "NATURALSHRIMP INCORPORATED",
+  "accn": "0001641172-25-027039",
+  "end": "2024-12-31",
+  "assets": 25035488,
+  "L_plus_E": 25035489,
+  "gap": -1,
+  "rel": 3.994329968722799e-08
+ },
+ {
+  "period": "CY2024Q4I",
+  "cik": 1990446,
+  "name": "TRANS AMERICAN AQUACULTURE, INC.",
+  "accn": "0001683168-26-000292",
+  "end": "2024-12-31",
+  "assets": 948015,
+  "L_plus_E": 948014,
+  "gap": 1,
+  "rel": 1.0548356302379181e-06
+ },
+ {
+  "period": "CY2024Q3I",
+  "cik": 1175151,
+  "name": "CYTOSORBENTS CORPORATION",
+  "accn": "0001410578-25-000591",
+  "end": "2024-09-30",
+  "assets": 47804011,
+  "L_plus_E": 47804010,
+  "gap": 1,
+  "rel": 2.0918746755371636e-08
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 825788,
+  "name": "DIVALL INSURED INCOME PROPERTIES 2 LIMITED PARTNERSHIP",
+  "accn": "0001493152-24-032041",
+  "end": "2024-06-30",
+  "assets": 1308671,
+  "L_plus_E": 1308672,
+  "gap": -1,
+  "rel": 7.641339954809115e-07
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1175151,
+  "name": "CYTOSORBENTS CORPORATION",
+  "accn": "0001410578-25-000591",
+  "end": "2024-06-30",
+  "assets": 53426791,
+  "L_plus_E": 53426790,
+  "gap": 1,
+  "rel": 1.8717201263313757e-08
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1347242,
+  "name": "Lipella Pharmaceuticals Inc.",
+  "accn": "0001753926-24-001419",
+  "end": "2024-06-30",
+  "assets": 2184112,
+  "L_plus_E": 2184111,
+  "gap": 1,
+  "rel": 4.5785197828682776e-07
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1467761,
+  "name": "FIEE, INC",
+  "accn": "0001829126-25-005431",
+  "end": "2024-06-30",
+  "assets": 953280,
+  "L_plus_E": 953281,
+  "gap": -1,
+  "rel": 1.049009734810339e-06
+ },
+ {
+  "period": "CY2024Q2I",
+  "cik": 1950803,
+  "name": "StepStone Private Credit Fund LLC",
+  "accn": "0001193125-24-200255",
+  "end": "2024-06-30",
+  "assets": 970646841,
+  "L_plus_E": 970646840,
+  "gap": 1,
+  "rel": 1.0302408226763084e-09
+ }
+]
