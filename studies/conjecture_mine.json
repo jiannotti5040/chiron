@@ -1,0 +1,762 @@
+[
+ {
+  "anum": 7497,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 8348,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 63 in data)"
+ },
+ {
+  "anum": 56744,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 71681,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 84 in data)"
+ },
+ {
+  "anum": 91182,
+  "status": "consistent",
+  "threshold": 3120,
+  "n_terms": 50000,
+  "source": "b-file (50000 terms vs 87 in data)"
+ },
+ {
+  "anum": 179210,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 69,
+  "source": "b-file (69 terms vs 33 in data)"
+ },
+ {
+  "anum": 185636,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 185645,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 18,
+  "source": "data"
+ },
+ {
+  "anum": 199920,
+  "status": "consistent",
+  "threshold": 11,
+  "n_terms": 50000,
+  "source": "b-file (50000 terms vs 100 in data)"
+ },
+ {
+  "anum": 208243,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 208244,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 50000,
+  "source": "b-file (50000 terms vs 100 in data)"
+ },
+ {
+  "anum": 208246,
+  "status": "consistent",
+  "threshold": 8,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 208249,
+  "status": "consistent",
+  "threshold": 8,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 87 in data)"
+ },
+ {
+  "anum": 209253,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 209254,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 209312,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 218585,
+  "status": "refused-qualifier",
+  "detail": "Conjecture: a(n)>0 for all n>1 with the only exception n=8."
+ },
+ {
+  "anum": 218654,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 218754,
+  "status": "consistent",
+  "threshold": 1187,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 218825,
+  "status": "consistent",
+  "threshold": 8,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 218867,
+  "status": "consistent",
+  "threshold": 50000,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 219055,
+  "status": "refused-qualifier",
+  "detail": "Conjecture: a(n) > 0 for all even n > 8012 and odd n > 15727."
+ },
+ {
+  "anum": 219157,
+  "status": "VIOLATION",
+  "threshold": 30000,
+  "offset": 1,
+  "source": "b-file (100000 terms vs 100 in data)",
+  "violations": [
+   [
+    38451,
+    0
+   ],
+   [
+    46441,
+    0
+   ],
+   [
+    50671,
+    0
+   ],
+   [
+    62371,
+    0
+   ]
+  ],
+  "n_terms": 100000,
+  "name": "Number of prime pairs {p,q} with p>q and p-2,q+2 also prime such that p+(1+mod(-n,6))q=n if n is not congruent",
+  "claim_text": "Conjecture: a(n)>0 for all n>30000 with n different from 38451, 46441, 50671, 62371. This conjecture is stronger than the twin prime conjecture. It is similar to the conjecture associated with A219055 about sexy prime pairs. Number of prime pairs {p,q} with p>"
+ },
+ {
+  "anum": 219185,
+  "status": "refused-qualifier",
+  "detail": "Conjecture: a(n)>0 for all odd n>4676 and even n>30986."
+ },
+ {
+  "anum": 219842,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 219864,
+  "status": "consistent",
+  "threshold": 7,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 219923,
+  "status": "consistent",
+  "threshold": 623,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 220272,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 20000,
+  "source": "b-file (20000 terms vs 100 in data)"
+ },
+ {
+  "anum": 220413,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 224748,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 72 in data)"
+ },
+ {
+  "anum": 224908,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 1000,
+  "source": "b-file (1000 terms vs 72 in data)"
+ },
+ {
+  "anum": 228425,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 228591,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 230219,
+  "status": "consistent",
+  "threshold": 6,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 231557,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 232463,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 232504,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 234344,
+  "status": "consistent",
+  "threshold": 5,
+  "n_terms": 7000,
+  "source": "b-file (7000 terms vs 72 in data)"
+ },
+ {
+  "anum": 234347,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 3000,
+  "source": "b-file (3000 terms vs 84 in data)"
+ },
+ {
+  "anum": 234470,
+  "status": "refused-qualifier",
+  "detail": "Conjecture: a(n) > 0 if n > 3 is not among 27, 34, 50, 61, 74, 78, 115, 120, 123, 127."
+ },
+ {
+  "anum": 234475,
+  "status": "consistent",
+  "threshold": 5,
+  "n_terms": 2525,
+  "source": "b-file (2525 terms vs 100 in data)"
+ },
+ {
+  "anum": 236241,
+  "status": "consistent",
+  "threshold": 19,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 87 in data)"
+ },
+ {
+  "anum": 236966,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 1200,
+  "source": "b-file (1200 terms vs 80 in data)"
+ },
+ {
+  "anum": 237284,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 237578,
+  "status": "consistent",
+  "threshold": 2,
+  "n_terms": 2500,
+  "source": "b-file (2500 terms vs 80 in data)"
+ },
+ {
+  "anum": 242748,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 8000,
+  "source": "b-file (8000 terms vs 80 in data)"
+ },
+ {
+  "anum": 256012,
+  "status": "consistent",
+  "threshold": 23,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 77 in data)"
+ },
+ {
+  "anum": 262311,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 262813,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 262815,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 101 in data)"
+ },
+ {
+  "anum": 262827,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 101 in data)"
+ },
+ {
+  "anum": 262941,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 262945,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 93 in data)"
+ },
+ {
+  "anum": 262955,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 92 in data)"
+ },
+ {
+  "anum": 262956,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 89 in data)"
+ },
+ {
+  "anum": 270488,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 270566,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 271518,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 272332,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 272620,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 272888,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 273107,
+  "status": "consistent",
+  "threshold": 5,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 273278,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 71 in data)"
+ },
+ {
+  "anum": 273404,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 281976,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 281977,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 300362,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 1001,
+  "source": "b-file (1001 terms vs 81 in data)"
+ },
+ {
+  "anum": 300396,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 300441,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 300510,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 300666,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 300667,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 300708,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 300712,
+  "status": "consistent",
+  "threshold": -1,
+  "n_terms": 10001,
+  "source": "b-file (10001 terms vs 81 in data)"
+ },
+ {
+  "anum": 300751,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 300752,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 301376,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 301391,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 301452,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 301471,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 302920,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 6000,
+  "source": "b-file (6000 terms vs 70 in data)"
+ },
+ {
+  "anum": 302982,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 302983,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 302984,
+  "status": "consistent",
+  "threshold": 5,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 302985,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 303233,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 303338,
+  "status": "consistent",
+  "threshold": 3,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 70 in data)"
+ },
+ {
+  "anum": 303363,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 70 in data)"
+ },
+ {
+  "anum": 303389,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 100000,
+  "source": "b-file (100000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303399,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303401,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303428,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303539,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303540,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303543,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303601,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 70 in data)"
+ },
+ {
+  "anum": 303637,
+  "status": "consistent",
+  "threshold": 5,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 60 in data)"
+ },
+ {
+  "anum": 303639,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303656,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 100000,
+  "source": "b-file (100000 terms vs 90 in data)"
+ },
+ {
+  "anum": 303702,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 65 in data)"
+ },
+ {
+  "anum": 303821,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 80 in data)"
+ },
+ {
+  "anum": 303934,
+  "status": "consistent",
+  "threshold": 1,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 90 in data)"
+ },
+ {
+  "anum": 304034,
+  "status": "consistent",
+  "threshold": 11,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 90 in data)"
+ },
+ {
+  "anum": 304081,
+  "status": "consistent",
+  "threshold": 7,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 90 in data)"
+ },
+ {
+  "anum": 308566,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 308584,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 338094,
+  "status": "consistent",
+  "threshold": 0,
+  "n_terms": 10000,
+  "source": "b-file (10000 terms vs 100 in data)"
+ },
+ {
+  "anum": 338096,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 382883,
+  "status": "no-parseable-conjecture"
+ },
+ {
+  "anum": 386575,
+  "status": "refused-qualifier",
+  "detail": "Conjecture: a(n) > 0 iff the multiset of prime factors of n has a permutation with all distinct run lengths."
+ }
+]
