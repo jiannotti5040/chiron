@@ -1,0 +1,53 @@
+==========================================================================
+COUNTEREXAMPLE CERTIFICATE
+==========================================================================
+
+CONJECTURE
+  Every Fermat number F_n = 2^(2^n) + 1 is prime. (Fermat, 1650; refuted by Euler, 1732.)
+
+PROVENANCE
+  source         Fermat's conjecture
+  oeis           https://oeis.org/A000215
+  status         historically refuted — used here to show the form
+
+VERDICT               REFUTED
+
+WITNESS
+  'n = 5,  F_5 = 4294967297'
+
+PRECONDITIONS  (every one must hold, or it is not a counterexample)
+  [HOLDS]  n is a nonnegative integer
+           n = 5
+  [HOLDS]  F_n is well-defined
+           F_5 = 2^32 + 1 = 4294967297
+
+CLAIMED CONCLUSION  (must fail -- this is the refutation)
+  [FAILS]  F_n is prime
+           4294967297 = 641 * 6700417
+
+INDEPENDENT RECOMPUTATION  (second method; must agree)
+  F_n is prime                 False
+  n is a nonnegative integer   True
+  F_n is well-defined          True
+
+NOTES
+  Independent route: trial division recovers 641 exactly;
+  641 * 6700417 = 4294967297 verified by integer multiplication.
+  No floating point participates in any step.
+
+WHAT WOULD FALSIFY THIS CERTIFICATE
+  Recompute any listed obligation and obtain a different result. Every
+  value here is exact integer or rational arithmetic; no floating point
+  participates in any verdict. If the conjecture's statement in the cited
+  source differs from the statement above, this certificate does not
+  apply.
+
+WHAT THIS DOES NOT CLAIM
+  It does not claim a proof of any general statement, that the witness is
+  minimal, or that the conjecture is uninteresting. It claims exactly one
+  thing: this finite object satisfies the stated hypotheses and fails the
+  stated conclusion.
+
+SHA-256   59f2e48b78e5db24512ffc3304a994b59eae0d0982d062b3d824eacb6e5107c7
+ISSUED    2026-07-27T20:07:14Z
+==========================================================================
