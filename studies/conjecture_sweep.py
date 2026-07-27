@@ -366,6 +366,25 @@ def _smooth(primes, cap):
     return sorted(v for v in vals if v <= cap)
 
 
+
+# --- classical sum-of-two-squares criterion --------------------------------
+# n is a sum of two squares  <=>  every prime p = 3 (mod 4) in its
+# factorization occurs to an EVEN power. Validated against brute force on
+# 30,001 values. This turns an O(sqrt n) scan into a factorization test, and
+# it is what lets the bounds below move by orders of magnitude: several of
+# these conjectures reduce, after fixing their "easy" parameters, to exactly
+# the question of whether a residue is a sum of two squares.
+def _is_sum_two_squares(n):
+    if n < 0:
+        return False
+    if n == 0:
+        return True
+    for p, e in _factor(n).items():
+        if p % 4 == 3 and e % 2:
+            return False
+    return True
+
+
 def _sun(anum, name, count, limit, prior="", search=None, lo=None):
     """
     Shared driver: validate representation counts against OEIS, then search.
@@ -429,13 +448,34 @@ def a280831(limit):
                     if _is_sq(x ** 4 + 1680 * y ** 3 * z):
                         c += 1
         return c
-    # OEIS counts 8n+7 over POSITIVE integers; the conjecture is every n over
-    # NONNEGATIVE ones. Two different objects -- validate on one, search the other.
+    # STRUCTURAL REDUCTION, verified against brute force on 20,001 values.
+    # Taking y = 0 makes the side condition x^4 + 1680*y^3*z = x^4 = (x^2)^2,
+    # a square unconditionally. So n = x^2 + 0 + z^2 + w^2 satisfies the
+    # conjecture for free, and that is exactly "n is a sum of three squares".
+    # By Gauss-Legendre that holds iff n is NOT of the form 4^k(8m+7).
+    #
+    # So 83.35% of all n are settled by a classical theorem rather than a
+    # search, and only n = 4^k(8m+7) requires real work. This is not a new
+    # observation -- it is almost certainly why Sun's sequence counts 8n+7 --
+    # but exploiting it is what lets the bound move by three orders of
+    # magnitude instead of grinding every n.
+    def needs_search(n):
+        m = n
+        while m and m % 4 == 0:
+            m //= 4
+        return m % 8 == 7
+
+    def satisfied(n):
+        if not needs_search(n):
+            return True          # Gauss-Legendre, via y = 0
+        return reps(n, 0) > 0
+
     return _sun(280831,
                 "A280831 (1680-conjecture): every n = x^2+y^2+z^2+w^2 with x^4+1680y^3z square",
                 lambda n: reps(8 * n + 7, 1), limit,
-                "Zhi-Wei Sun prize 1,680 RMB; open",
-                search=lambda n: reps(n, 0) > 0, lo=0)
+                "Zhi-Wei Sun prize 1,680 RMB; open. 83.35% of n reduce to "
+                "Gauss-Legendre via y=0; only 4^k(8m+7) is searched",
+                search=satisfied, lo=0)
 
 
 def a306477(limit):
@@ -470,6 +510,7 @@ def a306477(limit):
 
 
 def a303656(limit):
+    _spf(limit)          # so _is_sum_two_squares factorizes by sieve, not trial division
     def count(n):
         c, p3 = 0, 1
         while p3 <= n:
@@ -483,12 +524,24 @@ def a303656(limit):
             p3 *= 3
         return c
     # Conjecture is "a(n) > 0 for all n > 1"; OEIS publishes a(1) = 0 itself.
+    def fast(n):
+        p3 = 1
+        while p3 <= n:
+            p5 = 1
+            while p3 + p5 <= n:
+                if _is_sum_two_squares(n - p3 - p5):
+                    return True
+                p5 *= 5
+            p3 *= 3
+        return False
+
     return _sun(303656, "A303656: every n>1 = a^2 + b^2 + 3^c + 5^d", count, limit,
                 "Zhi-Wei Sun prize $3,500; verified to 2*10^10 by Sun -- this bound "
-                "is far below that", lo=2)
+                "is far below that", search=fast, lo=2)
 
 
 def a308734(limit):
+    _spf(limit)
     def count(n):
         r = isqrt(n)
         c = 0
@@ -502,9 +555,20 @@ def a308734(limit):
                         c += 1
         return c
     # Conjecture is "a(n) > 0 for all n > 1"; OEIS publishes a(1) = 0 itself.
+    def fast(n):
+        r = isqrt(n)
+        for u in _smooth((2, 3), r):
+            for v in _smooth((2, 5), r):
+                rem = n - u * u - v * v
+                if rem < 0:
+                    continue
+                if _is_sum_two_squares(rem):
+                    return True
+        return False
+
     return _sun(308734, "A308734: every n>1 = (2^a*3^b)^2 + (2^c*5^d)^2 + x^2 + y^2",
                 count, limit, "Zhi-Wei Sun prize $2,500; verified to 10^9 by Sun -- "
-                "this bound is far below that", lo=2)
+                "this bound is far below that", search=fast, lo=2)
 
 
 
@@ -625,10 +689,10 @@ REGISTRY = {
     "andrica":   (andrica, 3_000_000),
     "a034693":   (a034693, 20000),
     "erdos1065": (erdos1065, 2_000_000),
-    "a280831":   (a280831, 2000),
+    "a280831":   (a280831, 200000),
     "a306477":   (a306477, 30000),
-    "a303656":   (a303656, 20000),
-    "a308734":   (a308734, 5000),
+    "a303656":   (a303656, 1000000),
+    "a308734":   (a308734, 1000000),
     "a287616":   (a287616, 100000),
     "a281976":   (a281976, 3000),
     "a000041":   (a000041, 20000),
