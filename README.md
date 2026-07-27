@@ -102,12 +102,18 @@ have a finite core that can be searched exhaustively — which is exactly how DG
 fell. Run against three open conjectures from the corpus, in exact integer
 arithmetic:
 
-| Open conjecture | Exhaustive search | Verdict |
-|---|---|---|
-| **A063880** — every member of `σ(n) = 2·usigma(n)` is `≡ 108 (mod 216)` | all **28,141** members below 10,000,000 | holds; no counterexample |
-| **A063880** — 108 is the only primitive term | same range | holds; 108 unique |
-| **Juggler** — every `n > 0` reaches 1 | all `n ≤ 20,000` | holds; longest run 166 steps |
-| **Gilbreath** — `dᵏ(0) = 1` for all `k > 0` | `k = 1 … 29,999` over 30,000 primes | holds |
+| Open conjecture | Exhaustive search | Verdict | Prior art |
+|---|---|---|---|
+| **A063880** — every member of `σ(n) = 2·usigma(n)` is `≡ 108 (mod 216)` | all **28,141** members below 10,000,000 | holds | no published bound found |
+| **A063880** — 108 is the only primitive term | same range | holds; 108 unique | no published bound found |
+| **Juggler** — every `n > 0` reaches 1 | all `n ≤ 20,000` | holds; longest run 166 steps | verified far beyond this |
+| **Gilbreath** — `dᵏ(0) = 1` for all `k > 0` | `k = 1 … 29,999` over 30,000 primes | holds | **Odlyzko: 10¹³** |
+
+**These bounds are not advances.** Gilbreath is verified to 10¹³ and the Juggler
+map far past 20,000; the searches above re-derive known ground and are shown
+because they demonstrate the *contract*, not because they extend it. A bound
+printed without its prior art is a number flattering itself, so the column is
+mandatory here.
 
 Each result is stamped `VERIFIED-TO-N`, **never as a proof**, and each general
 statement remains `REFUSED` — unbounded `n` is not enumerable. Reporting a
