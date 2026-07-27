@@ -1,0 +1,47 @@
+{
+ "kind": "counterexample-certificate/1",
+ "conjecture": "Every Fermat number F_n = 2^(2^n) + 1 is prime. (Fermat, 1650; refuted by Euler, 1732.)",
+ "provenance": {
+  "source": "Fermat's conjecture",
+  "oeis": "https://oeis.org/A000215",
+  "status": "historically refuted \u2014 used here to show the form"
+ },
+ "verdict": "REFUTED",
+ "witness": "'n = 5,  F_5 = 4294967297'",
+ "preconditions": [
+  {
+   "name": "n is a nonnegative integer",
+   "expression": "n = 5",
+   "holds": true
+  },
+  {
+   "name": "F_n is well-defined",
+   "expression": "F_5 = 2^32 + 1 = 4294967297",
+   "holds": true
+  }
+ ],
+ "conclusion": {
+  "name": "F_n is prime",
+  "expression": "4294967297 = 641 * 6700417",
+  "holds": false
+ },
+ "independent_recomputation": [
+  {
+   "name": "F_n is prime",
+   "value": "False"
+  },
+  {
+   "name": "n is a nonnegative integer",
+   "value": "True"
+  },
+  {
+   "name": "F_n is well-defined",
+   "value": "True"
+  }
+ ],
+ "notes": "Independent route: trial division recovers 641 exactly;\n641 * 6700417 = 4294967297 verified by integer multiplication.\nNo floating point participates in any step.",
+ "what_would_falsify_this": "Recompute any listed obligation and obtain a different result. Every value here is exact integer or rational arithmetic; no floating point participates in any verdict. If the conjecture's statement in the cited source differs from the statement above, this certificate does not apply.",
+ "what_this_does_NOT_claim": "It does not claim a proof of any general statement, that the witness is minimal, or that the conjecture is uninteresting. It claims exactly one thing: this finite object satisfies the stated hypotheses and fails the stated conclusion.",
+ "issued_utc": "2026-07-27T20:07:14Z",
+ "certificate_sha256": "59f2e48b78e5db24512ffc3304a994b59eae0d0982d062b3d824eacb6e5107c7"
+}
