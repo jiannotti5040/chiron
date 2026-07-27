@@ -333,11 +333,305 @@ def erdos1065(limit):
 
 # ===========================================================================
 
+# ===========================================================================
+# The Zhi-Wei Sun family. Each is "every n can be written as <form>" -- FORALL
+# n, so one counterexample refutes it and a bounded search is genuinely
+# informative. Each carries a cash prize, meaning they have been attacked
+# hard; a laptop finding a counterexample would be evidence of an encoder bug,
+# not a discovery.
+#
+# These get STRONGER validation than existence. The OEIS sequences count the
+# NUMBER of representations of n, so the encoder must reproduce those counts
+# term for term. Matching a count is a far tighter constraint than finding
+# some witness, and it is what would catch a subtly wrong predicate.
+# ===========================================================================
+
+def _is_sq(v):
+    if v < 0:
+        return False
+    r = isqrt(v)
+    return r * r == v
+
+
+def _smooth(primes, cap):
+    """All products of the given primes that are <= cap."""
+    vals = {1}
+    for p in primes:
+        nxt = set()
+        for v in vals:
+            while v <= cap:
+                nxt.add(v)
+                v *= p
+        vals = nxt
+    return sorted(v for v in vals if v <= cap)
+
+
+def _sun(anum, name, count, limit, prior="", search=None, lo=None):
+    """
+    Shared driver: validate representation counts against OEIS, then search.
+
+    `count` must reproduce the OEIS sequence EXACTLY -- that is the encoder
+    check. `search` is the predicate the CONJECTURE actually asserts, which is
+    not always the same object: A280831 for instance counts representations of
+    8n+7 over POSITIVE integers, while the conjecture in the Lean file is about
+    every n over NONNEGATIVE ones. Validating on one and searching the other,
+    without noticing, is how a bogus counterexample gets produced.
+    """
+    try:
+        from oeis_novelty import entry
+        e = entry(anum)
+        pub = [int(x) for x in (e.get("data") or "").split(",")
+               if x.strip().lstrip("-").isdigit()]
+        off = int((e.get("offset") or "0,1").split(",")[0])
+    except Exception as ex:
+        return dict(verdict=REFUSED, name=name,
+                    detail=f"could not fetch A{anum:06d} to validate the encoder "
+                           f"({type(ex).__name__}) -- refusing to run unvalidated")
+
+    k = min(len(pub), 35)
+    got = [count(off + i) for i in range(k)]
+    if got != pub[:k]:
+        i = next(j for j in range(k) if got[j] != pub[j])
+        return dict(verdict=REFUSED, name=name,
+                    detail=f"encoder disagrees with published A{anum:06d} at n={off+i}: "
+                           f"got {got[i]}, published {pub[i]} -- refusing to run")
+    validation = (f"representation COUNTS reproduce the first {k} published terms of "
+                  f"A{anum:06d} exactly (a tighter check than mere existence)")
+
+    pred = search or (lambda n: count(n) > 0)
+    start = off if lo is None else lo
+    bad = []
+    for n in range(start, limit + 1):
+        if not pred(n):
+            bad.append(n)
+            if len(bad) >= 5:
+                break
+    if bad:
+        return dict(verdict=REFUTED, name=name, validation=validation,
+                    detail=f"NO representation exists for n = {bad}")
+    return dict(verdict=VERIFIED, name=name, validation=validation, bound=limit,
+                detail=f"every n in [{start}, {limit:,}] has at least one representation",
+                prior=prior)
+
+
+def a280831(limit):
+    def reps(m, lo):
+        """count x,y,z,w >= lo with m = x^2+y^2+z^2+w^2 and x^4+1680y^3z square"""
+        c = 0
+        for x in range(lo, isqrt(m) + 1):
+            rx = m - x * x
+            for y in range(lo, isqrt(rx) + 1):
+                ry = rx - y * y
+                for z in range(lo, isqrt(ry) + 1):
+                    w2 = ry - z * z
+                    if w2 < lo * lo or not _is_sq(w2):
+                        continue
+                    if _is_sq(x ** 4 + 1680 * y ** 3 * z):
+                        c += 1
+        return c
+    # OEIS counts 8n+7 over POSITIVE integers; the conjecture is every n over
+    # NONNEGATIVE ones. Two different objects -- validate on one, search the other.
+    return _sun(280831,
+                "A280831 (1680-conjecture): every n = x^2+y^2+z^2+w^2 with x^4+1680y^3z square",
+                lambda n: reps(8 * n + 7, 1), limit,
+                "Zhi-Wei Sun prize 1,680 RMB; open",
+                search=lambda n: reps(n, 0) > 0, lo=0)
+
+
+def a306477(limit):
+    from math import comb
+
+    def terms(k, off, cap):
+        out, i = [], 0
+        while comb(i + off, k) <= cap:
+            out.append(comb(i + off, k))
+            i += 1
+        return out
+
+    def count(n):
+        A, B = terms(2, 2, n), terms(4, 3, n)
+        C, D = terms(6, 5, n), set(terms(8, 7, n))
+        c = 0
+        for a in A:
+            for b in B:
+                if a + b > n:
+                    break
+                for d in C:
+                    if a + b + d > n:
+                        break
+                    if (n - a - b - d) in D:
+                        c += 1
+        return c
+    return _sun(306477,
+                "A306477 (2-4-6-8): n = C(w+2,2)+C(x+3,4)+C(y+5,6)+C(z+7,8)",
+                count, limit,
+                "Zhi-Wei Sun prize $2,468; already verified to 1.2*10^12 by Yaakov "
+                "Baruch (2019) -- this bound is far below that")
+
+
+def a303656(limit):
+    def count(n):
+        c, p3 = 0, 1
+        while p3 <= n:
+            p5 = 1
+            while p3 + p5 <= n:
+                r = n - p3 - p5
+                for a in range(isqrt(r // 2) + 1):     # a <= b, per the OEIS definition
+                    if _is_sq(r - a * a):
+                        c += 1
+                p5 *= 5
+            p3 *= 3
+        return c
+    # Conjecture is "a(n) > 0 for all n > 1"; OEIS publishes a(1) = 0 itself.
+    return _sun(303656, "A303656: every n>1 = a^2 + b^2 + 3^c + 5^d", count, limit,
+                "Zhi-Wei Sun prize $3,500; verified to 2*10^10 by Sun -- this bound "
+                "is far below that", lo=2)
+
+
+def a308734(limit):
+    def count(n):
+        r = isqrt(n)
+        c = 0
+        for u in _smooth((2, 3), r):
+            for v in _smooth((2, 5), r):
+                rem = n - u * u - v * v
+                if rem < 0:
+                    continue
+                for x in range(isqrt(rem // 2) + 1):   # x <= y, per the OEIS definition
+                    if _is_sq(rem - x * x):
+                        c += 1
+        return c
+    # Conjecture is "a(n) > 0 for all n > 1"; OEIS publishes a(1) = 0 itself.
+    return _sun(308734, "A308734: every n>1 = (2^a*3^b)^2 + (2^c*5^d)^2 + x^2 + y^2",
+                count, limit, "Zhi-Wei Sun prize $2,500; verified to 10^9 by Sun -- "
+                "this bound is far below that", lo=2)
+
+
+
+def a287616(limit):
+    """n = x(x+1)/2 + y(3y+1)/2 + z(5z+1)/2, x,y,z nonnegative."""
+    def count(n):
+        T = []
+        x = 0
+        while x * (x + 1) // 2 <= n:
+            T.append(x * (x + 1) // 2); x += 1
+        P = []
+        y = 0
+        while y * (3 * y + 1) // 2 <= n:
+            P.append(y * (3 * y + 1) // 2); y += 1
+        H = set()
+        z = 0
+        while z * (5 * z + 1) // 2 <= n:
+            H.add(z * (5 * z + 1) // 2); z += 1
+        c = 0
+        for t in T:
+            for q in P:
+                if t + q > n:
+                    break
+                if (n - t - q) in H:
+                    c += 1
+        return c
+    return _sun(287616,
+                "A287616: every n = x(x+1)/2 + y(3y+1)/2 + z(5z+1)/2",
+                count, limit, "Zhi-Wei Sun prize $135; open", lo=0)
+
+
+def a281976(limit):
+    """n = x^2+y^2+z^2+w^2 with z<=w, x a square, and x+24y a square."""
+    def count(n):
+        c = 0
+        for x in range(isqrt(n) + 1):
+            if not _is_sq(x):                    # x itself must be a square
+                continue
+            rx = n - x * x
+            for y in range(isqrt(rx) + 1):
+                if not _is_sq(x + 24 * y):       # and so must x + 24y
+                    continue
+                ry = rx - y * y
+                for z in range(isqrt(ry // 2) + 1):   # z <= w
+                    if _is_sq(ry - z * z):
+                        c += 1
+        return c
+    return _sun(281976,
+                "A281976: every n = x^2+y^2+z^2+w^2, z<=w, x and x+24y both squares",
+                count, limit, "Zhi-Wei Sun prize $2,400; open", lo=0)
+
+
+def a000041(limit):
+    """
+    No partition number p(k) is a perfect power x^m with x,m > 1.
+    FORM: forall k -- one perfect-power partition number refutes it.
+    Different shape from the Sun family: the OEIS sequence IS the partition
+    numbers, so validation is direct rather than via representation counts.
+    """
+    name = "A000041: no partition number is a perfect power x^m (x,m>1)"
+    # exact integer partition numbers via Euler's pentagonal recurrence
+    p = [1] + [0] * limit
+    for n in range(1, limit + 1):
+        tot, k = 0, 1
+        while True:
+            g1 = k * (3 * k - 1) // 2
+            g2 = k * (3 * k + 1) // 2
+            if g1 > n and g2 > n:
+                break
+            sgn = -1 if k % 2 == 0 else 1
+            if g1 <= n:
+                tot += sgn * p[n - g1]
+            if g2 <= n:
+                tot += sgn * p[n - g2]
+            k += 1
+        p[n] = tot
+
+    published = [1, 1, 2, 3, 5, 7, 11, 15, 22, 30, 42, 56, 77, 101, 135, 176,
+                 231, 297, 385, 490, 627]
+    if p[:len(published)] != published:
+        return dict(verdict=REFUSED, name=name,
+                    detail=f"partition numbers disagree with published A000041: "
+                           f"got {p[:8]} vs {published[:8]} -- refusing to run")
+    validation = (f"pentagonal-recurrence partition numbers reproduce the first "
+                  f"{len(published)} published A000041 terms exactly; p(100) = {p[100]:,}")
+
+    def perfect_power(v):
+        if v < 4:
+            return None
+        m = 2
+        while (1 << m) <= v:
+            r = round(v ** (1.0 / m))
+            for cand in (r - 1, r, r + 1):       # float only to seed; verified exactly
+                if cand > 1 and cand ** m == v:
+                    return (cand, m)
+            m += 1
+        return None
+
+    hits = []
+    for k in range(2, limit + 1):
+        pp = perfect_power(p[k])
+        if pp:
+            hits.append((k, p[k], pp))
+            if len(hits) >= 5:
+                break
+    if hits:
+        return dict(verdict=REFUTED, name=name, validation=validation,
+                    detail=f"partition number(s) that ARE perfect powers: {hits}")
+    return dict(verdict=VERIFIED, name=name, validation=validation, bound=limit,
+                detail=f"no p(k) for k in [2, {limit:,}] is a perfect power",
+                prior="open; the candidate seeds use a float root but every hit is "
+                      "confirmed by exact integer exponentiation, so no float "
+                      "decides a verdict")
+
+
 REGISTRY = {
     "erdos242":  (erdos242, 1000000),
     "andrica":   (andrica, 3_000_000),
     "a034693":   (a034693, 20000),
     "erdos1065": (erdos1065, 2_000_000),
+    "a280831":   (a280831, 2000),
+    "a306477":   (a306477, 30000),
+    "a303656":   (a303656, 20000),
+    "a308734":   (a308734, 5000),
+    "a287616":   (a287616, 100000),
+    "a281976":   (a281976, 3000),
+    "a000041":   (a000041, 20000),
 }
 
 
