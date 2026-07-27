@@ -83,7 +83,7 @@ REGISTRY = {
     "a280831": _reg("a280831", FORALL,
                     "Zhi-Wei Sun prize 1,680 RMB; open. 83.35% of n reduce to "
                     "Gauss-Legendre via y=0; only 4^k(8m+7) is searched.",
-                    budget=900, bound=50_000, source="OEIS A280831"),
+                    budget=420, bound=50_000, source="OEIS A280831"),
     "a306477": _reg("a306477", FORALL,
                     "Zhi-Wei Sun prize $2,468. Verified to 1.2*10^12 by Yaakov "
                     "Baruch (2019). Any bound here is far below that.",
@@ -155,33 +155,60 @@ def best(led, name):
 # Execution
 # ---------------------------------------------------------------------------
 
+class _Timeout(Exception):
+    pass
+
+
 def run_one(name, bound=None, budget=None):
-    """Run one conjecture as a checkpoint. Never raises."""
+    """
+    Run one conjecture as a checkpoint. Never raises.
+
+    The budget is ENFORCED with SIGALRM, not merely measured. An earlier
+    version of this function declared budgets in the registry and then simply
+    timed the call afterward -- so a conjecture that needed six hours would
+    have run for six hours and been recorded as if the budget meant something.
+    A declared constraint that the code does not honour is worse than no
+    constraint, because the docstring lies on its behalf.
+
+    On timeout the result is TIMEOUT with the bound ATTEMPTED, never a partial
+    VERIFIED. A search that did not finish has verified nothing.
+    """
+    import signal
     import conjecture_sweep as CS
     meta = REGISTRY[name]
     bound = bound or meta["bound"]
     budget = budget or meta["budget"]
     fn = getattr(CS, meta["fn"])
 
+    def _fire(signum, frame):
+        raise _Timeout()
+
+    base = dict(name=name, bound=bound, prior=meta["prior"],
+                form=meta["form"], source=meta["source"])
     t0 = time.time()
+    old = signal.signal(signal.SIGALRM, _fire)
+    signal.alarm(int(budget))
     try:
         res = fn(bound)
-        elapsed = time.time() - t0
-        return {
-            "name": name, "bound": bound, "verdict": res.get("verdict", "ERROR"),
-            "detail": res.get("detail", ""), "validation": res.get("validation", ""),
-            "prior": meta["prior"], "form": meta["form"], "source": meta["source"],
-            "seconds": round(elapsed, 1),
-        }
+        return {**base, "verdict": res.get("verdict", "ERROR"),
+                "detail": res.get("detail", ""),
+                "validation": res.get("validation", ""),
+                "seconds": round(time.time() - t0, 1)}
+    except _Timeout:
+        return {**base, "verdict": "TIMEOUT",
+                "detail": f"exceeded the {budget}s budget at bound {bound:,}; "
+                          f"NOTHING is verified by an unfinished search. Lower "
+                          f"the bound or raise the budget in the registry.",
+                "validation": "", "seconds": round(time.time() - t0, 1)}
     except KeyboardInterrupt:
         raise
     except Exception as e:
-        return {
-            "name": name, "bound": bound, "verdict": "ERROR",
-            "detail": f"{type(e).__name__}: {e}"[:200], "validation": "",
-            "prior": meta["prior"], "form": meta["form"], "source": meta["source"],
-            "seconds": round(time.time() - t0, 1),
-        }
+        return {**base, "verdict": "ERROR",
+                "detail": f"{type(e).__name__}: {e}"[:200],
+                "validation": "", "seconds": round(time.time() - t0, 1)}
+    finally:
+        signal.alarm(0)
+        signal.signal(signal.SIGALRM, old)
 
 
 def checkpoint(led, result, push=True):
@@ -312,10 +339,24 @@ def main():
             if not force and already(led, name, bound):
                 print(f"  [skip]  {name} @ {bound:,} already in ledger")
                 continue
-            print(f"  [run ]  {name} @ {bound:,} ...", flush=True)
-            r = run_one(name)
-            checkpoint(led, r, push=push)
-            print(f"          {r['verdict']}  ({r['seconds']}s)  {r['detail'][:60]}")
+            # Auto-calibrate: try the registry bound, and on TIMEOUT back off
+            # by halves until it fits the budget. Guessing bounds by hand
+            # either wastes the budget or wastes hours; this finds the largest
+            # bound that actually COMPLETES, which is the only kind that
+            # verifies anything. Every attempt is checkpointed, so the
+            # timeouts stay in the record rather than being quietly discarded.
+            attempt = bound
+            for _ in range(6):
+                print(f"  [run ]  {name} @ {attempt:,} ...", flush=True)
+                r = run_one(name, bound=attempt)
+                checkpoint(led, r, push=push)
+                print(f"          {r['verdict']}  ({r['seconds']}s)  {r['detail'][:60]}")
+                if r["verdict"] != "TIMEOUT":
+                    break
+                attempt //= 2
+                if attempt < 100:
+                    print(f"          giving up on {name}: even 100 exceeds budget")
+                    break
     else:
         print(__doc__)
 
