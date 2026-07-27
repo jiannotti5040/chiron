@@ -212,22 +212,44 @@ def run_one(name, bound=None, budget=None):
 
 
 def checkpoint(led, result, push=True):
-    """Persist one result: ledger, docs, commit. Durable before returning."""
+    """
+    Persist one attempt.
+
+    The ledger records EVERY attempt, including timeouts -- that history is
+    what auto-calibration reads and it costs nothing to keep locally.
+
+    But only a real FINDING is committed. An earlier version pushed a commit
+    per attempt, which filled the history with "-> TIMEOUT" noise: a search
+    that did not finish is not a result, and a repo log full of non-results
+    makes the real ones harder to find. Timeouts and errors now stay local.
+    """
     led["runs"].append(result)
     save_ledger(led)
     write_docs(led)
-    if push:
-        _commit(result)
+    if push and result["verdict"] in ("VERIFIED-TO-N", "REFUTED", "REFUSED"):
+        _commit(result, led)
 
 
-def _commit(r):
-    msg = (f"conjecture checkpoint: {r['name']} @ {r['bound']:,} -> {r['verdict']}\n\n"
+def _commit(r, led):
+    # Fold the calibration history into the one commit that carries a finding,
+    # rather than emitting a commit per failed attempt.
+    tried = [x for x in led["runs"]
+             if x["name"] == r["name"] and x["verdict"] == "TIMEOUT"]
+    cal = ""
+    if tried:
+        bounds = ", ".join(f"{x['bound']:,}" for x in tried)
+        cal = (f"\nCalibration: {len(tried)} bound(s) exceeded the "
+               f"{REGISTRY[r['name']]['budget']}s budget first ({bounds}); this "
+               f"is the largest bound that completed.\n")
+
+    msg = (f"{r['source']} @ {r['bound']:,} -> {r['verdict']}\n\n"
            f"{r['detail'][:300]}\n\n"
-           f"Prior art: {r['prior']}\n"
+           f"Encoder validation: {r.get('validation') or 'n/a'}\n"
            f"Logical form: {r['form']}"
-           f"{'  (no finite computation can settle this)' if r['form'] != FORALL else ''}\n"
-           f"Elapsed: {r['seconds']}s\n\n"
-           f"VERIFIED-TO-N is not a proof; the general statement remains open.\n\n"
+           f"{'  (no finite computation can settle this in either direction)' if r['form'] != FORALL else ''}\n"
+           f"Prior art: {r['prior']}\n"
+           f"{cal}"
+           f"\nVERIFIED-TO-N is not a proof; the general statement remains open.\n\n"
            f"Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>")
     for cmd in (["git", "add", str(LEDGER), str(DOCS)],
                 ["git", "commit", "-q", "-m", msg],
@@ -339,24 +361,43 @@ def main():
             if not force and already(led, name, bound):
                 print(f"  [skip]  {name} @ {bound:,} already in ledger")
                 continue
-            # Auto-calibrate: try the registry bound, and on TIMEOUT back off
-            # by halves until it fits the budget. Guessing bounds by hand
-            # either wastes the budget or wastes hours; this finds the largest
-            # bound that actually COMPLETES, which is the only kind that
-            # verifies anything. Every attempt is checkpointed, so the
-            # timeouts stay in the record rather than being quietly discarded.
-            attempt = bound
-            for _ in range(6):
-                print(f"  [run ]  {name} @ {attempt:,} ...", flush=True)
-                r = run_one(name, bound=attempt)
-                checkpoint(led, r, push=push)
-                print(f"          {r['verdict']}  ({r['seconds']}s)  {r['detail'][:60]}")
-                if r["verdict"] != "TIMEOUT":
+            # Calibrate UPWARD, not downward.
+            #
+            # The first version guessed a bound and halved on timeout, which
+            # spends the entire budget on searches that finish nothing and
+            # then reports a smaller bound anyway. Escalating instead starts
+            # from a cheap bound and doubles while there is measured headroom,
+            # so every second of compute goes into a search that COMPLETES.
+            #
+            # Only the final, largest completed run is committed. The
+            # intermediate rungs stay in the local ledger as calibration data.
+            meta = REGISTRY[name]
+            budget = meta["budget"]
+            attempt = meta.get("seed", 2000)
+            last = None
+            while attempt <= bound:
+                print(f"  [probe] {name} @ {attempt:,} ...", flush=True)
+                r = run_one(name, bound=attempt, budget=budget)
+                led["runs"].append(r)
+                save_ledger(led)
+                print(f"          {r['verdict']}  ({r['seconds']}s)")
+                if r["verdict"] == "TIMEOUT":
                     break
-                attempt //= 2
-                if attempt < 100:
-                    print(f"          giving up on {name}: even 100 exceeds budget")
+                if r["verdict"] == "ERROR":
+                    last = r
                     break
+                last = r
+                # stop escalating once the next doubling would likely overrun
+                if r["seconds"] * 2.6 > budget:
+                    break
+                attempt *= 2
+            if last and last["verdict"] != "TIMEOUT":
+                checkpoint(led, last, push=push)
+                print(f"  [DONE ] {name} @ {last['bound']:,} -> {last['verdict']}"
+                      f"  ({last['seconds']}s)  {last['detail'][:50]}")
+            else:
+                print(f"  [DONE ] {name}: no bound completed inside {budget}s "
+                      f"— nothing committed")
     else:
         print(__doc__)
 
