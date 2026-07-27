@@ -43,8 +43,26 @@ NOT_A_SIMPLE_THRESHOLD = re.compile(
     r"|\beven\s+n\b|\bodd\s+n\b|\bprime\s+n\b"      # parity/primality splits
     r"|\bprobably\b|\bperhaps\b|\bseems\b|\bappears\b|\bmight\b|\blikely\b"
     r"|\beventually\b|\binfinitely\b|\balmost\s+all\b|\bdensity\b"
-    r"|\bsufficiently\s+large\b|\blarge\s+enough\b",
+    r"|\bsufficiently\s+large\b|\blarge\s+enough\b"
+    # --- gaps found by the live hunt, each having produced a false flag ---
+    r"|\bdifferent\s+from\b|\bother\s+than\b|\bapart\s+from\b"   # A219157
+    r"|\bsmallest\b|\blargest\b|\bare\s+\d+\s*,"                  # A338757
+    r"|\bit\s+is\s+known\b|\bverified\b|\bchecked\b"              # A074063
+    r"|\bbut\s+this\s+is\s+not\s+true\b|\bis\s+false\b"          # A253238
+    r"|\bconverge\b|\bwe\s+can\s+conjecture\b",                     # A215689
     re.I)
+
+# A universal claim must be ASSERTED, not merely mentioned. "The smallest
+# numbers here with a(n) > 0 are 48, 60, ..." contains the substring but
+# claims nothing universal; A338757 was flagged on exactly that.
+ASSERTED = re.compile(
+    r"\bconjectur|\bwe\s+believe\b|\bit\s+seems\s+that\b|"
+    r"\bshould\s+hold\b|\bis\s+always\b|\bnever\b", re.I)
+
+# A BOUNDED range is not a universal claim: "a(n) > 0 for 58 <= n <= 200"
+# asserts nothing about n > 200. A074063 was flagged on this.
+BOUNDED_RANGE = re.compile(
+    r"for\s+\d+\s*(?:<=|≤|<)\s*n\s*(?:<=|≤|<)\s*\d+", re.I)
 
 # The forms that ARE a simple threshold, in the phrasings OEIS actually uses.
 THRESHOLDS = [
@@ -68,6 +86,12 @@ def domain_of(sentence: str):
     A returned threshold is always normalised to STRICT: n > threshold.
     """
     s = " ".join(sentence.split())
+
+    if BOUNDED_RANGE.search(s):
+        return ("refuse", "claim is over a BOUNDED range, not universal")
+    if not ASSERTED.search(s):
+        return ("refuse", "sentence mentions the property but asserts no "
+                          "universal claim")
 
     blocker = NOT_A_SIMPLE_THRESHOLD.search(s)
     if blocker:
@@ -111,6 +135,17 @@ def selftest():
         ("Conjecture: a(n) > 0 for sufficiently large n.", "refuse", None, "asymptotic"),
         ("Conjecture: a(n) > 0 if n is not a power of 2.", "refuse", None, "conditional"),
         ("Conjecture: a(n) > 0 for n >= 5.", "threshold", 4, "inclusive form"),
+        # --- found by the live hunt ---
+        ("Conjecture: a(n)>0 for all n>30000 with n different from 38451, 46441.",
+         "refuse", None, "A219157 exclusion list"),
+        ("The smallest numbers here with a(n) > 0 that are not prime powers are 48, 60.",
+         "refuse", None, "A338757 descriptive, not asserted"),
+        ("It is known that a(n) > 0 for 58 <= n <= 200.",
+         "refuse", None, "A074063 bounded range"),
+        ("In the past, I conjectured that a(n) > 0 for all n>24, but this is not true.",
+         "refuse", None, "A253238 self-retracted"),
+        ("We can conjecture that a(n) > 0 for all n, and the terms converge to X.",
+         "refuse", None, "A215689 loose wording"),
     ]
     ok = 0
     for sent, want_kind, want_thr, incident in cases:

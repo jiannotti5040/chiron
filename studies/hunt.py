@@ -107,7 +107,13 @@ if __name__ == "__main__":
     pages = int(sys.argv[1]) if len(sys.argv) > 1 else 12
     Q = ['"Conjecture: a(n) > 0"', '"Conjecture: a(n)>0"',
          '"a(n) is never"', '"conjectured that a(n) > 0"',
-         '"Conjecture: a(n) > 0 for all n"', '"a(n) > 0 for all n >"']
+         '"Conjecture: a(n) > 0 for all n"', '"a(n) > 0 for all n >"',
+         '"Conjecture: a(n) > 0 for every n"', '"a(n) is always positive"',
+         '"Conjecture: a(n) is never zero"', '"we conjecture that a(n) > 0"',
+         '"It is conjectured that a(n) > 0"', '"Conjecture: every n"',
+         '"a(n) > 0 for n >"', '"Conjecture: a(n) != 0"',
+         '"Conjecture: a(n) is nonzero"', '"a(n) is never a square"',
+         '"Conjecture: a(n) > 1"', '"conjectured to be positive"']
     print("="*74); print("HUNT — OEIS conjectures vs published terms (b-file preferred)")
     print("="*74)
     v = run(Q, pages)
