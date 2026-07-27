@@ -1,0 +1,37 @@
+{
+ "runs": [
+  {
+   "name": "a280831",
+   "bound": 2000,
+   "prior": "Zhi-Wei Sun prize 1,680 RMB; open. 83.35% of n reduce to Gauss-Legendre via y=0; only 4^k(8m+7) is searched.",
+   "form": "FORALL",
+   "source": "OEIS A280831",
+   "verdict": "VERIFIED-TO-N",
+   "detail": "every n in [0, 2,000] has at least one representation",
+   "validation": "representation COUNTS reproduce the first 35 published terms of A280831 exactly (a tighter check than mere existence)",
+   "seconds": 1.0
+  },
+  {
+   "name": "a280831",
+   "bound": 4000,
+   "prior": "Zhi-Wei Sun prize 1,680 RMB; open. 83.35% of n reduce to Gauss-Legendre via y=0; only 4^k(8m+7) is searched.",
+   "form": "FORALL",
+   "source": "OEIS A280831",
+   "verdict": "VERIFIED-TO-N",
+   "detail": "every n in [0, 4,000] has at least one representation",
+   "validation": "representation COUNTS reproduce the first 35 published terms of A280831 exactly (a tighter check than mere existence)",
+   "seconds": 4.7
+  },
+  {
+   "name": "a280831",
+   "bound": 8000,
+   "prior": "Zhi-Wei Sun prize 1,680 RMB; open. 83.35% of n reduce to Gauss-Legendre via y=0; only 4^k(8m+7) is searched.",
+   "form": "FORALL",
+   "source": "OEIS A280831",
+   "verdict": "VERIFIED-TO-N",
+   "detail": "every n in [0, 8,000] has at least one representation",
+   "validation": "representation COUNTS reproduce the first 35 published terms of A280831 exactly (a tighter check than mere existence)",
+   "seconds": 27.5
+  }
+ ]
+}

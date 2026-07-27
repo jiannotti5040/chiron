@@ -133,28 +133,53 @@ def check(anum):
     if not data:
         return {"anum": anum, "status": "no-data"}
     off = int((e.get("offset") or "0,1").split(",")[0])
+
+    # THE EDGE. A conjecture in an OEIS comment is usually checked only as far
+    # as the ~40-term `data` field the author was looking at. The b-file often
+    # carries hundreds to thousands MORE terms, uploaded later and never
+    # re-tested against the prose claim. That gap is where an unnoticed
+    # violation can actually live.
+    src = "data"
+    try:
+        from oeis_novelty import bfile
+        bt, status = bfile(anum, len(data))
+        if status == "real" and len(bt) > len(data):
+            # the b-file must AGREE with `data` on the overlap, or one of them
+            # is not what it claims and neither may be trusted
+            k = min(len(bt), len(data))
+            if bt[:k] == data[:k]:
+                data, src = bt, f"b-file ({len(bt)} terms vs {k} in data)"
+    except Exception:
+        pass
     thr = arg if arg is not None else off - 1     # no domain => whole sequence
 
     viol = [(off + i, v) for i, v in enumerate(data)
             if off + i > thr and v <= 0]
     if viol:
         return {"anum": anum, "status": "VIOLATION",
-                "threshold": thr, "offset": off,
+                "threshold": thr, "offset": off, "source": src,
                 "violations": viol[:6], "n_terms": len(data),
                 "name": (e.get("name") or "")[:110],
                 "claim_text": text[:260]}
     return {"anum": anum, "status": "consistent", "threshold": thr,
-            "n_terms": len(data)}
+            "n_terms": len(data), "source": src}
 
 
 def harvest(pages=8, per=10):
     """Collect A-numbers whose text contains a positivity conjecture."""
-    import urllib.request
+    import urllib.request, urllib.parse
     UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) chiron-research/0.6.4"
+    QUERIES = [
+        '"Conjecture: a(n) > 0"',
+        '"Conjecture: a(n)>0"',
+        '"conjectured that a(n) > 0"',
+        '"Conjecture: a(n) > 0 for all n"',
+    ]
     found = []
-    for start in range(0, pages * per, per):
-        url = ("https://oeis.org/search?q=%22Conjecture%3A+a%28n%29+%3E+0%22"
-               f"&fmt=json&start={start}")
+    import itertools
+    for q, start in itertools.product(QUERIES, range(0, pages * per, per)):
+        url = ("https://oeis.org/search?q=" +
+               urllib.parse.quote(q) + f"&fmt=json&start={start}")
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=60) as r:
@@ -164,7 +189,7 @@ def harvest(pages=8, per=10):
         if isinstance(d, dict):
             d = d.get("results") or []
         if not d:
-            break
+            continue
         for e in d:
             found.append(e["number"])
             (CACHE / f"A{e['number']:06d}.json").write_text(json.dumps(e))
