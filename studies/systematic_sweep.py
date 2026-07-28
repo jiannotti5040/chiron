@@ -5,8 +5,12 @@ each one a recorded status. No cherry-picking, no silent skipping.
 
 Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
 
-TARGET: google-deepmind/formal-conjectures — 850 Lean files, ~3,195 tagged
-theorems, ~1,171 of them open.
+TARGET: a caller-pinned checkout of google-deepmind/formal-conjectures.
+
+The historical journal bundled with this study predates source-version
+provenance. It remains an audit record, not a claim about the current upstream
+corpus. New runs require ``--repo`` and bind their journal to that checkout's
+git revision and Lean-file count.
 
 WHY THIS AND NOT THE PREVIOUS RUNNER. The earlier campaign hand-picked eleven
 conjectures and pushed their bounds. That is the wrong shape twice over: it
@@ -20,8 +24,8 @@ CONJECTURE. Most of these cannot be attacked by any finite computation, and
 saying so per-entry is the honest form of "we hit all of them". The statuses:
 
     SEARCHED-VERIFIED   bounded search completed, no counterexample found
-    SEARCHED-REFUTED    counterexample found -> escalates to a witness
-                        certificate, which must independently re-verify
+    SEARCHED-REFUTED    counterexample found -> requires a target-specific,
+                        independently executable witness checker before use
     REFUSED-INFINITARY  asserts an infinite set / asymptotic; no finite
                         computation settles it in either direction
     REFUSED-NEEDS-LEAN  truth depends on Lean definitions this cannot evaluate
@@ -38,15 +42,17 @@ Resumable: every processed file is journaled. Re-running skips completed work.
 Kill it at any point; nothing is lost and nothing is recomputed.
 
 Usage:
-    python3 studies/systematic_sweep.py scan            # inventory only
-    python3 studies/systematic_sweep.py run [--limit N] # walk the corpus
-    python3 studies/systematic_sweep.py report          # status summary
+    python3 studies/systematic_sweep.py scan --repo <repo>            # inventory only
+    python3 studies/systematic_sweep.py run --repo <repo> --journal <file> [--limit N]
+    python3 studies/systematic_sweep.py report [--journal <file>]     # status summary
 """
 
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
 import sys
 import time
 from collections import Counter
@@ -57,8 +63,6 @@ VAULT = HERE.parent
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(VAULT / "Primus" / "src"))
 
-REPO = Path("/private/tmp/claude-501/-Users-jacobiannotti-Desktop/"
-            "c94cbf5b-73af-44c3-977f-8e65f8da2b18/scratchpad/formal-conjectures")
 JOURNAL = HERE / "systematic_journal.json"
 
 SEARCHED_V = "SEARCHED-VERIFIED"
@@ -163,18 +167,53 @@ def try_oeis_search(anum, budget=45):
 
 # --------------------------------------------------------------------------
 
-def load_journal():
-    if JOURNAL.exists():
-        return json.loads(JOURNAL.read_text())
+def load_journal(journal=JOURNAL):
+    if journal.exists():
+        return json.loads(journal.read_text())
     return {"files": {}, "results": []}
 
 
-def save_journal(j):
-    JOURNAL.write_text(json.dumps(j, indent=1))
+def save_journal(j, journal=JOURNAL):
+    temp = journal.with_suffix(journal.suffix + ".tmp")
+    temp.write_text(json.dumps(j, indent=1) + "\n")
+    os.replace(temp, journal)
 
 
-def scan():
-    files = sorted((REPO / "FormalConjectures").rglob("*.lean"))
+def source_snapshot(repo: Path):
+    """The minimum identity needed to prevent a stale corpus claim."""
+    files = sorted((repo / "FormalConjectures").rglob("*.lean"))
+    if not files:
+        raise RuntimeError(f"not a Formal Conjectures checkout: {repo}")
+    try:
+        commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo,
+                                text=True, capture_output=True, check=False)
+        head = commit.stdout.strip() if commit.returncode == 0 else None
+    except OSError:
+        head = None
+    return {"repository_path": str(repo.resolve()), "git_head": head,
+            "lean_file_count": len(files)}
+
+
+def bind_snapshot(j, repo: Path):
+    """Refuse to merge a new run into an unpinned or different corpus journal."""
+    current = source_snapshot(repo)
+    recorded = j.get("source_snapshot")
+    if recorded is None:
+        if j.get("files") or j.get("results"):
+            raise RuntimeError(
+                "journal has results but no source snapshot; it is historical and "
+                "cannot be extended. Supply a new --journal path for this checkout.")
+        j["source_snapshot"] = current
+    elif recorded != current:
+        raise RuntimeError(
+            "journal snapshot differs from --repo; refusing to mix corpora. "
+            "Supply a separate --journal path.")
+    return current
+
+
+def scan(repo: Path):
+    snapshot = source_snapshot(repo)
+    files = sorted((repo / "FormalConjectures").rglob("*.lean"))
     tally = Counter()
     opens = 0
     for p in files:
@@ -183,6 +222,7 @@ def scan():
             tally[t["category"]] += 1
             if t["category"] == "research open":
                 opens += 1
+    print(f"  source commit    {snapshot['git_head'] or 'unavailable'}")
     print(f"  files            {len(files):,}")
     print(f"  tagged theorems  {sum(tally.values()):,}")
     print(f"  research open    {opens:,}")
@@ -191,17 +231,18 @@ def scan():
     return files
 
 
-def run(limit=None):
-    j = load_journal()
-    files = sorted((REPO / "FormalConjectures").rglob("*.lean"))
-    todo = [p for p in files if str(p.relative_to(REPO)) not in j["files"]]
+def run(repo: Path, journal: Path, limit=None):
+    j = load_journal(journal)
+    snapshot = bind_snapshot(j, repo)
+    files = sorted((repo / "FormalConjectures").rglob("*.lean"))
+    todo = [p for p in files if str(p.relative_to(repo)) not in j["files"]]
     if limit:
         todo = todo[:limit]
     print(f"  {len(j['files']):,} files already journaled; {len(todo):,} to process\n")
 
     t0 = time.time()
     for i, p in enumerate(todo, 1):
-        rel = str(p.relative_to(REPO))
+        rel = str(p.relative_to(repo))
         d = parse(p)
         opens = [t for t in d["theorems"] if t["category"] == "research open"]
         if not opens:
@@ -224,23 +265,32 @@ def run(limit=None):
         j["files"][rel] = {"status": "done", "n": len(recs)}
 
         if i % 25 == 0:
-            save_journal(j)
+            save_journal(j, journal)
             c = Counter(r["status"] for r in j["results"])
             el = time.time() - t0
             print(f"  {i}/{len(todo)}  ({el:.0f}s)  " +
                   "  ".join(f"{k.split('-')[-1][:8]}={v}" for k, v in c.most_common(4)))
 
-    save_journal(j)
+    save_journal(j, journal)
+    print(f"\n  source snapshot  {snapshot['git_head'] or 'unavailable'} "
+          f"({snapshot['lean_file_count']:,} Lean files)")
     report(j)
 
 
-def report(j=None):
-    j = j or load_journal()
+def report(j=None, journal=JOURNAL):
+    j = j or load_journal(journal)
     c = Counter(r["status"] for r in j["results"])
     tot = sum(c.values())
     print("\n" + "=" * 72)
     print(f"SYSTEMATIC SWEEP — {len(j['files']):,} files, {tot:,} open conjectures")
     print("=" * 72)
+    snapshot = j.get("source_snapshot")
+    if snapshot is None:
+        print("  SOURCE SNAPSHOT: MISSING — historical/unpinned journal; do not")
+        print("  treat these counts as coverage of the current upstream corpus.")
+    else:
+        print(f"  source commit   {snapshot.get('git_head') or 'unavailable'}")
+        print(f"  Lean files      {snapshot.get('lean_file_count'):,}")
     for k, v in c.most_common():
         print(f"  {k:22s} {v:6,}   {100*v/tot:5.1f}%")
     ref = [r for r in j["results"] if r["status"] == SEARCHED_R]
@@ -251,20 +301,43 @@ def report(j=None):
         print("    none — which is the expected outcome and is reported as a result")
 
 
+def _option(args, flag):
+    if flag not in args:
+        return None
+    i = args.index(flag)
+    if i + 1 >= len(args):
+        raise ValueError(f"{flag} needs a value")
+    return args[i + 1]
+
+
 def main():
-    cmd = sys.argv[1] if len(sys.argv) > 1 else "scan"
-    if cmd == "scan":
-        scan()
-    elif cmd == "run":
-        lim = None
-        if "--limit" in sys.argv:
-            lim = int(sys.argv[sys.argv.index("--limit") + 1])
-        run(lim)
-    elif cmd == "report":
-        report()
-    else:
-        print(__doc__)
+    args = sys.argv[1:]
+    cmd = args[0] if args else "scan"
+    try:
+        journal_arg = _option(args, "--journal")
+        journal = Path(journal_arg).expanduser() if journal_arg else JOURNAL
+        if cmd in ("scan", "run"):
+            repo_arg = _option(args, "--repo")
+            if not repo_arg:
+                raise ValueError(f"{cmd} requires --repo <formal-conjectures checkout>")
+            repo = Path(repo_arg).expanduser()
+            if not repo.is_dir():
+                raise ValueError(f"repo not found: {repo}")
+            if cmd == "scan":
+                scan(repo)
+            else:
+                limit_arg = _option(args, "--limit")
+                run(repo, journal, int(limit_arg) if limit_arg else None)
+        elif cmd == "report":
+            report(journal=journal)
+        else:
+            print(__doc__)
+            return 2
+    except (RuntimeError, ValueError) as exc:
+        print(f"REFUSED: {exc}")
+        return 2
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
