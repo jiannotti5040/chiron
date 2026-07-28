@@ -1,0 +1,90 @@
+{
+  "claim": {
+    "member_predicate": "n > 0 and sigma(n) == 2 * usigma(n), with unitary d defined by gcd(d, n / d) == 1",
+    "primitive_obligation": "a primitive member has no proper divisor that is also an enumerated member",
+    "residue_obligation": "every enumerated member has n % 216 == 108",
+    "scope": {
+      "lower": 1,
+      "upper": 10000000
+    },
+    "source_label": "DeepMind FormalConjectures A063880"
+  },
+  "generated_utc": "2026-07-28T04:12:15Z",
+  "implementation": {
+    "capsule_script": "studies/a063880_capsule.py",
+    "capsule_script_sha256": "8582773112b7e069643bf33c2e601cf4b6e3ed6083f98c3c3ed86cc0e06e8812",
+    "compiler": "cc",
+    "methods": {
+      "definition_level_audit": "C99 direct divisor enumeration for every reported member",
+      "independent": "C99 Euler linear sieve plus separately written factor loop",
+      "primary": "C99 smallest-prime-factor sieve plus multiplicative sigma/usigma formula"
+    },
+    "native_scanner": "studies/a063880_capsule.c",
+    "native_scanner_sha256": "ae7cb207248b0d795ed33a6cb3d7b96309968c7fd53501de8f96a7b74138bcb2",
+    "python": {
+      "implementation": "CPython",
+      "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+      "version": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]"
+    },
+    "replay_command": "python3 studies/a063880_capsule.py verify",
+    "selected_git_status": [
+      "?? studies/a063880_capsule.c",
+      "?? studies/a063880_capsule.py"
+    ],
+    "vault_git_head": "c89215fcefc054c5fd72dced491afba3a0409451"
+  },
+  "nonclaims": [
+    "This is not a proof of either unbounded theorem.",
+    "This makes no novelty or priority claim.",
+    "Agreement of two programs is corroboration, not formal verification of their algorithms.",
+    "The formal source snapshot contains statements; this capsule does not prove them in Lean."
+  ],
+  "outputs": {
+    "block_digests_path": "outputs/block-digests.json",
+    "block_digests_sha256": "d24405c1e3914bdb95d905fcfbddc0a71a7bc3c43d8ba6106bccfe3c064e3fdf",
+    "bound": 10000000,
+    "direct_audit": {
+      "definition_level_members_checked": 28141,
+      "direct_transcript_sha256": "c2833c3287f911a61ed78ca79c21d6280ccad1e8e784cf80f25959447bf0e660",
+      "primitive_terms": [
+        108
+      ],
+      "published_oeis_terms_checked": 40
+    },
+    "member_count": 28141,
+    "members_sha256": "b916836f6d48bd01afdedd2dc0d8288969b8976655d8c38299ae6a526355bc58",
+    "residue_counterexamples": [],
+    "result_sha256": "5f65cc488b686713bea5fcd6bee15dd5cd6d5c7048f52e9ee85f67ed71ee2ee1",
+    "schema": "chiron.a063880-result/1",
+    "scope_statement": "Every member found in [1, 10,000,000] is 108 modulo 216; 108 is the only primitive member in that interval. This is bounded evidence, not a proof.",
+    "verdict": "VERIFIED-TO-N"
+  },
+  "schema": "chiron.research-capsule/1",
+  "sources": {
+    "formal_conjectures": {
+      "commit": "f776d2f2039351b00737ffcafb9d7d7666e1d9af",
+      "declarations": [
+        "OeisA63880.A",
+        "OeisA63880.mod_216_of_a",
+        "OeisA63880.unique_primitive_108"
+      ],
+      "frozen_path": "inputs/formal-63880.lean",
+      "notice": "Frozen Apache-2.0 source retains its upstream notice.",
+      "path": "FormalConjectures/OEIS/63880.lean",
+      "repository": "https://github.com/google-deepmind/formal-conjectures",
+      "sha256": "d221ce0fb59297e6555e2632c38c422c2bd2b393eff9f58f118c30d860c080c0"
+    },
+    "oeis": {
+      "frozen_path": "inputs/oeis-A063880.json",
+      "local_cache_mtime_utc": "2026-07-26T16:17:18Z",
+      "notice": "Verification reads this frozen response, not the network or ignored cache.",
+      "sha256": "a2e950d7826433b888b460a9aa6b096902cf13101b8e0efb1502a0f2f65fa005",
+      "url": "https://oeis.org/search?q=id:A063880&fmt=json"
+    }
+  },
+  "status": "bounded-computation",
+  "timings_seconds": {
+    "native_full_replay_seconds": 0.955,
+    "total_seconds": 0.955
+  }
+}

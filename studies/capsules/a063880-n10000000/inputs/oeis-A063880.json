@@ -1,0 +1,34 @@
+{
+  "number": 63880,
+  "data": "108,540,756,1188,1404,1836,2052,2484,3132,3348,3780,3996,4428,4644,5076,5724,5940,6372,6588,7020,7236,7668,7884,8316,8532,8964,9180,9612,9828,10260,10476,10908,11124,11556,11772,12204,12420,12852,13716,14148",
+  "name": "Numbers k such that sigma(k) = 2*usigma(k).",
+  "comment": [
+    "Numbers so far are all == 108 (mod 216). - _Ralf Stephan_, Jul 07 2003 [Confirmed up to 10^7 by _Robert G. Wilson v_.]",
+    "Also numbers whose unitary and nonunitary divisors have equal sum. - _Amiram Eldar_, Sep 30 2019",
+    "From _Amiram Eldar_, Aug 31 2024: (Start)",
+    "The primitive terms of this sequence (terms whose proper divisors are not in this sequence) are all powerful numbers (A001694).",
+    "All the other terms are of the form m*s, where m is primitive (powerful) and s is a squarefree number coprime to m.",
+    "The only primitive term below 10^18 is 108.",
+    "If there are no other primitive terms, then a(n) = 108 * A276378(n). (End)"
+  ],
+  "link": [
+    "Amiram Eldar, <a href=\"/A063880/b063880.txt\">Table of n, a(n) for n = 1..10000</a> (terms 1..1000 from Harry J. Smith)"
+  ],
+  "mathematica": [
+    "usigma[n_] := Block[{d = Divisors[n]}, Plus @@ Select[d, GCD[ #, n/# ] == 1 &]]; Select[ Range[14363], DivisorSigma[1, # ] == 2 usigma[ # ] &] (* _Robert G. Wilson v_, Aug 28 2004 *)"
+  ],
+  "program": [
+    "(PARI) u(n) = sumdiv(n,d, if(gcd(d,n/d)==1,d));",
+    "j=[];  for(n=1,30000, if(sigma(n) == 2*u(n),j=concat(j,n))); j"
+  ],
+  "xref": [
+    "Cf. A000203, A001694, A034448, A048146, A097702, A276378."
+  ],
+  "keyword": "easy,nonn",
+  "offset": "1,1",
+  "author": "_Jason Earls_, Aug 27 2001",
+  "references": 6,
+  "revision": 39,
+  "time": "2024-08-31T04:33:09-04:00",
+  "created": "2003-05-16T03:00:00-04:00"
+}
