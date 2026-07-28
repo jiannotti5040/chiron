@@ -21,10 +21,10 @@ published values for its own problem. An encoder that cannot reproduce what is
 already known has no business reporting what is not.
 
 THE VERDICTS MEAN WHAT THEY SAY. VERIFIED-TO-N is not a proof and the general
-statement stays open; a bounded search is evidence. REFUTED requires a witness
-that survives studies/witness_certificate.py, which refuses to issue unless
-every precondition holds, the conclusion genuinely fails, and an independent
-recomputation by a second method agrees.
+statement stays open; a bounded search is evidence. REFUTED requires a
+target-specific executable witness checker with an independent recomputation.
+The former generic ``witness_certificate.py`` accepted caller-supplied
+booleans and is retired; it cannot support a mathematical verdict.
 """
 
 from __future__ import annotations
@@ -96,10 +96,15 @@ def erdos_base3(limit, K=64):
                 break
         r = (r * 2) % M
     if cand:
-        return dict(verdict=REFUTED, validation=validation,
-                    detail=f"candidate counterexample(s) at n={cand} -- low {K} "
-                           f"base-3 digits all in {{0,1}}; REQUIRES full-precision "
-                           f"confirmation before any claim is made")
+        # The residue scan is a one-way certificate: seeing a digit 2 in the
+        # low K digits proves the instance, but seeing only 0/1 there says
+        # nothing about higher digits.  Calling such a candidate REFUTED was
+        # therefore unsound.  Keep the candidate for an exact full-expansion
+        # follow-up, but issue no mathematical verdict from a partial view.
+        return dict(verdict=REFUSED, validation=validation,
+                    detail=f"low-{K}-digit candidate(s) at n={cand}; higher base-3 "
+                           "digits were not exhaustively checked, so this is NOT a "
+                           "counterexample and the scan refuses to conclude")
     return dict(verdict=VERIFIED, validation=validation, bound=limit,
                 detail=f"every 2^n for 8 < n <= {limit:,} contains the digit 2 "
                        f"in base 3",
