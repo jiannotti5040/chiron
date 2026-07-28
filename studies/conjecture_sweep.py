@@ -31,11 +31,87 @@ EVERY ENCODER VALIDATES FIRST. If validation fails the search does not run.
 
 from __future__ import annotations
 
+import gc
 import sys
 from fractions import Fraction
 from math import isqrt
 
 REFUTED, VERIFIED, REFUSED, ERROR = "REFUTED", "VERIFIED-TO-N", "REFUSED", "ERROR"
+
+
+# ``a000041`` needs a perfect-power detector.  Do not use floating-point
+# roots for this: partition numbers eventually exceed the range of a double,
+# and a rounded root must never decide a mathematical verdict.  The helpers
+# below use integer arithmetic exclusively.  It is enough to test PRIME
+# exponents: if v = x^m for composite m, then v is also a q-th power for a
+# prime divisor q of m.
+_POWER_EXPONENTS = {}
+_POWER_FILTERS = {}
+
+
+def _small_primes(limit):
+    """Return all primes <= limit, exactly (small helper for exponents)."""
+    if limit < 2:
+        return []
+    sieve = bytearray(b"\x01") * (limit + 1)
+    sieve[:2] = b"\x00\x00"
+    for p in range(2, isqrt(limit) + 1):
+        if sieve[p]:
+            sieve[p * p::p] = bytearray(len(sieve[p * p::p]))
+    return [p for p in range(2, limit + 1) if sieve[p]]
+
+
+def _prime_exponents(bit_length):
+    """Prime exponents that could occur in a positive ``bit_length``-bit power."""
+    if bit_length not in _POWER_EXPONENTS:
+        _POWER_EXPONENTS[bit_length] = _small_primes(bit_length - 1)
+    return _POWER_EXPONENTS[bit_length]
+
+
+def _prime_mod_one(exponent):
+    """A small prime q = 1 (mod exponent), found with exact trial division."""
+    q = exponent + 1
+    while True:
+        if all(q % d for d in range(2, isqrt(q) + 1)):
+            return q
+        q += exponent
+
+
+def _power_filter(exponent):
+    """Return (q, q-th-power residues mod q) for a necessary cheap test."""
+    if exponent not in _POWER_FILTERS:
+        q = _prime_mod_one(exponent)
+        _POWER_FILTERS[exponent] = (q, {pow(a, exponent, q) for a in range(q)})
+    return _POWER_FILTERS[exponent]
+
+
+def _integer_nth_root(value, exponent):
+    """Floor(value ** (1/exponent)), calculated using integers only."""
+    if exponent == 1:
+        return value
+    if exponent == 2:
+        return isqrt(value)
+    # Newton iteration starts at an upper bound and decreases to the floor.
+    root = 1 << ((value.bit_length() + exponent - 1) // exponent)
+    while True:
+        nxt = ((exponent - 1) * root + value // pow(root, exponent - 1)) // exponent
+        if nxt >= root:
+            return root
+        root = nxt
+
+
+def perfect_power(value):
+    """Return one exact (base, exponent) witness, or ``None`` if none exists."""
+    if value < 4:
+        return None
+    for exponent in _prime_exponents(value.bit_length()):
+        modulus, residues = _power_filter(exponent)
+        if value % modulus not in residues:
+            continue
+        root = _integer_nth_root(value, exponent)
+        if root > 1 and pow(root, exponent) == value:
+            return root, exponent
+    return None
 
 
 def primes_upto(n):
@@ -96,6 +172,13 @@ _SPF_CACHE = {"limit": 0, "spf": []}
 
 def _spf(limit):
     if _SPF_CACHE["limit"] < limit:
+        # Each checkpoint is a complete, independent scan.  Keeping the old
+        # Python-int sieve alive while allocating the next, larger sieve can
+        # double peak memory (and killed the 10,000,000 A063880 checkpoint
+        # after a successful 8,192,000 run).  Release it before building the
+        # replacement; no caller relies on identities from the old cache.
+        _SPF_CACHE.update(limit=0, spf=[])
+        gc.collect()
         spf = list(range(limit + 1))
         i = 2
         while i * i <= limit:
@@ -621,6 +704,111 @@ def a281976(limit):
                 count, limit, "Zhi-Wei Sun prize $2,400; open", lo=0)
 
 
+def _direct_sigma_usigma(n):
+    """Independent divisor enumeration, used only to audit a finite witness."""
+    sigma = usigma = 0
+    for d in range(1, isqrt(n) + 1):
+        if n % d:
+            continue
+        mate = n // d
+        for divisor in (d,) if d == mate else (d, mate):
+            sigma += divisor
+            if __import__("math").gcd(divisor, n // divisor) == 1:
+                usigma += divisor
+    return sigma, usigma
+
+
+def a063880(limit):
+    """
+    DeepMind Formal Conjectures A063880: if sigma(n) = 2*usigma(n), then
+    n = 108 mod 216, and 108 is the only primitive member.  These are two
+    universal claims, so a finite scan can refute but never prove them.
+    """
+    name = "A063880: sigma(n)=2*usigma(n) implies n=108 mod 216; 108 is unique primitive"
+    _spf(limit)
+
+    def sums(n):
+        sigma = usigma = 1
+        for p, exponent in _factor(n).items():
+            sigma *= (p ** (exponent + 1) - 1) // (p - 1)
+            usigma *= 1 + p ** exponent
+        return sigma, usigma
+
+    try:
+        from oeis_novelty import entry
+        raw = entry(63880)
+        published = [int(x) for x in (raw or {}).get("data", "").split(",")
+                     if x.strip().lstrip("-").isdigit()]
+    except Exception as exc:
+        return dict(verdict=REFUSED, name=name,
+                    detail=f"could not fetch A063880 to validate the encoder ({type(exc).__name__})")
+    if not published:
+        return dict(verdict=REFUSED, name=name,
+                    detail="A063880 returned no published terms; refusing to scan an unvalidated encoder")
+
+    members = []
+    for n in range(1, limit + 1):
+        sigma, usigma = sums(n)
+        if sigma == 2 * usigma:
+            members.append(n)
+
+    # The multiplicative formula is the fast path.  It must agree with an
+    # independent definition-level divisor scan on every published term before
+    # it may support a verdict about values outside the published range.
+    validation_count = min(len(published), len(members))
+    if published[:validation_count] != members[:validation_count]:
+        return dict(verdict=REFUSED, name=name,
+                    detail="factor-based membership disagrees with A063880's published prefix")
+    for n in published[:validation_count]:
+        if sums(n) != _direct_sigma_usigma(n):
+            return dict(verdict=REFUSED, name=name,
+                        detail=f"factor and direct-divisor sums disagree at published n={n}")
+    validation = (f"first {validation_count} published A063880 members match exactly; "
+                  "their sigma/usigma values also agree with independent divisor enumeration")
+
+    bad = [n for n in members if n % 216 != 108]
+    if bad:
+        n = bad[0]
+        fast = sums(n)
+        slow = _direct_sigma_usigma(n)
+        if fast != slow or fast[0] != 2 * fast[1]:
+            return dict(verdict=REFUSED, name=name, validation=validation,
+                        detail=f"candidate n={n} did not survive independent divisor enumeration")
+        return dict(verdict=REFUTED, name=name, validation=validation,
+                    detail=f"n={n} is a member by two exact methods but n mod 216 = {n % 216}")
+
+    member_set = set(members)
+    primitive = []
+    for n in members:
+        factors = _factor(n)
+        divisors = [1]
+        for p, exponent in factors.items():
+            divisors = [d * p ** e for d in divisors for e in range(exponent + 1)]
+        if not any(d != n and d in member_set for d in divisors):
+            primitive.append(n)
+    extra = [n for n in primitive if n != 108]
+    if extra:
+        n = extra[0]
+        # Recheck both the candidate and every proper divisor directly before
+        # calling it a refutation of the primitive-term statement.
+        factors = _factor(n)
+        divisors = [1]
+        for p, exponent in factors.items():
+            divisors = [d * p ** e for d in divisors for e in range(exponent + 1)]
+        direct_member = lambda d: _direct_sigma_usigma(d)[0] == 2 * _direct_sigma_usigma(d)[1]
+        if not direct_member(n) or any(d != n and direct_member(d) for d in divisors):
+            return dict(verdict=REFUSED, name=name, validation=validation,
+                        detail=f"candidate primitive n={n} did not survive direct divisor checks")
+        return dict(verdict=REFUTED, name=name, validation=validation,
+                    detail=f"n={n} is a primitive member distinct from 108, rechecked by direct divisors")
+
+    return dict(verdict=VERIFIED, name=name, validation=validation, bound=limit,
+                detail=(f"all {len(members):,} members in [1,{limit:,}] are 108 mod 216; "
+                        "108 is the only primitive member in that interval"),
+                prior="DeepMind's FormalConjectures/OEIS/63880.lean marks both "
+                      "statements research open; this is finite evidence only")
+
+
 def a000041(limit):
     """
     No partition number p(k) is a perfect power x^m with x,m > 1.
@@ -655,18 +843,6 @@ def a000041(limit):
     validation = (f"pentagonal-recurrence partition numbers reproduce the first "
                   f"{len(published)} published A000041 terms exactly; p(100) = {p[100]:,}")
 
-    def perfect_power(v):
-        if v < 4:
-            return None
-        m = 2
-        while (1 << m) <= v:
-            r = round(v ** (1.0 / m))
-            for cand in (r - 1, r, r + 1):       # float only to seed; verified exactly
-                if cand > 1 and cand ** m == v:
-                    return (cand, m)
-            m += 1
-        return None
-
     hits = []
     for k in range(2, limit + 1):
         pp = perfect_power(p[k])
@@ -679,9 +855,8 @@ def a000041(limit):
                     detail=f"partition number(s) that ARE perfect powers: {hits}")
     return dict(verdict=VERIFIED, name=name, validation=validation, bound=limit,
                 detail=f"no p(k) for k in [2, {limit:,}] is a perfect power",
-                prior="open; the candidate seeds use a float root but every hit is "
-                      "confirmed by exact integer exponentiation, so no float "
-                      "decides a verdict")
+                prior="open; perfect-power detection uses exact integer roots and "
+                      "exact exponentiation (no floating-point arithmetic)")
 
 
 REGISTRY = {
@@ -695,6 +870,7 @@ REGISTRY = {
     "a308734":   (a308734, 1000000),
     "a287616":   (a287616, 100000),
     "a281976":   (a281976, 3000),
+    "a063880":   (a063880, 10000000),
     "a000041":   (a000041, 20000),
 }
 
