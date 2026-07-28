@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-certify_conjectures.py — run every conjecture result from this campaign through
-the REAL certification engine (JDICert/cert_engine.py), not a bespoke script.
+certify_conjectures.py — LEGACY / QUARANTINED math-artifact generator.
 
 Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
 
@@ -23,11 +22,11 @@ The engine already encodes the distinction this campaign spent all night
 enforcing by hand: a bounded verification is a FACT, and the general statement
 is an UNKNOWN of a specific kind. XI_INFINITY is that kind.
 
-WHAT A CERTIFICATE HERE MEANS. Not that a conjecture is true. It records
-exactly what was computed, what was validated, what prior art exists, and what
-remains open -- Merkle-bound and replayable. Any claim of NOVELTY is entered
-as an unknown, never a fact, because novelty is a literature question and this
-campaign already got it wrong once (A261303/A261304, retracted).
+QUARANTINE NOTICE. This file serializes hand-authored prose into a governance
+engine; it does not replay the computation or bind evidence to source and code
+revisions. Its prior JSON files in ``studies/certificates/`` are historical,
+non-evidentiary artifacts. The generator now refuses rather than creating more
+of them. Use a target-specific executable research capsule for new evidence.
 """
 
 from __future__ import annotations
@@ -191,6 +190,14 @@ RESULTS = [
 
 
 def build_context(r):
+    raise RuntimeError(
+        "This legacy path is quarantined: it serializes asserted prose rather "
+        "than replaying mathematical evidence. Use a target-specific research "
+        "capsule with executable checkers instead.")
+
+    # Historical implementation retained below only as an audit record. It is
+    # unreachable by design and must not be re-enabled without a replayable
+    # evidence contract.
     part = C.KUOmegaPartition()
     for fid, stmt, src, cert, kind in r["facts"]:
         part.add_fact(C.Evidence(fid, stmt, src, cert, kind))
@@ -226,40 +233,11 @@ def build_context(r):
 
 
 def main():
-    OUT.mkdir(exist_ok=True)
-    print("=" * 76)
-    print("CERTIFYING THE CONJECTURE CAMPAIGN — via JDICert/cert_engine.py")
-    print("=" * 76)
-    print("The real engine, 12,909 lines, 280/280 embedded tests passing.")
-    print("Bounded verifications enter as FACTS; the general statement enters")
-    print("as an UNKNOWN classified XI_INFINITY -- an unbounded quantifier is a")
-    print("kind of unknowability, not a footnote. Novelty is never a fact.\n")
-
-    rows = []
-    for r in RESULTS:
-        ctx = build_context(r)
-        cert = C.certify(ctx)
-        d = cert.to_dict()
-        slug = r["cid"].lower()
-        (OUT / f"{slug}.json").write_text(json.dumps(d, indent=1, default=str))
-        rows.append((r["cid"], cert.verdict, cert.merkle_root(),
-                     len(r["facts"]), len(r["unknowns"]),
-                     len(d.get("escalations") or [])))
-        print(f"  {r['cid']:22s} {str(cert.verdict).split('.')[-1]:16s} "
-              f"K={len(r['facts'])} U={len(r['unknowns'])}  "
-              f"merkle {cert.merkle_root()[:16]}...")
-
-    print("\n" + "-" * 76)
-    ce = sum(1 for _, v, *_ in rows if v == C.Verdict.CERTIFIED_GO)
-    es = sum(1 for _, v, *_ in rows if v == C.Verdict.ESCALATE_HUMAN)
-    rj = sum(1 for _, v, *_ in rows if v == C.Verdict.REJECT_INPUT)
-    print(f"  CERTIFIED_GO {ce}   ESCALATE_HUMAN {es}   REJECT_INPUT {rj}")
-    print(f"\n  certificates written to {OUT}")
-    print("\n  A verdict of ESCALATE_HUMAN is the CORRECT outcome here: every")
-    print("  one of these carries an unbounded quantifier, so no engine may")
-    print("  auto-approve a general claim. That is the contract working, not")
-    print("  a failure to conclude.")
+    print("REFUSED — this legacy generator hashes hand-authored prose rather than")
+    print("replaying a computation. It is quarantined from mathematical use.")
+    print("Use a target-specific executable research capsule instead.")
+    return 2
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
