@@ -12,9 +12,10 @@ nothing is written down. This runner makes the campaign survive all of that.
                         (conjecture, bound). Nothing is ever recomputed
                         silently and nothing is lost to a dead session.
   * CHECKPOINTS         each conjecture is a checkpoint. After it completes,
-                        the ledger is written, docs are regenerated, and the
-                        result is committed. Kill the process at any point and
-                        the completed checkpoints are already durable.
+                        the ledger is written and docs are regenerated. A git
+                        commit/push is an explicit ``--push`` action, never a
+                        local-run side effect. Kill the process at any point
+                        and the completed checkpoints are already durable.
   * RESUME              a re-run skips any (conjecture, bound) already in the
                         ledger unless --force. Raising a bound is a NEW entry,
                         so the history of bounds is preserved rather than
@@ -42,7 +43,8 @@ its LOGICAL FORM:
 
 Usage:
     python3 studies/conjecture_runner.py list                 # registry + status
-    python3 studies/conjecture_runner.py run [names...]       # run checkpoints
+    python3 studies/conjecture_runner.py run [names...]       # run checkpoints locally
+    python3 studies/conjecture_runner.py run --push [names...] # explicitly publish findings
     python3 studies/conjecture_runner.py run --all            # everything pending
     python3 studies/conjecture_runner.py docs                 # regenerate docs
     python3 studies/conjecture_runner.py escalate <name>      # re-run at 10x bound
@@ -51,6 +53,7 @@ Usage:
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -73,9 +76,9 @@ FORALL, INFINITE, SIGMA2 = "FORALL", "INFINITE", "SIGMA2"
 # that flatters itself.
 # ---------------------------------------------------------------------------
 
-def _reg(fn_name, form, prior, budget=600, bound=None, source=""):
+def _reg(fn_name, form, prior, budget=600, bound=None, source="", capsule=""):
     return dict(fn=fn_name, form=form, prior=prior, budget=budget,
-                bound=bound, source=source)
+                bound=bound, source=source, capsule=capsule)
 
 
 REGISTRY = {
@@ -100,6 +103,12 @@ REGISTRY = {
     "a281976": _reg("a281976", FORALL,
                     "Zhi-Wei Sun prize $2,400; open.",
                     budget=900, bound=20_000, source="OEIS A281976"),
+    "a063880": _reg("a063880", FORALL,
+                    "DeepMind Formal Conjectures marks the residue and unique-primitive "
+                    "statements for A063880 as research open; finite evidence only.",
+                    budget=180, bound=10_000_000,
+                    source="DeepMind FormalConjectures A063880",
+                    capsule="../studies/capsules/a063880-n10000000/README.md"),
 
     # --- classical open problems ------------------------------------------
     "erdos242": _reg("erdos242", FORALL,
@@ -136,12 +145,24 @@ def load_ledger():
 
 
 def save_ledger(led):
-    LEDGER.write_text(json.dumps(led, indent=1))
+    # A checkpoint must not leave a half-written ledger if the process dies
+    # mid-write. ``os.replace`` is atomic on this filesystem; it does not
+    # claim multi-writer coordination, only crash-safe replacement.
+    temp = LEDGER.with_suffix(LEDGER.suffix + ".tmp")
+    temp.write_text(json.dumps(led, indent=1) + "\n")
+    os.replace(temp, LEDGER)
 
 
 def already(led, name, bound):
-    return any(r["name"] == name and r["bound"] == bound and
-               r["verdict"] not in ("TIMEOUT", "ERROR") for r in led["runs"])
+    return completed_result(led, name, bound) is not None
+
+
+def completed_result(led, name, bound):
+    """The recorded successful result for one exact checkpoint, if present."""
+    rows = [r for r in led["runs"]
+            if r["name"] == name and r["bound"] == bound
+            and r["verdict"] not in ("TIMEOUT", "ERROR")]
+    return rows[-1] if rows else None
 
 
 def best(led, name):
@@ -211,7 +232,7 @@ def run_one(name, bound=None, budget=None):
         signal.signal(signal.SIGALRM, old)
 
 
-def checkpoint(led, result, push=True):
+def checkpoint(led, result, push=False, persist=True):
     """
     Persist one attempt.
 
@@ -223,8 +244,13 @@ def checkpoint(led, result, push=True):
     that did not finish is not a result, and a repo log full of non-results
     makes the real ones harder to find. Timeouts and errors now stay local.
     """
-    led["runs"].append(result)
-    save_ledger(led)
+    # The escalating runner persists each completed probe immediately.  Its
+    # final probe is therefore already in the ledger when it becomes the
+    # checkpoint.  Appending it again inflated the run count and made the
+    # generated report disagree with the real execution history.
+    if persist:
+        led["runs"].append(result)
+        save_ledger(led)
     write_docs(led)
     if push and result["verdict"] in ("VERIFIED-TO-N", "REFUTED", "REFUSED"):
         _commit(result, led)
@@ -249,8 +275,7 @@ def _commit(r, led):
            f"{'  (no finite computation can settle this in either direction)' if r['form'] != FORALL else ''}\n"
            f"Prior art: {r['prior']}\n"
            f"{cal}"
-           f"\nVERIFIED-TO-N is not a proof; the general statement remains open.\n\n"
-           f"Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>")
+           f"\nVERIFIED-TO-N is not a proof; the general statement remains open.\n")
     for cmd in (["git", "add", str(LEDGER), str(DOCS)],
                 ["git", "commit", "-q", "-m", msg],
                 ["git", "push", "-q", "origin", "main"]):
@@ -275,8 +300,8 @@ def write_docs(led):
     L.append("**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.**\n")
     L.append("**This file is GENERATED** from `studies/conjecture_ledger.json` by")
     L.append("`studies/conjecture_runner.py`. Do not hand-edit it — it is a")
-    L.append("projection of the run ledger, so it cannot drift from what was")
-    L.append("actually executed.\n")
+    L.append("projection of the run ledger. Regenerate it instead of hand-editing")
+    L.append("it when the recorded execution changes.\n")
     L.append("## What a verdict means\n")
     L.append("| Verdict | Meaning |")
     L.append("|---|---|")
@@ -313,15 +338,19 @@ def write_docs(led):
             L.append(f"- **Encoder validation:** {r['validation']}")
         L.append(f"- **Result:** {r['detail']}")
         L.append(f"- **Prior art:** {r['prior']}")
-        L.append(f"- **Runtime:** {r['seconds']}s\n")
+        L.append(f"- **Runtime:** {r['seconds']}s")
+        capsule = REGISTRY.get(r["name"], {}).get("capsule")
+        if capsule:
+            L.append(f"- **Replay capsule:** [frozen inputs and independent "
+                     f"replay]({capsule})")
+        L.append("")
     tot = len(led["runs"])
     ref = sum(1 for r in led["runs"] if r["verdict"] == "REFUTED")
     L.append("---\n")
     L.append(f"*{tot} runs recorded; {len(order)} conjectures at their best bound; "
              f"**{ref} refutations.***\n")
-    L.append("*No bound here approaches the published state of the art for any of")
-    L.append("these problems. Each row carries its prior art so no number can be")
-    L.append("read as more than it is.*")
+    L.append("*Bounds are not novelty claims. Each row carries its source and prior-art")
+    L.append("status so no number can be read as more than its stated scope.*")
     DOCS.parent.mkdir(exist_ok=True)
     DOCS.write_text("\n".join(L) + "\n")
 
@@ -351,7 +380,10 @@ def main():
     elif cmd == "run":
         args = [a for a in sys.argv[2:] if not a.startswith("--")]
         names = list(REGISTRY) if "--all" in sys.argv or not args else args
-        push = "--no-push" not in sys.argv
+        # Publishing is an external action, never the default side effect of
+        # a local research run.  ``--no-push`` remains harmless for backward
+        # compatibility with earlier invocation notes.
+        push = "--push" in sys.argv
         force = "--force" in sys.argv
         for name in names:
             if name not in REGISTRY:
@@ -376,11 +408,15 @@ def main():
             attempt = meta.get("seed", 2000)
             last = None
             while attempt <= bound:
-                print(f"  [probe] {name} @ {attempt:,} ...", flush=True)
-                r = run_one(name, bound=attempt, budget=budget)
-                led["runs"].append(r)
-                save_ledger(led)
-                print(f"          {r['verdict']}  ({r['seconds']}s)")
+                r = None if force else completed_result(led, name, attempt)
+                if r is not None:
+                    print(f"  [cache] {name} @ {attempt:,} -> {r['verdict']}")
+                else:
+                    print(f"  [probe] {name} @ {attempt:,} ...", flush=True)
+                    r = run_one(name, bound=attempt, budget=budget)
+                    led["runs"].append(r)
+                    save_ledger(led)
+                    print(f"          {r['verdict']}  ({r['seconds']}s)")
                 if r["verdict"] == "TIMEOUT":
                     break
                 if r["verdict"] == "ERROR":
@@ -390,9 +426,14 @@ def main():
                 # stop escalating once the next doubling would likely overrun
                 if r["seconds"] * 2.6 > budget:
                     break
-                attempt *= 2
+                # The declared target is itself a checkpoint.  Doubling past
+                # it (for example 64,000 -> 128,000 with a 100,000 target)
+                # previously made the advertised bound unreachable.
+                if attempt == bound:
+                    break
+                attempt = min(attempt * 2, bound)
             if last and last["verdict"] != "TIMEOUT":
-                checkpoint(led, last, push=push)
+                checkpoint(led, last, push=push, persist=False)
                 print(f"  [DONE ] {name} @ {last['bound']:,} -> {last['verdict']}"
                       f"  ({last['seconds']}s)  {last['detail'][:50]}")
             else:
