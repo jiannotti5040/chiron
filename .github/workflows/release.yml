@@ -29,16 +29,19 @@ jobs:
           PKG=$(python -c "import tomllib;print(tomllib.load(open('Primus/pyproject.toml','rb'))['project']['version'])")
           TAG="${GITHUB_REF_NAME#v}"
           test "$PKG" = "$TAG" || { echo "tag v$TAG != pyproject $PKG"; exit 1; }
-      - name: Run the gates before anything ships
+      - name: Run the full gate battery before anything ships
         run: |
           pip install ./Primus
-          cd Primus
-          python test_invariant_engine.py
-          python benchmark.py
-          primus selftest
-          python test_mcp_server.py
-          python test_certify_fuzz.py
-          python oeis_live.py
+          python bin/chiron test --full
+          python Primus/test_certify_property.py
+          python Primus/test_engine_server.py
+          python bin/chiron parity
+      - name: Monolith source is current
+        working-directory: Chiron Monolith
+        run: |
+          python build_monolith.py
+          git diff --stat --exit-code chiron_monolith.py \
+            || (echo "::error::monolith is stale — run 'chiron build' and commit the artifact" && exit 1)
       - name: Build sdist + wheel
         run: |
           pip install build
