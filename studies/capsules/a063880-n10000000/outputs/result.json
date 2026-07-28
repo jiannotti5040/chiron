@@ -1,0 +1,19 @@
+{
+  "block_digests_path": "outputs/block-digests.json",
+  "block_digests_sha256": "d24405c1e3914bdb95d905fcfbddc0a71a7bc3c43d8ba6106bccfe3c064e3fdf",
+  "bound": 10000000,
+  "direct_audit": {
+    "definition_level_members_checked": 28141,
+    "direct_transcript_sha256": "c2833c3287f911a61ed78ca79c21d6280ccad1e8e784cf80f25959447bf0e660",
+    "primitive_terms": [
+      108
+    ],
+    "published_oeis_terms_checked": 40
+  },
+  "member_count": 28141,
+  "members_sha256": "b916836f6d48bd01afdedd2dc0d8288969b8976655d8c38299ae6a526355bc58",
+  "residue_counterexamples": [],
+  "schema": "chiron.a063880-result/1",
+  "scope_statement": "Every member found in [1, 10,000,000] is 108 modulo 216; 108 is the only primitive member in that interval. This is bounded evidence, not a proof.",
+  "verdict": "VERIFIED-TO-N"
+}
