@@ -384,6 +384,6 @@ And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)*
 2. **Run** `./demo.sh` — every public battery plus the frozen-output grade, one command; then [`eval/grade.py`](eval/grade.py) live for the strong mode.
 3. **Install** the full engine when you have a decision you need to be able to prove: `pip install primus-intelligence`.
 
-> Required Notice: Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
+> Copyright © 2026 Jacob Iannotti. Code under Apache-2.0, prose under CC BY 4.0 — see [LICENSES.md](LICENSES.md).
 > Public materials licensed under Apache-2.0 — see [LICENSE.md](LICENSE.md).
 > Questions: jiannotti1@gmail.com
