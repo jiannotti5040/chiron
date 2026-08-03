@@ -474,7 +474,7 @@ primus collapse "1 1 2 3 5 8 13 21"</div>
 
   <div class="honesty">
     <h4>What runs where, precisely</h4>
-    <p>The claim checker and “full engine” sequence mode call the public HTTP demo. The browser sequence core is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>, fetched verbatim and run by CPython-in-WebAssembly. It is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families and a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the full engine stamps (see <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a> and <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). The shared contract is narrower and more important: do not stamp what cannot be exactly supported.</p>
+    <p>The claim checker and “full engine” sequence mode call an engine you run yourself (<code>primus-serve</code>); point this page at it with <code>?engine=&lt;url&gt;</code>. There is no managed instance. The browser sequence core is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>, fetched verbatim and run by CPython-in-WebAssembly. It is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families and a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the full engine stamps (see <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a> and <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). The shared contract is narrower and more important: do not stamp what cannot be exactly supported.</p>
   </div>
 
   <details class="gates">
