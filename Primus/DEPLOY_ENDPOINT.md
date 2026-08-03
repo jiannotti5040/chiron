@@ -73,7 +73,7 @@ A `render.yaml` Blueprint and a `Dockerfile` live at the vault root, so Render
 can provision the whole service from this repo. Steps:
 
 1. Render dashboard → **New → Blueprint**.
-2. **Connect a repository** → authorize Render's GitHub app for `chiron-vault`
+2. **Connect a repository** → authorize your host's GitHub app for `chiron`
    (this grants Render read access to the private repo so it can build — the
    running service still exposes only the API, never source).
 3. Pick this repo; Render reads `render.yaml` and shows the `chiron-engine`
