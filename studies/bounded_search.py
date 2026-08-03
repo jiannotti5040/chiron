@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 bounded_search.py — resolve the finite content of OPEN conjectures by
 exhaustive search, in exact integer arithmetic.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 WHY THIS EXISTS. The triage pass over google-deepmind/formal-conjectures found
 302 finite obligations out of 3,195 -- but 215 of those are DeepMind's own

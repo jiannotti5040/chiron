@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 # ============================================================================
 #  PRIMUS — INVARIANT ENGINE (clean core, v2)
-#  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.
-#  Licensed under PolyForm Noncommercial 1.0.0: noncommercial use, modification,
+#  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
+#  Licensed under Apache-2.0: use, modification, distribution,
 #  and sharing permitted; commercial rights reserved. See LICENSE.md.
 # ============================================================================
 """

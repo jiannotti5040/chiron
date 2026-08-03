@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 uma.dgg — exact verification of the 2026 Dinitz–Garg–Goemans cost-conjecture
 counterexample (Rybin / GPT-5.6 Pro announcement, July 2026).

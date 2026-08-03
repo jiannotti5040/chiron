@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 oeis_novelty.py — does Chiron recover an exact rule OEIS does not already state?
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 PRE-REGISTERED, written before any run (see docs/OEIS_NOVELTY_PROTOCOL.md):
 

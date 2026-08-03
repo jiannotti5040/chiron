@@ -108,5 +108,5 @@ Re-run after changing any Chiron module so the fold stays byte-identical to the 
 
 The monolith is a faithful single-file embodiment of Chiron's code. It is not a separate
 engine and adds no logic — every behaviour, gate, and certificate is the spine's own,
-reached through one file instead of sixty-three. Licensed under PolyForm Noncommercial 1.0.0
+reached through one file instead of sixty-three. Licensed under Apache-2.0
 (see `../LICENSE.md`).

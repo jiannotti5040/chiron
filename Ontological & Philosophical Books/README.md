@@ -1,6 +1,6 @@
 # Ontological & Philosophical Books
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../LICENSE)).**
 
 The theoretical spine beneath the engineering. These are first-principles works
 on meaning, value, and becoming — the conceptual ground from which the

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 conjecture_sweep.py — bounded exhaustive search over open conjectures, as a
 registry of independently-validated encoders.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 SCOPE, STATED HONESTLY. google-deepmind/formal-conjectures holds 1,171 open
 conjectures; 86 have searchable structure. This file encodes the subset whose

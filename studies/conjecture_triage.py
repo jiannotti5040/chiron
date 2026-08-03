@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 conjecture_triage.py — run Chiron's verify-or-refuse contract over an external
 corpus of formalized open conjectures.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 TARGET: google-deepmind/formal-conjectures — 1,024 Lean files, ~3,343 tagged
 theorems spanning Erdos problems, Hilbert problems, Millennium problems, OEIS

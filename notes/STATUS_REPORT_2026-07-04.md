@@ -43,7 +43,7 @@ The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (th
 
 ## 5. Decisions on record
 
-- **License: PolyForm Noncommercial — decided, done, no action.** Revisit only if a commercial request arrives.
+- **License: Apache-2.0 — decided, done, no action.** Revisit only if a commercial request arrives.
 - **Direction: contact before capability** (your call). Parked builds, in order: Apéry-class recursion → Candor as second product → full-OEIS atlas pipeline.
 
 ## 6. Your action list (total ~25 min, none urgent)

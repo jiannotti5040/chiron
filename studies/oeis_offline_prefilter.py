@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 oeis_offline_prefilter.py — stage 1 of the novelty search.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 Fetching every OEIS entry over the network at OEIS's requested politeness delay
 would take ~18 days. This stage runs entirely against the bulk `stripped.gz` and

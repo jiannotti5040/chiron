@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See ../LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 remote.py — talk to a live Chiron engine endpoint. Certificates come back;
 the engine's source never does.
 
-The licensed engine can be served as a minimal HTTP endpoint (request in,
+The engine can be served as a minimal HTTP endpoint (request in,
 certificate out, hard rate limits, everything over budget REFUSED). This
 stdlib client is the public half: point it at a running endpoint and get
 the real engine's verify-or-refuse on input YOU choose — the strongest
 possible pre-purchase eval when an endpoint URL is published.
 
-A live demo instance runs at https://chiron-engine.onrender.com (free tier:
+Run your own instance with `primus-serve` (defaults to http://localhost:8790;
 rate-limited, refuses over budget, ~30 s cold start after idle). This client
 also works against any other deployment (or a licensee's own:
 `PYTHONPATH=src python3 -m primus.engine_server` in the vault).
 
-    python3 remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"
-    python3 remote.py --url https://chiron-engine.onrender.com certify "97 is prime and 2+2=5"
+    python3 remote.py --url http://localhost:8790 collapse "1 1 2 3 5 8 13 21 34 55 89 144"
+    python3 remote.py --url http://localhost:8790 certify "97 is prime and 2+2=5"
     python3 remote.py --url http://127.0.0.1:8790 conjecture "1 3 6 10 15 21 28 36"   # local instance
 
 Auth: if the endpoint requires a bearer token, set CHIRON_API_TOKEN.

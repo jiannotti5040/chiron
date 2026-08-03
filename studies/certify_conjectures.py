@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 certify_conjectures.py — LEGACY / QUARANTINED math-artifact generator.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 WHY THIS EXISTS. The conjecture campaign was built as ~17 standalone Python
 scripts that never touched the vault's own engines. That is "some scripts",

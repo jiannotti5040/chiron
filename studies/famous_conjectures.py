@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 famous_conjectures.py — named open conjectures with finite refutable content.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 WHERE THESE CAME FROM, AND WHY IT MATTERS. The systematic sweep over
 google-deepmind/formal-conjectures classified 601 of 1,171 open conjectures as

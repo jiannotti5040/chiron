@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 hunt.py — hunt OEIS for a stated conjecture contradicted by published data.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 Every domain decision goes through claim_domain.domain_of, which refuses when
 the domain is not a simple threshold. That function is a regression suite of

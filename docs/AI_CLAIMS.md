@@ -1,6 +1,6 @@
 # When an AI hands you a proof, what checks the arithmetic?
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see [../LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Apache-2.0 (see [../LICENSE.md](../LICENSE.md)).**
 
 In one week of July 2026, two long-open mathematical conjectures were
 refuted by counterexamples that AI systems produced:

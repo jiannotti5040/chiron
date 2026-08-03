@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 conjecture_runner.py — durable, checkpointed, resumable conjecture campaign.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 WHY THIS EXISTS. Running conjecture searches ad hoc loses work: a session ends,
 a process is killed, a bound is raised and the old result is forgotten, and
@@ -297,7 +299,7 @@ def write_docs(led):
 
     L = []
     L.append("# Conjecture campaign — bounded exhaustive search\n")
-    L.append("**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.**\n")
+    L.append("**Author: Jacob Iannotti. Apache-2.0.**\n")
     L.append("**This file is GENERATED** from `studies/conjecture_ledger.json` by")
     L.append("`studies/conjecture_runner.py`. Do not hand-edit it — it is a")
     L.append("projection of the run ledger. Regenerate it instead of hand-editing")

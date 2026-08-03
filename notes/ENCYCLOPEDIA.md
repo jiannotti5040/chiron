@@ -48,7 +48,7 @@ aesthetics.py — mathematical beauty as a measured, multi-signal quantity.
 
 ### `apply_license_headers`
 
-apply_license_headers — stamp the PolyForm Noncommercial SPDX header onto every
+apply_license_headers — stamp the Apache-2.0 SPDX header onto every
 
 - **Facts:** selftest: no · deps: stdlib only
 - **Path:** `Chiron/apply_license_headers.py`

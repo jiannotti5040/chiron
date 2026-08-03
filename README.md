@@ -15,11 +15,15 @@ On the current published frozen external eval (2026-07-21): **22 stamped / 22 ex
 
 <p align="center"><img src="docs/assets/chiron_demo.gif" width="880" alt="Real terminal session, outputs unedited: Chiron verifies a geometric rule on held-out terms, then refuses to certify a formula that fits the primes but fails the withheld terms, then shows a certificate that names its own falsifier."></p>
 
-| Try the exact-claim gate | Verify the published evidence | Use it commercially |
+| Try the exact-claim gate | Verify the published evidence | Run the whole engine |
 |---|---|---|
-| **[Check a claim live →](https://jiannotti5040.github.io/chiron/playground/#claim-checker)** | **[Run the public eval →](eval/README.md)** | **[See commercial access →](PRICING.md)** |
+| **[Open the playground →](https://jiannotti5040.github.io/chiron/playground/)** | **[Run the public eval →](eval/README.md)** | **[`pip install primus-intelligence` →](Primus/README.md)** |
 
-> Free to explore and use noncommercially (PolyForm Noncommercial 1.0.0). Commercial use and the full engine are licensed.
+> **Apache-2.0. Nothing is held back.** There is no paid tier, no private repository, and no
+> feature behind a licence key — the full engine, the folded monolith, the gate battery, and
+> every research capsule are in this repository. Use it commercially, modify it, ship it in a
+> product. Attribution is the only condition. Prose and books are CC BY 4.0 — see
+> [LICENSES.md](LICENSES.md).
 
 ---
 
@@ -149,7 +153,7 @@ claude mcp add primus -- primus-mcp
 Three MCP tools appear: **`certify`** (mark every checkable claim `VERIFIED` / `REFUTED` /
 `REFUSED`, and report the coverage boundary), **`collapse`** (recover an exact rule, proven on
 held-out terms, or refuse), **`conjecture`** (guess-and-prove behind an exact gate). Runs locally
-and offline; free for noncommercial use. Setup for Claude Desktop, Cursor and other clients:
+and offline, under Apache-2.0. Setup for Claude Desktop, Cursor and other clients:
 **[`docs/MCP.md`](docs/MCP.md)**.
 
 A `certify` pass means nothing checkable was refuted — *not* that the text is true. Coverage tells
@@ -163,9 +167,9 @@ Each tier says exactly what it proves and what it does not. That restraint is th
 
 ### 10 seconds — challenge a live exact-claim gate
 
-**[The playground](docs/playground/)** has two distinct demos. The live claim checker sends a non-sensitive test sentence to the licensed-engine endpoint and returns claim-level `VERIFIED`, `REFUTED`, or `REFUSED` results with coverage. The sequence lab lets you paste integers and watch a real Python core verify-or-refuse in the browser — Fibonacci verifies, primes are refused with the reason, and the certificate renders in full.
+**[The playground](docs/playground/)** has two distinct demos. The live claim checker sends a non-sensitive test sentence to the full-engine endpoint and returns claim-level `VERIFIED`, `REFUTED`, or `REFUSED` results with coverage. The sequence lab lets you paste integers and watch a real Python core verify-or-refuse in the browser — Fibonacci verifies, primes are refused with the reason, and the certificate renders in full.
 
-*Proves:* the contract on a live, limited test input—exact claim-level checks or a stamp only on exact held-out prediction, with refusal otherwise. *Does not prove:* the licensed engine's full reach or the truth of arbitrary prose. The browser sequence core is strictly weaker by design (it refuses Tribonacci, Catalan and factorials, which the engine stamps).
+*Proves:* the contract on a live, limited test input—exact claim-level checks or a stamp only on exact held-out prediction, with refusal otherwise. *Does not prove:* the full engine's reach or the truth of arbitrary prose. The browser sequence core is strictly weaker by design (it refuses Tribonacci, Catalan and factorials, which the full engine stamps).
 
 **Live now: [jiannotti5040.github.io/chiron/playground](https://jiannotti5040.github.io/chiron/playground/)** —
 or locally, no install: `python3 -m http.server` from the repo root, then `http://localhost:8000/docs/playground/`. Use the public endpoint only for non-sensitive test inputs.
@@ -195,22 +199,25 @@ A006318    holonomic_r2_p1               8/8   externally CORRECT
   RESULT: PASS — zero false verifications on external data
 ```
 
-*Proves:* the headline property itself — the licensed engine's frozen, self-hash-bearing outputs contain
+*Proves:* the headline property itself — the engine's frozen, self-hash-bearing outputs contain
 zero stamps that external data contradicts; and with [`eval/challenge.py`](eval/challenge.py) you
 can run the same protocol on sequences **you** choose. *Does not prove:* that everything gets
 stamped (12 of 34 are refusals — that is the design). The protocol and its one residual assumption
 are stated plainly in [`eval/README.md`](eval/README.md).
 
-And if you want the **real engine on your own input, right now** — a live demo endpoint runs it:
+And if you want the **real engine on your own input, right now** — install it and run it:
 
 ```
-python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
-python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+pip install primus-intelligence
+primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+primus collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
 ```
 
-The licensed engine, served over HTTP — certificate out, source never serialized, rate-limited,
-refuses over budget (33/33 endpoint gates). It's a free-tier demo instance (~30 s cold start after
-idle); `remote.py` works against any deployment.
+Prefer it over HTTP? `primus-serve` starts the same engine locally — certificate out,
+rate-limited, refuses over budget (33/33 endpoint gates in
+[`Primus/test_engine_server.py`](Primus/test_engine_server.py)) — and
+[`eval/remote.py`](eval/remote.py) works against any deployment you run. There is no
+managed instance to depend on, and no cold start.
 
 ### 30 minutes — run every public battery and read the reconciled map
 
@@ -220,17 +227,15 @@ idle); `remote.py` works against any deployment.
 ```
 
 Then read **[`docs/BATTERIES.md`](docs/BATTERIES.md)** — every gate count in the project on one
-page, tiered by what you can verify before paying — and **[`docs/GATES.md`](docs/GATES.md)** for
-how to read the numbers honestly.
+page — and **[`docs/GATES.md`](docs/GATES.md)** for how to read the numbers honestly.
 
-*Proves:* every public claim in this README, reproduced on your machine, and exactly which claims
-are only provable post-license (the vault tiers). *Does not prove:* the vault batteries themselves —
-those run with the licensed engine (`bin/chiron test`), and this repo says so rather than asserting
-them on trust.
+*Proves:* every claim in this README, reproduced on your machine. Every battery is in this
+repository and runs from this checkout — there is no longer a tier you cannot reach, and
+nothing is asserted on trust.
 
 ---
 
-## The licensed engine, in 30 seconds
+## The engine, in 30 seconds
 
 Chiron is handed six numbers and asked for the rule. It finds one, then **checks itself against held-out terms it was not given**:
 
@@ -324,17 +329,27 @@ That makes Chiron a useful **last-mile exact gate** beside an existing tracing, 
 
 ---
 
-## The model: public proof, commercial engine
+## What's in this repository
 
-Chiron is source-available for noncommercial use and commercially licensed for organizational deployment.
+Everything. This used to be two repositories — a public trust layer and a private engine behind a
+paid licence. They are now one Apache-2.0 project, and the paywall is gone for good.
 
-- **This public repository** is the trust layer: the thesis, real examples, a runnable prototype, the architecture, the governance philosophy, and the honest gate results. It answers *why this exists* and lets you verify the claims before you pay.
-- **The licensed engine** (`chiron-vault`) is the full system: 72+ folded modules, the certification brain, the composer, the dashboard — delivered as **one self-contained deterministic file** that runs offline with nothing to install.
-- **License holders can read, run, modify, and extend** the full engine, and contribute improvements back. Changes to the certified core are owner-approved so the `verified` stamp retains a controlled meaning.
+- **[`Primus/`](Primus/)** — the seed engine and the `primus-intelligence` package: exact invariant
+  recovery, held-out verification, the `certify` claim gate, an MCP server, and an HTTP server.
+- **[`Chiron/`](Chiron/)** — the flagship: the certification layer, the composer, the dashboard, and
+  the module set the monolith folds.
+- **[`Chiron Monolith/`](Chiron%20Monolith/)** — the whole flagship folded into one self-contained
+  deterministic file that runs offline with nothing to install.
+- **[`studies/`](studies/)** — the research: OEIS extensions, conjecture sweeps, refutations,
+  retractions, and replay capsules with pinned evidence.
+- **[`docs/`](docs/)** — the published site and the reconciled gate map. **[`notes/`](notes/)** — the
+  working records, kept unedited including the failures.
+- The prose works (the books, the Paper) are **CC BY 4.0**; everything else is **Apache-2.0**.
+  See [LICENSES.md](LICENSES.md).
 
-Buying a license gives your organization commercial-use rights, the full offline engine, and a controlled path to build on it.
-
-See **[Pricing](PRICING.md)** for the individual, team, business, and enterprise tiers.
+Contributions to the certified core are reviewed against the full gate battery before merge — not to
+gatekeep, but because a `verified` stamp that has never lied is the only thing this project actually
+sells, and it is now free. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
@@ -351,11 +366,11 @@ Everything above is backed by gates you can run, not adjectives. On the current 
 | Documented-command smoke (every command in the manual runs as written) | **9/9** |
 | The TWIN PROOF (two different poems, one recovered generator) | 279,608,910,057,308,160 verses each, identical fingerprint |
 
-**Verify the headline property before paying: [`eval/`](eval/)** — the engine's frozen predictions on 34 public OEIS sequences (12 terms shown, 8 held-out terms per stamp), graded live against oeis.org by a stdlib script, tamper-evident, **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals** on the 2026-07-21 freeze. `eval/challenge.py` lets you run the same protocol on sequences *you* choose. No engine code ships; outputs are what zero-false is a property of.
+**Verify the headline property yourself: [`eval/`](eval/)** — the engine's frozen predictions on 34 public OEIS sequences (12 terms shown, 8 held-out terms per stamp), graded live against oeis.org by a stdlib script, tamper-evident, **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals** on the 2026-07-21 freeze. `eval/challenge.py` lets you run the same protocol on sequences *you* choose. No engine code ships; outputs are what zero-false is a property of.
 
 **How it compares to symbolic regression: [`docs/SYMREG.md`](docs/SYMREG.md)** — under the head-to-head harness (stricter than the `oeis_live` battery: exact 4/4 continuation only, so its Primus column reads 18 where BATTERIES records 20 verified) Primus scores 18 exact / 0 wrong / 11 refused against PySR's 5 exact / 24 wrong; both the dated original runs and a 2026-07-21 reproduction have identical counts. The distinction is not that a user cannot wrap another tool with an abstention rule; it is that held-out exact verification and native refusal are part of Chiron’s contract.
 
-**Every gate count in this project, reconciled on one page: [`docs/BATTERIES.md`](docs/BATTERIES.md)** — each battery, what it covers, where it runs (public prototype / vault / single file), and which tier you can verify before paying. If two numbers ever disagree, that page wins.
+**Every gate count in this project, reconciled on one page: [`docs/BATTERIES.md`](docs/BATTERIES.md)** — each battery, what it covers, and where it runs (seed engine / flagship / single file). If two numbers ever disagree, that page wins.
 
 Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**. The governance stance: **[`docs/GOVERNANCE.md`](docs/GOVERNANCE.md)**. Why it refuses: **[`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md)**.
 
@@ -367,8 +382,8 @@ And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)*
 
 1. **Open** the [playground](docs/playground/) — paste a sequence, watch it verify or refuse, in your browser.
 2. **Run** `./demo.sh` — every public battery plus the frozen-output grade, one command; then [`eval/grade.py`](eval/grade.py) live for the strong mode.
-3. **License** the full engine when you have a decision you need to be able to prove: **[Pricing](PRICING.md)**.
+3. **Install** the full engine when you have a decision you need to be able to prove: `pip install primus-intelligence`.
 
 > Required Notice: Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
-> Public materials licensed under PolyForm Noncommercial 1.0.0 — see [LICENSE.md](LICENSE.md).
+> Public materials licensed under Apache-2.0 — see [LICENSE.md](LICENSE.md).
 > Questions: jiannotti1@gmail.com

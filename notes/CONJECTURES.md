@@ -1,6 +1,6 @@
 # Conjecture campaign — bounded exhaustive search
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.**
+**Author: Jacob Iannotti. Apache-2.0.**
 
 **This file is GENERATED** from `studies/conjecture_ledger.json` by
 `studies/conjecture_runner.py`. Do not hand-edit it — it is a

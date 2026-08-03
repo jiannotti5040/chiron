@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 planner.py — the first slice of Horizon Two: engines compose toward a goal, and the
 exact gate arbitrates every step (HORIZON.md H2.1, epistemic status: **prototype**).

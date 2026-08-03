@@ -1,6 +1,6 @@
 # OEIS novelty search — pre-registered protocol
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.**
+**Author: Jacob Iannotti. Apache-2.0.**
 Status: **pre-registration.** Written and committed *before* the sweep results
 were read. The stage-1 pre-filter was running in the background as this file
 was written; no candidate list had been inspected.

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
-# Copyright (c) 2026 Jacob Iannotti.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 #
-# Licensed under the PolyForm Noncommercial License 1.0.0: noncommercial use,
-# modification, and sharing are permitted free of charge; commercial use is
-# reserved to the owner. See LICENSE.md at the repository root.
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# Licensed under the Apache License, Version 2.0: use, modification,
+# distribution, and commercial use are permitted, with attribution and the
+# license notice preserved. See LICENSE at the repository root.
 #
 # Author: J. Iannotti, 2026.
 """
@@ -10465,8 +10463,8 @@ def _():
 def _():
     import inspect
     src = inspect.getsource(sys.modules[__name__])
-    _at("PolyForm Noncommercial" in src)
-    _at("SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0" in src)
+    _at("Apache-2.0" in src)
+    _at("SPDX-License-Identifier: Apache-2.0" in src)
 
 
 @test("activation_protocol_contains_keystone")

@@ -1,6 +1,6 @@
 # External validation — live OEIS run
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 (see the repository-root [LICENSE](../LICENSE)).**
 Reproduce: `python3 oeis_live.py` (cached live snapshot) or `python3 oeis_live.py --live` (re-fetch from oeis.org).
 
 The internal benchmark grades the engine on sequences it generated for

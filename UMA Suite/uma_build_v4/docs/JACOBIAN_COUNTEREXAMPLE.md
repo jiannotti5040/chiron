@@ -1,6 +1,6 @@
 # The 2026 Jacobian-conjecture counterexample, verified by this suite's own arithmetic
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root LICENSE.md).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 (see the repository-root LICENSE).**
 **Epistemic status: the verification machinery and the two arithmetic claims below are implemented-and-tested (`uma/jacobian/`, `tests/test_jacobian.py`, 12 gates). The surrounding history is reported, not certified.**
 
 ## What happened

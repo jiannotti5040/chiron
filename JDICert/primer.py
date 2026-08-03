@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
-# Copyright (c) 2026 Jacob Iannotti.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 #
-# Licensed under the PolyForm Noncommercial License 1.0.0: noncommercial use,
+# Licensed under the Apache License, Version 2.0: use, modification,
 # modification, and sharing are permitted free of charge; commercial use is
 # reserved to the owner. See LICENSE.md at the repository root.
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 #
 # Author: J. Iannotti, 2026.
 """

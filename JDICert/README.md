@@ -8,7 +8,7 @@ Scope: a detect–decide–act decision chain with a `CERTIFY` phase inserted be
 
 ## License
 
-Licensed under the **PolyForm Noncommercial License 1.0.0**. You may use, modify, and share this work for any noncommercial purpose — research, study, experiment — free of charge; commercial use is reserved to the author. Full text in the repository-root `LICENSE.md`.
+Licensed under the **Apache License 2.0**. You may use, modify, and share this work for any noncommercial purpose — research, study, experiment — free of charge; commercial use is reserved to the author. Full text in the repository-root `LICENSE.md`.
 
 ---
 
@@ -177,7 +177,7 @@ A standalone LLM prompt that any frontier model can execute. It ingests arbitrar
 
 ## Author
 
-J. Iannotti, 2026. Licensed under PolyForm Noncommercial 1.0.0.
+J. Iannotti, 2026. Licensed under Apache-2.0.
 
 ---
 
