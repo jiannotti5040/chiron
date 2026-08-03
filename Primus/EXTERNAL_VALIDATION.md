@@ -134,6 +134,22 @@ The extended battery stands at **35 sequences — 25 verified (all externally
 correct), 0 false stamps, 9 refusals, 1 conservative unstamp.** As before, the
 claim is stronger for having been falsified and repaired in the open.
 
+> **Re-run 2026-08-03 — the verified count is now 24, not 25.**
+> `python3 oeis_live.py --cache oeis_corpus_extended_2026-07-07.json` today
+> reports `n=35 · VERIFIED+correct: 24 · declined: 9 · recovered-unstamped: 2 ·
+> false confidence: 0 · PASS`. One sequence that was stamped at v0.5.1 now
+> recovers its rule but declines to stamp it. The engine moved **toward**
+> refusal, which is the safe direction and needs no repair — but the 25 above is
+> a dated figure, not the current one, and is left in place because this file is
+> a chronological record. The invariant is unchanged: zero false stamps in both
+> runs.
+>
+> **Which corpus produces which number.** `oeis_live.py` defaults to
+> `oeis_corpus_cache.json` (**29** sequences → 20 verified / 7 declined / 2
+> unstamped), which is what the gate battery and `docs/BATTERIES.md` report.
+> The **35**-sequence figure requires the `--cache` flag above. Both are live-
+> graded against oeis.org; neither is a superset claim about the other.
+
 ## 2026-07-11 — the first full keyword:core sweep: 3 false stamps. RESOLVED same night.
 
 **Status: RESOLVED.** All three defects were fixed at root within hours

@@ -39,7 +39,8 @@ still arrive only with a license.
 | Twin cross-lock | exact combinatorial corpus agreement | **12/12** |
 | Certify property grid | soundness invariant across a generated grid | pass, 0 violations |
 | Internal benchmark | recovery + precision, zero false confidence | pass |
-| **External OEIS validation** | live-fetched sequences the author didn't write; graded on exact prediction of unseen terms | **20 verified / 0 false / n=29** |
+| **External OEIS validation** (default corpus) | live-fetched sequences the author didn't write; graded on exact prediction of unseen terms | **20 verified / 7 declined / 2 recovered-unstamped / 0 false / n=29** |
+| **External OEIS validation** (extended corpus, `--cache oeis_corpus_extended_2026-07-07.json`) | the same protocol over a larger live-fetched set | **24 verified / 9 declined / 2 recovered-unstamped / 0 false / n=35** |
 | Seed↔Chiron drift differential | the two engines may not silently disagree | **42 agree / 0 fail** |
 
 **Chiron, the production spine:**

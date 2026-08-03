@@ -2,6 +2,35 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.7.0 — 2026-08-03
+
+**Relicensed to Apache-2.0. The paywall is gone and nothing is held back.**
+No stamping path was touched; no verdict changed. The gate battery is
+byte-identical to the pre-conversion run — 11/11 green, including
+`oeis_live` at `n=29 · 20 verified · 0 false confidence · PASS`.
+
+- **License: PolyForm Noncommercial 1.0.0 → Apache-2.0.** PolyForm
+  Noncommercial is source-available, not open source: it discriminates
+  against commercial use, so it fails the OSI definition. Apache-2.0 keeps
+  the explicit patent grant the old license had and keeps attribution
+  binding through NOTICE. Commercial use, modification, and redistribution
+  are now all permitted. The project's prose and books are CC BY 4.0 —
+  see `LICENSES.md` in the repository root.
+- **No commercial tier.** The paid tiers, the Stripe checkout, and the
+  private `chiron-vault` delivery repository are retired. The full engine,
+  the flagship, the folded monolith, and every research capsule now live in
+  one public repository.
+- **Packaging fix that would have shipped a license-less wheel.**
+  `license-files` still pointed at `LICENSE.md`, which the relicense
+  deleted; the wheel would have carried no license text at all and
+  `ci/check_wheel_license.py` would have failed the release. Now `LICENSE`,
+  verified present inside the built wheel.
+- **Project URLs** now point at the merged public repository. Nothing links
+  to a private destination.
+- **No managed endpoint.** The hosted demo instance is retired. `primus-serve`
+  runs the same engine locally with the same contract (33/33 endpoint gates);
+  `eval/remote.py` works against any instance you run.
+
 ## 0.6.3 — 2026-07-25
 
 **The endpoint's front door is a closed table, and every error path is a
