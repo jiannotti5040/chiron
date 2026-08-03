@@ -3,7 +3,7 @@
 # Copyright 2026 Jacob Iannotti
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, and sharing are permitted free of charge; commercial use is
+# modification, distribution, and commercial use are permitted with
 # reserved to the owner. See LICENSE.md at the repository root.
 #
 # Author: J. Iannotti, 2026.

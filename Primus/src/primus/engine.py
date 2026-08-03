@@ -5,7 +5,7 @@
 #  PRIMUS — INVARIANT ENGINE (clean core, v2)
 #  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
 #  Licensed under Apache-2.0: use, modification, distribution,
-#  and sharing permitted; commercial rights reserved. See LICENSE.md.
+#  distribution, and commercial use permitted with attribution. See LICENSE.
 # ============================================================================
 """
 A domain-agnostic compression-and-invariant-discovery framework.

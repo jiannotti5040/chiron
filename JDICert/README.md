@@ -8,7 +8,7 @@ Scope: a detect–decide–act decision chain with a `CERTIFY` phase inserted be
 
 ## License
 
-Licensed under the **Apache License 2.0**. You may use, modify, and share this work for any noncommercial purpose — research, study, experiment — free of charge; commercial use is reserved to the author. Full text in the repository-root `LICENSE.md`.
+Licensed under the **Apache License 2.0**. You may use, modify, distribute, and commercialise this work, including inside proprietary products; attribution and the NOTICE are the conditions. Full text in the repository-root `LICENSE`.
 
 ---
 
