@@ -1,6 +1,6 @@
 #!/bin/bash
 # PUSH_TO_GITHUB.command — double-click this file in Finder to push the vault.
-# It pushes every local commit on 'main' to github.com/jiannotti5040/chiron-vault.
+# It pushes every local commit on 'main' to github.com/jiannotti5040/chiron.
 # If GitHub asks for credentials it will walk you through the one-time setup.
 
 cd "$(dirname "$0")" || exit 1
@@ -18,7 +18,7 @@ case "$ANSWER" in n|N) echo "Okay — nothing pushed."; exit 0;; esac
 if git push origin main; then
     echo
     echo "✅ Done. Everything is on GitHub:"
-    echo "   https://github.com/jiannotti5040/chiron-vault"
+    echo "   https://github.com/jiannotti5040/chiron"
     echo
     echo "CI ('Chiron CI') will start running the full gate battery on this"
     echo "push automatically — check the Actions tab in a few minutes."

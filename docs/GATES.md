@@ -19,7 +19,7 @@ page records the current results honestly, including their scope and limits.
 The **standalone** number (5/5) is the certified core-engine battery running from
 the single monolith file with no supporting tree. The broader in-repo sweep
 (49/49) includes orchestration and serving modules — live servers, the packaged
-seed, growth/state tooling — which need the full `chiron-vault` install to run.
+seed, growth/state tooling — which need a full repository checkout to run.
 We state the standalone claim as exactly what it is: the core engines, proven in
 one file. We do not claim the servers run from the single file, because they
 don't, and overclaiming is the one error this project cannot afford.
