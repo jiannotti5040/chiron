@@ -248,24 +248,24 @@
 
     <section id="how-it-works">
       <div class="shell">
-        <p class="section-label">What the product does</p>
-        <h2>A decision gate—not another confidence score.</h2>
-        <p class="section-lead">Use Chiron when a system needs to distinguish a claim it can support from one it cannot. It is built for exact, inspectable checks and explicit refusal—not plausible-looking output.</p>
+        <p class="section-label">The mechanism</p>
+        <h2>It has to predict what it was never shown.</h2>
+        <p class="section-lead">This is the whole trick, and it is why the engine cannot bluff its way to a stamp. A rule that merely <em>fits</em> the data you handed it is worth nothing — overfitting is free. So the engine never gets to grade its own homework.</p>
         <div class="steps">
           <article class="step">
-            <div class="step-no">01 / INPUT</div>
-            <h3>Send the claim or structured surface.</h3>
-            <p>Try a machine-generated mathematical or factual claim in the live checker, or give the engine a sequence whose rule needs to be recovered.</p>
+            <div class="step-no">01 / SPLIT</div>
+            <h3>Show 12 terms. Hide 8.</h3>
+            <p>The engine sees only the shown prefix. The held-out terms exist, are known, and are withheld — the same protocol every time, fixed before the run, not chosen after seeing what worked.</p>
           </article>
           <article class="step">
-            <div class="step-no">02 / VERDICT</div>
-            <h3>Get VERIFIED, REFUTED, or REFUSED.</h3>
-            <p>Chiron checks only the portion it can handle exactly. It does not bless the surrounding prose just because one statement passed.</p>
+            <div class="step-no">02 / RECOVER</div>
+            <h3>Find the shortest exact rule.</h3>
+            <p>Minimum description length over a constrained hypothesis space, in exact rational and integer arithmetic. No floats on the stamping path — anything past 2<sup>53</sup> where a float would silently lie is refused instead.</p>
           </article>
           <article class="step">
-            <div class="step-no">03 / EVIDENCE</div>
-            <h3>Keep the reason, not just the answer.</h3>
-            <p>Results include the discovered rule or claim-level status, a machine-readable evidence record, and the limits of coverage. Sequence results also render an <strong>Evidence Trace</strong>: what the recovery saw, what was held out, and what earned a certificate. <a href="playground/#sequence-lab">Try it live →</a></p>
+            <div class="step-no">03 / SURVIVE OR ABSTAIN</div>
+            <h3>Predict all 8 exactly, or get nothing.</h3>
+            <p>Not "close." Not "within tolerance." Exact integer equality on every held-out term, or the engine abstains and says so. A wrong rule fails here — which is precisely how it caught <em>itself</em> three times. <a href="playground/#sequence-lab">Watch it run →</a></p>
           </article>
         </div>
       </div>
@@ -274,40 +274,45 @@
     <section class="band">
       <div class="shell band-grid">
         <div>
-          <p class="section-label">The important constraint</p>
-          <h2>Honest scope is a feature, not a footnote.</h2>
-          <p class="section-lead">A system that says “verified” when it only recognized part of the input is worse than no system at all. Chiron surfaces coverage and leaves uncheckable material unblessed.</p>
+          <p class="section-label">The limit, stated in numbers</p>
+          <h2>On real operational text, it certifies about 9% of the sentence.</h2>
+          <p class="section-lead">Not a footnote — the measurement. Given a realistic logistics summary, <code>certify</code> verified the arithmetic <code>4200 / 1400 = 3</code> and left the sentence a human would actually act on — <em>"Unit Bravo has 3 days of fuel"</em> — sitting in the uncertified remainder. Coverage: <b>0.09</b>.</p>
+          <p class="section-lead" style="margin-top:16px">That is the honest shape of the tool. Every claim kind it supports is <b>self-contained</b> — checkable from the claim text alone. None of them compares a claim against an external table, so the operational sentence is exactly the one it cannot reach. Anyone selling this as a gate over arbitrary AI output is overstating it, including its author.</p>
         </div>
         <div class="limits">
-          <div class="limit"><b>It can check</b><span>Supported exact claim types and structured patterns, with an explanation of the verdict.</span></div>
-          <div class="limit"><b>It will refuse</b><span>Inputs outside its proof methods, ambiguous evidence, or work beyond the configured budget.</span></div>
-          <div class="limit"><b>It does not claim</b><span>To certify all free-form language, business judgment, legal compliance, or safety in the abstract.</span></div>
+          <div class="limit"><b>Reaches</b><span>Arithmetic, percentages, primality, gcd/lcm, modular and date arithmetic, aggregates, closed forms, and sequence continuation — each provable from the text itself.</span></div>
+          <div class="limit"><b>Refuses</b><span>Anything needing outside knowledge, ambiguous evidence, floats past 2<sup>53</sup>, or work over budget. Refusal is the designed output, not a failure.</span></div>
+          <div class="limit"><b>Needs a second stage</b><span>Grounding a claim against a real ontology — exact comparison of (entity, field, value), REFUSED where no ground truth exists. That belongs <em>beside</em> the gate, not inside it.</span></div>
         </div>
       </div>
     </section>
 
     <section>
       <div class="shell">
-        <p class="section-label">Who gets value now</p>
-        <h2>For teams that need evidence before an output becomes an action.</h2>
+        <p class="section-label">The receipts</p>
+        <h2>This engine has lied. Here is exactly when, and what it cost to fix.</h2>
+        <p class="section-lead">Every project claims rigour. The only evidence that means anything is what happened the day the claim failed — so the failures are published in full, with the defect, the wrong number, and the commit that repaired it. All of it is still in the log.</p>
         <div class="fit-grid">
-          <article class="fit good">
-            <h3>A strong fit</h3>
+          <article class="fit not">
+            <h3>What went wrong</h3>
             <ul>
-              <li>AI product engineers who need a gate around supported claims.</li>
-              <li>Evaluation owners who need reproducible pass, fail, and abstain records.</li>
-              <li>Teams that want a deterministic engine they can run offline, with no service dependency.</li>
+              <li><b>A002275, repunits.</b> Stamped <code>VERIFIED</code>. Predicted <code>111111112740</code>; OEIS says <code>111111111111</code>. Found on the harness's <em>first ever</em> external run — after ~5,070 internal cases had passed clean.</li>
+              <li><b>The cause was the promise itself.</b> The held-out check was comparing with a <code>1e-6</code> relative tolerance while the documentation promised exact equality. At a(n) ≈ 10<sup>10</sup> that forgives an error of ~10<sup>4</sup>.</li>
+              <li><b>A002203, companion Pell.</b> A float holonomic fit with 6 free parameters scored shorter than the true order-2 recurrence and cleared the window it happened to match. Predicted <code>551612</code>; OEIS says <code>551614</code>.</li>
+              <li><b>2026-07-11.</b> The first full <code>keyword:core</code> sweep surfaced 3 more. Fixed at root the same night.</li>
             </ul>
           </article>
-          <article class="fit not">
-            <h3>Not the promise</h3>
+          <article class="fit good">
+            <h3>What it changed</h3>
             <ul>
-              <li>A generic hallucination score or a replacement for domain experts.</li>
-              <li>A legal, regulatory, or security conclusion about arbitrary text.</li>
-              <li>A black-box “trust us” layer that silently turns uncertainty into approval.</li>
+              <li><b>Exact arithmetic became structural.</b> Coefficients snap to exact rationals; the tolerance is gone — held-out comparison is integer equality or nothing.</li>
+              <li><b>An exact rule can no longer be masked by a float overfit.</b> When any candidate reproduces the surface exactly in integer arithmetic, the non-exact path is dropped from selection outright.</li>
+              <li><b>The repairs cost zero correct stamps.</b> The 109-sequence sweep was re-run on the fixed engine: 44 verified, all externally correct, 0 false. A001147 moved from false-stamp to exactly verified.</li>
+              <li><b>Nothing was quietly amended.</b> A retraction commit stands in the log for a novelty claim that turned out not to be novel.</li>
             </ul>
           </article>
         </div>
+        <p class="section-lead" style="margin-top:26px">Each of those was caught by a gate doing its job against data the author does not control. That is the only reason the zero is worth anything — and it is why the external battery runs against live oeis.org rather than a table shipped in the repository.</p>
       </div>
     </section>
 
