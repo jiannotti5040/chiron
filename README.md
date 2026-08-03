@@ -1,206 +1,374 @@
-# Chiron — recover exactly, verify, refuse, certify
+# Chiron
 
-[![gates](https://github.com/jiannotti5040/chiron-vault/actions/workflows/ci.yml/badge.svg)](https://github.com/jiannotti5040/chiron-vault/actions/workflows/ci.yml)
+### Exact-or-refuse evidence gates for structured AI outputs.
 
-> **New here? → [START_HERE.md](START_HERE.md) is the 90-second, plain-English tour** — what it is, a 20-second demo, and why it matters. No domain background needed.
->
-> **Or skip the reading: [try the live playground](https://jiannotti5040.github.io/chiron-vault/playground.html)** — the real engine, in your browser, no install. Paste a sequence, watch it verify or refuse.
->
-> **In plain terms:** an offline engine that finds the exact rule behind an ambiguous input, *proves* it on data it never saw, and *refuses* rather than guess — so you can tell what an AI answer has **proven** from what it merely **asserts**. It ships as an installable tool with 160+ passing gates and a zero-false-verification contract **enforced by live external testing, which works**: a 109-sequence OEIS sweep (2026-07-11) caught 3 false stamps; they were [published the same night and fixed at root within hours](Primus/EXTERNAL_VALIDATION.md) — the re-run now grades 44 verified, all externally correct, zero false. Architecture at a glance: **[architecture.svg](architecture.svg)**.
+[![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
+[![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
 
-<p align="center"><img src="docs/assets/demo.svg" width="780" alt="Real terminal session, outputs unedited: collapse recovers Fibonacci's generator and proves it on 3 held-out terms; certify verifies 2+3+7=12 and 17*3=51 but REFUTES 2^10=1025."></p>
+Chiron is a **proof-carrying acceptance gate** for the part of a machine output that can be checked exactly. It recovers constrained rules from data, verifies supported claims, refutes false ones, and **refuses to stamp what it cannot prove**. The result is a self-hash-bearing evidence record stating both what passed and what remained uncertified.
 
-<p align="center"><b><a href="https://jiannotti5040.github.io/chiron-vault/playground.html">Run this yourself in the browser</a></b> · or locally: double-click <code>SERVE_VAULT.command</code> (or <code>python3 bin/chiron serve</code>) → the full operator dashboard on <code>127.0.0.1:8765</code>. (Opening <code>Chiron/dashboard.html</code> as a plain file shows dead panels — it needs the local services; use the command.)</p>
+Use it where a confidence score is not a release criterion: structured numerical output, a rule recovered from data, or any supported checkable claim where a false pass costs more than a human review. Chiron is **not** a general truth oracle, a replacement for experts, or a way to certify arbitrary free-form text — and it is built so you cannot mistake it for one.
 
-**What must a machine prove before it deserves influence over a human decision?**
+On the current published frozen external eval (2026-07-21): **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals**, graded live against OEIS ground truth. That is a bounded, reproducible result—not a promise about every possible input. A prior 109-sequence sweep caught 3 false stamps; they were published and fixed at the root, then re-run with 44 verified and zero false. The public CI badges above keep the published proof path testable.
 
-This repository answers that with engineering, not policy. At its center is **Chiron**: a portable,
-offline, deterministic engine that recovers the exact rule beneath a codified surface, verifies it by
-exact prediction of withheld data, and **refuses** when no rule is confirmed. The defining property
-is not maximal recall — it is the discipline of declining to certify what cannot be exactly verified,
-a checkable standard of care that curve-fitting and neural embeddings structurally lack.
+**If a result needs to become a release condition, it needs evidence—not a confidence score.**
 
-The surrounding systems are not separate projects. They are the same contract — **recover structure →
-verify exactly → refuse otherwise → certify provenance** — instantiated across meaning, governance,
-ambiguity, value, and certification, and made explicit as one interface in
-[`Chiron/epistemic.py`](Chiron/epistemic.py).
+<p align="center"><img src="docs/assets/chiron_demo.gif" width="880" alt="Real terminal session, outputs unedited: Chiron verifies a geometric rule on held-out terms, then refuses to certify a formula that fits the primes but fails the withheld terms, then shows a certificate that names its own falsifier."></p>
 
-## The front door: a verifier that refuses, as a package
-
-The discipline is installable. In the agent era, the missing primitive is not a model
-that answers — it is a gate that separates what an answer *proves* from what it merely
-*asserts*. That gate is the `primus` package (the seed engine plus its certificate layer):
-
-```bash
-pip install ./Primus
-```
-
-```python
-from primus import certify
-cert = certify(model_output)          # any LLM/agent answer
-cert["counts"]                        # every checkable claim: VERIFIED / REFUTED / REFUSED
-cert["unverifiable_remainder"]        # free text is reported honestly, never blessed
-```
-
-Pipe any model output through the gate (exit 1 if any claim is REFUTED), or
-run the engine itself — both paste-safe as written:
-
-```bash
-echo "17*3 = 51 and 2+2 = 5" | primus certify - --gate
-primus collapse "1 1 2 3 5 8 13 21"
-```
-
-It refuses to call free text "correct," refutes what is exactly false, and stamps only
-what it exactly verifies on data it never saw. And it speaks MCP: `primus-mcp` serves
-`certify` + `collapse` over stdio, so Claude Code (`claude mcp add primus -- primus-mcp`),
-Claude Desktop, Cowork, or any MCP agent can call the gate natively.
-See [Primus/README.md](Primus/README.md).
-
-**Try it in a browser, no install:** [`playground.html`](playground.html) runs the
-*real* engine sources on CPython/WebAssembly, entirely client-side — serve the repo
-(`python3 -m http.server`) or enable GitHub Pages and open it.
-
-## Proof first — measured and reproducible
-
-`python3 Chiron/benchmark.py`:
-
-| Benchmark | Result |
-|---|---|
-| OEIS-core sequences | 22 / 22 algebraically-generated recovered (held-out predicted exactly); 7 / 7 non-closed-form correctly abstained |
-| Classical ciphers | 42 / 44 plaintexts recovered ciphertext-only |
-| Randomized fuzz + labeled gauntlet | ~5,070 scored cases — **0 false verifications**, 0 crashes |
-| **Live OEIS (external data)** | `python3 Primus/oeis_live.py` — 28 sequences fetched from oeis.org: **20 verified, all externally correct; 0 false stamps; 7 honest refusals** — incl. Motzkin, Schröder, and (deep tier) the Apéry and Franel numbers via exact P-recursion, with Bell correctly refusing even at 24 shown terms ([results + miss list](Primus/EXTERNAL_VALIDATION.md)) |
-| **vs. symbolic regression** | Same live protocol, both baselines: Primus 18 exact / **0 wrong** / 11 refused; gplearn GP 2 exact / 22 wrong; **PySR** (deterministic, 40 iterations) 5 exact / **24 wrong** — it recovers exactly the polynomial rows and confidently misses everything else ([details](Primus/SYMREG_RESULTS.md)) |
-
-The number that matters is the zero — and it is now an *externally tested* zero. The first
-live-OEIS run caught a false verification the ~5,070 internal cases never surfaced (float
-drift in the recurrence path, fixed with exact rational arithmetic; the full story is told,
-not buried, in [EXTERNAL_VALIDATION.md](Primus/EXTERNAL_VALIDATION.md)). The claim is
-stronger for having been falsified and repaired in the open.
-
-`python3 Chiron/bench_suite.py` runs the same architecture across **six independent tasks** — integer
-sequences, proverb semantics, protocol/automaton inference, governance, symbolic regression (vs
-polynomial regression), and authorship attribution — each beating or matching an established baseline
-and refusing rather than guess where refusal applies.
-
-## How it works
-
-Chiron takes an ambiguous surface (an integer sequence, a string, a ciphertext, source code) and
-recovers the minimal generator beneath it under a Minimum Description Length criterion in **exact
-rational arithmetic**. A result is *verified* only when the recovered rule predicts withheld terms at
-exact equality; anything it cannot compress is returned as a classified residual, never a confident
-guess. The core is a single self-contained file whose one dependency is numpy (declared in `Primus/pyproject.toml`, so `pip install ./Primus` brings it), owner-signed end to
-end, and it emits an auditable certificate on every run.
-
-- `python3 Chiron/epistemic.py` — the contract (Surface → Hypothesis → Constraint → Verify →
-  Certificate) as one interface, with the integer engine, the semantic calculus, the governance
-  layer, and a probabilistic (energy) layer as four instances of it.
-- `python3 Chiron/compare.py` — head-to-head vs gzip / bz2 / lzma: Chiron stores a constant-size law
-  that regenerates terms the general compressors cannot produce.
-- `python3 Chiron/trace.py "1 1 2 3 5 8"` — the full ranked-candidate reasoning path: why the winner
-  won and how it was verified.
-- `python3 Chiron/llm_certify.py "..."` — wrap a language-model output: audit its honesty, exactly
-  verify the checkable claims, refuse to call free text "correct." The discipline as an LLM wrapper.
-- **Run everything with one command:** `python3 bin/chiron serve` from the vault root, then open
-  http://127.0.0.1:8765 — the operator console, opening on **Pulse** (the live vault certificate and
-  run ledger) and flowing through **Analyze**, **Run** (run any function), **Chat** (natural language
-  over the engine), **Verify → Certificates**, and **Feed** (start/stop/point the grower). Full guide:
-  **[RUNNING.md](Chiron/docs/RUNNING.md)**.
-- **The Chat assistant is provider-pluggable and free.** It tries a fallback chain of LLMs — set any
-  one key (`GEMINI_API_KEY`, `OPENROUTER_API_KEY` for Llama/Qwen/GPT, `GROQ_API_KEY`, `OPENAI_API_KEY`,
-  `ANTHROPIC_API_KEY`, …) in your shell, **or paste it right in the Chat tab’s “Add your own API key”
-  panel**. The model only proposes; the exact engine still verifies. See `Chiron/llm_providers.py`.
-- Every script can leave a signed, falsifiable certificate under `Chiron/artifacts/`, indexed by
-  `build_manifest.py` and browsable in the dashboard's **Verify → Certificates** stage — each tile names the module in Chiron
-  vocabulary and explains it **mathematically, programmatically, and conceptually**. See
-  [ARTIFACTS.md](Chiron/docs/ARTIFACTS.md). Four scripts (`semic`, `chiron`, `density_emotion`,
-  `chiron_artifact`) emit as working proofs.
-- **The whole spine in one file:** all 65 Chiron modules folded, byte-identical, into a single
-  runnable file. `python3 "Chiron Monolith/chiron_monolith.py" serve` opens the same dashboard;
-  `--selftest` runs the full gate sweep (identical coverage to the full build); run any module with
-  `... <module> [args]`. The folder is self-contained. See
-  [Chiron Monolith/README.md](Chiron%20Monolith/README.md).
-- Scope and failure modes are stated plainly in [WHY_CHIRON.md](Chiron/docs/WHY_CHIRON.md) and
-  [KNOWN_LIMITATIONS.md](Chiron/docs/KNOWN_LIMITATIONS.md).
-
-## The vault at a glance
-
-Five concepts, one interface:
-
-| Concept | Where | Rule |
+| Try the exact-claim gate | Verify the published evidence | Use it commercially |
 |---|---|---|
-| **Source** | `Chiron/` (flat engine modules; guides in `Chiron/docs/`) + `Primus/` (the packaged seed) | you edit here, always |
-| **CLI** | `bin/chiron` — `serve · test · build · verify · grow · benchmark · parity · doctor` | the single way you interact |
-| **Build** | `Chiron Monolith/build_monolith.py` + `Chiron/build_manifest.py`, driven by `chiron build` | reproducible; never guess |
-| **Runtime** | `chiron serve` → console :8765, launcher :8768, assistant :8769, grow :8767/:8766, **heartbeat** (the vault's autonomous pulse) | one Ctrl-C stops everything |
-| **Artifacts** | `Chiron Monolith/` (the self-contained fold), `Chiron/manifest.json`, per-script certificates + **the vault certificate** (`artifacts/vault/latest.json`, one signed self-statement per heartbeat) | generated — run, ship, delete, rebuild, **never edit** |
+| **[Check a claim live →](https://jiannotti5040.github.io/chiron/playground/#claim-checker)** | **[Run the public eval →](eval/README.md)** | **[See commercial access →](PRICING.md)** |
+
+> Free to explore and use noncommercially (PolyForm Noncommercial 1.0.0). Commercial use and the full engine are licensed.
+
+---
+
+## The bottleneck is no longer discovery. It is verification.
+
+In July 2026 an AI system produced a counterexample to the **Jacobian conjecture**,
+open since 1939. Days later another produced one to the **Dinitz–Garg–Goemans
+conjecture**, open since the 1990s. Both were announced ahead of peer review.
+Follow-on families and fresh counterexamples in adjacent problems arrived within
+the week.
+
+Machines can now generate candidate mathematics faster than people can check it.
+Proof assistants are one answer, but formalization is expensive. Computer algebra
+is another, but it does not tell you what it failed to establish. The open
+question is narrower and more practical:
+
+> **When a machine announces a result, which parts of it can be checked exactly,
+> right now — and which parts must a human still own?**
+
+That question is what Chiron answers, and the refusals are as much of the answer
+as the checks.
+
+### Two announced counterexamples, ingested and checked
+
+| | What was checked | Result |
+|---|---|---|
+| **Jacobian** (Alpöge / Claude Fable 5) | `det J ≡ −2` as an exact polynomial identity over ℚ; a two-point rational collision denying injectivity | **12/12 gates** |
+| **Dinitz–Garg–Goemans** (Rybin / GPT-5.6 Pro) | fractional flow feasible at cost **58**; all 2³ unsplittable routings enumerated; cheapest congestion-admissible one costs **60** | **15/15 gates** |
+| **The whole DGG family** | every admissible instance with `b ≤ 25` — **456** of them — refutes, exhaustively, in exact integers | **456/456** |
+
+Exact rational and integer arithmetic. No solver, no floats, no network.
+
+The claim is deliberately narrow, and the wording is the point: Chiron
+**independently certified the finite computational claims constituting each
+published counterexample, under the encoded formulation.** It did not certify
+either conjecture false. Provenance, minimality, the Jacobian `n = 2` case, the
+DGG theorem itself, and peer review are all **outside certificate scope** and are
+recorded as refusals.
+
+The Jacobian map now has an independent Isabelle/HOL formalization, so checking it
+adds no missing mathematical fact. What it demonstrates is a systems property: a
+general-purpose verifier, **not written for either conjecture**, ingested both and
+recovered their decisive finite obligations.
+
+**[Read what was verified — and what was refused →](docs/AI_CLAIMS.md)**
+
+### The same contract, run across 3,195 open conjectures
+
+Two hand-picked results prove little on their own. So the same engine was pointed
+at [`google-deepmind/formal-conjectures`](https://github.com/google-deepmind/formal-conjectures)
+— 850 Lean files spanning Erdős problems, Hilbert problems, Millennium problems and
+OEIS conjectures — and asked the only question it is entitled to ask of each:
+*is there a finite exact obligation here that I can discharge?*
+
+| Verdict | Theorems | |
+|---|---:|---|
+| `REFUSED-NEEDS-LEAN` | 1,545 | 48.4% |
+| `REFUSED-INFINITARY` | 922 | 28.9% |
+| `REFUSED-NO-ANSWER` | 426 | 13.3% |
+| **`FINITE-CHECKABLE`** | **302** | **9.5%** |
+
+**Chiron refuses 90.5% of this corpus, and that is the correct answer.** Open
+conjectures are open precisely because they are not finitely checkable. A tool
+reporting a high success rate here would be broken, not capable.
+
+The calibration check is that the classifier never sees the corpus's own labels,
+yet independently rediscovers them. Theorems DeepMind tags `test` account for 215
+of the 302 finite-checkable obligations — 71% of everything Chiron can discharge
+comes from the 18% of the corpus that is sanity checks. Meanwhile `research open`
+returns **432 infinitary and 418 unanswered against just 18 finite**.
+
+Of the OEIS-referencing subset, **35 concrete obligations were discharged against
+live oeis.org data with zero contradictions**, and 21 statements were refused.
+
+### What refusal buys you: the finite part of an open problem
+
+Refusing the general statement is not the end of the work. An existential falls
+to one witness and a universal to one counterexample, so many open conjectures
+have a finite core that can be searched exhaustively — which is exactly how DGG
+fell. Run against three open conjectures from the corpus, in exact integer
+arithmetic:
+
+| Open conjecture | Exhaustive search | Verdict | Prior art |
+|---|---|---|---|
+| **A063880** — every member of `σ(n) = 2·usigma(n)` is `≡ 108 (mod 216)` | all **28,141** members below 10,000,000 | holds | no published bound found |
+| **A063880** — 108 is the only primitive term | same range | holds; 108 unique | no published bound found |
+| **Juggler** — every `n > 0` reaches 1 | all `n ≤ 20,000` | holds; longest run 166 steps | verified far beyond this |
+| **Gilbreath** — `dᵏ(0) = 1` for all `k > 0` | `k = 1 … 29,999` over 30,000 primes | holds | **Odlyzko: 10¹³** |
+
+**These bounds are not advances.** Gilbreath is verified to 10¹³ and the Juggler
+map far past 20,000; the searches above re-derive known ground and are shown
+because they demonstrate the *contract*, not because they extend it. A bound
+printed without its prior art is a number flattering itself, so the column is
+mandatory here.
+
+Each result is stamped `VERIFIED-TO-N`, **never as a proof**, and each general
+statement remains `REFUSED` — unbounded `n` is not enumerable. Reporting a
+bounded check as if it settled a conjecture is the precise failure this project
+exists to prevent, so the distinction is enforced in the verdict itself rather
+than left to the reader. Where the Juggler search hits its step cap it reports
+`REFUSED`, never `REFUTED`: failing to terminate within a bound is not evidence
+of divergence.
+
+Two details that show why the arithmetic is exact rather than floating-point:
+the enumerator is validated against all 40 of OEIS's published A063880 terms
+before it is trusted, and the Juggler trajectory from `n = 15845` peaks at a
+**~23,889-digit integer** — a float implementation goes wrong long before that.
+
+Reproduce the corpus numbers yourself — no licence, no engine, no account:
+
+```bash
+git clone --depth 1 https://github.com/google-deepmind/formal-conjectures
+python3 eval/conjecture_triage.py triage formal-conjectures
+```
+
+---
+
+## Use it in your agent — free, offline, 30 seconds
+
+Gate your own agent's output with the same engine. No key, no account, no repo access:
+
+```bash
+pip install primus-intelligence
+claude mcp add primus -- primus-mcp
+```
+
+Three MCP tools appear: **`certify`** (mark every checkable claim `VERIFIED` / `REFUTED` /
+`REFUSED`, and report the coverage boundary), **`collapse`** (recover an exact rule, proven on
+held-out terms, or refuse), **`conjecture`** (guess-and-prove behind an exact gate). Runs locally
+and offline; free for noncommercial use. Setup for Claude Desktop, Cursor and other clients:
+**[`docs/MCP.md`](docs/MCP.md)**.
+
+A `certify` pass means nothing checkable was refuted — *not* that the text is true. Coverage tells
+you how much the gate could see. The tool is built so you cannot lose that distinction.
+
+---
+
+## Verify it yourself — three depths, no purchase
+
+Each tier says exactly what it proves and what it does not. That restraint is the product.
+
+### 10 seconds — challenge a live exact-claim gate
+
+**[The playground](docs/playground/)** has two distinct demos. The live claim checker sends a non-sensitive test sentence to the licensed-engine endpoint and returns claim-level `VERIFIED`, `REFUTED`, or `REFUSED` results with coverage. The sequence lab lets you paste integers and watch a real Python core verify-or-refuse in the browser — Fibonacci verifies, primes are refused with the reason, and the certificate renders in full.
+
+*Proves:* the contract on a live, limited test input—exact claim-level checks or a stamp only on exact held-out prediction, with refusal otherwise. *Does not prove:* the licensed engine's full reach or the truth of arbitrary prose. The browser sequence core is strictly weaker by design (it refuses Tribonacci, Catalan and factorials, which the engine stamps).
+
+**Live now: [jiannotti5040.github.io/chiron/playground](https://jiannotti5040.github.io/chiron/playground/)** —
+or locally, no install: `python3 -m http.server` from the repo root, then `http://localhost:8000/docs/playground/`. Use the public endpoint only for non-sensitive test inputs.
+
+### 2 minutes — grade the engine against ground truth the author does not control
 
 ```
-START_HERE.md         the 90-second front door        playground.html   the engine in a browser
-bin/chiron            the CLI — the product; the scripts behind it are implementation details
-Chiron/               the flagship engine (source of truth) + docs/ + tests/ + artifacts/
-Chiron Monolith/      generated artifact: the whole spine folded into one runnable file
-Primus/               the packaged seed engine (pip install ./Primus) + its full gate battery
-JDICert/ Veritas/ Candor/ Infectatrum/    the same contract in other domains
-Governance/ UMA Suite/ Individual Programs/ Ontological & Philosophical Books/
-Quack System Constructs/ Paper/           doctrine, theory, papers, salvage
-docs/                 vault-level documents (Mathematical Compendium)
+git clone https://github.com/jiannotti5040/chiron && cd chiron
+python3 eval/grade.py        # live oeis.org; add --cache eval/oeis_snapshot_2026-07-07.json for offline
 ```
 
-**Where this is going:** the long-horizon vision lives in **[docs/HORIZON.md](docs/HORIZON.md)**,
-every milestone with a falsifier attached. The first horizon has begun shipping: the **run ledger**
-(operational memory) and the **heartbeat** (the vault beating on its own pulse — reading its own
-organs, growing on itself, self-verifying, and emitting one signed *vault certificate* per beat)
-are live, and `chiron parity` proves the spine and the fold are one organism (138 identical gates
-through both). Still ahead: the President as planner and certify-before-act for external agents.
-How hard it has been stress-tested for a sale — and the holes found and repaired — is in
-**[docs/STRESS_TEST.md](docs/STRESS_TEST.md)**.
+Real session, 2026-07-21, output unedited (18 mid-table rows elided, every one reads "externally CORRECT"):
 
-## Components
+```
+frozen file: engine 0.6.0+source  frozen 2026-07-21T11:26:51+00:00  commit 1652af0acc
+tamper check: recomputed rows sha256 MATCHES the recorded one
+ground truth: LIVE from oeis.org (b-files, ~1 req/s — the strong mode)
 
-Each system stands alone in its folder with its own README; together they are one contract in
-different domains.
+A-number   model class                 graded  verdict
+A000032    linear_recurrence_order2      8/8   externally CORRECT
+A000045    linear_recurrence_order2      8/8   externally CORRECT
+   ...
+A006318    holonomic_r2_p1               8/8   externally CORRECT
 
-| System | Role |
+  stamped 22   externally correct 22   ungraded 0   refused (honest abstentions) 12
+  FALSE STAMPS: 0   <- the number this eval exists to check
+  RESULT: PASS — zero false verifications on external data
+```
+
+*Proves:* the headline property itself — the licensed engine's frozen, self-hash-bearing outputs contain
+zero stamps that external data contradicts; and with [`eval/challenge.py`](eval/challenge.py) you
+can run the same protocol on sequences **you** choose. *Does not prove:* that everything gets
+stamped (12 of 34 are refusals — that is the design). The protocol and its one residual assumption
+are stated plainly in [`eval/README.md`](eval/README.md).
+
+And if you want the **real engine on your own input, right now** — a live demo endpoint runs it:
+
+```
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+```
+
+The licensed engine, served over HTTP — certificate out, source never serialized, rate-limited,
+refuses over budget (33/33 endpoint gates). It's a free-tier demo instance (~30 s cold start after
+idle); `remote.py` works against any deployment.
+
+### 30 minutes — run every public battery and read the reconciled map
+
+```
+./demo.sh          # prototype 26 gates + demo core 17 gates + the frozen-output grade
+./demo.sh --live   # the same, plus the live oeis.org grade
+```
+
+Then read **[`docs/BATTERIES.md`](docs/BATTERIES.md)** — every gate count in the project on one
+page, tiered by what you can verify before paying — and **[`docs/GATES.md`](docs/GATES.md)** for
+how to read the numbers honestly.
+
+*Proves:* every public claim in this README, reproduced on your machine, and exactly which claims
+are only provable post-license (the vault tiers). *Does not prove:* the vault batteries themselves —
+those run with the licensed engine (`bin/chiron test`), and this repo says so rather than asserting
+them on trust.
+
+---
+
+## The licensed engine, in 30 seconds
+
+Chiron is handed six numbers and asked for the rule. It finds one, then **checks itself against held-out terms it was not given**:
+
+```
+$ chiron collapse 2 4 8 16 32 64
+```
+```json
+{
+  "model_class": "geometric",
+  "verified": true,
+  "exact": true,
+  "explanation": "VERIFIED generator 'geometric'. Recovered in EXACT arithmetic
+   from the first 4 terms, this rule reproduces every term and predicts all 2
+   held-out terms exactly (==, not a tolerance). Compresses 69 bits to 14."
+}
+```
+
+Now the part a proof gate needs. Hand it a sequence it *can* fit but *cannot* prove:
+
+```
+$ chiron collapse 2 3 5 7 11 13 17
+```
+```json
+{
+  "model_class": "linear_recurrence_order3",
+  "verified": false,
+  "explanation": "Recovered a model that reproduces the given terms exactly,
+   but its held-out prediction did not confirm (0/2). Status: recovered_unstamped.
+   Treat as a candidate, not verified."
+}
+```
+
+It found a formula that fits every number you gave it — and **still refused to certify it**, because it failed on the numbers you didn't. That refusal is the product. A system that only tells you what it can prove is a system you can build on.
+
+Every run can emit a certificate carrying a self-hash — machine-readable evidence, a plain-language view, and (required on every certificate) **the exact thing that would prove it wrong**:
+
+```json
+{
+  "system": "CHIRON", "verified": true,
+  "human_view": {
+    "what_was_discovered": "exact collapse recovers and verifies generators on
+     held-out terms, refuses the incompressible, and escalates unsafe actions.",
+    "what_would_falsify": "Any core gate failing — a false-verify, a missed
+     escalation, or exec-of-string in the core path — would break the claim."
+  },
+  "self_hash": "fa07ee792bbe970d"
+}
+```
+
+Real outputs, reproducible today, are in **[`examples/`](examples/)**. A runnable taste is in **[`prototype/`](prototype/)** — clone it and watch it verify and refuse for yourself.
+
+---
+
+## The problem Chiron solves
+
+Organizations are deploying AI into workflows where a wrong structured output can trigger a costly downstream action—and often have no durable record of **what was checked, what passed, and what was left unknown.**
+
+Today, many teams use a mix of confidence scores, LLM judges, tests, and human review. Those are useful tools, but a score or a plausible explanation is not the same thing as an independently checkable release condition.
+
+Chiron is the exact-check layer between a supported machine claim and the decision to accept it. It **checks, refuses, and records the boundary**. Its published external result is deliberately narrow: zero false stamps in the stated frozen evaluation, not a claim that every output will be verifiable.
+
+---
+
+## Who it's for
+
+The same engine answers a different pain for each buyer. They compose — a team can use all four at once.
+
+**Structured-output and quantitative developers — “Recover the rule, or get an honest refusal.”**
+You need to distinguish an exact relationship from a convincing fit. Chiron makes held-out evidence and refusal part of the contract, rather than leaving an extrapolation to a caller’s judgment.
+
+**AI product and evaluation engineers — “A confidence score is not a release criterion.”**
+You need a narrow, reproducible gate for supported claims inside a larger eval stack. Chiron gives you a deterministic `VERIFIED` / `REFUTED` / `REFUSED` result and a record of exactly what it covered.
+
+**Risk and compliance teams — “Show the check, not just the conclusion.”**
+You need evidence artifacts that your own reviewers can inspect: what was checked, the verdict, and the stated limits. Chiron can support that control; it does not replace legal, regulatory, or domain review.
+
+**Researchers and labs — “Candidate discovery is not certification.”**
+You need a deterministic framework for exact arithmetic, held-out validation, and reproducible failure cases—not an obligation to publish the best-looking equation.
+
+---
+
+## What makes it different: an evidence record, not a score
+
+Most AI-evaluation tools are valuable for broad monitoring, ranking, and experimentation. Chiron is meant for the narrower moment where a supported result must either carry exact evidence or stop:
+
+- A sequence rule is tested on held-out terms that the fit did not see.
+- A supported claim is reported at claim level, while the non-checkable remainder stays visibly uncertified.
+- The full engine records the method, verdict, and stated falsifier so a reviewer can replay what the system relied on.
+
+That makes Chiron a useful **last-mile exact gate** beside an existing tracing, monitoring, or LLM-evaluation stack—not a replacement for every part of one.
+
+---
+
+## The model: public proof, commercial engine
+
+Chiron is source-available for noncommercial use and commercially licensed for organizational deployment.
+
+- **This public repository** is the trust layer: the thesis, real examples, a runnable prototype, the architecture, the governance philosophy, and the honest gate results. It answers *why this exists* and lets you verify the claims before you pay.
+- **The licensed engine** (`chiron-vault`) is the full system: 72+ folded modules, the certification brain, the composer, the dashboard — delivered as **one self-contained deterministic file** that runs offline with nothing to install.
+- **License holders can read, run, modify, and extend** the full engine, and contribute improvements back. Changes to the certified core are owner-approved so the `verified` stamp retains a controlled meaning.
+
+Buying a license gives your organization commercial-use rights, the full offline engine, and a controlled path to build on it.
+
+See **[Pricing](PRICING.md)** for the individual, team, business, and enterprise tiers.
+
+---
+
+## Proof, honestly
+
+Everything above is backed by gates you can run, not adjectives. On the current build (2026-07-16, Python 3.14), the full battery is green:
+
+| Gate | Result |
 |---|---|
-| **Primus** | The installable seed: `pip install ./Primus` gives `collapse` (exact recovery with held-out proof) and `certify` (the accountability certificate over LLM/agent output) as a package, CLI, and agent tool-call. Externally validated against the live OEIS. |
-| **Chiron** | Deterministic invariant recovery, certification, and bounded growth under governance — the flagship. |
-| **semic** | The Semantic Invariant Calculus — the recovery discipline lifted from integer sequences to meaning, exact and fully offline, with a three-level energy layer that explores explicitly *uncertified* approximations only when exact collapse refuses. |
-| **JDICert** | High-stakes decision certification: regulatory and governance gates (EU AI Act, GDPR, NIST AI RMF, ISO/IEC 42001), a free-energy filter against unsupported conclusions, and cryptographically-signed, Merkle-chained certificates. |
-| **Veritas** | The exact-arithmetic core of *collapse / same-origin / cast* — multi-hypothesis ranking, residual taxonomy, and every finding rendered as *what was discovered, why it is believed, and what would falsify it.* |
-| **Candor** | An anti-patronization audit scoring reasoning across condescension, unearned confidence, evasion, and opacity, tracing each point of the score to the span that caused it. |
-| **Infectatrum** | Ambiguity and information-loss measurement over any codified object — reading-spectrum cardinality and entropy, origin signatures, and the transcribed Caramuel *Primus Calamus* (1663) atlas. |
-| **President** | A bounded executive, deliberately isolated from the deterministic core; it gathers and deliberates over public archives and escalates anything irreversible to a human. |
+| Core engine smoke, as **one standalone file** | **5/5** (semic 56/56, chiron core incl. JDICert 280/280, density-emotion 8/8, semic-energy 8/8, epistemic 13/13) |
+| Full folded sweep, in-repo | **49/49** modules green through the fold (2026-07-21 build; 48/48 on 2026-07-16 — the sweep grows with the spine) |
+| Invariant-operation stress probes | **23/23** |
+| Pipeline composer (chain / team / swarm) | **7/7** — no false verification in the published battery |
+| Documented-command smoke (every command in the manual runs as written) | **9/9** |
+| The TWIN PROOF (two different poems, one recovered generator) | 279,608,910,057,308,160 verses each, identical fingerprint |
 
-## Mathematical compendium
+**Verify the headline property before paying: [`eval/`](eval/)** — the engine's frozen predictions on 34 public OEIS sequences (12 terms shown, 8 held-out terms per stamp), graded live against oeis.org by a stdlib script, tamper-evident, **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals** on the 2026-07-21 freeze. `eval/challenge.py` lets you run the same protocol on sequences *you* choose. No engine code ships; outputs are what zero-false is a property of.
 
-Every formal object across the portfolio — the invariant engine, the semantic calculus, the
-continuity theory, the physical substrate, the governance rules, and the derived measures — is
-collected in one document, each result tagged by its epistemic status (standard result, implemented
-and tested, proof-of-concept, or self-developed theory):
+**How it compares to symbolic regression: [`docs/SYMREG.md`](docs/SYMREG.md)** — under the head-to-head harness (stricter than the `oeis_live` battery: exact 4/4 continuation only, so its Primus column reads 18 where BATTERIES records 20 verified) Primus scores 18 exact / 0 wrong / 11 refused against PySR's 5 exact / 24 wrong; both the dated original runs and a 2026-07-21 reproduction have identical counts. The distinction is not that a user cannot wrap another tool with an abstention rule; it is that held-out exact verification and native refusal are part of Chiron’s contract.
 
-**[docs/Mathematical_Compendium.pdf](docs/Mathematical_Compendium.pdf)** (source: `docs/Mathematical_Compendium.tex`).
+**Every gate count in this project, reconciled on one page: [`docs/BATTERIES.md`](docs/BATTERIES.md)** — each battery, what it covers, where it runs (public prototype / vault / single file), and which tier you can verify before paying. If two numbers ever disagree, that page wins.
 
-## Theoretical foundations
+Methodology: **[`docs/GATES.md`](docs/GATES.md)**. Architecture: **[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**. The governance stance: **[`docs/GOVERNANCE.md`](docs/GOVERNANCE.md)**. Why it refuses: **[`docs/PHILOSOPHY.md`](docs/PHILOSOPHY.md)**.
 
-The engineering grew from a body of self-developed theory: **Holographic Continuity Theory** and the
-**Projection Calculus** (identity persistence under transformation, provenance as a conservation law,
-significance as geometric curvature); **SoCPM — A Standard of Care for Persuasive Machines** and
-**LexGuard** (the governance doctrine); **UMA** (the computational-physics field substrate); and the
-**Projection–Innovation Hierarchy** (a variational principle for dynamical systems with endogenous
-uncertainty). These are constructive explorations that informed the build; they are **not externally
-validated or peer-reviewed**, and are labeled as such throughout. The independently verifiable claims
-are the engine and the benchmarks above.
+And one exhibit that is neither code nor spec: **[`VerifiedInk/`](VerifiedInk/)** — an essay on ink as verdict. It is in this repo on purpose: the aesthetic case for the same thesis the gates make mechanically — that a mark you cannot take back should never be made casually. Its **Evidence Trace** now appears in the sequence lab as a certificate-backed view of the shown/held-out seam; the visual explains the proof boundary, while the certificate remains authoritative. Read Verified Ink as the philosophy of the stamp; the code is the enforcement of it.
 
-## Scope
+---
 
-The exact-recovery core and the measures marked *implemented and tested* are reproducible and covered
-by self-tests. The certification, governance, and theoretical layers are working prototypes built to
-civilian standards and have not undergone external or third-party audit. Epistemic status is labeled
-explicitly rather than blurred — that labeling is the point.
+## Start
 
-## License
+1. **Open** the [playground](docs/playground/) — paste a sequence, watch it verify or refuse, in your browser.
+2. **Run** `./demo.sh` — every public battery plus the frozen-output grade, one command; then [`eval/grade.py`](eval/grade.py) live for the strong mode.
+3. **License** the full engine when you have a decision you need to be able to prove: **[Pricing](PRICING.md)**.
 
-Licensed under the **PolyForm Noncommercial License 1.0.0** (see [LICENSE.md](LICENSE.md)): free to
-use, modify, and share for any noncommercial purpose; all commercial rights reserved to Jacob
-Iannotti. Commercial licensing and other inquiries: jiannotti1@gmail.com
+> Required Notice: Copyright © 2026 Jacob Iannotti (THRUPUT). Commercial rights reserved.
+> Public materials licensed under PolyForm Noncommercial 1.0.0 — see [LICENSE.md](LICENSE.md).
+> Questions: jiannotti1@gmail.com

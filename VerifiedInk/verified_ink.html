@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<!--
+    VERIFIED INK — walks that must earn their continuation.
+    Built on the Anthropic generative-art viewer template.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verified Ink</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Anthropic Brand Colors */
+        :root {
+            --anthropic-dark: #141413;
+            --anthropic-light: #faf9f5;
+            --anthropic-mid-gray: #b0aea5;
+            --anthropic-light-gray: #e8e6dc;
+            --anthropic-orange: #d97757;
+            --anthropic-blue: #6a9bcc;
+            --anthropic-green: #788c5d;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--anthropic-light) 0%, #f5f3ee 100%);
+            min-height: 100vh;
+            color: var(--anthropic-dark);
+        }
+
+        .container { display: flex; min-height: 100vh; padding: 20px; gap: 20px; }
+
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(20, 20, 19, 0.1);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar h1 {
+            font-family: 'Lora', serif;
+            font-size: 24px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .sidebar .subtitle {
+            color: var(--anthropic-mid-gray);
+            font-size: 14px;
+            margin-bottom: 24px;
+            line-height: 1.4;
+        }
+
+        .verdict-line {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--anthropic-mid-gray);
+            background: var(--anthropic-light);
+            border: 1px solid var(--anthropic-light-gray);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .verdict-line b { color: var(--anthropic-orange); font-weight: 600; }
+
+        .control-section { margin-bottom: 32px; }
+
+        .control-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--anthropic-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-section h3::before {
+            content: '•';
+            color: var(--anthropic-orange);
+            font-weight: bold;
+        }
+
+        .seed-input {
+            width: 100%;
+            background: var(--anthropic-light);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin-bottom: 12px;
+            border: 1px solid var(--anthropic-light-gray);
+            text-align: center;
+        }
+
+        .seed-input:focus {
+            outline: none;
+            border-color: var(--anthropic-orange);
+            box-shadow: 0 0 0 2px rgba(217, 119, 87, 0.1);
+            background: white;
+        }
+
+        .seed-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .regen-button { margin-bottom: 0; }
+
+        .control-group { margin-bottom: 20px; }
+
+        .control-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--anthropic-dark);
+            margin-bottom: 8px;
+        }
+
+        .slider-container { display: flex; align-items: center; gap: 12px; }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: var(--anthropic-light-gray);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--anthropic-orange);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: #c86641;
+        }
+
+        .slider-container input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--anthropic-orange);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .value-display {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--anthropic-mid-gray);
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .button {
+            background: var(--anthropic-orange);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .button:hover { background: #c86641; transform: translateY(-1px); }
+        .button:active { transform: translateY(0); }
+        .button.secondary { background: var(--anthropic-blue); }
+        .button.secondary:hover { background: #5a8bb8; }
+        .button.tertiary { background: var(--anthropic-green); }
+        .button.tertiary:hover { background: #6b7b52; }
+
+        .button-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .button-row .button { flex: 1; }
+
+        .canvas-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        #canvas-container {
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(20, 20, 19, 0.1);
+            background: white;
+        }
+
+        #canvas-container canvas {
+            display: block;
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--anthropic-mid-gray);
+        }
+
+        @media (max-width: 600px) {
+            .container { flex-direction: column; }
+            .sidebar { width: 100%; }
+            .canvas-area { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h1>Verified Ink</h1>
+            <div class="subtitle">Walks that must earn their continuation.
+            Left of the seam, every attempt is drawn. Right of it, only what
+            a walk's own rule can prove — everything else refuses.</div>
+
+            <div class="verdict-line" id="verdict-line">census pending…</div>
+
+            <!-- Seed Section (FIXED) -->
+            <div class="control-section">
+                <h3>Seed</h3>
+                <input type="number" id="seed-input" class="seed-input" value="2275" onchange="updateSeed()">
+                <div class="seed-controls">
+                    <button class="button secondary" onclick="previousSeed()">← Prev</button>
+                    <button class="button secondary" onclick="nextSeed()">Next →</button>
+                </div>
+                <button class="button tertiary regen-button" onclick="randomSeedAndUpdate()">↻ Random</button>
+            </div>
+
+            <!-- Parameters Section -->
+            <div class="control-section">
+                <h3>Parameters</h3>
+
+                <div class="control-group">
+                    <label>Walks</label>
+                    <div class="slider-container">
+                        <input type="range" id="walkCount" min="60" max="900" step="20" value="420" oninput="updateParam('walkCount', this.value)">
+                        <span class="value-display" id="walkCount-value">420</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Steps per walk</label>
+                    <div class="slider-container">
+                        <input type="range" id="steps" min="8" max="32" step="1" value="16" oninput="updateParam('steps', this.value)">
+                        <span class="value-display" id="steps-value">16</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Held-out fraction</label>
+                    <div class="slider-container">
+                        <input type="range" id="holdoutFrac" min="0.15" max="0.45" step="0.05" value="0.25" oninput="updateParam('holdoutFrac', this.value)">
+                        <span class="value-display" id="holdoutFrac-value">0.25</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Generator rate (in-class walks)</label>
+                    <div class="slider-container">
+                        <input type="range" id="motifChance" min="0" max="1" step="0.05" value="0.7" oninput="updateParam('motifChance', this.value)">
+                        <span class="value-display" id="motifChance-value">0.7</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Amplitude</label>
+                    <div class="slider-container">
+                        <input type="range" id="amplitude" min="4" max="16" step="0.5" value="9" oninput="updateParam('amplitude', this.value)">
+                        <span class="value-display" id="amplitude-value">9</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Weave</label>
+                    <div class="slider-container">
+                        <input type="range" id="weave" min="0" max="1" step="0.05" value="0.35" oninput="updateParam('weave', this.value)">
+                        <span class="value-display" id="weave-value">0.35</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Ink density</label>
+                    <div class="slider-container">
+                        <input type="range" id="inkAlpha" min="8" max="60" step="2" value="26" oninput="updateParam('inkAlpha', this.value)">
+                        <span class="value-display" id="inkAlpha-value">26</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions Section (FIXED) -->
+            <div class="control-section">
+                <h3>Actions</h3>
+                <div class="button-row">
+                    <button class="button" onclick="initializeSystem()">Regenerate</button>
+                    <button class="button" onclick="resetParameters()">Reset</button>
+                </div>
+                <button class="button tertiary" onclick="downloadPNG()">Download PNG</button>
+            </div>
+        </div>
+
+        <div class="canvas-area">
+            <div id="canvas-container">
+                <div class="loading">Initializing generative art...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════════════════════════
+        // VERIFIED INK — parameters
+        // The palette is fixed and monastic on purpose: cream, graphite, one
+        // ember accent for the proven, one ghost gray for the refused. The
+        // drama is epistemic, not chromatic.
+        // ═══════════════════════════════════════════════════════════════════
+
+        let params = {
+            seed: 2275,          // a walk that once got stamped wrongly; never again
+            walkCount: 420,
+            steps: 16,           // 16 steps, holdout 0.25 -> shown 12, held out 4
+            holdoutFrac: 0.25,
+            motifChance: 0.7,
+            amplitude: 9,
+            weave: 0.35,
+            inkAlpha: 26
+        };
+        let defaultParams = {...params};
+
+        const INK    = [20, 20, 19];      // graphite
+        const EMBER  = [217, 119, 87];    // verified
+        const GHOST  = [176, 174, 165];   // refused
+        const SEAM   = [232, 230, 220];   // the holdout boundary
+        const PAPER  = [250, 249, 245];   // cream
+
+        const PHI = 0.6180339887498949;   // band spacing by golden ratio
+        const MARGIN = 70;
+
+        // ═══════════════════════════════════════════════════════════════════
+        // The system: integer walks with steps in {-1, 0, +1}, floored at 0.
+        //   shown region  — every walk may attempt (illegal steps resampled)
+        //   held-out region — ONLY a walk's own generator may continue it,
+        //   and only if the derivation never breaks the floor. No generator,
+        //   or a generator that would dip below zero: the walk refuses.
+        // ═══════════════════════════════════════════════════════════════════
+
+        let walks = [];
+        let census = { verified: 0, refused: 0, outOfClass: 0 };
+
+        function stepChoice() {
+            // gentle upward bias keeps the crowd airborne without faking it
+            const r = random();
+            if (r < 0.36) return 1;
+            if (r < 0.72) return 0;
+            return -1;
+        }
+
+        function buildWalk(idx, total) {
+            const steps = params.steps;
+            const shownSteps = constrain(round(steps * (1 - params.holdoutFrac)), 4, steps - 2);
+            const hasMotif = random() < params.motifChance;
+
+            let motif = null, heights = null;
+
+            if (hasMotif) {
+                // A private rule: 2-5 steps, repeated. It must at least keep
+                // the SHOWN region legal — the crowd only ever exhibits legal
+                // surfaces; whether the rule survives unseen territory is
+                // exactly what the seam will judge.
+                for (let attempt = 0; attempt < 40 && !heights; attempt++) {
+                    const L = floor(random(2, 6));
+                    const m = Array.from({length: L}, stepChoice);
+                    if (m.every(s => s === 0)) continue;           // flat is no rule
+                    const h = [0];
+                    let ok = true;
+                    for (let k = 0; k < shownSteps; k++) {
+                        const nh = h[k] + m[k % L];
+                        if (nh < 0) { ok = false; break; }
+                        h.push(nh);
+                    }
+                    if (ok) { motif = m; heights = h; }
+                }
+            }
+            if (!heights) {
+                // Out of class: legal improvisation, no rule to consult later.
+                motif = null;
+                heights = [0];
+                for (let k = 0; k < shownSteps; k++) {
+                    let s = stepChoice();
+                    if (heights[k] + s < 0) s = random() < 0.5 ? 0 : 1;
+                    heights.push(heights[k] + s);
+                }
+            }
+
+            // The verdict: derive the continuation from the rule alone.
+            let verdict = 'refused';
+            let tail = [];                    // heights beyond the seam
+            let ghost = [];                   // where a broken rule would have gone
+            if (motif) {
+                let h = heights[shownSteps];
+                let broke = -1;
+                const derived = [];
+                for (let k = shownSteps; k < steps; k++) {
+                    h += motif[k % motif.length];
+                    derived.push(h);
+                    if (h < 0 && broke < 0) broke = derived.length;
+                }
+                if (broke < 0) { verdict = 'verified'; tail = derived; }
+                else ghost = derived.slice(0, broke);
+            } else {
+                // no rule — sketch what improvisation would have done, faintly
+                let h = heights[shownSteps];
+                for (let k = shownSteps; k < steps; k++) {
+                    let s = stepChoice();
+                    if (h + s < 0) s = 0;
+                    h += s;
+                    ghost.push(h);
+                }
+            }
+
+            // Placement: golden-ratio band centers, softly woven by noise.
+            const y0 = map((idx * PHI) % 1, 0, 1, MARGIN + 40, height - MARGIN - 40)
+                       + random(-14, 14);
+            const tint = [random(-6, 6), random(-4, 4), random(-2, 6)];
+
+            return { heights, tail, ghost, verdict, hasMotif: !!motif,
+                     shownSteps, y0, tint, noisePhase: idx * 0.31 };
+        }
+
+        function walkPoint(w, k, h) {
+            const stepW = (width - 2 * MARGIN) / params.steps;
+            const x = MARGIN + k * stepW;
+            const drift = (noise(x * 0.002, w.noisePhase) - 0.5) * params.weave * 140;
+            return [x, w.y0 + drift - h * params.amplitude];
+        }
+
+        function setup() {
+            let canvas = createCanvas(1200, 1200);
+            canvas.parent('canvas-container');
+            noLoop();
+            initializeSystem();
+            document.querySelector('.loading').style.display = 'none';
+        }
+
+        function initializeSystem() {
+            randomSeed(params.seed);
+            noiseSeed(params.seed);
+            walks = [];
+            census = { verified: 0, refused: 0, outOfClass: 0 };
+            for (let i = 0; i < params.walkCount; i++) {
+                const w = buildWalk(i, params.walkCount);
+                walks.push(w);
+                if (w.verdict === 'verified') census.verified++;
+                else if (w.hasMotif) census.refused++;
+                else census.outOfClass++;
+            }
+            redraw();
+            updateVerdictLine();
+        }
+
+        function draw() {
+            background(...PAPER);
+
+            const stepW = (width - 2 * MARGIN) / params.steps;
+            const shownSteps = walks.length ? walks[0].shownSteps
+                : round(params.steps * (1 - params.holdoutFrac));
+            const seamX = MARGIN + shownSteps * stepW;
+
+            // the seam — barely there, but everything answers to it
+            stroke(...SEAM, 200); strokeWeight(1.5);
+            line(seamX, MARGIN * 0.6, seamX, height - MARGIN * 0.6);
+            stroke(...GHOST, 140); strokeWeight(3);
+            line(seamX, MARGIN * 0.6, seamX, MARGIN * 0.6 + 14);
+            line(seamX, height - MARGIN * 0.6 - 14, seamX, height - MARGIN * 0.6);
+
+            // 1. ghosts first — the quietest layer
+            for (const w of walks) {
+                if (!w.ghost.length) continue;
+                let prev = walkPoint(w, w.shownSteps, w.heights[w.shownSteps]);
+                for (let j = 0; j < w.ghost.length; j++) {
+                    const p = walkPoint(w, w.shownSteps + 1 + j, w.ghost[j]);
+                    const fade = map(j, 0, max(1, w.ghost.length - 1), 80, 8);
+                    stroke(...GHOST, fade); strokeWeight(1.6);
+                    dottedLine(prev, p, 5.5);
+                    prev = p;
+                }
+            }
+
+            // 2. the shown crowd — communal graphite
+            noFill();
+            for (const w of walks) {
+                stroke(INK[0] + w.tint[0], INK[1] + w.tint[1], INK[2] + w.tint[2],
+                       params.inkAlpha);
+                strokeWeight(1.1);
+                beginShape();
+                for (let k = 0; k <= w.shownSteps; k++) {
+                    const [x, y] = walkPoint(w, k, w.heights[k]);
+                    curveVertex(x, y);
+                    if (k === 0 || k === w.shownSteps) curveVertex(x, y);
+                }
+                endShape();
+            }
+
+            // 3. refusal marks at the seam — hollow, honest
+            for (const w of walks) {
+                if (w.verdict === 'verified') continue;
+                const [x, y] = walkPoint(w, w.shownSteps, w.heights[w.shownSteps]);
+                noFill(); stroke(...GHOST, 150); strokeWeight(1.2);
+                circle(x, y, 6.4);
+            }
+
+            // 4. the verified — re-ink the earned thread end to end
+            for (const w of walks) {
+                if (w.verdict !== 'verified') continue;
+
+                stroke(...INK, min(255, params.inkAlpha + 34));
+                strokeWeight(1.35);
+                noFill();
+                beginShape();
+                for (let k = 0; k <= w.shownSteps; k++) {
+                    const [x, y] = walkPoint(w, k, w.heights[k]);
+                    curveVertex(x, y);
+                    if (k === 0 || k === w.shownSteps) curveVertex(x, y);
+                }
+                endShape();
+
+                const pts = [walkPoint(w, w.shownSteps, w.heights[w.shownSteps])];
+                for (let j = 0; j < w.tail.length; j++)
+                    pts.push(walkPoint(w, w.shownSteps + 1 + j, w.tail[j]));
+
+                stroke(...EMBER, 60); strokeWeight(4.5);   // soft halo
+                inkPolyline(pts);
+                stroke(...EMBER, 215); strokeWeight(1.8);  // the proof itself
+                inkPolyline(pts);
+
+                const end = pts[pts.length - 1];
+                noStroke(); fill(...EMBER, 230);
+                circle(end[0], end[1], 7);                  // the stamp
+                stroke(...EMBER, 180); strokeWeight(1.6);
+                const s0 = pts[0];
+                line(s0[0], s0[1] - 5, s0[0], s0[1] + 5);   // seam tick
+            }
+        }
+
+        function inkPolyline(pts) {
+            noFill();
+            beginShape();
+            for (let i = 0; i < pts.length; i++) {
+                curveVertex(pts[i][0], pts[i][1]);
+                if (i === 0 || i === pts.length - 1) curveVertex(pts[i][0], pts[i][1]);
+            }
+            endShape();
+        }
+
+        function dottedLine(a, b, gap) {
+            const d = dist(a[0], a[1], b[0], b[1]);
+            const n = max(1, floor(d / gap));
+            for (let i = 0; i <= n; i++) {
+                const t = i / n;
+                point(lerp(a[0], b[0], t), lerp(a[1], b[1], t));
+            }
+        }
+
+        function updateVerdictLine() {
+            const el = document.getElementById('verdict-line');
+            if (!el) return;
+            el.innerHTML =
+                `census · <b>${census.verified} verified</b> · ` +
+                `${census.refused} refused · ${census.outOfClass} out of class` +
+                `<br>nothing right of the seam was drawn without proof`;
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // UI handlers
+        // ═══════════════════════════════════════════════════════════════════
+
+        function updateParam(name, value) {
+            const asInt = ['walkCount', 'steps', 'inkAlpha'];
+            params[name] = asInt.includes(name) ? parseInt(value) : parseFloat(value);
+            document.getElementById(name + '-value').textContent = value;
+            initializeSystem();
+        }
+
+        function downloadPNG() {
+            saveCanvas('verified_ink_seed_' + params.seed, 'png');
+        }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // Seed controls (FIXED)
+        // ═══════════════════════════════════════════════════════════════════
+
+        function updateSeedDisplay() {
+            document.getElementById('seed-input').value = params.seed;
+        }
+
+        function updateSeed() {
+            let input = document.getElementById('seed-input');
+            let newSeed = parseInt(input.value);
+            if (newSeed && newSeed > 0) {
+                params.seed = newSeed;
+                initializeSystem();
+            } else {
+                updateSeedDisplay();
+            }
+        }
+
+        function previousSeed() {
+            params.seed = Math.max(1, params.seed - 1);
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function nextSeed() {
+            params.seed = params.seed + 1;
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function randomSeedAndUpdate() {
+            params.seed = Math.floor(Math.random() * 999999) + 1;
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        function resetParameters() {
+            params = {...defaultParams};
+            for (const name of ['walkCount', 'steps', 'holdoutFrac', 'motifChance',
+                                'amplitude', 'weave', 'inkAlpha']) {
+                document.getElementById(name).value = params[name];
+                document.getElementById(name + '-value').textContent = params[name];
+            }
+            updateSeedDisplay();
+            initializeSystem();
+        }
+
+        window.addEventListener('load', updateSeedDisplay);
+    </script>
+</body>
+</html>
