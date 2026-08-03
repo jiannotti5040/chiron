@@ -1,6 +1,6 @@
 # Primus — the installable seed
 
-**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](https://github.com/jiannotti5040/chiron/blob/main/LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution (see the repository-root [LICENSE](https://github.com/jiannotti5040/chiron/blob/main/LICENSE)).**
 
 Primus is the clean, auditable core of the whole vault, now shipped as a
 Python package: **exact invariant recovery with held-out verification and

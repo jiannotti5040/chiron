@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](DICTIONARY.md) defines the vocabulary; the [SOP](SOP.md) says how to operate it all.
 
-**State at generation:** 74 runnable scripts · 55 carry selftest gates · 64 stdlib-only · 74 licensed · 104 internal import edges · generated 2026-08-03T21:31:28Z (static mode).
+**State at generation:** 74 runnable scripts · 55 carry selftest gates · 64 stdlib-only · 74 licensed · 104 internal import edges · generated 2026-08-03T21:55:41Z (static mode).
 
 ## Index by role
 

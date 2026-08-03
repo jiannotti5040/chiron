@@ -3,7 +3,7 @@
 # Copyright 2026 Jacob Iannotti
 # ============================================================================
 #  chiron_grow.py — the operator-directed grower for CHIRON
-#  Author: Jacob Iannotti. Apache-2.0 — noncommercial use permitted; commercial rights reserved. See LICENSE.md.
+#  Author: Jacob Iannotti. Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. See LICENSE.
 #
 #  Runs LOCALLY. This is the network-capable companion, deliberately SEPARATE
 #  from the offline monolith: chiron.py stays deterministic and offline; only

@@ -5,7 +5,7 @@
 #  CANDOR — the anti-patronization engine
 #  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
 #  Licensed under Apache-2.0: use, modification, distribution,
-#  and sharing permitted; commercial rights reserved. See LICENSE.md.
+#  distribution, and commercial use permitted with attribution. See LICENSE.
 # ============================================================================
 """
 CANDOR audits a piece of machine (or human) reasoning for the failure mode

@@ -70,7 +70,7 @@ from __future__ import annotations
 # Copyright (c) 2026 Jacob Iannotti.
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, and sharing are permitted free of charge; commercial use is
+# modification, distribution, and commercial use are permitted with
 # reserved to the owner. See LICENSE.md at the repository root.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -13111,7 +13111,7 @@ def jdicert_selfcheck() -> int:
 # Copyright (c) 2026 Jacob Iannotti.
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, and sharing are permitted free of charge; commercial use is
+# modification, distribution, and commercial use are permitted with
 # reserved to the owner. See LICENSE.md at the repository root.
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -27502,7 +27502,7 @@ import types as _types, sys as _sys
 #  CHIRON (knowledge = verified invariants) x CANDOR (wisdom = audited honesty)
 #  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
 #  Licensed under Apache-2.0: use, modification, distribution,
-#  and sharing permitted; commercial rights reserved. See LICENSE.md.
+#  distribution, and commercial use permitted with attribution. See LICENSE.
 # ============================================================================
 """
 CHIRON — VERITAS engine.
