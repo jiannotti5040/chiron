@@ -940,7 +940,7 @@ if (GC_CODE) {
 function track(name) {
   try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, title: name, event: true }); } catch (e) {}
 }
-// which examples people run, when they switch to the real engine, and Pricing clicks
+// which examples people run and when they switch to the full engine
 document.addEventListener("click", (e) => {
   const t = e.target.closest && e.target.closest("a, button"); if (!t) return;
   const href = (t.getAttribute && t.getAttribute("href")) || "";
