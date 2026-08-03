@@ -1,0 +1,24 @@
+{
+  "owner": "Jacob Iannotti",
+  "domain": "numeric",
+  "model_class": "geometric",
+  "params": {
+    "a0": 2,
+    "r": 2
+  },
+  "structure": {
+    "family": "geometric",
+    "verified": true
+  },
+  "exact": true,
+  "verified": true,
+  "model_bits": 14.01,
+  "surface_bits": 69.17,
+  "compression_ratio": 4.937,
+  "mdl_margin_bits": 4.25,
+  "fit_score": 1.0,
+  "family_fingerprint": "cf5d4d8d97d4644e",
+  "generator_fingerprint": "b68ff422c7fccb11",
+  "residual": [],
+  "explanation": "VERIFIED generator 'geometric'. Recovered in EXACT arithmetic from the first 4 terms, this rule reproduces every term and predicts all 2 held-out terms exactly (== , not a tolerance). Compresses 69 bits to 14; MDL margin to the next model is 4 bits."
+}

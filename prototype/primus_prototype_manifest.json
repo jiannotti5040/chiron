@@ -1,0 +1,35 @@
+{
+  "author": "J. Iannotti",
+  "bank": [
+    {
+      "artifact": "f20e622fd56318050c816e6d392ac3cd1de01d7fe314dc8177eae8810262d302",
+      "engine": "JDICert",
+      "role": "generator",
+      "weight": 1.0
+    }
+  ],
+  "chain": [
+    {
+      "hash": "a1c32b978a704d1f5a466ee5da2113a25ffaffc9216c11e735d3ce886db3af5e",
+      "payload_hash": "212339cfe1a5c15380f99cf440e65824147c5fdcbd15ea881843d1cb5c1faa40",
+      "prev": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "hash": "15f87e4e0ce21fe7cc960ba5175a749949de89f5365626747875c810c3164bfd",
+      "payload_hash": "3adab23d5acb1c1d3cf7f53d9371a814888bb0586b8537afbcba1591733a851c",
+      "prev": "a1c32b978a704d1f5a466ee5da2113a25ffaffc9216c11e735d3ce886db3af5e"
+    }
+  ],
+  "crystal": {
+    "2^2": [
+      "f20e622fd56318050c816e6d392ac3cd1de01d7fe314dc8177eae8810262d302"
+    ]
+  },
+  "library": [],
+  "note": "UNVERIFIED PROTOTYPE MANIFEST -- content-only seal, no wall-clock, author-bound. Not the vault.",
+  "schema": "primus-prototype/0.1 (UNVERIFIED-PROTOTYPE)",
+  "sealed_root": "3adab23d5acb1c1d3cf7f53d9371a814888bb0586b8537afbcba1591733a851c",
+  "vault_keys": [
+    "f20e622fd56318050c816e6d392ac3cd1de01d7fe314dc8177eae8810262d302"
+  ]
+}
