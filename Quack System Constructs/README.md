@@ -1,6 +1,6 @@
 # Quack System Constructs
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../LICENSE)).**
 
 Earlier exploratory work, kept and labelled honestly. These were attempts at
 mathematical and ontological systems-building that did **not** meet scientific

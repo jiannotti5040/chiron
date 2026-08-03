@@ -1,6 +1,6 @@
 # The 2026 Dinitz–Garg–Goemans cost-conjecture counterexample, verified by this suite's own arithmetic
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root LICENSE.md).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 (see the repository-root LICENSE).**
 **Epistemic status: the verification machinery and the arithmetic claims below are implemented-and-tested (`uma/dgg/`, `tests/test_dgg.py`, 15 gates). The surrounding history is reported, not certified.**
 
 ## What happened

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 test_certify_property.py — the certify kernel's core invariant, checked
 EXHAUSTIVELY over a bounded domain rather than by hand-picked examples.

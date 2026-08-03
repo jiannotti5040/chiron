@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """tests/test_stage6.py -- self-consistent Stage 6 closure tests."""
 from __future__ import annotations
 import numpy as np

@@ -8,10 +8,10 @@
   faked outputs. The "26 gates" panel additionally fetches and runs the actual
   prototype/primus_prototype.py battery in-tab.
 
-  WHAT THIS IS NOT: the licensed engine. The demo core shares the licensed
+  WHAT THIS IS NOT: the full engine. The browser core shares the full
   engine's contract (exact arithmetic, stamp only on exact held-out proof,
-  refuse otherwise) and is strictly weaker by design. The real licensed engine
-  is graded in eval/ and runs live at chiron-engine.onrender.com.
+  refuse otherwise) and is strictly weaker by design. The full engine is
+  graded in eval/ and ships in Primus/ — pip install it and run it locally.
 
   Served over HTTP (fetch is blocked on file://). Live: GitHub Pages at
   https://jiannotti5040.github.io/chiron/playground/  — or locally:
@@ -360,7 +360,7 @@
   <nav>
     <a href="../">How it works</a>
     <a href="https://github.com/jiannotti5040/chiron">GitHub</a>
-    <a class="nav-cta" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Commercial access</a>
+    <a class="nav-cta" href="https://github.com/jiannotti5040/chiron">GitHub</a>
   </nav>
 </header>
 
@@ -370,14 +370,14 @@
     <span class="eyebrow">EXACT-OR-REFUSE EVIDENCE GATE</span>
     <h1>Check a machine claim.<br>See exactly what it can prove.</h1>
     <p class="lead">Confidence is not evidence. Chiron checks the claims it can prove exactly, <b style="color:var(--text)">refutes what is false</b>, and leaves everything outside that boundary explicitly uncertified.</p>
-    <p class="sub">Try a public, live licensed-engine check below — or use the sequence lab to see held-out proof in action.</p>
-    <div class="hero-actions"><a class="primary" href="#claim-checker">Check a claim live</a><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Get commercial access</a></div>
+    <p class="sub">Try a public, live full-engine check below — or use the sequence lab to see held-out proof in action.</p>
+    <div class="hero-actions"><a class="primary" href="#sequence-lab">Run the sequence lab</a><a href="https://github.com/jiannotti5040/chiron">Get the full engine</a></div>
   </div>
 
   <section class="claim-demo" id="claim-checker" aria-labelledby="claim-title">
     <div class="claim-head">
       <div>
-        <span class="live-pill">live licensed engine</span>
+        <span class="live-pill">live full engine</span>
         <h2 id="claim-title">Check a claim from an AI output</h2>
         <p>Chiron extracts supported, exactly checkable claims and reports each one as VERIFIED, REFUTED, or REFUSED. Free-form remainder is never silently approved.</p>
       </div>
@@ -443,7 +443,7 @@
   </section>
 
   <section class="blk">
-    <div class="kicker">How sure can you be — before paying?</div>
+    <div class="kicker">How sure can you be — before you trust it?</div>
     <h3>Three depths of proof. Each says what it does and doesn't show.</h3>
     <p class="intro">The restraint is the brand — nothing here claims more than it proves.</p>
     <div class="tiers">
@@ -451,34 +451,30 @@
         <div class="time">10 SECONDS</div>
         <h4>This page</h4>
         <p>Try a non-sensitive claim with the live checker, or a sequence with the browser demo core.</p>
-        <div class="proves"><b>Shows:</b> the stated contract on one limited test input. The browser core is deliberately weaker than the licensed engine.</div>
+        <div class="proves"><b>Shows:</b> the stated contract on one limited test input. The browser core is deliberately weaker than the full engine.</div>
       </div>
       <div class="tier">
         <div class="time">2 MINUTES</div>
         <h4>Grade it yourself</h4>
         <div class="cmd">python3 eval/grade.py</div>
-        <p>The licensed engine's frozen outputs, graded live against oeis.org — data the author doesn't control.</p>
+        <p>The full engine's frozen outputs, graded live against oeis.org — data the author doesn't control.</p>
         <div class="proves"><b>Shows:</b> 22 stamped / 22 externally correct / 0 false stamps / 12 refusals in the current frozen external eval. <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/ →</a></div>
       </div>
       <div class="tier live">
-        <div class="time">LIVE · THE REAL ENGINE</div>
-        <h4>Hit the licensed engine</h4>
-        <div class="cmd">python3 eval/remote.py --url \
-https://chiron-engine.onrender.com \
-collapse "1 1 2 3 5 8 13 21"</div>
-        <p>The real engine over HTTP — certificate out, source never serialized, rate-limited.</p>
-        <div class="proves"><b>Shows:</b> the endpoint's contract on a limited input. It may refuse, rate-limit, or issue no certificate. <a href="https://chiron-engine.onrender.com/health">endpoint →</a></div>
+        <div class="time">LOCAL · THE REAL ENGINE</div>
+        <h4>Run the full engine yourself</h4>
+        <div class="cmd">pip install primus-intelligence
+primus collapse "1 1 2 3 5 8 13 21"</div>
+        <p>The real engine, on your machine — no service, no rate limit, no network. Serve it over HTTP with <code>primus-serve</code> if you want the same certificate-out contract.</p>
+        <div class="proves"><b>Shows:</b> the full hypothesis families and the exact held-out gate. It may still refuse — that is the contract. <a href="https://github.com/jiannotti5040/chiron/tree/main/Primus">Primus source →</a></div>
       </div>
     </div>
-    <div class="conversion">
-      <div><b>Need this gate inside your workflow?</b><span>Commercial access includes the full deterministic engine for organizational use, from $100/month.</span></div>
-      <div class="conversion-links"><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Talk through a use case</a><a class="primary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">See commercial access</a></div>
-    </div>
+
   </section>
 
   <div class="honesty">
     <h4>What runs where, precisely</h4>
-    <p>The claim checker and “licensed engine” sequence mode call the public HTTP demo. The browser sequence core is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>, fetched verbatim and run by CPython-in-WebAssembly. It is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families and a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the licensed engine stamps (see <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a> and <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). The shared contract is narrower and more important: do not stamp what cannot be exactly supported.</p>
+    <p>The claim checker and “full engine” sequence mode call the public HTTP demo. The browser sequence core is <a href="../../prototype/browser_core.py">prototype/browser_core.py</a>, fetched verbatim and run by CPython-in-WebAssembly. It is <b style="color:var(--text)">strictly weaker by design</b>: five hypothesis families and a more conservative evidence rule. It refuses Catalan, factorials, and Tribonacci — which the full engine stamps (see <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">eval/</a> and <a href="https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md">BATTERIES.md</a>). The shared contract is narrower and more important: do not stamp what cannot be exactly supported.</p>
   </div>
 
   <details class="gates">
@@ -493,7 +489,7 @@ collapse "1 1 2 3 5 8 13 21"</div>
     <div class="links">
       <a href="https://github.com/jiannotti5040/chiron">Repository</a>
       <a href="https://github.com/jiannotti5040/chiron/tree/main/eval">Verify (eval/)</a>
-      <a href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">Pricing</a>
+      <a href="https://github.com/jiannotti5040/chiron/blob/main/LICENSES.md">Licence</a>
     </div>
   </footer>
 
@@ -506,7 +502,12 @@ const SOURCES = [
   "../../prototype/",   // canonical file when serving the repo root locally
   "https://raw.githubusercontent.com/jiannotti5040/chiron/main/prototype/",
 ];
-const LIVE_ENDPOINT = "https://chiron-engine.onrender.com";
+// Self-hosted engine endpoint. There is no managed instance: the engine is
+// Apache-2.0, so you run your own (`pip install primus-intelligence && primus-serve`,
+// or the Dockerfile at the repo root). Point this page at it with ?engine=<url>
+// or by setting chiron_engine_url in localStorage.
+const LIVE_ENDPOINT = (new URLSearchParams(location.search).get("engine")
+  || localStorage.getItem("chiron_engine_url") || "").replace(/\/$/, "");
 const boot = document.getElementById("boot");
 const bootText = document.getElementById("boot-text");
 const runBtn = document.getElementById("run");
@@ -538,7 +539,7 @@ async function init() {
   } catch (e) {
     if (engine === "live") {
       boot.classList.add("ready");
-      bootText.textContent = "licensed engine selected — browser demo core was unavailable, but live checks can still run";
+      bootText.textContent = "full engine selected — browser demo core was unavailable, but live checks can still run";
       runBtn.disabled = false;
     } else {
       bootText.textContent = "boot failed: " + e.message;
@@ -551,7 +552,7 @@ function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 function updateBootStatus(sourceLength) {
   if (engine === "live") {
     boot.classList.add("ready");
-    bootText.textContent = "licensed engine selected — over HTTP; the first call may cold-start for up to ~40 seconds";
+    bootText.textContent = "full engine selected — over HTTP; the first call may cold-start for up to ~40 seconds";
     runBtn.disabled = false;
     return;
   }
@@ -579,6 +580,12 @@ function selectEngine(nextEngine) {
 }
 
 async function requestLive(path, body) {
+  if (!LIVE_ENDPOINT) {
+    throw new Error(
+      "No engine endpoint is configured. The full engine is Apache-2.0 \u2014 run it yourself " +
+      "with `pip install primus-intelligence && primus-serve`, then reload this page with " +
+      "?engine=http://localhost:8790");
+  }
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), 75000);
   try {
@@ -602,7 +609,7 @@ async function requestLive(path, body) {
 }
 
 function renderLiveProblem(message) {
-  resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">…</div><div><h2>NO CERTIFICATE ISSUED</h2><span class="etag live">licensed engine · live</span></div></div>
+  resultEl.innerHTML = `<div class="verdict r"><div class="stamp"><div class="glyph">…</div><div><h2>NO CERTIFICATE ISSUED</h2><span class="etag live">full engine · live</span></div></div>
     <p class="expl">${esc(message)}</p><div class="refuse-note"><b>This is not a refusal verdict.</b> The public endpoint did not issue a certificate for this request. Try again shortly, use the browser demo core, or run the endpoint client from the repository.</div></div>`;
 }
 
@@ -629,7 +636,7 @@ function renderClaim(cert) {
     <div class="claim-list">${rows}</div>
     <p class="coverage-note">${coverage === null ? "Only the listed claim-level results are certified." : "Coverage: " + coverage + "% of this text was recognized as exactly checkable. The remaining text is not certified."}</p>
     <details class="raw"><summary>View the raw certificate</summary><pre>${esc(JSON.stringify(cert, null, 2))}</pre></details>
-    <div class="conversion"><div><b>Want this gate in your workflow?</b><span>The licensed engine is available for commercial use and offline deployment.</span></div><div class="conversion-links"><a href="mailto:jiannotti1@gmail.com?subject=Chiron%20commercial%20access">Talk through a use case</a><a class="primary" href="https://github.com/jiannotti5040/chiron/blob/main/PRICING.md">See plans</a></div></div>
+    <div class="conversion"><div><b>Want this gate in your workflow?</b><span>The full engine is Apache-2.0 \u2014 <code>pip install primus-intelligence</code> and run it anywhere, including offline.</span></div><div class="conversion-links"><a class="primary" href="https://github.com/jiannotti5040/chiron">Get the source</a></div></div>
   </div>`;
 }
 
@@ -732,7 +739,7 @@ function renderEvidenceTrace(cert) {
 async function runCertify(text) {
   if (!text.trim()) return;
   certifyBtn.disabled = true;
-  claimResultEl.innerHTML = `<div class="waking"><span class="spinner"></span> checking supported claims with the licensed engine… <span class="wk-sub">(free-tier cold start may take up to ~40 seconds)</span></div>`;
+  claimResultEl.innerHTML = `<div class="waking"><span class="spinner"></span> checking supported claims with the full engine… <span class="wk-sub">(free-tier cold start may take up to ~40 seconds)</span></div>`;
   try {
     renderClaim(await requestLive("/certify", { text }));
   } catch (e) {
@@ -744,7 +751,7 @@ async function runCertify(text) {
 
 function render(cert, source) {
   // Normalize across both engines: the demo core emits an explicit `status`;
-  // the licensed engine emits `verified` (collapse never "REFUSES" — it either
+  // the full engine emits `verified` (collapse never "REFUSES" — it either
   // proves on held-out terms or honestly does not stamp).
   const verified = cert.status ? cert.status === "VERIFIED" : cert.verified === true;
   const refused = cert.status === "REFUSED";
@@ -752,7 +759,7 @@ function render(cert, source) {
   const glyph = verified ? "✓" : (refused ? "⊘" : "≈");
   const title = verified ? "VERIFIED" : (refused ? "REFUSED" : "NOT STAMPED");
   const engineTag = source === "live"
-    ? `<span class="etag live">licensed engine · live</span>`
+    ? `<span class="etag live">full engine · live</span>`
     : `<span class="etag">demo core · in your browser</span>`;
 
   let proof = "";
@@ -769,7 +776,7 @@ function render(cert, source) {
   }
 
   const refuseNote = !verified ? `<div class="refuse-note"><b>This is the feature.</b> A system that only stamps what it can prove is a system you can build on. This result is not verified; treat it as a candidate or review case, not a confident guess dressed up as an answer.</div>` : "";
-  const recovery = source === "core" && !verified ? `<div class="recovery"><div><b>This smaller browser core did not stamp this sequence.</b><span>The licensed engine supports more hypothesis families. Try the same non-sensitive sequence there; it may still refuse.</span></div><button id="try-live-engine" type="button">Try in licensed engine</button></div>` : "";
+  const recovery = source === "core" && !verified ? `<div class="recovery"><div><b>This smaller browser core did not stamp this sequence.</b><span>The full engine supports more hypothesis families. Try the same non-sensitive sequence there; it may still refuse.</span></div><button id="try-live-engine" type="button">Try in full engine</button></div>` : "";
   const nextNote = (verified && cert.next_terms) ? `<p class="sub-expl">If the true sequence disagrees with those committed terms, this certificate is falsified — publicly, forever.</p>` : "";
   const falsify = cert.what_would_falsify ? `<div class="falsify"><b>What would falsify this:</b> ${esc(cert.what_would_falsify)}</div>` : "";
   const evidenceTrace = renderEvidenceTrace(cert);
@@ -797,7 +804,7 @@ function render(cert, source) {
   if (!suppressScroll) requestAnimationFrame(() => resultEl.scrollIntoView({ behavior: "smooth", block: "start" }));
 }
 
-// Sequences the LICENSED engine stamps but the in-browser demo core cannot.
+// Sequences the FULL engine stamps but the in-browser demo core cannot.
 // This is a deliberate capability gap (the demo core carries five hypothesis
 // families and a stricter evidence rule), so a refusal here is correct — but
 // a dead end is bad UX. Name the case, say why, and offer the real engine.
@@ -819,7 +826,7 @@ function runCore(text) {
   const out = pyodide.globals.get("browser_core").collapse_text(text);
   const cert = JSON.parse(out);
   render(cert, "core");
-  // If the demo core declined something the licensed engine stamps, say so
+  // If the demo core declined something the full engine stamps, say so
   // explicitly and make the live engine one click away.
   const gap = (cert.status !== "VERIFIED") ? knownGap(text) : null;
   if (gap) {
@@ -828,9 +835,9 @@ function runCore(text) {
     el.innerHTML =
       `<b>This one is a known limit of the in-browser demo core, not of the engine.</b>` +
       `<p>You entered <b>${esc(gap.name)}</b>. The demo core declined because ${esc(gap.why)}. ` +
-      `The licensed engine carries that family and stamps this sequence on held-out proof. ` +
+      `The full engine carries that family and stamps this sequence on held-out proof. ` +
       `It refused rather than guess — which is the contract working, not failing.</p>` +
-      `<button class="button primary" id="gap-live">Run the same input on the licensed engine →</button>`;
+      `<button class="button primary" id="gap-live">Run the same input on the full engine →</button>`;
     resultEl.appendChild(el);
     const btn = document.getElementById("gap-live");
     if (btn) btn.addEventListener("click", () => { selectEngine("live"); run(text); });
@@ -860,7 +867,7 @@ async function firstImpression() {
 }
 
 async function runLive(text) {
-  resultEl.innerHTML = `<div class="waking"><span class="spinner"></span> waking the licensed engine and running your input… <span class="wk-sub">(free-tier cold start — up to ~40s the first time)</span></div>`;
+  resultEl.innerHTML = `<div class="waking"><span class="spinner"></span> waking the full engine and running your input… <span class="wk-sub">(free-tier cold start — up to ~40s the first time)</span></div>`;
   try {
     render(await requestLive("/collapse", { surface: text }), "live");
   } catch (e) {
@@ -937,7 +944,6 @@ function track(name) {
 document.addEventListener("click", (e) => {
   const t = e.target.closest && e.target.closest("a, button"); if (!t) return;
   const href = (t.getAttribute && t.getAttribute("href")) || "";
-  if (/PRICING\.md/i.test(href)) track("click:pricing");
   else if (/\/eval/i.test(href)) track("click:eval");
   else if (t.classList && t.classList.contains("preset")) track("preset:" + (t.textContent || "").trim().split("\n")[0].slice(0, 24));
   else if (t.closest && t.closest("#engine-toggle")) track("engine:" + (t.dataset ? t.dataset.engine : ""));

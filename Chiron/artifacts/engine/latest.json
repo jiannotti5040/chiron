@@ -1,0 +1,23 @@
+{
+  "owner": "Jacob Iannotti",
+  "system": "CHIRON",
+  "license": "Apache-2.0",
+  "script": "engine",
+  "purpose": "recover the exact generator of an integer surface and build a Caramuel twin-space translator at constant cost per record",
+  "verified": true,
+  "generated_utc": "2026-08-03T13:48:01Z",
+  "commit": "3cac647084f7a79980a2ceeefcabb1176c827bb6",
+  "machine_view": {
+    "surface": "fibonacci",
+    "stress_suite": "48/48 in test_invariant_engine.py"
+  },
+  "human_view": {
+    "purpose": "recover the exact generator of an integer surface and build a Caramuel twin-space translator at constant cost per record",
+    "what_was_discovered": "The Fibonacci surface collapses to its exact recurrence and a twin-space structural map translates any verse index in O(fields).",
+    "why_believed": "The demo recovers the generator and verifies it on held-out terms; the full 48/48 stress suite lives in test_invariant_engine.py.",
+    "what_would_falsify": "A recovered generator that mispredicts a held-out term, or a twin map that fails to translate a known index, would break the claim.",
+    "residual": "n/a",
+    "confidence": "high"
+  },
+  "self_hash": "3ec89157f7a472d3"
+}

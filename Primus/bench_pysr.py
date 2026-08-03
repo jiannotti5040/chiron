@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 bench_pysr.py — the same live-OEIS head-to-head (see 12 terms, predict 4
 exactly) against PySR, the strongest widely-used symbolic-regression

@@ -1,6 +1,6 @@
 # primus.certificate/2 — the certificate contract
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 (see the repository-root [LICENSE](../LICENSE)).**
 
 This is the written contract for consumers of `primus.certify` output —
 agents, CI gates, and pipelines. Read the first section even if you read

@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 uma.rsls.frame_dragging -- the Stage 5 / 1.5-D cylindrical frame-
 dragging kernel.

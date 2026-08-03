@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 oeis_conjecture_miner.py — cross-check OEIS's stated conjectures against
 OEIS's own published terms.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 THE OPPORTUNITY. OEIS carries thousands of conjectures in free-text comments:
 

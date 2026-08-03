@@ -1,12 +1,12 @@
 {
   "owner": "Jacob Iannotti",
   "system": "CHIRON",
-  "license": "PolyForm-Noncommercial-1.0.0",
+  "license": "Apache-2.0",
   "script": "chiron",
   "purpose": "prove the Chiron core: exact MDL invariant recovery, held-out verification, refusal, certification, and bounded agency in one file",
   "verified": true,
-  "generated_utc": "2026-07-28T04:22:32Z",
-  "commit": "c89215fcefc054c5fd72dced491afba3a0409451",
+  "generated_utc": "2026-08-03T13:49:32Z",
+  "commit": "3cac647084f7a79980a2ceeefcabb1176c827bb6",
   "machine_view": {
     "core_gates_total": 12,
     "core_gates_passed": 12,
@@ -21,5 +21,5 @@
     "residual": "n/a",
     "confidence": "high"
   },
-  "self_hash": "9b7bbd5d94c0f4a0"
+  "self_hash": "c29d0249e2b044f1"
 }

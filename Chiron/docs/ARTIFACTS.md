@@ -14,7 +14,7 @@ intelligence system.
 | `build_manifest.py` | Walks every runnable script, records what it proves / deps / SPDX / last result, ties each to its emitted certificate, and merges `lexicon.json`. Writes `manifest.json`. |
 | `lexicon.json` | Per-script context for the dashboard: a Chiron-vocabulary **title** and what each module does **mathematically, programmatically, and conceptually**. Scripts not listed fall back to their docstring purpose. |
 | `dashboard.html` — Verify → Certificates | Reads `manifest.json` + the artifact tree. One tile per script showing its Chiron title, the three lenses (math / prog / concept), pass/fail, what it found, and **the one thing that would break the claim.** |
-| `apply_license_headers.py` | Idempotently stamps the PolyForm SPDX header on every `.py`, after any shebang/coding line. |
+| `apply_license_headers.py` | Idempotently stamps the Apache-2.0 SPDX header on every `.py`, replacing any older header, after any shebang/coding line. |
 
 ## Workflow
 

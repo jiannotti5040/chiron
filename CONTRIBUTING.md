@@ -1,9 +1,9 @@
 # Contributing
 
-This repository is licensed under the **PolyForm Noncommercial License 1.0.0** (see
-[`LICENSE.md`](LICENSE.md)). You are free to clone it, run it, modify it, and share
-your changes for any **noncommercial** purpose — experiment freely. Commercial use is
-reserved to the author; for that, contact jiannotti5040@gmail.com.
+The code here is licensed under the **Apache License 2.0** (see [`LICENSE`](LICENSE))
+and the prose works under **CC BY 4.0** (see [`LICENSES.md`](LICENSES.md) for the
+map). Clone it, run it, modify it, ship it, sell it — experiment freely. There is no
+commercial tier and nothing is held back.
 
 This project has one inviolable property: **zero false verifications.** A change that
 makes an engine stamp something it cannot exactly prove is wrong even if every
@@ -78,11 +78,18 @@ inward.
 
 ## Attribution and licensing
 
-Contributions are accepted under the repository's PolyForm Noncommercial terms. Grown
-content carries its sources' attribution — Wikipedia (CC BY-SA), OEIS, and the
-public-domain Caramuel source; see [`NOTICE.md`](NOTICE.md). By opening a PR you
-confirm you have the right to contribute the material and that it is attributed
-correctly.
+Inbound equals outbound: contributions of **code** are accepted under Apache-2.0, and
+contributions of **prose** under CC BY 4.0 — the same terms the repository already
+carries. You keep the copyright in what you write; no CLA and no copyright assignment.
+Apache-2.0 §5 makes this explicit, and its patent grant (§3) runs from contributors
+too, which is the main reason this project uses Apache rather than MIT.
+
+Grown content carries its sources' attribution — Wikipedia (CC BY-SA 4.0), OEIS, the
+vendored DeepMind `formal-conjectures` file, and the public-domain Caramuel source;
+see [`NOTICE`](NOTICE). Note that CC BY-SA is copyleft and **cannot** be relicensed
+into this repository: a Congress grown over Wikipedia is not redistributable here,
+which is why `Chiron/chiron_memory.json` is untracked. By opening a PR you confirm you
+have the right to contribute the material and that it is attributed correctly.
 
 ## Conduct
 

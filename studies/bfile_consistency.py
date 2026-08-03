@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 bfile_consistency.py — do OEIS b-files agree with the `data` field of the
 same entry?
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 An entry publishes its first terms twice: in the `data` field, and again as
 the opening lines of its b-file. These are maintained separately, often years

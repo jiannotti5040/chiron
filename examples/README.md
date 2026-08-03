@@ -1,7 +1,7 @@
 # Examples — real output, reproducible today
 
 These three files are **actual output from the Chiron engine**, not illustrations.
-Regenerate them yourself from the licensed engine (or see the runnable
+Regenerate them yourself from the full engine (or see the runnable
 [`../prototype/`](../prototype/) for a taste that needs no license).
 
 ### `verified.json` — a claim it can prove
@@ -30,6 +30,6 @@ engineer can inspect and replay.
 ---
 
 *These certify integer-sequence recovery — the cleanest way to *show* exact
-verification and refusal. The licensed engine applies the same
+verification and refusal. The full engine applies the same
 recover → prove-on-held-out → refuse-or-certify discipline to code, structured
 claims, policy checks, and governed decisions.*

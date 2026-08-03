@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See ../LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 browser_core.py — the PUBLIC DEMO CORE behind the browser playground.
 
@@ -9,22 +9,22 @@ What this file is, stated plainly (honest scope, the GATES.md way):
   * A small sequence verify-or-refuse core written for the playground at
     docs/playground/. It exists because the architecture prototype in this
     folder (primus_prototype.py) deliberately contains NO sequence engine —
-    its certifier refuses everything by design — and the licensed engine's
+    its certifier refuses everything by design — and the full engine's
     source does not ship in this repository.
-  * It carries the SAME CONTRACT as the licensed engine: exact arithmetic
+  * It carries the SAME CONTRACT as the full engine: exact arithmetic
     only (integers and Fractions, no floats anywhere on the stamping path),
     a stamp only when the recovered rule predicts held-out terms EXACTLY
     (==, not a tolerance), and refusal otherwise. Zero false verifications
     is as binding here as it is in the vault.
-  * It is NOT the licensed engine, is NOT derived from vault source, and is
+  * It is NOT the full engine, is NOT derived from vault source, and is
     STRICTLY WEAKER: five hypothesis families (constant, arithmetic,
     geometric, polynomial ≤ deg 4, linear recurrence ≤ order 3) against the
-    licensed engine's much larger set (holonomic, multiplicative, periodic,
+    full engine's much larger set (holonomic, multiplicative, periodic,
     …), and a more conservative evidence rule — for example, the licensed
     engine stamps Tribonacci from 12 terms; this core refuses it (order-3
     counts 6 parameters here, and 12 terms only put 4 aside as held-out).
     Where the two disagree, this core refuses more, never stamps more.
-  * The licensed engine's real graded outputs on external data live in
+  * The full engine's real graded outputs on external data live in
     ../eval/ (frozen predictions, graded against oeis.org). This file is
     the demo; that folder is the proof.
 
@@ -70,7 +70,7 @@ def _cert(status, explanation, **extra):
     cert = {
         "schema": SCHEMA,
         "author": AUTHOR,
-        "engine": "browser_core (public demo core — NOT the licensed engine)",
+        "engine": "browser_core (public demo core — NOT the full engine)",
         "status": status,               # VERIFIED | recovered_unstamped | REFUSED
         "verified": status == "VERIFIED",
         "explanation": explanation,
@@ -250,7 +250,7 @@ def collapse(terms):
             "No exact rule found. %d terms were shown to five hypothesis "
             "families and none reproduces them exactly — so this core asserts "
             "nothing. It does not curve-fit, approximate, or guess. (The "
-            "licensed engine searches a much larger family set and refuses "
+            "full engine searches a much larger family set and refuses "
             "the same way when its search comes up empty.)" % len(shown),
             shown=shown, held_out=held)
 
@@ -375,7 +375,7 @@ def _gates():
         c = collapse(t)
         assert not c["verified"] and c["status"] == "recovered_unstamped", c
         assert c["reason"] == "insufficient_heldout_evidence", c
-        # the licensed engine stamps this from 12 terms; this core must not —
+        # the full engine stamps this from 12 terms; this core must not —
         # it refuses more, never stamps more
 
     @gate("corrupted_holdout_never_stamps")
@@ -438,7 +438,7 @@ def run_selftest():
             failures.append((name, repr(exc)))
             print("  [FAIL] %s: %r" % (name, exc))
     print("  %d/%d gates green   (this is the DEMO CORE's own count — the "
-          "licensed engine's batteries are in docs/BATTERIES.md)"
+          "full engine's batteries are in docs/BATTERIES.md)"
           % (len(gates) - len(failures), len(gates)))
     return 1 if failures else 0
 

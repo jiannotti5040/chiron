@@ -3,7 +3,7 @@ INTEL STANDARDIZATION PROMPT
 For any frontier LLM (Claude / GPT / Gemini / Grok / Llama)
 ================================================================
 
-Copyright (c) 2026 Jacob Iannotti. Licensed under the PolyForm Noncommercial
+Copyright (c) 2026 Jacob Iannotti. Licensed under the Apache-2.0
 License 1.0.0: noncommercial use, modification, and sharing permitted;
 commercial rights reserved. See LICENSE.md at the repository root.
 

@@ -1,6 +1,6 @@
 # Deploying the engine endpoint (Fly.io / Render notes)
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see LICENSE.md).**
+**Author: Jacob Iannotti. Apache-2.0 (see LICENSE).**
 Status: implemented-and-tested locally (`test_engine_server.py`, 33/33 over
 real HTTP). These are deploy NOTES — nothing below has been provisioned;
 deploying is an explicit owner action.
@@ -79,7 +79,7 @@ can provision the whole service from this repo. Steps:
 3. Pick this repo; Render reads `render.yaml` and shows the `chiron-engine`
    web service. Click **Apply**.
 4. First build takes a few minutes (numpy install). When it's live, hit
-   `https://chiron-engine.onrender.com/health` (exact host shown in the
+   `http://localhost:8790/health` (exact host shown in the
    dashboard).
 
 The Blueprint is **open by design** (no token — the value is public eval on

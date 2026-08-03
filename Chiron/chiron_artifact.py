@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 chiron_artifact — one emit path for every runnable script in the vault.
 
@@ -51,7 +51,7 @@ from typing import Any, Dict, Optional
 
 OWNER = "Jacob Iannotti"
 SYSTEM = "CHIRON"
-LICENSE = "PolyForm-Noncommercial-1.0.0"
+LICENSE = "Apache-2.0"
 
 # artifacts/ lives next to this module (the Chiron spine root), so every script
 # in the directory emits into one auditable tree regardless of CWD.

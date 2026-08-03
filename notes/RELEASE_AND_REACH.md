@@ -1,10 +1,15 @@
 # Release, reach, and drift — exact steps (2026-07-07)
 
-Covers items 3–5 of the "what Primus needs" map. **Item 4 (release) is blocked**
-by the open false-stamp in `EXTERNAL_VALIDATION_ADDENDUM_2026-07-07.md` — do not
-publish a release or Show HN with a known live false verification.
+> **CLOSED 2026-08-03.** The false stamp that blocked this plan was fixed in
+> Primus v0.5.1 (`42453bc`) and the battery has been green since; see the
+> RESOLVED banner on `EXTERNAL_VALIDATION_ADDENDUM_2026-07-07.md`. The version
+> and tag facts below are a snapshot of 2026-07-07 and are now stale — the
+> package is at 0.7.0 under Apache-2.0. Kept as a working record, not as
+> current instructions.
 
-## Item 4 — release (tag + PyPI). BLOCKED pending the seed fix.
+Covers items 3–5 of the "what Primus needs" map.
+
+## Item 4 — release (tag + PyPI). [historical: was blocked pending the seed fix]
 
 State verified today: `pyproject` version = **0.5.0**; **no git tags exist**
 (untagged, so nothing has been published). `python -m build` is not available in
@@ -14,7 +19,7 @@ step. When the false stamp is fixed and the full battery is green:
 ```bash
 # from the repo root, on your machine
 python -m build Primus --outdir dist/           # build sdist + wheel
-python Primus/ci/check_wheel_license.py         # PolyForm notice must ship inside the wheel
+python Primus/ci/check_wheel_license.py         # Apache-2.0 notice must ship inside the wheel
 git tag v0.5.1                                   # bump first if the fix changes behavior (it does)
 git push origin main --tags                      # release.yml verifies tag == pyproject, reruns gates
 ```

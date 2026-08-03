@@ -1,0 +1,102 @@
+Chiron
+Copyright 2026 Jacob Iannotti
+
+This product includes software developed by Jacob Iannotti.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy of
+the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+License for the specific language governing permissions and limitations
+under the License.
+
+The prose works in this repository are licensed separately under
+Creative Commons Attribution 4.0 International. See LICENSES.md for the map
+of which license covers which path.
+
+================================================================================
+THIRD-PARTY MATERIAL
+================================================================================
+
+This repository vendors or derives from material owned by others. Their terms
+survive this project's relicensing and are not ours to change.
+
+--------------------------------------------------------------------------------
+Formal Conjectures — Google DeepMind
+--------------------------------------------------------------------------------
+
+    studies/capsules/a063880-n10000000/inputs/formal-63880.lean
+
+    Copyright 2026 The Formal Conjectures Authors.
+    Licensed under the Apache License, Version 2.0.
+
+    Source:  https://github.com/google-deepmind/formal-conjectures
+    Commit:  f776d2f2039351b00737ffcafb9d7d7666e1d9af
+    SHA-256: d221ce0fb59297e6555e2632c38c422c2bd2b393eff9f58f118c30d860c080c0
+
+    This file is vendored unmodified as a pinned capsule input. Its hash is
+    recorded in the capsule manifest and checked on replay. Do not edit it,
+    do not restamp its header, and do not add a copyright line to it.
+
+--------------------------------------------------------------------------------
+The On-Line Encyclopedia of Integer Sequences (OEIS)
+--------------------------------------------------------------------------------
+
+    Primus/oeis_corpus_cache.json
+    Primus/oeis_corpus_extended_2026-07-07.json
+    Primus/eval_freeze.json
+    eval/oeis_snapshot_2026-07-07.json
+    studies/capsules/**/inputs/oeis-*.json
+
+    Sequence data © The OEIS Foundation Inc., used with attribution under the
+    OEIS Terms of Use. OEIS content is offered under terms that are not
+    compatible with blanket relicensing; these frozen snapshots are included
+    for reproducibility of the published evaluations and remain the property
+    of the OEIS Foundation.
+
+    Source: https://oeis.org
+
+--------------------------------------------------------------------------------
+Wikipedia
+--------------------------------------------------------------------------------
+
+    A Congress grown over Wikipedia is NOT distributed with this repository.
+
+    Chiron's growth process records, for each ingested text, the set of
+    distinct valid readings it recovered. For unambiguous prose that set
+    contains the source text itself. A Congress grown over Wikipedia therefore
+    carries verbatim article prose, which is licensed CC BY-SA 4.0 by its
+    contributors — a copyleft license that is one-way incompatible with both
+    Apache-2.0 and CC BY 4.0.
+
+    Because the Congress vault is content-addressed (the storage key is a hash
+    of the payload, and that hash is folded into the sealed manifest root),
+    the text cannot be stripped out in place without destroying the integrity
+    property the store exists to provide.
+
+    Accordingly `Chiron/chiron_memory.json` is untracked and regenerable
+    rather than shipped. If you grow a Congress over Wikipedia yourself, the
+    result inherits CC BY-SA 4.0 and attribution to Wikipedia contributors,
+    and you may not redistribute it under this repository's licenses.
+
+--------------------------------------------------------------------------------
+Caramuel, "Primus Calamus ob oculos ponens Metametricam" (Rome, 1663)
+--------------------------------------------------------------------------------
+
+    Infectatrum/corpus/
+    Chiron/primus_extra/
+
+    The 1663 source is in the public domain. The plate transcriptions and
+    curated extras derived from it are original work by Jacob Iannotti and
+    carry per-file provenance and confidence records.
+
+================================================================================
+
+Contributions to grow-public/ are offered for inclusion under the license of
+their underlying source. Contributors are responsible for the provenance and
+license compatibility of anything they ingest.

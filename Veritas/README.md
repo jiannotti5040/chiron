@@ -1,6 +1,6 @@
 # Veritas — the knowledge-and-wisdom engine
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 — free to use, modify, and share for any noncommercial purpose; commercial rights reserved (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../LICENSE)).**
 
 Veritas is the exact-arithmetic heart of the invariant work: *collapse* a codified
 surface to its minimal generator, test whether two surfaces *share* one hidden

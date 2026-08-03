@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 claim_domain.py — extract the DOMAIN of a natural-language conjecture, or
 refuse to test it.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 WHY THIS MODULE EXISTS. Testing a claim outside its own stated domain is the
 single most productive source of false counterexamples in this project. It has

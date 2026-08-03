@@ -1,6 +1,6 @@
 # Head-to-head vs symbolic regression — the outputs, honestly
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Apache-2.0 (see [LICENSE.md](../LICENSE.md)).**
 
 This page ships the **outputs** of the licensed battery's symbolic-regression
 comparison, the same way [`../eval/`](../eval/) ships the engine's frozen OEIS

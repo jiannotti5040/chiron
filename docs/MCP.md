@@ -1,6 +1,6 @@
 # Gate your agent's output — an MCP server, free, 30 seconds
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see [../LICENSE.md](../LICENSE.md)) — free for any noncommercial use.**
+**Author: Jacob Iannotti. Apache-2.0 (see [../LICENSE.md](../LICENSE.md)) — free for any noncommercial use.**
 
 Your agent asserts things. Some of those assertions are checkable. This is an
 MCP server that checks them exactly and **refuses** when it can't, so a
@@ -73,7 +73,7 @@ lose.
 - It does not do regulatory compliance or legal conclusions.
 - A high coverage number is not a safety score.
 - Free for noncommercial use; commercial use is licensed — see
-  [PRICING.md](../PRICING.md).
+  [LICENSES.md](../LICENSES.md).
 
 ## Try it before installing
 

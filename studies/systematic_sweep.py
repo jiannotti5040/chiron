@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 systematic_sweep.py — walk EVERY conjecture in the corpus, in order, and give
 each one a recorded status. No cherry-picking, no silent skipping.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 TARGET: a caller-pinned checkout of google-deepmind/formal-conjectures.
 

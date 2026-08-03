@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 import glob, os, sys, zipfile
 
 candidates = glob.glob("dist/*.whl") or glob.glob("**/*.whl", recursive=True)

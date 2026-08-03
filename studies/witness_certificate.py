@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 witness_certificate.py — RETIRED generic counterexample issuer.
 
-Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0.
+Author: Jacob Iannotti. Apache-2.0.
 
 This module is deliberately disabled.  Its former API accepted booleans and
 expression strings supplied by the caller, rather than executing the stated

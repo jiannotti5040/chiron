@@ -1,6 +1,6 @@
 # The public eval build — verify zero-false before you pay
 
-**Author: Jacob Iannotti. PolyForm Noncommercial 1.0.0 (see ../LICENSE.md).**
+**Author: Jacob Iannotti. Apache-2.0 (see ../LICENSE.md).**
 
 The strongest outside review of this repo said, correctly: *"the proof of
 the thing being sold is behind the thing being sold."* This folder is the
@@ -61,16 +61,16 @@ arbitrary input yourself before licensing. The engine's own gate battery
 runs post-purchase. This eval reduces the pre-purchase gap from "trust
 the philosophy" to "verify the headline property on data you choose."
 
-One more rung is live: a currently deployed licensed engine is served over
+One more rung is live: a currently deployed engine is served over
 HTTP (request in, certificate out, hard rate limits, engine source never
 serialized — 18/18 endpoint gates), and [`remote.py`](remote.py) in this
 folder is the stdlib client. Run the **real engine** on input you choose,
-before paying:
+before you trust it:
 
 ```
-python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
-python3 eval/remote.py --url https://chiron-engine.onrender.com collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
-python3 eval/remote.py --url https://chiron-engine.onrender.com certify "2+2=5, 97 is prime"
+python3 eval/remote.py --url http://localhost:8790 collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+python3 eval/remote.py --url http://localhost:8790 collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+python3 eval/remote.py --url http://localhost:8790 certify "2+2=5, 97 is prime"
 ```
 
 That is a demo instance on a free tier: it's rate-limited (per-IP 20/min),

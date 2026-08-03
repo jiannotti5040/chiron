@@ -1,6 +1,6 @@
 # Head-to-head vs symbolic regression (gplearn + PySR) — live OEIS protocol
 
-**Author: Jacob Iannotti. Licensed under PolyForm Noncommercial 1.0.0 (see the repository-root [LICENSE.md](../LICENSE.md)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 (see the repository-root [LICENSE](../LICENSE)).**
 Reproduce: `python3 bench_symreg_external.py --population 300 --generations 12`
 (gplearn 0.4.2 / scikit-learn 1.7.2; run 2026-07-04 on the live-fetched
 OEIS corpus in `oeis_corpus_cache.json`).

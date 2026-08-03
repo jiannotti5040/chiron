@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 # ============================================================================
 #  CHIRON — THE EPISTEMIC ORGANISM  (Chiron core)
 #  One operation over anything codified: recover the immutable generator
@@ -9,12 +9,12 @@
 # ============================================================================
 #  Author & copyright owner: Jacob Iannotti. Copyright (c) 2026.
 #
-#  Licensed under the PolyForm Noncommercial License 1.0.0. You may use, copy,
+#  Licensed under the Apache License 2.0. You may use, copy,
 #  modify, and share this software for ANY NONCOMMERCIAL purpose — research,
 #  experiment, study, teaching, hobby, or noncommercial organizations — free of
 #  charge. Commercial use is reserved to the owner. Full text: LICENSE.md at the
-#  repository root, or https://polyformproject.org/licenses/noncommercial/1.0.0
-#  SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+#  repository root, or https://www.apache.org/licenses/LICENSE-2.0
+#  SPDX-License-Identifier: Apache-2.0
 #  Required Notice: Copyright (c) 2026 Jacob Iannotti
 #
 #  TAMPER-EVIDENCE: the owner's signature is cryptographically bound into
@@ -69,10 +69,10 @@ from __future__ import annotations
 #!/usr/bin/env python3
 # Copyright (c) 2026 Jacob Iannotti.
 #
-# Licensed under the PolyForm Noncommercial License 1.0.0: noncommercial use,
+# Licensed under the Apache License, Version 2.0: use, modification,
 # modification, and sharing are permitted free of charge; commercial use is
 # reserved to the owner. See LICENSE.md at the repository root.
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# SPDX-License-Identifier: Apache-2.0
 #
 # Author: J. Iannotti, 2026.
 """
@@ -10659,8 +10659,8 @@ def _():
 def _():
     import inspect
     src = inspect.getsource(sys.modules[__name__])
-    _at("PolyForm Noncommercial" in src)
-    _at("SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0" in src)
+    _at("Apache-2.0" in src)
+    _at("SPDX-License-Identifier: Apache-2.0" in src)
 
 
 @test("activation_protocol_contains_keystone")
@@ -13110,10 +13110,10 @@ def jdicert_selfcheck() -> int:
 #!/usr/bin/env python3
 # Copyright (c) 2026 Jacob Iannotti.
 #
-# Licensed under the PolyForm Noncommercial License 1.0.0: noncommercial use,
+# Licensed under the Apache License, Version 2.0: use, modification,
 # modification, and sharing are permitted free of charge; commercial use is
 # reserved to the owner. See LICENSE.md at the repository root.
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
+# SPDX-License-Identifier: Apache-2.0
 #
 # Author: J. Iannotti, 2026.
 """
@@ -20159,7 +20159,7 @@ if False:  # flattened module demo (disabled in the monolith)
 #    Architect & sole owner: Jacob Iannotti, 2026. The author signature is
 #    bound into every payload hash and into the Congress manifest root, so any
 #    removal of attribution changes the root digest (tamper-EVIDENT and
-#    provenance-complete; not claimed copy-proof). PolyForm Noncommercial 1.0.0 licensed.
+#    provenance-complete; not claimed copy-proof). Apache-2.0 licensed.
 #
 #  Runs on the Python standard library alone. numpy / networkx / ortools / cltk
 #  are OPTIONAL accelerators, each behind a correct pure-python fallback.
@@ -20206,8 +20206,8 @@ except Exception:
 # =============================================================================
 
 AUTHOR_SIGNATURE = "ARCHITECT AND SOLE OWNER: Jacob Iannotti"
-LICENSE_LINE = ("LICENSE: PolyForm Noncommercial 1.0.0 - noncommercial use, "
-                "modification, and sharing permitted; commercial rights reserved.")
+LICENSE_LINE = ("LICENSE: Apache-2.0 - use, modification, distribution, and "
+                "commercial use permitted; attribution and license notice required.")
 __author__ = "Jacob Iannotti"
 __version__ = "1.0"
 
@@ -24079,9 +24079,12 @@ def _gate_invariants(g: _Gate) -> None:
     restored = Congress.from_portable(doc)
     g.check("L3 portable round-trip preserves root",
             restored.seal() == root_before)
+    # NOTE: this read `A and B or C`, which Python parses as `(A and B) or C` —
+    # so a portable doc with the WRONG author passed as long as its license
+    # string contained the license name. Parenthesized and retargeted; both
+    # conditions are now genuinely required.
     g.check("L3 portable carries author + license",
-            doc["author"] == AUTHOR_SIGNATURE and "LICENSE" in doc["license"].upper() or
-            "PolyForm" in doc["license"])
+            doc["author"] == AUTHOR_SIGNATURE and "Apache-2.0" in doc["license"])
 
     # --- L5 no network: assert no socket/urllib import path is used by core ---
     src = ""
@@ -27392,9 +27395,9 @@ def main(argv=None):  # noqa: F811  (extend the CLI with invariant + dashboard v
 #  implementation detail behind it.
 # =============================================================================
 LICENSE = (
-    "PolyForm Noncommercial 1.0.0. Author and copyright owner: Jacob "
-    "Iannotti. Free for any noncommercial use, modification, and sharing; "
-    "commercial rights reserved. See LICENSE.md. The owner signature is "
+    "Apache-2.0. Author and copyright owner: Jacob Iannotti. Free for any "
+    "use, modification, distribution, and commercial use, with attribution "
+    "and the license notice preserved. See LICENSE. The owner signature is "
     "cryptographically bound into every artifact; removal invalidates the "
     "provenance chain."
 )
@@ -27497,8 +27500,8 @@ import types as _types, sys as _sys
 #  CHIRON — the system.  ( the wounded teacher: the human-engine pairing done right )
 #  This file is VERITAS, its knowledge-and-wisdom engine.
 #  CHIRON (knowledge = verified invariants) x CANDOR (wisdom = audited honesty)
-#  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.
-#  Licensed under PolyForm Noncommercial 1.0.0: noncommercial use, modification,
+#  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
+#  Licensed under Apache-2.0: use, modification, distribution,
 #  and sharing permitted; commercial rights reserved. See LICENSE.md.
 # ============================================================================
 """
@@ -29714,7 +29717,7 @@ def _build_president_module():
     #!/usr/bin/env python3
     # ============================================================================
     #  PRESIDENT — the agentic executive companion (SEPARATE from the veritas core)
-    #  PolyForm Noncommercial 1.0.0 — noncommercial use permitted; commercial rights reserved. Author: Jacob Iannotti.
+    #  Apache-2.0 — use, modification, distribution, and commercial use permitted with attribution. Author: Jacob Iannotti.
     # ============================================================================
     """
     PRESIDENT is the agentic executive of the Chiron organism, pulled out as its

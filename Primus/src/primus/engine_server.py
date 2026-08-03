@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-# Required Notice: Copyright © 2026 Jacob Iannotti. Commercial rights reserved. See LICENSE.md.
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Jacob Iannotti
 """
 primus.engine_server — the verifier-that-refuses as a minimal HTTP endpoint.
 
@@ -448,7 +448,7 @@ class Handler(BaseHTTPRequestHandler):
                          "routes": list(VALID_ROUTES),
                          "limits": {"body_bytes": MAX_BODY_BYTES,
                                     "rate_per_min": self.limiter.per_ip},
-                         "license": "PolyForm-Noncommercial-1.0.0"},
+                         "license": "Apache-2.0"},
                    with_body=with_body)
 
     def _post(self, path: str) -> None:

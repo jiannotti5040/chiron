@@ -2,7 +2,7 @@
 
 Chiron is a set of independently-runnable engines that share one spine: exact
 recovery, held-out verification, refusal, and a certificate carrying a self-hash. In the
-licensed engine they are folded into **one self-contained deterministic file**
+full engine they are folded into **one self-contained deterministic file**
 (`chiron_monolith.py`) that runs offline with nothing to install — the whole
 system as a single drag-and-drop artifact, plus an operator dashboard.
 
@@ -52,4 +52,4 @@ what makes Chiron auditable rather than merely observable.
 This public repository carries the thesis, real example output, a runnable
 prototype, and these docs — enough to verify the claims. The full engine, the
 folded monolith, the certification brain, the composer, and the dashboard are in
-the licensed `chiron-vault`. See [PRICING](../PRICING.md).
+this repository, under Apache-2.0. See [LICENSES.md](../LICENSES.md).
