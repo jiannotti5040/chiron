@@ -479,7 +479,7 @@ Trusted publishing registered (project `primus-intelligence`, owner
 
 ## 2.7 · Git, GitHub, machine
 
-Push via `PUSH_TO_GITHUB.command`; CI runs the battery per push; `main` is
+Push via `bin/push-to-github.command`; CI runs the battery per push; `main` is
 protected with required checks. Pages is deploy-from-branch
 (`build_type: legacy` — if the site 404s while "enabled," check that field
 first; `.nojekyll` keeps Jekyll out). Secret-scanning alerts get triaged

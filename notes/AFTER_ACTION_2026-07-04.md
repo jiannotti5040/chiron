@@ -60,7 +60,7 @@ Convert a private, inward-growing research vault into an externally validated, i
 
 ## 8. Open follow-ups (owner: you)
 
-1. Push the Windows fix (double-click `PUSH_TO_GITHUB.command`) → confirm full-green CI.
+1. Push the Windows fix (double-click `bin/push-to-github.command`) → confirm full-green CI.
 2. Enable GitHub Pages → one browser check of the playground.
 3. Show HN draft when ready. 4–6: PyPI tag, PySR, full-OEIS sweep — parked, optional.
 

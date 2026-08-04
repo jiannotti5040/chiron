@@ -5,7 +5,7 @@
 
 ## 1. Current state, one paragraph
 
-The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (the Windows-filename fix, `3d51e4d`) is committed locally and **waiting for you to double-click PUSH_TO_GITHUB.command**. The latest CI run passed every functional gate on all three Linux jobs (155+ gates green on GitHub's machines); the two Windows jobs failed only at file checkout because two filenames contained `*`, which the waiting commit fixes. Nothing is broken. Nothing is urgent.
+The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (the Windows-filename fix, `3d51e4d`) is committed locally and **waiting for you to double-click bin/push-to-github.command**. The latest CI run passed every functional gate on all three Linux jobs (155+ gates green on GitHub's machines); the two Windows jobs failed only at file checkout because two filenames contained `*`, which the waiting commit fixes. Nothing is broken. Nothing is urgent.
 
 ## 2. CI / external validation status
 
@@ -39,7 +39,7 @@ The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (th
 - **Engine, all-exact stamping path** — rational recurrence snapping; exact Newton polynomials; exact geometric ratios (incl. negative); exact order-2 P-recursion (Motzkin recovered with its classical recurrence; Schröder verified on first contact as a post-development probe; Bell correctly refuses). Same capability ported into chiron.py; monolith regenerated.
 - **Bug found by external data and fixed:** repunit false verification (float drift + tolerance hole) — the zero-false-stamp claim was falsified externally, repaired at root, and now holds.
 - **Infrastructure** — drift detector with capability ledger (in CI), CI matrix (3.9/3.13 × Ubuntu/Windows), tag-triggered PyPI release workflow, CHANGELOG, CONTRIBUTING, CITATION.cff, CI badge, README repositioned around the certify gate.
-- **Artifacts** — `Paper/abstain_or_prove.pdf` (6 pp, compiles clean, real numbers, TODO markers where only you can act), `playground.html` (browser demo of the real engine, needs one open-in-browser check), `PUSH_TO_GITHUB.command` (double-click pusher), `primus-vault-workflow` skill (installable card), Verified Ink art (in your outputs, personal, not in git).
+- **Artifacts** — `Paper/abstain_or_prove.pdf` (6 pp, compiles clean, real numbers, TODO markers where only you can act), `playground.html` (browser demo of the real engine, needs one open-in-browser check), `bin/push-to-github.command` (double-click pusher), `primus-vault-workflow` skill (installable card), Verified Ink art (in your outputs, personal, not in git).
 
 ## 5. Decisions on record
 
@@ -50,7 +50,7 @@ The vault is public on GitHub. 21 of 22 session commits are pushed; 1 commit (th
 
 | # | Action | Time | When |
 |---|---|---|---|
-| 1 | Double-click `PUSH_TO_GITHUB.command` | 2 min | whenever |
+| 1 | Double-click `bin/push-to-github.command` | 2 min | whenever |
 | 2 | Tell me; I verify CI goes fully green | — | after 1 |
 | 3 | GitHub → Settings → Pages → deploy `main` / root; open `…github.io/Jacob-s-Portfolio-Vault/playground.html` | 20 min | weekend |
 | 4 | Show HN draft (I write it with you, repunit story) | later | next week |

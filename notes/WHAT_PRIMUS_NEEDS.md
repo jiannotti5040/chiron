@@ -25,7 +25,7 @@ the two-copy drift closed.** In leverage order:
 
 - **Push the 2 local commits.** `main` is ahead of `origin/main` by two:
   `81087cd` (ci: track check_wheel_license) and `224bee1` (the twin cross-lock
-  gate I just added). Use your **`PUSH_TO_GITHUB.command`** (double-click) —
+  gate I just added). Use your **`bin/push-to-github.command`** (double-click) —
   I can't push from here (needs your GitHub credentials).
 - **Confirm CI goes green** afterward. The new twin cross-lock runs in the
   `chiron` job (3.12); it imports `chiron`, so it's deliberately *not* in the
