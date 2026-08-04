@@ -1,32 +1,72 @@
 # Chiron
 
-### Exact-or-refuse evidence gates for structured AI outputs.
+### Every other AI tool competes to be right more often. This one competes to never be wrong.
 
 [![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
 [![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
 
-Pointed at **3,195 open conjectures** from DeepMind's `formal-conjectures` — Erdős, Hilbert,
-Millennium — Chiron discharged **302** and refused the other **90.5%**.
+The way it does that is by shutting up a lot.
 
-That is the correct answer, and it is the whole design. Open conjectures are open *because* they
-are not finitely checkable. A verifier reporting a high success rate on that corpus would be
-broken, not capable. So the number to judge this project by is not what it proves — it is what it
-declines to prove, and whether it has ever been wrong when it did stamp something.
-
-**It has been wrong three times. All three are published, in the commit log, with the repair.**
-The first was found by an external run against live OEIS data after ~5,070 internal cases had
-passed clean: the held-out check was comparing with a `1e-6` tolerance while the documentation
-promised exact equality. Exact arithmetic is now structural, and the standing external result is
-**zero false verifications** across every run since.
+Hand it a sequence and ask for the rule:
 
 ```
-$ pip install primus-intelligence
-$ primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"     VERIFIED   linear_recurrence_order2
-$ primus collapse "2 3 5 7 11 13 17 19 23 29 31 37"    refuses    no exact rule survived holdout
+$ primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"
+
+VERIFIED generator 'linear_recurrence_order2' {'coeffs': [1.0, 1.0], 'seeds': [1.0, 1.0]}.
+Recovered from the first 9 terms, this rule then EXACTLY predicts all 3 held-out terms
+— 90 bits of data it had never seen, reproduced from a 4-parameter rule. That is proof
+it captured the law, not an artifact of fitting.
 ```
 
-The second line is the product. Anything can guess a formula for the primes; refusing to is the
-hard part.
+It never graded its own homework. It saw nine terms, three were withheld, and it had to reproduce
+all three *exactly* — right integer, every time — before it was allowed to say anything.
+
+Now ask for the rule behind the prime numbers:
+
+```
+$ primus collapse "2 3 5 7 11 13 17 19 23 29 31 37"
+
+Best model in class: 'power_law' — Does Not Meaningfully Compress the surface
+(355->342 bits, ratio 1.04). Held-out prediction: 0/3 — treat as a candidate,
+not yet verified.
+```
+
+It found something. It just refused to call it true. **That refusal is the product.** Any model on
+earth will hand you a formula for the primes if you ask nicely enough — confidently, instantly, and
+wrongly. This one shows you its best guess and then tells you it failed the only test that counted.
+
+### Why you'd care
+
+Because "the model was 94% confident" is not something you can put in a change request, a filing,
+or an incident review. Somewhere in your stack there is a number that came out of a language model
+and got treated as a fact. Chiron is the thing that stands between that number and the decision —
+it verifies what it can prove exactly, refutes what is false, and **marks the rest as unchecked
+instead of quietly passing it through**.
+
+It is not a truth oracle and cannot certify prose. On realistic operational text it certifies about
+**9%** of the sentence and says so out loud. That honesty is the entire engineering problem.
+
+### Has it ever lied?
+
+Yes. Three times, all published, all in the commit log with the repair beside them.
+
+The worst one is worth reading: the very first external run — against live OEIS data, after ~5,070
+internal test cases had passed clean — caught it stamping a wrong number. The cause was that the
+held-out check had been comparing with a `1e-6` tolerance while the documentation promised exact
+equality. At the magnitudes involved, that forgave an error of about ten thousand.
+
+It got caught because the check runs against data the author doesn't control. Exact arithmetic is
+structural now, and every external run since reports **zero false verifications** — the one number
+in this project that is not allowed to move.
+
+Same discipline at scale: pointed at **3,195 open conjectures** from DeepMind's `formal-conjectures`
+(Erdős, Hilbert, Millennium), it discharged 302 and **refused 90.5%**. That is the correct answer.
+Open problems are open precisely because they aren't finitely checkable — a tool reporting a high
+success rate there would be broken, not brilliant.
+
+```
+pip install primus-intelligence
+```
 
 **If a result has to become a release condition, it needs evidence — not a confidence score.**
 
