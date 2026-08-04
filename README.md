@@ -5,13 +5,30 @@
 [![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
 [![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
 
-Chiron is a **proof-carrying acceptance gate** for the part of a machine output that can be checked exactly. It recovers constrained rules from data, verifies supported claims, refutes false ones, and **refuses to stamp what it cannot prove**. The result is a self-hash-bearing evidence record stating both what passed and what remained uncertified.
+Pointed at **3,195 open conjectures** from DeepMind's `formal-conjectures` — Erdős, Hilbert,
+Millennium — Chiron discharged **302** and refused the other **90.5%**.
 
-Use it where a confidence score is not a release criterion: structured numerical output, a rule recovered from data, or any supported checkable claim where a false pass costs more than a human review. Chiron is **not** a general truth oracle, a replacement for experts, or a way to certify arbitrary free-form text — and it is built so you cannot mistake it for one.
+That is the correct answer, and it is the whole design. Open conjectures are open *because* they
+are not finitely checkable. A verifier reporting a high success rate on that corpus would be
+broken, not capable. So the number to judge this project by is not what it proves — it is what it
+declines to prove, and whether it has ever been wrong when it did stamp something.
 
-On the current published frozen external eval (2026-07-21): **22 stamped / 22 externally correct / 0 false stamps / 12 honest refusals**, graded live against OEIS ground truth. That is a bounded, reproducible result—not a promise about every possible input. A prior 109-sequence sweep caught 3 false stamps; they were published and fixed at the root, then re-run with 44 verified and zero false. The public CI badges above keep the published proof path testable.
+**It has been wrong three times. All three are published, in the commit log, with the repair.**
+The first was found by an external run against live OEIS data after ~5,070 internal cases had
+passed clean: the held-out check was comparing with a `1e-6` tolerance while the documentation
+promised exact equality. Exact arithmetic is now structural, and the standing external result is
+**zero false verifications** across every run since.
 
-**If a result needs to become a release condition, it needs evidence—not a confidence score.**
+```
+$ pip install primus-intelligence
+$ primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"     VERIFIED   linear_recurrence_order2
+$ primus collapse "2 3 5 7 11 13 17 19 23 29 31 37"    refuses    no exact rule survived holdout
+```
+
+The second line is the product. Anything can guess a formula for the primes; refusing to is the
+hard part.
+
+**If a result has to become a release condition, it needs evidence — not a confidence score.**
 
 <p align="center"><img src="docs/assets/chiron_demo.gif" width="880" alt="Real terminal session, outputs unedited: Chiron verifies a geometric rule on held-out terms, then refuses to certify a formula that fits the primes but fails the withheld terms, then shows a certificate that names its own falsifier."></p>
 
@@ -350,6 +367,36 @@ paid licence. They are now one Apache-2.0 project, and the paywall is gone for g
 Contributions to the certified core are reviewed against the full gate battery before merge — not to
 gatekeep, but because a `verified` stamp that has never lied is the only thing this project actually
 sells, and it is now free. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## One chain of custody, built four times without noticing
+
+These began as separate projects. They are four rungs of the same ladder — the question
+*"can I stand behind this?"* asked at four increasing scopes, each answering what the one below
+it cannot.
+
+| Ask | Answers | Where |
+|---|---|---|
+| Can this claim be proved exactly? | `VERIFIED` / `REFUTED` / `REFUSED` | [`Primus/`](Primus/), [`Chiron/`](Chiron/) |
+| Does it match the system of record? | ontology grounding — closes the coverage gap below | the readiness gate (external) |
+| Would the record survive scrutiny? | Daubert · FRE 702 · FRCP 26 analysis | [`JDICert/`](JDICert/) — **12,907 lines, 280/280 gates** |
+| What standard of care applies at all? | LexGuard, the persuasive-machines standard | [`Governance/`](Governance/) |
+
+The gap that makes the ladder necessary is measured, not assumed. Every `certify` claim kind is
+**self-contained** — provable from the claim text alone — so on realistic operational text coverage
+is about **0.09**. It verifies `4200 / 1400 = 3` and leaves *"Unit Bravo has 3 days of fuel"* — the
+sentence a human acts on — uncertified. Rung 2 exists because rung 1 cannot reach that sentence, and
+rung 3 exists because being right is not the same as being able to prove you were right afterwards.
+
+[`JDICert/`](JDICert/) is the least-known piece and possibly the most valuable: given a certificate,
+`analyze_legal_admissibility()` returns whether it would survive a Daubert challenge, prong by prong,
+with the attack an opposing party would make and the answer the record supports. It grades its own
+engine *challenged* on two factors rather than claiming a clean sheet.
+
+The load-bearing idea across all four: **a system that scores every claim has to defend its scoring
+function. A system that refuses has to defend only the boundary — and the boundary is arithmetic.**
+Refusal is not this project's limitation. It is the reason any of it holds up.
 
 ---
 
