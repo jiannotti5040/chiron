@@ -43,8 +43,36 @@ and got treated as a fact. Chiron is the thing that stands between that number a
 it verifies what it can prove exactly, refutes what is false, and **marks the rest as unchecked
 instead of quietly passing it through**.
 
-It is not a truth oracle and cannot certify prose. On realistic operational text it certifies about
-**9%** of the sentence and says so out loud. That honesty is the entire engineering problem.
+On realistic operational text it certifies about **9%** of the sentence. That is not the
+disappointing part. That is the deliverable: the 9% is machine-provable and the other 91% is
+yours, and now you know which is which *before* you sign your name to it. Every tool that reports
+a single confidence score over the whole paragraph has hidden that line from you.
+
+### The same idea, at two scales
+
+The sequence checker above is the small version. It answers *can this claim be proved?* The
+`JDICert/` engine in this repository asks the identical question about an entire decision, and
+answers it in an 18-section record:
+
+|  | one claim — [`Primus/`](Primus/) | one decision — [`JDICert/`](JDICert/) |
+|---|---|---|
+| provable now | `VERIFIED` | **K** — known facts, cited |
+| demonstrably false | `REFUTED` | — |
+| beyond the method | `REFUSED` | **U** unknown · **Ω** unknowable |
+| how much was reachable | coverage | Truth Horizon **Θ** |
+
+Below the horizon, the engine is required to escalate rather than proceed. Unknowns get an
+explicit due-diligence trail — measured, reframed, modelled, or escalated — so the record shows
+what was done about them instead of implying they were never there.
+
+The certificate that falls out is not a log. It carries a regulatory matrix citing the EU AI Act,
+GDPR, NIST AI RMF, ISO/IEC 42001 and the Federal Rules; a Merkle ledger; PAC confidence intervals;
+an adversarial probe; and a **Daubert / FRE 702 / FRCP 26 admissibility analysis** that names, prong
+by prong, the attacks an opposing party would make and the answers the record supports.
+
+**That is the actual thesis of this repository.** Exact verification is the trust anchor — the one
+section of the record that cannot be argued with — and the record is the product. Nobody defends an
+automated decision by producing a benchmark score. They produce evidence, or they lose.
 
 ### Has it ever lied?
 
@@ -410,11 +438,10 @@ sells, and it is now free. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-## One chain of custody, built four times without noticing
+## The full ladder
 
-These began as separate projects. They are four rungs of the same ladder — the question
-*"can I stand behind this?"* asked at four increasing scopes, each answering what the one below
-it cannot.
+Four rungs, each answering what the one below it structurally cannot. They were built as separate
+projects; they are one system.
 
 | Ask | Answers | Where |
 |---|---|---|
