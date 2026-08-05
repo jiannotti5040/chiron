@@ -26,6 +26,7 @@ Status: implemented & tested. Reuses the real engine, candor, and governance.
 """
 import os
 import re
+from fractions import Fraction
 import sys
 import json
 import time
@@ -44,12 +45,27 @@ import govern as _gov  # noqa: E402  SoCPM gate
 def extract_claims(text):
     claims = []
     # arithmetic equations: a (op) b = c
-    for m in re.finditer(r"(-?\d+)\s*([+\-*x×])\s*(-?\d+)\s*=\s*(-?\d+)", text):
+    # Division was absent from this class until 2026-08-05. Every "a / b = c"
+    # claim silently extracted as zero claims and therefore certified as
+    # nothing — and division is the arithmetic operational text actually
+    # contains (on-hand / burn rate = days of supply). primus.certify handled
+    # it correctly the whole time, so the two extractors disagreed in a way
+    # nothing tested for. Exact rational comparison, never float.
+    for m in re.finditer(r"(-?\d+)\s*([+\-*x×/÷])\s*(-?\d+)\s*=\s*(-?\d+)", text):
         a, op, b, c = int(m.group(1)), m.group(2), int(m.group(3)), int(m.group(4))
-        truth = {"+": a + b, "-": a - b}.get(op, a * b if op in "*x×" else None)
+        if op in "+":
+            truth = a + b
+        elif op == "-":
+            truth = a - b
+        elif op in "*x×":
+            truth = a * b
+        else:                       # division: exact, and never by zero
+            truth = Fraction(a, b) if b != 0 else None
         claims.append({"kind": "arithmetic", "text": m.group(0),
                        "verified": truth is not None and truth == c,
-                       "expected": truth})
+                       "expected": (int(truth) if isinstance(truth, Fraction)
+                                    and truth.denominator == 1
+                                    else (str(truth) if truth is not None else None))})
     # numeric sequences: a run of 5+ integers
     for m in re.finditer(r"(?:-?\d+[ ,]+){4,}-?\d+", text):
         seq = [int(x) for x in re.findall(r"-?\d+", m.group(0))]
