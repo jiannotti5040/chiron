@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](DICTIONARY.md) defines the vocabulary; the [SOP](SOP.md) says how to operate it all.
 
-**State at generation:** 74 runnable scripts · 55 carry selftest gates · 64 stdlib-only · 74 licensed · 104 internal import edges · generated 2026-08-03T21:55:41Z (static mode).
+**State at generation:** 75 runnable scripts · 56 carry selftest gates · 65 stdlib-only · 75 licensed · 106 internal import edges · generated 2026-08-05T00:26:33Z (static mode).
 
 ## Index by role
 
@@ -57,6 +57,13 @@ assistant_server.py — a natural-language assistant over the Chiron engine and 
 
 - **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `chiron`, `console_server`, `heartbeat`, `llm_providers`, `president_grow`, `run_ledger`
 - **Path:** `Chiron/assistant_server.py`
+
+### `attest`
+
+attest.py — provenance of generated language: know the inputs, not the output.
+
+- **Facts:** selftest: yes · deps: stdlib only · imports: `language`, `provenance`
+- **Path:** `Chiron/attest.py`
 
 ### `axioms` — The HCT Axioms
 
@@ -484,7 +491,7 @@ language.py — natural language and prose, fully offline, no external API.
 
 - **Conceptually:** the engine can read and weigh natural language without depending on any external model.
 
-- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `bench_authorship`
+- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `attest`, `bench_authorship`
 - **Path:** `Chiron/language.py`
 
 ### `legal_corpus` — The Codified Law
@@ -624,7 +631,7 @@ provenance.py — provenance conservation and blame (HCT A3 / T3).
 
 - **Conceptually:** nothing is unsourced — history is a conserved quantity you can audit back to its origin.
 
-- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`
+- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `attest`
 - **Path:** `Chiron/provenance.py`
 
 ### `run_ledger`
