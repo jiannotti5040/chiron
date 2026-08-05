@@ -73,6 +73,25 @@ REFUSED = "REFUSED"
 
 
 @dataclass
+class Token:
+    """One word, and where it came from.
+
+    Sentence-level attribution is too coarse to act on: a model routinely takes
+    a real sentence and changes one number, or splices an invented clause into
+    a quoted one. The seam is what matters, and the seam is between words.
+
+    `sources` is every supplied input whose vocabulary contains this token, so a
+    reader can see at a glance which words are traceable to something and which
+    appeared from nowhere. A token present in no input is not "suspicious" — it
+    is unattributable, which is a fact, not a score.
+    """
+    text: str
+    kind: str            # "content" | "function" | "number" | "punct"
+    sources: List[str] = field(default_factory=list)
+    novel: bool = False  # present in no supplied input
+
+
+@dataclass
 class Span:
     text: str
     verdict: str = REFUSED
@@ -86,6 +105,40 @@ class Span:
     reason: str = ""
     owner: str = "human"
     blame: List[str] = field(default_factory=list)
+    tokens: List[Token] = field(default_factory=list)
+    novel_content_words: List[str] = field(default_factory=list)
+    traceable_fraction: Optional[float] = None
+
+
+_NUM = __import__("re").compile(r"^\d[\d,.]*$")
+
+
+def _token_origins(span: str, candidates: Dict[str, str]) -> List[Token]:
+    """Word-level trace: for each token, which supplied inputs contain it.
+
+    Function words are marked but never counted as novel — every English text
+    contains "the", so their presence carries no provenance information and
+    treating it as evidence would inflate the traceable fraction into
+    meaninglessness. Content words and numbers are where provenance lives.
+    """
+    vocab = {name: set(lang.tokenize(text)) for name, text in candidates.items()}
+    fw = {w.lower() for w in getattr(lang, "FUNCTION_WORDS", set())}
+    out: List[Token] = []
+    for raw in span.split():
+        bare = raw.strip(".,;:!?()\"'").lower()
+        if not bare:
+            out.append(Token(raw, "punct"))
+            continue
+        if _NUM.match(bare):
+            kind = "number"
+        elif bare in fw:
+            kind = "function"
+        else:
+            kind = "content"
+        srcs = sorted(n for n, v in vocab.items() if bare in v)
+        out.append(Token(raw, kind, srcs,
+                         novel=(not srcs and kind in ("content", "number"))))
+    return out
 
 
 def _attribute(span: str, candidates: Dict[str, str]) -> Dict[str, Any]:
@@ -165,6 +218,15 @@ def attest(output: str,
         if a["reason"] and not s.reason:
             s.reason = a["reason"]
 
+        # Word level. This is what makes the analysis operational: it locates
+        # the seam where invented language was spliced into traceable language.
+        s.tokens = _token_origins(sentence, inputs)
+        weighted = [t for t in s.tokens if t.kind in ("content", "number")]
+        s.novel_content_words = [t.text for t in weighted if t.novel]
+        if weighted:
+            s.traceable_fraction = round(
+                sum(1 for t in weighted if not t.novel) / len(weighted), 3)
+
         # Minimal blame: the smallest set of supplied inputs a challenge lands
         # on. Only meaningful once a span is actually attributable.
         if s.origin:
@@ -175,6 +237,9 @@ def attest(output: str,
               for v in (VERIFIED, REFUTED, REFUSED)}
     n = len(spans) or 1
     attributed = sum(1 for s in spans if s.origin)
+    all_weighted = [t for s in spans for t in s.tokens
+                    if t.kind in ("content", "number")]
+    novel_total = sum(1 for t in all_weighted if t.novel)
 
     return {
         "schema": SCHEMA,
@@ -183,6 +248,10 @@ def attest(output: str,
         "span_total": len(spans),
         "attributed": attributed,
         "unattributable": len(spans) - attributed,
+        "content_words": len(all_weighted),
+        "novel_content_words": novel_total,
+        "traceable_word_fraction": (round(1 - novel_total / len(all_weighted), 3)
+                                    if all_weighted else None),
         "machine_warranted": round(counts[VERIFIED] / n, 3),
         "human_owned": round((counts[REFUSED] + counts[REFUTED]) / n, 3),
         "candidate_inputs": sorted(inputs),
@@ -203,6 +272,10 @@ def render(a: Dict[str, Any]) -> str:
         f"  {a['span_total']} spans   "
         f"verified {a['counts'][VERIFIED]} · refuted {a['counts'][REFUTED]} · "
         f"refused {a['counts'][REFUSED]}",
+        f"  content words traceable to an input: "
+        f"{a['traceable_word_fraction']:.0%}"
+        f"   ({a['content_words'] - a['novel_content_words']}/{a['content_words']})"
+        if a.get("traceable_word_fraction") is not None else "",
         f"  attributed to a supplied input: {a['attributed']}/{a['span_total']}"
         f"   ·   machine-warranted {a['machine_warranted']:.0%}"
         f"   ·   yours {a['human_owned']:.0%}",
@@ -215,6 +288,12 @@ def render(a: Dict[str, Any]) -> str:
                f"margin {s['origin_margin']})" if s["origin"]
                else "origin=UNATTRIBUTABLE")
         out.append(f"             {src}")
+        if s["traceable_fraction"] is not None:
+            out.append(f"             words traceable to an input: "
+                       f"{s['traceable_fraction']:.0%}")
+        if s["novel_content_words"]:
+            out.append(f"             appears in NO input: "
+                       f"{', '.join(s['novel_content_words'])}")
         if s["reason"]:
             out.append(f"             {s['reason']}")
     out += ["",
