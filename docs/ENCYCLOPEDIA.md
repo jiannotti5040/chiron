@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](DICTIONARY.md) defines the vocabulary; the [SOP](SOP.md) says how to operate it all.
 
-**State at generation:** 75 runnable scripts · 56 carry selftest gates · 65 stdlib-only · 75 licensed · 106 internal import edges · generated 2026-08-05T00:26:33Z (static mode).
+**State at generation:** 76 runnable scripts · 57 carry selftest gates · 66 stdlib-only · 76 licensed · 106 internal import edges · generated 2026-08-05T01:37:33Z (static mode).
 
 ## Index by role
 
@@ -367,6 +367,13 @@ Formal soundness checks (property-based).
 
 - **Facts:** selftest: no · deps: stdlib only · imports: `chiron`
 - **Path:** `Chiron/formal_check.py`
+
+### `full_stack`
+
+full_stack.py — run the whole vault over one piece of text.
+
+- **Facts:** selftest: yes · deps: stdlib only
+- **Path:** `Chiron/full_stack.py`
 
 ### `govern` — The Governance Gate
 
