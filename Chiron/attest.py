@@ -54,6 +54,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from dataclasses import dataclass, asdict, field
 from typing import Any, Dict, List, Optional
@@ -110,7 +111,7 @@ class Span:
     traceable_fraction: Optional[float] = None
 
 
-_NUM = __import__("re").compile(r"^\d[\d,.]*$")
+_NUM = re.compile(r"^\d[\d,.]*$")
 
 
 def _token_origins(span: str, candidates: Dict[str, str]) -> List[Token]:
@@ -135,7 +136,13 @@ def _token_origins(span: str, candidates: Dict[str, str]) -> List[Token]:
             kind = "function"
         else:
             kind = "content"
-        srcs = sorted(n for n, v in vocab.items() if bare in v)
+        # Compound identifiers (CLR-114, 2-32, FOB/Kestrel) are one token to a
+        # reader but several to a tokenizer. Treat the compound as present when
+        # every one of its parts is — otherwise a convoy ID that is sitting in
+        # the source reads as invented, which is a false accusation.
+        parts = [q for q in re.split(r"[-/_.]", bare) if q]
+        srcs = sorted(n for n, v in vocab.items()
+                      if bare in v or (len(parts) > 1 and all(q in v for q in parts)))
         out.append(Token(raw, kind, srcs,
                          novel=(not srcs and kind in ("content", "number"))))
     return out
