@@ -110,11 +110,12 @@ single reconciled source for every gate count; if two numbers ever disagree, tha
 | | |
 |---|---|
 | [`Primus/`](Primus/) | the seed engine and the `primus-intelligence` package — recovery, certify, MCP server, HTTP server |
-| [`Chiron/`](Chiron/) | the flagship: 74 modules — the certification layer, the composer, and the courts |
+| [`Chiron/`](Chiron/) | the flagship: 73 modules — the certification layer, the composer, and the courts |
 | [`Chiron Monolith/`](Chiron%20Monolith/) | the whole flagship folded into one deterministic file that runs offline |
 | [`JDICert/`](JDICert/) | decision certification — 18 sections, K/U/Ω partition, Daubert analyser, 280/280 |
 | [`studies/`](studies/) | the research: OEIS extensions, conjecture sweeps, retractions, replay capsules |
 | [`UMA Suite/`](UMA%20Suite/) | the physics framework and its falsification checkpoints |
+| [`App/`](App/) | the native macOS front end — SwiftUI over the vault's own engines, no verification logic of its own |
 | [`docs/`](docs/) · [`notes/`](notes/) | the published site · the working records, kept unedited including the failures |
 
 ---

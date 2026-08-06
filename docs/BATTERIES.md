@@ -9,7 +9,7 @@ Counts grow as modules are added; this page is regenerated whenever they
 do. If a number here disagrees with a number elsewhere, this page wins
 and the other page is stale — tell us.
 
-## Tier 1 — public: run it yourself, right now, from this repo
+## Tier 1 — the standalone builds: one file, no install
 
 | Battery | Covers | Where | Count |
 |---|---|---|---|
@@ -19,13 +19,12 @@ and the other page is stale — tell us.
 
 | Local engine endpoint (`primus-serve`, then `eval/remote.py --url http://localhost:8790`) | the **real engine** over HTTP — verifies supported sequence inputs or explicitly does not stamp them; rate-limited, refuses over budget | any instance you run yourself; no managed host | 33/33 endpoint gates |
 
-That is the pre-purchase verification boundary today: the discipline, a
+Those run from a single file with nothing installed: the discipline, a
 working core, the zero-false property verified on the published external
-evaluation, and — via the hosted endpoint — the real engine's behavior on
-supported inputs you choose. The full engine source and its gate battery
-still arrive only with a license.
+evaluation, and — via the local endpoint — the real engine's behavior on
+supported inputs you choose.
 
-## Tier 2 — the vault build (delivered with a license) — as most recently run, 2026-07-21
+## Tier 2 — the full vault install — as most recently run, 2026-08-05
 
 **Primus, the packaged seed engine:**
 
@@ -50,7 +49,7 @@ still arrive only with a license.
 | Chiron core gates | the organism's hard laws | **12/12** |
 | Reproducibility harness | same input, same version ⇒ byte-identical results | digest-stable |
 | Monolith standalone smoke | the certified core from ONE file, no vault beside it (semic 56/56, JDICert 280/280 inside) | **5/5** |
-| Monolith full folded sweep | every selftest-bearing module, through the fold | **49/49** |
+| Monolith full folded sweep | every selftest-bearing module, through the fold | **51/51** |
 | Invariant-operation stress probes | recovery/refusal/cipher/structure (build of 2026-07-16) | **23/23** |
 | Pipeline composer | chain/team/swarm compose; unknown component fails safe | **7/7** |
 | Documented-command smoke | every command in the manual runs as written | **9/9** |
@@ -70,17 +69,17 @@ review) — are published at [`AI_CLAIMS.md`](AI_CLAIMS.md).
 
 ## How to read the two tiers honestly
 
-Tier 1 is verifiable before any money moves — and since 2026-07-21 that
-includes the headline property itself: the [`eval/`](../eval/) build
-grades the engine's frozen outputs against oeis.org live, with a
-buyer-chosen challenge mode that removes the "author picked the corpus"
-objection (protocol and residual assumptions stated plainly in
-[`eval/README.md`](../eval/README.md)). Tier 2 is the thing being sold;
-its numbers are reproduced on every change (`bin/chiron test` after
-licensing). "Trust us, it's green in private" is exactly the claim this
-project exists to reject; the eval build is that rejection made runnable.
+Tier 1 needs no install and includes the headline property itself: the
+[`eval/`](../eval/) build grades the engine's frozen outputs against
+oeis.org live, with a reader-chosen challenge mode that removes the
+"author picked the corpus" objection (protocol and residual assumptions
+stated plainly in [`eval/README.md`](../eval/README.md)). Tier 2 needs the
+repository checked out and its numbers are reproduced on every change
+(`bin/chiron test`). "Trust us, it's green in private" is exactly the
+claim this project exists to reject — the code and every gate above are
+Apache-2.0 in this repository, with nothing behind a licence key.
 
 *Single-file scope, precisely: the standalone 5/5 runs from one file with
-no vault beside it; the 49/49 sweep includes modules (servers, packaged
+no vault beside it; the 51/51 sweep includes modules (servers, packaged
 seed, growth tooling) that need the full vault install. We do not claim
 the servers run from the single file, because they don't.*
