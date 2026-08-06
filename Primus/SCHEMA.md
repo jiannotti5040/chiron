@@ -36,7 +36,9 @@ bounded), `percentage`, `primality` (deterministic Miller–Rabin below
 `gcd` / `lcm`, `modular` (`a mod m = c`, `a ≡ c (mod m)`),
 `date_arithmetic` (`N days after/before DATE is DATE`, `days between A and
 B is N`; unambiguous formats only, no year → refused), `aggregate`
-(sum/total/average/mean of a listed number set, exact rationals),
+(sum/total/average/mean/product of a listed number set, exact rationals; a
+product whose operands together exceed the exact-arithmetic digit bound is
+REFUSED rather than computed),
 `sequence_continuation` (generator recovered from the stated prefix with
 held-out proof, continuation compared exactly), `closed_form`
 (`a(n) = <expr> matches t0, t1, ...`, optional `(n from k)` offset; the

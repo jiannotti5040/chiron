@@ -103,7 +103,7 @@ _RE_DATE_BETWEEN = re.compile(
     rf"(?:number\s+of\s+)?days\s+(?:between|from)\s+({_DATE})\s+(?:and|to|until)\s+({_DATE})"
     rf"\s+(?:is|=|equals)\s+(\d+)", re.I)
 _RE_AGG = re.compile(
-    rf"\b(sum|total|average|mean)\s+of\s+({_NUMLIST})\s+(?:is|=|equals)\s+({_NUM})", re.I)
+    rf"\b(sum|total|average|mean|product)\s+of\s+({_NUMLIST})\s+(?:is|=|equals)\s+({_NUM})", re.I)
 
 _DATE_FORMATS = ("%B %d %Y", "%b %d %Y", "%d %B %Y", "%d %b %Y", "%Y-%m-%d")
 
@@ -296,15 +296,31 @@ def _claims_dates(text, add):
 
 
 def _claims_aggregate(text, add):
-    for m in _find(_RE_AGG, text, r"sum|total|average|mean", 6000):
+    for m in _find(_RE_AGG, text, r"sum|total|average|mean|product", 6000):
         kind = m.group(1).lower()
         try:
             vals, claimed = _nums(m.group(2)), _frac(m.group(3))
         except OverflowError:
             add(m, "aggregate", "REFUSED", {"reason": "exceeds exact-arithmetic bounds"})
             continue
-        total = sum(vals, Fraction(0))
-        expected = total if kind in ("sum", "total") else total / len(vals)
+        if kind == "product":
+            # Every other aggregate here grows at most linearly in the operands,
+            # so per-value MAX_INT_DIGITS bounds them. A product does not: 200
+            # values of 4,096 digits each would be exact but is unbounded work
+            # by any honest reading of the gate's own limit. Hold the RESULT to
+            # the same bound rather than inventing a new one.
+            if sum(len(str(abs(v.numerator))) + len(str(v.denominator))
+                   for v in vals) > MAX_INT_DIGITS:
+                add(m, "aggregate", "REFUSED",
+                    {"operation": kind, "n_values": len(vals),
+                     "reason": "exceeds exact-arithmetic bounds"})
+                continue
+            expected = Fraction(1)
+            for v in vals:
+                expected *= v
+        else:
+            total = sum(vals, Fraction(0))
+            expected = total if kind in ("sum", "total") else total / len(vals)
         add(m, "aggregate", _status(expected == claimed),
             {"operation": kind, "n_values": len(vals),
              "expected": str(int(expected)) if expected.denominator == 1 else str(expected)})
@@ -535,9 +551,13 @@ def render(cert: Dict[str, Any]) -> str:
 def _selftest() -> int:
     """Fast offline gates for the certify layer. Returns count of failures."""
     fails = 0
+    total = 0
 
     def gate(name: str, cond: bool) -> None:
-        nonlocal fails
+        # The total counts itself. A hardcoded denominator here silently
+        # stopped counting every gate added after it was written.
+        nonlocal fails, total
+        total += 1
         print(f"  [{'PASS' if cond else 'FAIL'}] {name}")
         fails += 0 if cond else 1
 
@@ -550,6 +570,15 @@ def _selftest() -> int:
     gate("reversed arithmetic (91 = 7 x 13) verified", counts("91 = 7 x 13")["verified"] == 1)
     gate("power claim verified (2^10 = 1024)", counts("2^10 = 1024")["verified"] == 1)
     gate("percentage verified", counts("50% of 80 is 40")["verified"] == 1)
+    gate("product verified (product of 3 and 4 is 12)",
+         counts("the product of 3 and 4 is 12")["verified"] == 1)
+    gate("product refuted (product of 3 and 4 is 11)",
+         counts("the product of 3 and 4 is 11")["refuted"] == 1)
+    gate("product of a listed set verified",
+         counts("the product of 2, 3 and 7 is 42")["verified"] == 1)
+    gate("product beyond exact-arithmetic bounds refused",
+         counts("the product of " + ", ".join([str(10**600)] * 8)
+                + " is 1")["refused"] == 1)
     gate("primality: 97 is prime verified", counts("97 is prime")["verified"] == 1)
     gate("primality: 91 is prime refuted", counts("91 is prime")["refuted"] == 1)
     gate("primality: 91 is composite verified", counts("91 is composite")["verified"] == 1)
@@ -595,7 +624,7 @@ def _selftest() -> int:
          counts(f"{big} + 1 = 1{'0' * (MAX_INT_DIGITS + 10)}")["refused"] == 1)
     cert = certify("2+2=4. " * 5)
     gate("coverage reported and sane", 0.0 < cert["coverage"] <= 1.0)
-    print(f"  certify gates: {31 - fails}/31 passed")
+    print(f"  certify gates: {total - fails}/{total} passed")
     return fails
 
 

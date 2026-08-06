@@ -2,6 +2,23 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## Unreleased
+
+- **`certify` now checks `product of ...` in prose.** `sum`, `total`,
+  `average`, and `mean` were all matched in their written-out form;
+  `product` was not, so "the product of 3 and 4 is 11" passed through
+  uncertified while "the sum of 2 and 2 is 5" was refuted. The asymmetry was
+  an oversight, not a policy. A product whose operands together exceed
+  `MAX_INT_DIGITS` is REFUSED rather than computed — multiplication is the
+  only aggregate here that grows faster than linearly in its operands, so it
+  needs the bound stated. Gates: 4 added (verified, refuted, listed set,
+  bound refusal).
+- **The certify selftest stopped counting itself.** Its summary line
+  hardcoded `31/31`, so every gate added after that line was written was
+  invisible in the reported total — 35 gates were reporting as 31. The
+  denominator is now derived. No verdict changed; the number that described
+  them was wrong.
+
 ## 0.7.0 — 2026-08-03
 
 **Relicensed to Apache-2.0. The paywall is gone and nothing is held back.**
