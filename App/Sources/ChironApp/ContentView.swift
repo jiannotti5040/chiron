@@ -5,6 +5,7 @@ import ChironKit
 
 enum Screen: String, CaseIterable, Identifiable {
     case fullStack = "Full Stack"
+    case modules = "Modules"
     case attest = "Attest"
     case certify = "Certify"
     case gates = "Gates"
@@ -14,6 +15,7 @@ enum Screen: String, CaseIterable, Identifiable {
     var symbol: String {
         switch self {
         case .fullStack: "square.stack.3d.up"
+        case .modules: "cube.transparent"
         case .attest: "text.magnifyingglass"
         case .certify: "checkmark.seal"
         case .gates: "shield.checkerboard"
@@ -23,6 +25,7 @@ enum Screen: String, CaseIterable, Identifiable {
     var subtitle: String {
         switch self {
         case .fullStack: "Every applicable module over one text"
+        case .modules: "Every module in the vault, discovered not enumerated"
         case .attest: "Which input produced each word"
         case .certify: "Exact claims: VERIFIED · REFUTED · REFUSED"
         case .gates: "Run the vault's own selftests"
@@ -57,6 +60,7 @@ struct ContentView: View {
             } detail: {
                 switch screen {
                 case .fullStack: FullStackView(client: client)
+                case .modules: ModulesView(client: client)
                 case .attest: AttestView(client: client)
                 case .certify: CertifyView(client: client)
                 case .gates: GatesView(client: client)

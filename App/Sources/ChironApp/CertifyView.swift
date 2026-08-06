@@ -19,6 +19,8 @@ struct CertifyView: View {
                 .font(.body)
                 .frame(height: 110)
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
+                .acceptsFileDrop(text: $text)
+            FileLoadBar(label: "Certify a file…", text: $text)
             HStack {
                 Button {
                     run()

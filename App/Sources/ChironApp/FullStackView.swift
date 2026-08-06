@@ -11,8 +11,8 @@ struct FullStackView: View {
     @State private var running = false
     @State private var errorText: String?
 
-    static let sample = "The convoy carries 4200 gallons with a burn rate of "
-        + "1400 per day, so three days remain. Sequence check: 1, 4, 9, 16, 25."
+    static let sample = "The archive holds 4200 records and 1400 were revised "
+        + "this quarter, so three in ten changed. Sequence: 1, 4, 9, 16, 25."
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -22,6 +22,8 @@ struct FullStackView: View {
                 .font(.body)
                 .frame(height: 110)
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
+                .acceptsFileDrop(text: $text)
+            FileLoadBar(label: "Analyse a file…", text: $text)
             HStack {
                 Button {
                     run()

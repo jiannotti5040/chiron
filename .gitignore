@@ -22,6 +22,7 @@ dist/
 .eggs/
 *.spec
 App/.build/
+App/build/
 
 # --- environments ---
 .venv/

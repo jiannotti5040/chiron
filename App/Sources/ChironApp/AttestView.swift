@@ -12,15 +12,16 @@ private struct Candidate: Identifiable {
 struct AttestView: View {
     let client: VaultClient
 
-    @State private var output = "The depot holds 4200 gallons. Burn rate is 1400 "
-        + "gallons per day. Resupply is not required at this time."
+    @State private var output = "The archive holds 4200 records. 1400 were revised "
+        + "this quarter. No further review is needed at this time."
     @State private var candidates: [Candidate] = [
-        Candidate(name: "logistics_report",
-                  text: "Depot BRAVO inventory: 4200 gallons diesel. Daily consumption 1400 gallons."),
+        Candidate(name: "quarterly_report.txt",
+                  text: "Collection inventory: 4200 records catalogued. Revisions this quarter: 1400."),
     ]
     @State private var record: AttestationRecord?
     @State private var running = false
     @State private var errorText: String?
+    @State private var addFiles = false
 
     var body: some View {
         HSplitView {
@@ -31,11 +32,18 @@ struct AttestView: View {
                     .font(.body)
                     .frame(minHeight: 90)
                     .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
+                    .acceptsFileDrop(text: $output)
+                FileLoadBar(label: "Load the output from a file…", text: $output)
 
                 HStack {
                     Text("Candidate inputs")
                         .font(.headline)
                     Spacer()
+                    Button {
+                        addFiles = true
+                    } label: {
+                        Label("Add files", systemImage: "doc.badge.plus")
+                    }
                     Button {
                         candidates.append(Candidate(name: "input_\(candidates.count + 1)", text: ""))
                     } label: {
@@ -77,6 +85,18 @@ struct AttestView: View {
                     .keyboardShortcut(.return, modifiers: .command)
                     .disabled(running || output.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     if running { ProgressView().controlSize(.small) }
+                }
+                .fileImporter(isPresented: $addFiles,
+                              allowedContentTypes: [.plainText, .text, .data, .sourceCode, .json],
+                              allowsMultipleSelection: true) { result in
+                    guard case .success(let urls) = result else { return }
+                    for url in urls {
+                        guard let loaded = try? FileLoad.read(url) else {
+                            errorText = "Could not read \(url.lastPathComponent)"
+                            continue
+                        }
+                        candidates.append(Candidate(name: loaded.name, text: loaded.text))
+                    }
                 }
                 // The module's own contract, stated where the user acts on it.
                 Text("Attribution is relative to the candidate inputs you supply. "

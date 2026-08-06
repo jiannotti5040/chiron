@@ -12,19 +12,47 @@ recomputes them.
 | Screen | What it runs | Record |
 |---|---|---|
 | Full Stack | `Chiron/full_stack.py --json` | `chiron.full_stack/1` |
+| Modules | every module in `Chiron/`, discovered by introspection | `chiron.app.catalog/1` |
 | Attest | `attest.attest()` via a stdin shim | `chiron.attestation/1` |
 | Certify | `primus certify --json -` | `primus.certificate/2` |
 | Gates | the vault's own selftests | exit codes, verbatim output |
+
+The Modules screen reaches the whole vault: **73 modules, 768 entrypoints**,
+181 of them drivable from a single input box. That list is not written down
+anywhere — it is read from `Chiron/` at launch, so a module added to the
+folder appears with no edit here. Entrypoints that need more than one
+argument are listed and say why they cannot be run, rather than being hidden.
+
+## Files
+
+Every text box takes a file: drop one on it, or use the button beside it.
+Files are read to a 2 MB bound and the app says so when a file was truncated
+— a partly-read file must never look like a fully analysed one. The CLI
+takes a path anywhere it takes text.
 
 ## Run
 
 ```bash
 cd App
-swift run chiron-app                 # the app window
-swift run chiron-app run "text …"    # headless full stack, same record
-swift run chiron-app certify "The sum of 2 and 2 is 4."
-swift test                           # fixture decodes + live end-to-end
+swift run chiron-app                      # the app window
+swift run chiron-app run "text …"         # headless full stack, same record
+swift run chiron-app run ./notes.md       # …or a file
+swift run chiron-app certify ./report.txt
+swift run chiron-app catalog              # what the vault exposes
+swift run chiron-app call language stylometry "some prose"
+swift test                                # fixture decodes + live end-to-end
 ```
+
+To build a double-clickable `Chiron.app`:
+
+```bash
+./make_app.sh
+```
+
+The bundle records the vault it was built against and passes it through as
+`CHIRON_VAULT`, because a double-clicked app inherits no shell environment
+and cannot find the vault by walking up from a working directory. It carries
+no engine of its own.
 
 If this checkout lives under an iCloud-synced folder (Desktop or Documents
 with "Desktop & Documents" on), `swift test` fails at the codesign step with
