@@ -1,0 +1,112 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 Jacob Iannotti. See LICENSE.
+import SwiftUI
+import ChironKit
+
+enum Screen: String, CaseIterable, Identifiable {
+    case fullStack = "Full Stack"
+    case attest = "Attest"
+    case certify = "Certify"
+    case gates = "Gates"
+
+    var id: String { rawValue }
+
+    var symbol: String {
+        switch self {
+        case .fullStack: "square.stack.3d.up"
+        case .attest: "text.magnifyingglass"
+        case .certify: "checkmark.seal"
+        case .gates: "shield.checkerboard"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .fullStack: "Every applicable module over one text"
+        case .attest: "Which input produced each word"
+        case .certify: "Exact claims: VERIFIED · REFUTED · REFUSED"
+        case .gates: "Run the vault's own selftests"
+        }
+    }
+}
+
+struct ContentView: View {
+    @Environment(AppModel.self) private var model
+    @State private var screen: Screen = .fullStack
+
+    var body: some View {
+        if let client = model.client {
+            NavigationSplitView {
+                List(Screen.allCases, selection: $screen) { s in
+                    Label(s.rawValue, systemImage: s.symbol).tag(s)
+                }
+                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
+                .safeAreaInset(edge: .bottom) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Vault")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        Text(client.vaultRoot.path)
+                            .font(.caption2.monospaced())
+                            .lineLimit(2)
+                            .truncationMode(.head)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
+                }
+            } detail: {
+                switch screen {
+                case .fullStack: FullStackView(client: client)
+                case .attest: AttestView(client: client)
+                case .certify: CertifyView(client: client)
+                case .gates: GatesView(client: client)
+                }
+            }
+        } else {
+            VaultSetupView()
+        }
+    }
+}
+
+struct VaultSetupView: View {
+    @Environment(AppModel.self) private var model
+    @State private var importing = false
+    @State private var rejected = false
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Image(systemName: "shippingbox")
+                .font(.system(size: 44))
+                .foregroundStyle(.secondary)
+            Text("Point Chiron at the vault")
+                .font(.title2.weight(.semibold))
+            Text("This app is a front end for the Portfolio Vault's own engines. "
+                 + "Pick the repository root (the folder containing Chiron/ and Primus/), "
+                 + "or set CHIRON_VAULT before launching.")
+                .frame(maxWidth: 440)
+                .multilineTextAlignment(.center)
+                .foregroundStyle(.secondary)
+            Button("Choose Vault Folder…") { importing = true }
+                .keyboardShortcut(.defaultAction)
+            if rejected {
+                Text("That folder has no Chiron/full_stack.py — not a vault root.")
+                    .font(.callout)
+                    .foregroundStyle(.red)
+            }
+            if PythonRunner.locate() == nil {
+                Text("No python3 found on this Mac. Install Python 3 (e.g. via Homebrew) "
+                     + "or set CHIRON_PYTHON.")
+                    .font(.callout)
+                    .foregroundStyle(.red)
+            }
+        }
+        .padding(40)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .fileImporter(isPresented: $importing,
+                      allowedContentTypes: [.folder]) { result in
+            if case .success(let url) = result {
+                rejected = !model.setVault(url)
+            }
+        }
+    }
+}

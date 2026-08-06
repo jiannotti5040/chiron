@@ -1,0 +1,217 @@
+{
+  "schema": "chiron.attestation/1",
+  "spans": [
+    {
+      "text": "The depot holds 4200 gallons.",
+      "verdict": "REFUSED",
+      "origin": null,
+      "origin_delta": null,
+      "origin_cosine": null,
+      "origin_margin": null,
+      "checked_against": null,
+      "ground_truth": null,
+      "asserted": null,
+      "reason": "no exact checker supplied for this domain",
+      "owner": "human",
+      "blame": [],
+      "tokens": [
+        {
+          "text": "The",
+          "kind": "function",
+          "sources": [],
+          "novel": false
+        },
+        {
+          "text": "depot",
+          "kind": "content",
+          "sources": [
+            "logistics_report"
+          ],
+          "novel": false
+        },
+        {
+          "text": "holds",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        },
+        {
+          "text": "4200",
+          "kind": "number",
+          "sources": [
+            "logistics_report"
+          ],
+          "novel": false
+        },
+        {
+          "text": "gallons.",
+          "kind": "content",
+          "sources": [
+            "logistics_report"
+          ],
+          "novel": false
+        }
+      ],
+      "novel_content_words": [
+        "holds"
+      ],
+      "traceable_fraction": 0.75
+    },
+    {
+      "text": "Burn rate is 1400 gallons per day.",
+      "verdict": "REFUSED",
+      "origin": null,
+      "origin_delta": 0.0194,
+      "origin_cosine": 0.0,
+      "origin_margin": 0.0384,
+      "checked_against": null,
+      "ground_truth": null,
+      "asserted": null,
+      "reason": "no exact checker supplied for this domain",
+      "owner": "human",
+      "blame": [],
+      "tokens": [
+        {
+          "text": "Burn",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        },
+        {
+          "text": "rate",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        },
+        {
+          "text": "is",
+          "kind": "function",
+          "sources": [
+            "sop"
+          ],
+          "novel": false
+        },
+        {
+          "text": "1400",
+          "kind": "number",
+          "sources": [
+            "logistics_report"
+          ],
+          "novel": false
+        },
+        {
+          "text": "gallons",
+          "kind": "content",
+          "sources": [
+            "logistics_report"
+          ],
+          "novel": false
+        },
+        {
+          "text": "per",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        },
+        {
+          "text": "day.",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        }
+      ],
+      "novel_content_words": [
+        "Burn",
+        "rate",
+        "per",
+        "day."
+      ],
+      "traceable_fraction": 0.333
+    },
+    {
+      "text": "Resupply is not required at this time.",
+      "verdict": "REFUSED",
+      "origin": null,
+      "origin_delta": 0.0701,
+      "origin_cosine": 0.0,
+      "origin_margin": 0.0367,
+      "checked_against": null,
+      "ground_truth": null,
+      "asserted": null,
+      "reason": "no exact checker supplied for this domain",
+      "owner": "human",
+      "blame": [],
+      "tokens": [
+        {
+          "text": "Resupply",
+          "kind": "content",
+          "sources": [
+            "sop"
+          ],
+          "novel": false
+        },
+        {
+          "text": "is",
+          "kind": "function",
+          "sources": [
+            "sop"
+          ],
+          "novel": false
+        },
+        {
+          "text": "not",
+          "kind": "function",
+          "sources": [],
+          "novel": false
+        },
+        {
+          "text": "required",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        },
+        {
+          "text": "at",
+          "kind": "function",
+          "sources": [],
+          "novel": false
+        },
+        {
+          "text": "this",
+          "kind": "function",
+          "sources": [],
+          "novel": false
+        },
+        {
+          "text": "time.",
+          "kind": "content",
+          "sources": [],
+          "novel": true
+        }
+      ],
+      "novel_content_words": [
+        "required",
+        "time."
+      ],
+      "traceable_fraction": 0.333
+    }
+  ],
+  "counts": {
+    "VERIFIED": 0,
+    "REFUTED": 0,
+    "REFUSED": 3
+  },
+  "span_total": 3,
+  "attributed": 0,
+  "unattributable": 3,
+  "content_words": 13,
+  "novel_content_words": 7,
+  "traceable_word_fraction": 0.462,
+  "machine_warranted": 0.0,
+  "human_owned": 1.0,
+  "candidate_inputs": [
+    "logistics_report",
+    "sop"
+  ],
+  "scope": "Attribution is relative to the supplied candidate inputs only. No probability that a span is machine-written is reported, because no such measurement exists. Spans with no exact grounding are REFUSED and returned to the human unchanged."
+}

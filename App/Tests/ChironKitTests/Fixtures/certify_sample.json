@@ -1,0 +1,42 @@
+{
+  "schema": "primus.certificate/2",
+  "engine": {
+    "name": "primus",
+    "version": "0.7.0"
+  },
+  "owner": "Jacob Iannotti",
+  "created_utc": "2026-08-06T02:45:04+00:00",
+  "input": {
+    "sha256": "271b44d533ab9b08b6945adc39dae223197b02c7d15b3e9fd0cde7c7c15f7cac",
+    "chars": 54,
+    "truncated": false
+  },
+  "claims": [
+    {
+      "kind": "aggregate",
+      "text": "sum of 2 and 2 is 4",
+      "status": "VERIFIED",
+      "span": [
+        4,
+        23
+      ],
+      "operation": "sum",
+      "n_values": 2,
+      "expected": "4"
+    }
+  ],
+  "counts": {
+    "checkable": 1,
+    "verified": 1,
+    "refuted": 0,
+    "refused": 0
+  },
+  "coverage": 0.3519,
+  "claims_capped": false,
+  "unverifiable_remainder": true,
+  "verdict": "Of 1 checkable claim(s): 1 verified, 0 refuted, 0 refused (no exact proof either way). The remaining free text is unverifiable by exact methods and is not certified.",
+  "attestation": {
+    "sha256": "e52bb5868355689fa135340023f4a9d9e9c91a41c332b63f5a26afb56574e605",
+    "kind": "tamper-evident-hash"
+  }
+}

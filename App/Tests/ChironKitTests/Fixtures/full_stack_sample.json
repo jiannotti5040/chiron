@@ -1,0 +1,1042 @@
+{
+  "schema": "chiron.full_stack/1",
+  "text": "The convoy carries 4200 gallons with a burn rate of 1400 per day, so three days remain. Sequence check: 1, 4, 9, 16, 25.",
+  "numeric_surface": [
+    4200,
+    1400,
+    1,
+    4,
+    9,
+    16,
+    25
+  ],
+  "stages_run": 28,
+  "tally": {
+    "OK": 28
+  },
+  "elapsed_ms": 628.5,
+  "layers": [
+    "adjudication",
+    "candor",
+    "language",
+    "provenance",
+    "record",
+    "recovery",
+    "verification"
+  ],
+  "results": [
+    {
+      "layer": "language",
+      "module": "language",
+      "fn": "analyze",
+      "asks": "What is this text, structurally?",
+      "status": "OK",
+      "ms": 556.2,
+      "result": {
+        "stylometry": {
+          "words": 17,
+          "types": 17,
+          "type_token_ratio": 1.0,
+          "hapax_ratio": 1.0,
+          "yule_k": 0.0,
+          "simpson_d": 0.0,
+          "mean_word_length": 4.35,
+          "mean_sentence_length": 8.5,
+          "function_word_ratio": 0.2941,
+          "punctuation_ratio": 0.25
+        },
+        "readability": {
+          "words": 17,
+          "sentences": 2,
+          "flesch_reading_ease": 93.7,
+          "flesch_kincaid_grade": 2.3,
+          "gunning_fog": 3.4,
+          "coleman_liau": 6.3
+        },
+        "anomaly": {
+          "n_sentences": 2,
+          "flags": [],
+          "note": "too few sentences to establish a law"
+        },
+        "structure": {
+          "twins": {},
+          "repeated_ngrams": []
+        },
+        "brief": {
+          "verdict": "ABSTAIN \u2014 too little text to establish a law",
+          "n_sentences": 2,
+          "anomalies": [],
+          "templated_groups": [],
+          "boilerplate_ngrams": [],
+          "readability_grade": 2.3
+        }
+      }
+    },
+    {
+      "layer": "language",
+      "module": "language",
+      "fn": "stylometry",
+      "asks": "What register is it written in?",
+      "status": "OK",
+      "ms": 0.0,
+      "result": {
+        "words": 17,
+        "types": 17,
+        "type_token_ratio": 1.0,
+        "hapax_ratio": 1.0,
+        "yule_k": 0.0,
+        "simpson_d": 0.0,
+        "mean_word_length": 4.35,
+        "mean_sentence_length": 8.5,
+        "function_word_ratio": 0.2941,
+        "punctuation_ratio": 0.25
+      }
+    },
+    {
+      "layer": "language",
+      "module": "language",
+      "fn": "readability",
+      "asks": "How hard is it to read?",
+      "status": "OK",
+      "ms": 0.0,
+      "result": {
+        "words": 17,
+        "sentences": 2,
+        "flesch_reading_ease": 93.7,
+        "flesch_kincaid_grade": 2.3,
+        "gunning_fog": 3.4,
+        "coleman_liau": 6.3
+      }
+    },
+    {
+      "layer": "language",
+      "module": "language",
+      "fn": "anomaly_report",
+      "asks": "Which sentences are statistical outliers?",
+      "status": "OK",
+      "ms": 0.0,
+      "result": {
+        "n_sentences": 2,
+        "flags": [],
+        "note": "too few sentences to establish a law"
+      }
+    },
+    {
+      "layer": "language",
+      "module": "language",
+      "fn": "structural_twins",
+      "asks": "Which sentences share a skeleton?",
+      "status": "OK",
+      "ms": 0.0,
+      "result": {}
+    },
+    {
+      "layer": "provenance",
+      "module": "attest",
+      "fn": "attest",
+      "asks": "Which input produced each word?",
+      "status": "OK",
+      "ms": 20.1,
+      "result": {
+        "schema": "chiron.attestation/1",
+        "spans": [
+          {
+            "text": "The convoy carries 4200 gallons with a burn rate of 1400 per day, so three days remain.",
+            "verdict": "REFUSED",
+            "origin": null,
+            "origin_delta": null,
+            "origin_cosine": null,
+            "origin_margin": null,
+            "checked_against": null,
+            "ground_truth": null,
+            "asserted": null,
+            "reason": "no exact checker supplied for this domain",
+            "owner": "human",
+            "blame": [],
+            "tokens": [
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026"
+            ],
+            "novel_content_words": [
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026"
+            ],
+            "traceable_fraction": 0.0
+          },
+          {
+            "text": "Sequence check: 1, 4, 9, 16, 25.",
+            "verdict": "REFUSED",
+            "origin": null,
+            "origin_delta": null,
+            "origin_cosine": null,
+            "origin_margin": null,
+            "checked_against": null,
+            "ground_truth": null,
+            "asserted": null,
+            "reason": "no exact checker supplied for this domain",
+            "owner": "human",
+            "blame": [],
+            "tokens": [
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026"
+            ],
+            "novel_content_words": [
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026",
+              "\u2026"
+            ],
+            "traceable_fraction": 0.0
+          }
+        ],
+        "counts": {
+          "VERIFIED": 0,
+          "REFUTED": 0,
+          "REFUSED": 2
+        },
+        "span_total": 2,
+        "attributed": 0,
+        "unattributable": 2,
+        "content_words": 19,
+        "novel_content_words": 19,
+        "traceable_word_fraction": 0.0,
+        "machine_warranted": 0.0,
+        "human_owned": 1.0,
+        "candidate_inputs": [],
+        "scope": "Attribution is relative to the supplied candidate inputs only. No probability that a span is machine-written is reported, because no such measurement exists. Spans with no exact grounding are REFUSED and returned to the human unchanged."
+      }
+    },
+    {
+      "layer": "provenance",
+      "module": "chiron",
+      "fn": "extract_named_entities_regex",
+      "asks": "Which entities are named?",
+      "status": "OK",
+      "ms": 0.3,
+      "result": {
+        "coordinates": [],
+        "times": [],
+        "numeric_ids": [],
+        "proper_nouns": [
+          "The",
+          "Sequence"
+        ],
+        "acronyms": [],
+        "quoted_speech": []
+      }
+    },
+    {
+      "layer": "provenance",
+      "module": "chiron",
+      "fn": "heuristic_k_u_classification",
+      "asks": "What is known, unknown, unknowable (K/U/Omega)?",
+      "status": "OK",
+      "ms": 0.1,
+      "result": [
+        [
+          {
+            "fact_id": "K_HEURISTIC_000",
+            "statement": "The convoy carries 4200 gallons with a burn rate of 1400 per day, so three days remain.",
+            "source": "regex_heuristic",
+            "confidence": 0.6,
+            "evidence_type": "free_text_extraction"
+          },
+          {
+            "fact_id": "K_HEURISTIC_001",
+            "statement": "Sequence check: 1, 4, 9, 16, 25.",
+            "source": "regex_heuristic",
+            "confidence": 0.6,
+            "evidence_type": "free_text_extraction"
+          }
+        ],
+        []
+      ]
+    },
+    {
+      "layer": "verification",
+      "module": "llm_certify",
+      "fn": "extract_claims",
+      "asks": "Which claims are extractable?",
+      "status": "OK",
+      "ms": 1.9,
+      "result": [
+        {
+          "kind": "sequence",
+          "text": "1, 4, 9, 16, 25",
+          "verified": false,
+          "model_class": "polynomial_deg2"
+        }
+      ]
+    },
+    {
+      "layer": "verification",
+      "module": "llm_certify",
+      "fn": "certify_llm_output",
+      "asks": "Which claims survive exact certification?",
+      "status": "OK",
+      "ms": 1.3,
+      "result": {
+        "title": "LLM Output Accountability Certificate",
+        "issued": "2026-08-06T02:42:56Z",
+        "what_this_is": "An audit of an LLM output: what is exactly checkable is checked; the rest is flagged unverifiable. This certifies accountability, NOT that the answer is true.",
+        "candor": {
+          "score": 1.0,
+          "grade": "candid",
+          "findings": []
+        },
+        "checkable_claims": {
+          "total": 1,
+          "verified": 0,
+          "refused": 1,
+          "detail": [
+            {
+              "kind": "\u2026",
+              "text": "\u2026",
+              "verified": "\u2026",
+              "model_class": "\u2026"
+            }
+          ]
+        },
+        "unverifiable_note": "Free-text/semantic factual claims are NOT verifiable by exact methods and are neither confirmed nor denied here.",
+        "governance": "REJECT \u2014 critical non-compliance (AIA-ART-14: Reg (EU) 2024/1689, Art. 14)",
+        "verdict": "0/1 checkable claims verified",
+        "attestation": {
+          "output_sha256": "453371f97059d5a4eba502d837c0723e14c3852f07da42aaf5ab53719b32cc94",
+          "merkle_root": "b3f0ed990f38a77a7392e03ab45d1600faadd00cd75711e6bd0a15a286665db7",
+          "deterministic": true
+        },
+        "legal_status": "Assurance/audit artifact. Not a legal determination, not legal advice, and not a correctness guarantee."
+      }
+    },
+    {
+      "layer": "verification",
+      "module": "chiron",
+      "fn": "audit",
+      "asks": "What does the flagship's own audit say?",
+      "status": "OK",
+      "ms": 0.1,
+      "result": "Audit(text_len=120, n_sentences=2, scores={'condescension': 0.0, 'unearned_confidence': 0.0, 'evasion': 0.0, 'opacity': 0.0}, candor_score=1.0, grade='candid', findings=[], limits='Lexical/structural detector, not semantic. Can be fooled by content dishonest without these markers, or flag honest content using one. Findings are spans to inspect, never a verdict.')"
+    },
+    {
+      "layer": "candor",
+      "module": "candor_bridge",
+      "fn": "audit_text",
+      "asks": "Is this text candid, or is it hedging?",
+      "status": "OK",
+      "ms": 2.5,
+      "result": {
+        "candor_score": 1.0,
+        "grade": "candid",
+        "axes": {
+          "condescension": 0.0,
+          "unearned_confidence": 0.0,
+          "evasion": 0.0,
+          "opacity": 0.0
+        },
+        "n_findings": 0,
+        "findings": [],
+        "limits": "Lexical/structural detector, not semantic. It can be fooled by content that is dishonest WITHOUT these surface markers, and it can flag honest content that happens to use one. Treat findings as spans to inspect, never as a verdict. This tool practices the candor it measures: it tells you exactly what it cannot do."
+      }
+    },
+    {
+      "layer": "candor",
+      "module": "infectatrum_bridge",
+      "fn": "measure_text",
+      "asks": "How ambiguous is it?",
+      "status": "OK",
+      "ms": 3.5,
+      "result": {
+        "cardinality": 1,
+        "entropy_bits": -0.0,
+        "valid_readings": 1,
+        "excluded": 6,
+        "classify": {
+          "type": "A1-missing-or-sparse",
+          "policy": "resolve (infer)",
+          "topology": {
+            "distinct_readings": 1,
+            "excluded": 6,
+            "entropy_bits": -0.0,
+            "ductus_profile": {
+              "diagonalis": "\u2026"
+            }
+          }
+        },
+        "adversarial": {
+          "p_adversarial": 0.0,
+          "uniformity": 0.0,
+          "neg_space_starvation": 0.0,
+          "entropy_saturation": 0.0
+        },
+        "ductus_profile": {
+          "diagonalis": 1
+        }
+      }
+    },
+    {
+      "layer": "recovery",
+      "module": "chiron",
+      "fn": "collapse",
+      "asks": "Is there an exact generator behind the numbers?",
+      "status": "OK",
+      "ms": 0.2,
+      "result": "Invariant(domain='numeric', model_class='incompressible', params={'values': [Fraction(4200, 1), Fraction(1400, 1), Fraction(1, 1), Fraction(4, 1), Fraction(9, 1), Fraction(16, 1), Fraction(25, 1)]}, structure={'family': 'none'}, model_bits=97.1914498598306, surface_bits=97.1914498598306, residual=[Fraction(4200, 1), Fraction(1400, 1), Fraction(1, 1), Fraction(4, 1), Fraction(9, 1), Fraction(16, 1)"
+    },
+    {
+      "layer": "recovery",
+      "module": "discernment",
+      "fn": "discern",
+      "asks": "Do independent witnesses converge?",
+      "status": "OK",
+      "ms": 15.8,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "witnesses": [
+          {
+            "witness": "epistemic",
+            "asks": "appears true (verified law)",
+            "affirms": false,
+            "evidence": "model=incompressible, verified=False"
+          },
+          {
+            "witness": "ontological:robustness",
+            "asks": "survives perturbation",
+            "affirms": false,
+            "evidence": "persisted=False, lyapunov=0.0"
+          },
+          {
+            "witness": "adversarial",
+            "asks": "survives cross-examination",
+            "affirms": false,
+            "evidence": "NO CASE \u2014 no verified generator to defend (hones"
+          },
+          {
+            "witness": "axiological:aesthetic",
+            "asks": "elegant / parsimonious",
+            "affirms": false,
+            "evidence": "beauty=0.0065"
+          },
+          {
+            "witness": "axiological:value",
+            "asks": "worth preserving",
+            "affirms": false,
+            "evidence": "V_units=0.0"
+          },
+          {
+            "witness": "candor",
+            "asks": "explanation is honest",
+            "affirms": true,
+            "evidence": "candor=1.0"
+          }
+        ],
+        "convergence_confidence": 0.167,
+        "affirming": 1,
+        "of": 6,
+        "dissent": [
+          "epistemic",
+          "ontological:robustness",
+          "adversarial",
+          "axiological:aesthetic",
+          "axiological:value"
+        ],
+        "flip_to_change": 3,
+        "governance": {
+          "verdict": "ESCALATE",
+          "socpm_lhs": -0.21
+        },
+        "verdict": "SPLIT \u2014 witnesses disagree (diagnostic)"
+      }
+    },
+    {
+      "layer": "recovery",
+      "module": "holographic",
+      "fn": "holographic",
+      "asks": "Can the whole be recovered from a fragment?",
+      "status": "OK",
+      "ms": 1.0,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "context_dim": 6,
+        "boundary_dim": 16,
+        "erased_fragment": 6,
+        "erased_fraction": 0.375,
+        "recovered_exactly": true,
+        "recovery_error": 0.0,
+        "empirical_recovery_threshold": 0.375
+      }
+    },
+    {
+      "layer": "recovery",
+      "module": "density_emotion",
+      "fn": "density_emotion",
+      "asks": "How do competing hypotheses decohere?",
+      "status": "OK",
+      "ms": 10.8,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "n_hypotheses": 3,
+        "decoherence_rate": 1.0,
+        "final_probabilities": [
+          0.3333,
+          0.3333,
+          0.3333
+        ],
+        "entropy_trail": [
+          {
+            "t": 0.0,
+            "coherence": 2.0,
+            "von_neumann_entropy": -0.0
+          },
+          {
+            "t": 2.0,
+            "coherence": 0.2707,
+            "von_neumann_entropy": 1.081
+          },
+          {
+            "t": 4.0,
+            "coherence": 0.0366,
+            "von_neumann_entropy": 1.0983
+          },
+          {
+            "t": 6.0,
+            "coherence": 0.005,
+            "von_neumann_entropy": 1.0986
+          }
+        ],
+        "cptp_valid_throughout": true,
+        "interpretation": "von Neumann entropy rising = the live superposition decohering toward commitment"
+      }
+    },
+    {
+      "layer": "recovery",
+      "module": "aesthetics",
+      "fn": "aesthetic",
+      "asks": "Is the recovered rule beautiful, measurably?",
+      "status": "OK",
+      "ms": 5.5,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "elegance": 0.0,
+        "elegance_detail": {
+          "mdl_saturation": 0.0,
+          "generative_leverage": 0.0,
+          "parsimony_margin": 0.0
+        },
+        "symmetry": 0.9413,
+        "symmetry_detail": {
+          "mirror": 0.0,
+          "periodicity": 0.9413,
+          "scale_symmetry": 0.4768
+        },
+        "resonance": 0.2962,
+        "resonance_detail": {
+          "lyapunov_stability": 0.5,
+          "spectral_concentration": 0.0925,
+          "persisted": false
+        },
+        "beauty": 0.0065,
+        "band": "inelegant"
+      }
+    },
+    {
+      "layer": "recovery",
+      "module": "significance",
+      "fn": "significance",
+      "asks": "Where does meaning concentrate?",
+      "status": "OK",
+      "ms": 3.8,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "entities": 7,
+        "alpha": 0.5,
+        "scalar_curvature": [
+          4.6079,
+          5.1615,
+          4.2055,
+          4.0772,
+          5.0514,
+          4.079,
+          4.2579
+        ],
+        "significance_valence": [
+          0.4307,
+          0.4747,
+          0.3974,
+          0.3865,
+          0.4662,
+          0.3867,
+          0.4018
+        ],
+        "peak_significance_index": 1,
+        "peak_curvature": 5.1615,
+        "mean_curvature": 4.4915,
+        "curvature_dispersion": 0.4233,
+        "gravity": 0.4206,
+        "interpretation": "high curvature -> ambiguity / decision-gravity; low -> coherent, recoverable"
+      }
+    },
+    {
+      "layer": "adjudication",
+      "module": "cross_examine",
+      "fn": "cross_examine",
+      "asks": "Does the rule survive the defence?",
+      "status": "OK",
+      "ms": 0.2,
+      "result": {
+        "evidence_hash": "fca6716f7927f71f",
+        "winner": {
+          "model_class": "incompressible",
+          "verified": false
+        },
+        "searches": [],
+        "reasonable_doubt": false,
+        "doubt_reasons": [],
+        "injunction": {
+          "active": false,
+          "reason": null
+        },
+        "verdict": "NO CASE \u2014 no verified generator to defend (honest abstention)",
+        "evidence_immutable": true
+      }
+    },
+    {
+      "layer": "adjudication",
+      "module": "operator_calculus",
+      "fn": "profile",
+      "asks": "Which epistemic operators reduce the unknown?",
+      "status": "OK",
+      "ms": 0.8,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "mystery_vector": {
+          "ignorance": 0.2,
+          "paradox": 0.05,
+          "transcendence": 0.75,
+          "emergence": 0.15,
+          "subjectivity": 0.05,
+          "infinity": 0.1
+        },
+        "dominant_unknown": "transcendence",
+        "recommended_operator": "Invent",
+        "interpretation": "beyond the current hypothesis classes \u2014 apply Invent (build a new class)",
+        "mystery_norm_start": 0.8,
+        "mystery_norm_end": 0.1304,
+        "reduction_trajectory": [
+          {
+            "step": 0,
+            "operator": null,
+            "norm": 0.8,
+            "dominant": "transcendence"
+          },
+          {
+            "step": 1,
+            "operator": "Invent",
+            "norm": 0.4093,
+            "dominant": "transcendence"
+          },
+          {
+            "step": 2,
+            "operator": "Invent",
+            "norm": 0.3032,
+            "dominant": "ignorance"
+          },
+          {
+            "step": 3,
+            "operator": "Measure",
+            "norm": 0.2356,
+            "dominant": "emergence"
+          },
+          {
+            "step": 4,
+            "operator": "Model",
+            "norm": 0.1913,
+            "dominant": "transcendence"
+          },
+          {
+            "step": 5,
+            "operator": "Invent",
+            "norm": 0.1565,
+            "dominant": "infinity"
+          },
+          {
+            "step": 6,
+            "operator": "Explore",
+            "norm": 0.1304,
+            "dominant": "ignorance"
+          }
+        ],
+        "noncommuting_pairs": 0,
+        "noncommutativity_note": "the linear algebra commutes on an uncoupled vector; genuine order-dependence (T4) arises once species are coupled and operators surface new unknowns"
+      }
+    },
+    {
+      "layer": "adjudication",
+      "module": "judgment",
+      "fn": "judge",
+      "asks": "What do the six courts return?",
+      "status": "OK",
+      "ms": 0.8,
+      "result": {
+        "disposition": "ABSTAIN",
+        "opinion": "Epistemic Court: no verified rule was extracted; there is no justiciable question. The court abstains.",
+        "docket": [
+          {
+            "court": "Epistemic Court",
+            "jurisdiction": "fact-finding",
+            "cleared": false,
+            "finding": "no verified generator (class=incompressible)",
+            "disposition": "ABSTAIN"
+          }
+        ],
+        "courts_polled": 1,
+        "evidence_hash": "fca6716f7927f71f",
+        "evidence_immutable": true,
+        "final": false,
+        "certificate": null
+      }
+    },
+    {
+      "layer": "adjudication",
+      "module": "stare_decisis",
+      "fn": "stare_decisis",
+      "asks": "What is the nearest precedent?",
+      "status": "OK",
+      "ms": 0.4,
+      "result": {
+        "domain": "ai_governance",
+        "scores": {
+          "Cx": 0.81,
+          "Ar": 0.6,
+          "Hp": 0.55,
+          "Mc": 0.5,
+          "V": 0.9000000000000001
+        },
+        "socpm_lhs": 0.2173,
+        "verdict": "PROCEED",
+        "nearest_precedent": "Kumho Tire v. Carmichael (1999)",
+        "precedent_holding": "Gatekeeping extends to all expert testimony, technical and experiential.",
+        "precedent_distance": 0.37,
+        "on_point": false,
+        "departs_from_precedent": false,
+        "controlling_law": [
+          {
+            "id": "AIA-ART-5",
+            "citation": "Reg (EU) 2024/1689, Art. 5",
+            "severity": "CRITICAL"
+          },
+          {
+            "id": "AIA-ART-14",
+            "citation": "Reg (EU) 2024/1689, Art. 14",
+            "severity": "CRITICAL"
+          },
+          {
+            "id": "GDPR-ART-9",
+            "citation": "Reg (EU) 2016/679, Art. 9",
+            "severity": "CRITICAL"
+          },
+          {
+            "id": "GDPR-ART-22",
+            "citation": "Reg (EU) 2016/679, Art. 22",
+            "severity": "CRITICAL"
+          },
+          {
+            "id": "FRE-702",
+            "citation": "Fed. R. Evid. 702 (amended Dec 1, 2023)",
+            "severity": "CRITICAL"
+          },
+          {
+            "id": "DAUBERT",
+            "citation": "Daubert v. Merrell Dow, 509 U.S. 579 (1993)",
+            "severity": "CRITICAL"
+          }
+        ],
+        "ruling": "case of first impression (no on-point precedent)",
+        "ledger_head": "eafd198cb9b48c41"
+      }
+    },
+    {
+      "layer": "adjudication",
+      "module": "govern",
+      "fn": "govern",
+      "asks": "Do the four gates and the regulatory walk clear?",
+      "status": "OK",
+      "ms": 0.1,
+      "result": {
+        "domain": "ai_governance",
+        "scores": {
+          "Cx": 0.81,
+          "Ar": 0.6,
+          "Hp": 0.55,
+          "Mc": 0.5,
+          "V": 0.9000000000000001
+        },
+        "socpm": {
+          "lhs": 0.2173,
+          "threshold_T": 0.25,
+          "redirect_required": false
+        },
+        "gates": [
+          {
+            "gate": "ENTROPY",
+            "pass": false,
+            "reason": "context too sparse to decide"
+          },
+          {
+            "gate": "SOCPM",
+            "pass": true,
+            "reason": "SoCPM lhs 0.2173 <= T=0.25"
+          },
+          {
+            "gate": "EVIDENCE",
+            "pass": true,
+            "reason": "value-alignment V=0.9000000000000001 >= 0.5"
+          },
+          {
+            "gate": "AUTHORITY",
+            "pass": true,
+            "reason": "lawful authority chain present"
+          }
+        ],
+        "applicable_provisions": 44,
+        "violations": [
+          {
+            "id": "AIA-ART-14",
+            "instrument": "EU AI Act",
+            "citation": "Reg (EU) 2024/1689, Art. 14",
+            "severity": "CRITICAL",
+            "applicable": true,
+            "compliant": false,
+            "note": "human-in-the-loop / appropriate human judgment required"
+          },
+          {
+            "id": "IEEE-7009",
+            "instrument": "IEEE 7009-2024",
+            "citation": "IEEE Std 7009-2024",
+            "severity": "MAJOR",
+            "applicable": true,
+            "compliant": false,
+            "note": "human-in-the-loop / appropriate human judgment required"
+          }
+        ],
+        "open_human_review": 34,
+        "verdict": "REJECT \u2014 critical non-compliance (AIA-ART-14: Reg (EU) 2024/1689, Art. 14)"
+      }
+    },
+    {
+      "layer": "record",
+      "module": "certify_finding",
+      "fn": "certify_finding",
+      "asks": "Is the record court-deployable?",
+      "status": "OK",
+      "ms": 0.3,
+      "result": {
+        "title": "Chiron Finding Certificate",
+        "issued": "2026-08-06T02:42:56.904908Z",
+        "owner": "Jacob Iannotti",
+        "domain": "general",
+        "sections": [
+          {
+            "title": "Finding",
+            "content": "incompressible (verified=False); No exact model in the hypothesis class reproduces this sequence (honest negative)."
+          },
+          {
+            "title": "Method & Reliability",
+            "content": "Daubert/FRE 702: 2/6 factors -> INADMISSIBLE_AS_PROFFERED"
+          },
+          {
+            "title": "Regulatory Compliance",
+            "content": "44 provisions in general; 0 violations; 34 open for review"
+          },
+          {
+            "title": "Governance",
+            "content": "ESCALATE \u2014 gate(s) failed: EVIDENCE"
+          },
+          {
+            "title": "Attestation",
+            "content": "merkle=298ee1282d6ceffc2c47d74e\u2026; replay_seed reproduces input"
+          }
+        ],
+        "daubert": {
+          "factors": [
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            },
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            },
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            },
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            },
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            },
+            {
+              "factor": "\u2026",
+              "citation": "\u2026",
+              "satisfied": "\u2026",
+              "basis": "\u2026"
+            }
+          ],
+          "satisfied": 2,
+          "of": 6,
+          "overall_assessment": "INADMISSIBLE_AS_PROFFERED"
+        },
+        "admissibility": "INADMISSIBLE_AS_PROFFERED",
+        "controlling_law": [
+          "Reg (EU) 2024/1689, Art. 5",
+          "Reg (EU) 2024/1689, Art. 14",
+          "Reg (EU) 2016/679, Art. 9",
+          "Reg (EU) 2016/679, Art. 22",
+          "Fed. R. Evid. 702 (amended Dec 1, 2023)",
+          "Daubert v. Merrell Dow, 509 U.S. 579 (1993)"
+        ],
+        "governance_verdict": "ESCALATE \u2014 gate(s) failed: EVIDENCE",
+        "violations": [],
+        "merkle_root": "298ee1282d6ceffc2c47d74e5e0c776386c14cf12fa1b7f04e1e28757ddb6c51",
+        "replay_seed": "4200 1400 1 4 9 16 25",
+        "court_deployable": false,
+        "legal_status": "Court-READY input, not a legal determination. The Daubert/FRE 702 section is the system's self-assessment of reliability factors; admissibility is decided by a court, and a qualified expert must sponsor and authenticate the finding. The method is not peer-reviewed (disclosed above). Not legal advice."
+      }
+    },
+    {
+      "layer": "record",
+      "module": "provenance",
+      "fn": "provenance",
+      "asks": "What is the provenance chain?",
+      "status": "OK",
+      "ms": 0.3,
+      "result": {
+        "law": "incompressible",
+        "verified": false,
+        "stages": [
+          "intake",
+          "collapse",
+          "certify",
+          "govern",
+          "judgment"
+        ],
+        "commits": {
+          "intake": "02d4a87784b7",
+          "collapse": "d33a285e7c55",
+          "certify": "833344211510",
+          "govern": "b3bb53fc4f92",
+          "judgment": "9f51aea65447"
+        },
+        "final_artifact": "9f51aea65447",
+        "full_lineage_size": 4,
+        "minimal_blame_set": [
+          "d33a285e7c55",
+          "02d4a87784b7",
+          "b3bb53fc4f92",
+          "833344211510"
+        ],
+        "branches_merged_at_judgment": true,
+        "provenance_conserved": true,
+        "note": "content-addressed, monotone, branching chain (A3); any artifact traces to origin (T3)"
+      }
+    },
+    {
+      "layer": "record",
+      "module": "actionable_intelligence",
+      "fn": "brief",
+      "asks": "What should a decision-maker do?",
+      "status": "OK",
+      "ms": 1.0,
+      "result": {
+        "label": null,
+        "n": 7,
+        "what_it_is": {
+          "law": "incompressible",
+          "plain": "No exact model in the hypothesis class reproduces this sequence (honest negative).",
+          "exact_arithmetic": true,
+          "verified_on_heldout": false
+        },
+        "whats_wrong": {
+          "anomalies": [],
+          "note": "no law recovered \u2014 exact anomaly detection is not defined"
+        },
+        "whats_next": {
+          "abstain": true,
+          "reason": "no law found; do not forecast (a general compressor is the right tool)"
+        },
+        "confidence": {
+          "verified_on_heldout": false,
+          "compression_ratio": 1.0,
+          "margin": 0.0,
+          "what_would_falsify": "a single held-out element the law fails to reproduce exactly"
+        },
+        "provenance": {
+          "generator_fingerprint": "44c269add4ddaf7b",
+          "note": "same-origin attribution across sources available via twins / origin-signatures"
+        },
+        "recommendation": {
+          "verdict": "REJECT_INPUT \u2014 no structure; insufficient basis to act",
+          "evidence_quality_V": 0.25,
+          "governance": "ESCALATE \u2014 gate(s) failed: EVIDENCE"
+        }
+      }
+    },
+    {
+      "layer": "record",
+      "module": "epistemic",
+      "fn": "run",
+      "asks": "Does it satisfy the five-stage epistemic contract?",
+      "status": "OK",
+      "ms": 1.3,
+      "result": "Certificate(domain='integers / ciphers / code', verdict='REFUSED', generator=None, detail={'model_class': 'incompressible', 'explanation': 'No exact model in the hypothesis class reproduces this sequence (honest negative).'})"
+    }
+  ],
+  "scope": "Every applicable vault stage over one text. SKIPPED means the stage does not apply and says why; ERROR means it raised. Neither is reported as a pass."
+}
