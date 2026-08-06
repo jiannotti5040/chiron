@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "chiron": {
+      "command": "python3",
+      "args": ["Chiron/mcp_server.py"],
+      "env": {}
+    },
+    "primus": {
+      "command": "python3",
+      "args": ["-m", "primus.mcp_server"],
+      "env": { "PYTHONPATH": "Primus/src" }
+    }
+  }
+}
