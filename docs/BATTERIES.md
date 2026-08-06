@@ -31,7 +31,7 @@ supported inputs you choose.
 | Battery | Covers | Count |
 |---|---|---|
 | Invariant stress gates | recovery, refusal, adversarial input, the evidence rule | **55/55** |
-| `primus selftest` | engine 4 + certificate layer 31 + guess-and-prove conjecture layer 16 | **51/51** |
+| `primus selftest` | engine 4 + certificate layer 35 + guess-and-prove conjecture layer 16 | **55/55** |
 | Certify fuzz | hostile input: floods, bombs, bounds, noise-stability, determinism | **16/16** |
 | MCP handshake | the live server process over real stdio JSON-RPC | **11/11** |
 | HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): verify/refuse round-trips, over-budget refusals at the certify bounds, rate limits, auth, and the no-leak rule (no traceback or source path in any hostile response); closed route table (404 / 405 + Allow), adversarial-JSON bounded refusal, log hygiene | **33/33** |
@@ -49,10 +49,11 @@ supported inputs you choose.
 | Chiron core gates | the organism's hard laws | **12/12** |
 | Reproducibility harness | same input, same version ⇒ byte-identical results | digest-stable |
 | Monolith standalone smoke | the certified core from ONE file, no vault beside it (semic 56/56, JDICert 280/280 inside) | **5/5** |
-| Monolith full folded sweep | every selftest-bearing module, through the fold | **51/51** |
+| Monolith full folded sweep | every selftest-bearing module, through the fold | **52/52** |
 | Invariant-operation stress probes | recovery/refusal/cipher/structure (build of 2026-07-16) | **23/23** |
 | Pipeline composer | chain/team/swarm compose; unknown component fails safe | **7/7** |
 | Documented-command smoke | every command in the manual runs as written | **9/9** |
+| Chiron MCP tools (`Chiron/mcp_server.py selftest`) | the vault as agent tools: attest refuses without candidates, file reading and its bounds, text/path exclusivity, catalog discovery, dispatch and its refusals | **17/17** |
 
 **UMA Suite (research package in the vault):**
 
