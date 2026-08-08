@@ -86,8 +86,9 @@
     {
       "id": "palantir_foundry_aip",
       "role": "external ontology and agent integration",
-      "status": "unimplemented",
-      "reason": "No authorized credentials, endpoint, ontology, or client implementation was found."
+      "status": "boundary-only-unconfigured",
+      "paths": ["Chiron/foundry_boundary.py", "docs/FOUNDRY_AIP_INTEGRATION.md"],
+      "reason": "A typed, non-delivering external-ontology boundary is implemented. No authorized credentials, endpoint, ontology, or live client implementation was supplied."
     }
   ],
   "shared_interfaces": [
@@ -95,7 +96,7 @@
       "name": "Chiron MCP",
       "entry": "Chiron/mcp_server.py",
       "transport": "local stdio JSON-RPC",
-      "tools": ["attest", "analyze", "certify", "catalog", "call"],
+      "tools": ["attest", "analyze", "certify", "collapse", "trace", "catalog"],
       "status": "implemented-and-tested"
     },
     {
