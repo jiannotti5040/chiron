@@ -1,14 +1,23 @@
 # App Store and release readiness
 
-**Decision (inspection date: 2026-08-08): not ready for App Store submission
-or public macOS distribution.** This checkout now contains two development
-interfaces: a locally tested macOS SwiftUI front end for a separately
-installed Python vault, and a native iOS SwiftUI client for the narrow,
-versioned Primus `/v1` service contract. An earlier iOS Simulator build was
-observed, but the local Xcode build service stalled before compiler output on
-a repeat after final hardening; no deployed authenticated gateway, completed
-iOS test run, release archive, signing evidence, or App Review evidence exists. A locally
-built `.app` is not an App Store candidate.
+**Decision (re-inspected 2026-08-08, second pass): not ready for App Store
+submission or public macOS distribution.** This checkout contains two
+development interfaces: a locally tested macOS SwiftUI front end for a
+separately installed Python vault, and a native iOS SwiftUI client for the
+narrow, versioned Primus `/v1` service contract.
+
+What changed in this pass: the iOS target had been deleted, leaving
+`ChironMobile.xcodeproj` on disk with zero sources. It has been restored on
+the renamed `chiron.local_api/1` contract and **a full Simulator bundle build
+now completes** (`** BUILD SUCCEEDED **`, Xcode 27.0, iPhone 17 Pro, iOS 27.0)
+— the first completed iOS build recorded in this repository. The certify
+vertical slice has also been exercised end to end against a live local engine
+server through the same client the iOS app links.
+
+Still absent: any completed iOS test-runner result (the runner stalls on this
+host), any deployed authenticated gateway, release archive, signing,
+notarization, or App Review evidence. A locally built `.app` is not an App
+Store candidate.
 
 This is an evidence record for this checkout and the local artifacts inspected
 at the time. It is not an assertion about an Apple account, App Review, legal
@@ -20,8 +29,10 @@ cannot be observed from source control.
 | Route | Status | Evidence-based reason |
 |---|---|---|
 | Local macOS developer use | **Implemented and tested** | The SwiftPM app runs the local vault through `python3`; the package suite has exercised the macOS flow and shared remote-client contract locally. |
-| Native iOS development target | **Implemented; earlier simulator build observed** | `iOS/ChironMobile.xcodeproj` links a URLSession-only client to the fixed `/v1` contract. The Simulator build succeeded earlier, but a repeat Xcode build service and the Xcode test runner both stalled without a completed result. |
-| End-to-end mobile service use | **Not demonstrated** | There is no project-operated authenticated HTTPS gateway, owner-issued credential, or observed device/client-to-service request. |
+| Native iOS development target | **Implemented; Simulator bundle build completed** | `iOS/ChironMobile.xcodeproj` links a URLSession-only client to the fixed `/v1` contract. `** BUILD SUCCEEDED **` observed on Xcode 27.0 / iPhone 17 Pro / iOS 27.0. |
+| iOS test-runner result | **Blocked, not failed** | `xcodebuild test` produced no output for ten minutes and `xcrun simctl install` hung, while `build` and `simctl boot` worked. CoreSimulator appears wedged on this host; the same stall was recorded in the previous pass, so it is reproducible. |
+| End-to-end service use | **Demonstrated locally through the shared client; UI interaction not observed** | Live `URLSession` requests from `ChironService` to a running `engine_server` on `127.0.0.1` returned real `chiron.local_api/1` envelopes: certify preserved `VERIFIED` + `REFUTED` unaltered, collapse recovered the order-2 recurrence with zero residual. The iOS app links that exact client, so the code path is shared — but no on-device or Simulator *UI* interaction was observed, and there is still no project-operated authenticated HTTPS gateway or owner-issued credential. |
+| Apple on-device model | **Implemented and tested; available on this host** | `ChironIntelligence` gates `SystemLanguageModel` behind `#if canImport(FoundationModels)` and `@available(macOS 26/iOS 26)`, reports availability honestly, and cannot express a verdict. 12 deterministic gates green; a live run was observed. Privacy-manifest and store-disclosure work for it is **not** done. |
 | Direct macOS distribution | **Not ready** | The inspected bundle is ad-hoc signed, has no Hardened Runtime evidence, is rejected by Gatekeeper, and has not been notarized. |
 | Mac App Store | **Not ready** | No App Sandbox entitlement, Apple distribution signing, archive/export pipeline, valid store versioning, privacy submission record, or review evidence exists. |
 | iOS App Store | **Not ready** | The development target has no release signing/provisioning/archive/privacy/review evidence; its authenticated service boundary is not deployed or exercised end to end; and its AppIcon asset set has no assigned 1024 px image. |
@@ -40,23 +51,26 @@ cannot be observed from source control.
   truncation warning, and uses stdin for the Full Stack flow. It persists the
   user-selected vault *path* in `UserDefaults`; a release data-flow inventory
   must account for that behavior.
-- The original local macOS inspection recorded **13 tests in 3 suites**
-  passing. The current SwiftPM suite also includes ten deterministic
-  `ChironRemote` client-contract tests; it has been observed green as a
-  23-test suite in this checkout. These are local development checks, not
-  evidence of an archive, sandboxed execution, signing, notarization, or App
-  Review.
+- The SwiftPM suite at this revision has been observed green as **33
+  deterministic gates**: 11 in `ChironKitTests`, 10 `ChironService`
+  client-contract gates, and 12 `ChironIntelligence` grounding/availability
+  gates. Four further gates exercise live subsystems and are **skipped by
+  default**, on purpose: three need `CHIRON_LOCAL_API_URL` to name a running
+  engine server, and one needs `CHIRON_LIVE_MODEL=1`. All four have been
+  observed passing against real subsystems on this host. These are local
+  development checks, not evidence of an archive, sandboxed execution,
+  signing, notarization, or App Review.
 
 ### Shared contract and iOS development target
 
 - `ChironContract` holds the shared record types and exact JSON-token parser.
-  `ChironRemote` is a URLSession-only client: it does not import
+  `ChironService` is a URLSession-only client: it does not import
   `Foundation.Process`, launch Python, discover a vault path, dynamically
   invoke a tool, recompute certificate values on device, or follow HTTP
   redirects. Its plaintext development exception is literal `127.0.0.1` or
   `::1`; all other endpoints require HTTPS.
 - The client can request the three deliberately fixed operations in the
-  [local mobile-safe contract](../Primus/MOBILE_API.md): `GET
+  [local `/v1` contract](../Primus/LOCAL_API.md): `GET
   /v1/capabilities`, `POST /v1/collapse`, and `POST /v1/certify`. It bounds
   requests and streamed responses, validates the response envelope/schema,
   preserves raw JSON number tokens, and has no local-process fallback.
@@ -76,24 +90,60 @@ cannot be observed from source control.
   no token is embedded in the repository, project, or app defaults. This
   storage choice is not proof of
   an identity system, token lifecycle, or production authorization.
-- The following Simulator build completed successfully in this environment:
+- The following Simulator bundle build completed successfully in this
+  environment, at this revision:
 
   ```bash
   xcodebuild -project iOS/ChironMobile.xcodeproj \
     -scheme ChironMobile \
-    -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0' \
-    -derivedDataPath /tmp/chiron-ios-mobile-build \
-    CODE_SIGNING_ALLOWED=NO build
+    -destination 'platform=iOS Simulator,name=iPhone 17 Pro,OS=27.0' \
+    -derivedDataPath /tmp/chiron-ios-dd build
   ```
 
-  The matching test invocation has **not** yielded a completed result: its
-  runner stalled. A later repeat build after local hardening also stalled in
-  Xcode's build service before compiler output. The current shared and iOS
-  sources were typechecked directly against the installed arm64 iOS Simulator
-  SDK, but that is not a bundle build. Therefore this record makes no current-
-  revision iOS build, test-pass, app-launch, device, network, or end-to-end
-  assertion. That investigation is a release blocker, not a reason to infer
-  success from a compiled test target.
+  It emitted `** BUILD SUCCEEDED **` and produced a signed-to-run-locally
+  `ChironMobile.app`. This is a real bundle build, not a typecheck.
+
+  The matching **test** invocation still has not yielded a completed result:
+  `xcodebuild … test` produced no output for ten minutes and was killed, and
+  `xcrun simctl install` hung indefinitely against a device that `simctl boot`
+  had just booted successfully. Because plain `build` completes on the same
+  host and destination, this is an environment fault (CoreSimulator), not a
+  source defect — but it is still a release blocker, and no iOS test-pass,
+  app-launch, or on-device assertion is made here.
+
+- The certify path *was* exercised end to end, through the same
+  `ChironService` client the iOS target links, by
+  `App/Tests/ChironServiceTests/LiveLocalServiceTests.swift`. Those gates are
+  skipped unless `CHIRON_LOCAL_API_URL` names a server the operator started,
+  so they cannot pass with nothing listening. Observed against
+  `http://127.0.0.1:8765`: a certify certificate whose claims were
+  `["VERIFIED", "REFUTED"]` with counts `verified: 1, refuted: 1`, and a
+  collapse certificate recovering `linear_recurrence_order2` with
+  `residual_bits: 0.0`. This demonstrates the client/server contract; it does
+  not demonstrate a UI interaction or a deployed gateway.
+
+### Apple on-device model
+
+- `ChironIntelligence` adapts Apple's `SystemLanguageModel` behind
+  `#if canImport(FoundationModels)` and `@available(macOS 26.0, iOS 26.0,
+  visionOS 26.0, *)`. On an older OS or a build without the framework it still
+  compiles and still constructs; it reports the real reason and refuses.
+- The model is a **proposer only**. `ProposedClaim` has no status, score,
+  confidence, or correction field, and the `@Generable` schema gives the model
+  no vocabulary for deciding anything — so a verdict is not merely
+  discouraged, it is unrepresentable. `GroundingFilter` then discards any span
+  absent from the source, and always carries the *document's* bytes forward
+  rather than the model's rendering of them.
+- The target depends on nothing else in the package: a proposer cannot reach a
+  client, an engine, or a certificate.
+- Observed on this host: `availability == available`, and a live generation
+  returned spans that survived grounding. Model output is nondeterministic, so
+  the live gate asserts the invariant (every surviving claim is verbatim
+  source text), never a particular answer.
+- **Not done for release:** no privacy-manifest entry, App Store data-use
+  disclosure, or user-facing consent flow for on-device model use exists yet.
+  Availability is also hardware- and settings-dependent, so store metadata must
+  not imply the feature is universally present.
 
 ### Local bundle inspected
 
@@ -237,11 +287,14 @@ No legal conclusion is made here.
    scopes, expiry/refresh, rotation/revocation, rate/abuse policy, monitoring,
    retention, and incident/support ownership. Keep all credentials out of Git
    and out of the application binary.
-3. **Close the iOS local gates.** Resolve the stalled `xcodebuild test` run,
-   exercise the exact service envelope/refusal behavior against a controlled
-   endpoint, and test on supported devices for lifecycle, network failure,
-   file import, Keychain, accessibility, and privacy behavior. Record the
-   output; do not substitute a compile for these gates.
+3. **Close the iOS local gates.** The bundle build and the service
+   envelope/refusal behavior are now both observed, the latter through the
+   shared client against a live local endpoint. What remains: resolve the
+   stalled `xcodebuild test` runner (start with the wedged CoreSimulator —
+   `sudo pkill -9 -f CoreSimulator`, then re-boot the device), then test on
+   supported devices for lifecycle, network failure, file import, Keychain,
+   accessibility, and privacy behavior. Record the output; do not substitute a
+   compile, or a shared-client test, for an on-device gate.
 4. **Create reproducible app release targets.** Add maintained macOS and iOS
    archive/export configurations, numeric release/build inputs, recorded
    source revisions, and no-local-path configuration. Decide and test
@@ -279,6 +332,6 @@ xcodebuild -project iOS/ChironMobile.xcodeproj \
 ```
 
 For the mobile target's deliberately narrow boundary, see
-[`iOS/README.md`](../iOS/README.md) and [`Primus/MOBILE_API.md`](../Primus/MOBILE_API.md).
+[`iOS/README.md`](../iOS/README.md) and [`Primus/LOCAL_API.md`](../Primus/LOCAL_API.md).
 For the broader architecture, see [`RECONSTRUCTION.md`](RECONSTRUCTION.md).
 For macOS local development, see [`App/README.md`](../App/README.md).
