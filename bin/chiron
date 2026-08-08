@@ -129,6 +129,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_mcp_server.py"))], None),
         ("local browser CORS (real loopback HTTP)",
          [PY, _script(os.path.join("tests", "test_local_cors.py"))], None),
+        ("assistant and console execution policy",
+         [PY, _script(os.path.join("tests", "test_execution_policy.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
         ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",

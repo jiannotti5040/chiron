@@ -104,8 +104,8 @@ costing the properties above (`python3 build.py verify-all`).
 | `build.py` | lossless split/recompile of the single-file engines, byte-identical round-trip gate |
 | `intake_salvage.py` | fault-tolerant ingestion over strict `intake.py` (never overwrites a good parse) |
 | `vault.py` | one command that starts every local service and prints one URL (Ctrl-C stops all) |
-| `console_server.py` | the launcher service — run any function from the dashboard Run tab (port 8768) |
-| `assistant_server.py` | the natural-language assistant — intent → real engine actions (Chat tab, port 8769) |
+| `console_server.py` | static read-only analysis/status launcher; mutation and unlisted commands are escalated (port 8768) |
+| `assistant_server.py` | bounded natural-language assistant — intent → deterministic read-only engine/Congress actions (Chat tab, port 8769) |
 | `local_cors.py` | strict loopback-only browser-origin allowlist shared by the Run and Chat services; CORS is not authentication |
 | `grow_control.py` | start / stop / point the continuous grower from the dashboard (Feed tab, port 8767) |
 | `run_ledger.py` | the vault's operational memory — every engine invocation appended as one append-only, crash-healing, replay-exact record (`artifacts/run_ledger.jsonl`) |

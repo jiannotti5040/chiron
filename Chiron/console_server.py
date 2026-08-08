@@ -2,18 +2,16 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Jacob Iannotti
 """
-console_server.py — run any Chiron function, and reach every engine, from the dashboard.
+console_server.py — a read-only, allowlisted Chiron launcher for the dashboard.
 
-A small local launcher (port 8768). It exposes a curated catalog of the engines' functions — the
-chiron CLI verbs, the semantic calculus, the framework interface, the governance and certification
-layer, the growth tools, the build verifier, and the six-task benchmark suite — plus an
-auto-discovered self-test for every module in the folder. The dashboard's "Run" tab renders the
-catalog and shows the output; nothing here touches the signed chiron.py.
+A small local launcher (port 8768). It exposes a curated catalog of deterministic analysis and
+status actions. The dashboard's "Run" tab renders that static allowlist and shows the output;
+nothing here touches the signed chiron.py.
 
-Safety: there is no shell. A request names a module (which must be an existing `.py` in this folder)
-and a verb; the launcher runs `python3 <module>.py <verb> <args>` with arguments passed as argv, so
-there is no shell interpolation. Long-running servers (anything `serve`) are intentionally not in the
-catalog.
+Safety: there is no shell, no module auto-discovery, and no generic "run a sibling script" path.
+A request must exactly match a read-only (engine-facing) allowlisted module + verb. Known mutating
+or process-control requests are escalated to a trusted local operator; unknown requests are refused.
+Run growth, writes, builds, process control, or any other operator command from a reviewed local CLI.
 
     python3 console_server.py serve         # launcher at http://127.0.0.1:8768
     python3 console_server.py selftest
@@ -25,19 +23,21 @@ this loopback service never uses a wildcard CORS policy.
 """
 import os
 import sys
-import glob
 import json
 import time
 import shlex
 import argparse
 import subprocess
+import re
 
 import local_cors
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-# Curated, featured catalog. Each item: (module, [fixed argv], label, args_placeholder_or_None).
+# Curated labels for the browser catalog. Every row still needs an exact entry in
+# READ_ONLY_COMMANDS below before it is executable.
+# Each item: (module, [fixed argv], label, args_placeholder_or_None).
 FEATURED = {
     "Engine — recover & prove": [
         ("chiron", ["collapse"], "collapse a sequence", "1 1 2 3 5 8 13"),
@@ -107,25 +107,120 @@ FEATURED = {
     ],
 }
 
-# Verbs we never offer (they block / serve forever).
-_BLOCK = {"serve"}
+# Browser-executable commands, named exactly. This is deliberately not derived from files on
+# disk or from FEATURED: adding a script must never silently make it remotely invocable.
+READ_ONLY_COMMANDS = frozenset((
+    ("chiron", ("collapse",)),
+    ("chiron", ("topk",)),
+    ("chiron", ("explain",)),
+    ("chiron", ("articulate",)),
+    ("chiron", ("solve",)),
+    ("chiron", ("same-origin",)),
+    ("chiron", ("audit",)),
+    ("chiron", ("twins",)),
+    ("chiron", ("state",)),
+    ("semic", ()),
+    ("semic_energy", ("demo",)),
+    ("epistemic", ("demo",)),
+    ("bench_suite", ()),
+    ("bench_symreg", ()),
+    ("bench_proverbs", ()),
+    ("bench_protocol", ()),
+    ("bench_legal", ()),
+    ("bench_compression", ()),
+    ("bench_authorship", ()),
+    ("compare", ()),
+    ("govern", ("demo",)),
+    ("llm_certify", ()),
+    ("president_grow", ("status",)),
+    ("grow_control", ("status",)),
+    ("heartbeat", ("status",)),
+))
+
+# Only these allowlisted actions accept the dashboard's free-form payload. Option-looking
+# tokens are refused before subprocess creation, so an input field cannot change the verb or
+# activate a hidden file/network mode.
+USER_INPUT_COMMANDS = frozenset((
+    ("chiron", ("collapse",)),
+    ("chiron", ("topk",)),
+    ("chiron", ("explain",)),
+    ("chiron", ("articulate",)),
+    ("chiron", ("solve",)),
+    ("chiron", ("same-origin",)),
+    ("chiron", ("audit",)),
+    ("llm_certify", ()),
+))
+
+# These known state-changing families never execute through this unauthenticated loopback
+# launcher. They are reported as an escalation so a person can review and run the direct CLI.
+OPERATOR_ONLY_MODULES = frozenset((
+    "grow_clean", "chiron_grow", "grow_control", "president_grow", "heartbeat", "build",
+    "apply_license_headers",
+))
+OPERATOR_ONLY_PREFIXES = frozenset((
+    ("chiron", "run"), ("chiron", "ingest"), ("chiron", "seal"), ("chiron", "unseal"),
+    ("chiron", "merge"), ("chiron", "checkpoint"), ("chiron", "compact"),
+    ("chiron", "self-growth"), ("chiron", "grow-concepts"),
+    ("chiron", "propose"), ("chiron", "apply-proposal"),
+    ("chiron", "rollback-proposal"),
+    ("pipeline", "run"), ("planner", "run"),
+    ("president_grow", "cycle"),
+    ("grow_control", "start"), ("grow_control", "stop"), ("grow_control", "serve"),
+    ("heartbeat", "serve"),
+))
+_OPTION_TOKEN = re.compile(r"^--?[A-Za-z]")
 
 
-def _modules_with_selftest():
-    """Auto-discover every module in the folder that declares a self-test — 'the entirety'."""
-    found = []
-    for path in sorted(glob.glob(os.path.join(_HERE, "*.py"))):
-        name = os.path.basename(path)[:-3]
-        if name in ("console_server",):
-            continue
-        try:
-            text = open(path, encoding="utf-8", errors="ignore").read(8000)
-        except OSError:
-            continue
-        if "selftest" in text:
-            verb = "--selftest" if "--selftest" in text and "add_parser(\"selftest\"" not in text else "selftest"
-            found.append({"module": name, "verb": verb})
-    return found
+def _command_key(module, argv):
+    """Normalize one request, rejecting ambiguous shapes before policy lookup."""
+    if not isinstance(module, str) or not module or any(c in module for c in "/\\."):
+        return None
+    if not module.replace("_", "").isalnum():
+        return None
+    if not isinstance(argv, (list, tuple)) or not all(isinstance(v, str) and v for v in argv):
+        return None
+    return module, tuple(argv)
+
+
+def command_policy(module, argv):
+    """Return the execution classification for one console request.
+
+    This function is part of the testable trust boundary: callers must check it before
+    constructing a subprocess command.
+    """
+    key = _command_key(module, argv)
+    if key is None:
+        return {"status": "refused", "reason": "module and argv must be a simple exact command"}
+    if key in READ_ONLY_COMMANDS:
+        return {"status": "allowed", "reason": "exact read-only command allowlisted"}
+    if (key[0] in OPERATOR_ONLY_MODULES or
+            (key[1] and (key[0], key[1][0]) in OPERATOR_ONLY_PREFIXES)):
+        return {
+            "status": "escalated",
+            "reason": ("This command can change state or control a process. Review and run it "
+                       "from the trusted local CLI; the dashboard launcher will not execute it."),
+        }
+    return {
+        "status": "refused",
+        "reason": "command is not in the console's explicit read-only allowlist",
+    }
+
+
+def _read_only_args(key, user_args):
+    """Parse a payload only after exact command authorization."""
+    if user_args in (None, ""):
+        return [], None
+    if key not in USER_INPUT_COMMANDS:
+        return None, "this allowlisted command does not accept dashboard arguments"
+    if not isinstance(user_args, str) or len(user_args) > 4096:
+        return None, "arguments must be a short string"
+    try:
+        extra = shlex.split(user_args)
+    except ValueError as e:
+        return None, f"invalid quoted arguments: {e}"
+    if any(_OPTION_TOKEN.match(token) for token in extra):
+        return None, "option-like arguments are not permitted through the dashboard"
+    return extra, None
 
 
 def catalog():
@@ -133,41 +228,50 @@ def catalog():
     for title, items in FEATURED.items():
         rows = []
         for mod, argv, label, ph in items:
-            if any(v in _BLOCK for v in argv):
+            key = _command_key(mod, argv)
+            if key not in READ_ONLY_COMMANDS:
                 continue
-            rows.append({"module": mod, "argv": argv, "label": label, "args": ph})
-        groups.append({"title": title, "items": rows})
-    groups.append({"title": "Every module — self-test",
-                   "items": [{"module": m["module"], "argv": [m["verb"]],
-                              "label": f"{m['module']} self-test", "args": None}
-                             for m in _modules_with_selftest()]})
+            rows.append({"module": mod, "argv": argv, "label": label, "args": ph,
+                         "policy": "read-only"})
+        if rows:
+            groups.append({"title": title, "items": rows})
     return groups
 
 
 def run(module, argv, user_args=""):
-    if not module or any(c in module for c in "/\\.") or not module.replace("_", "").isalnum():
-        return {"ok": False, "output": f"rejected module name: {module!r}"}
-    path = os.path.join(_HERE, module + ".py")
+    key = _command_key(module, argv)
+    policy = command_policy(module, argv)
+    if policy["status"] != "allowed":
+        return {"ok": False, "policy": policy["status"], "output": policy["reason"]}
+    extra, arg_error = _read_only_args(key, user_args)
+    if arg_error:
+        return {"ok": False, "policy": "refused", "output": arg_error}
+    path = os.path.join(_HERE, key[0] + ".py")
+    # The static allowlist is source-of-truth, but retain this defense against an incomplete checkout.
     if not os.path.isfile(path):
-        return {"ok": False, "output": f"no such module: {module}.py"}
-    extra = shlex.split(user_args) if user_args else []
-    cmd = [sys.executable, path] + list(argv) + extra
+        return {"ok": False, "policy": "refused", "output": f"allowlisted module is unavailable: {key[0]}.py"}
+    cmd = [sys.executable, path] + list(key[1]) + extra
     t0 = time.time()
     try:
         p = subprocess.run(cmd, cwd=_HERE, capture_output=True, text=True, timeout=180)
         out = (p.stdout or "") + (p.stderr or "")
     except subprocess.TimeoutExpired:
-        return {"ok": False, "output": "timed out after 180s", "cmd": " ".join(cmd[1:])}
+        return {"ok": False, "policy": "allowed", "output": "timed out after 180s",
+                "cmd": " ".join(cmd[1:])}
     res = {"ok": p.returncode == 0, "returncode": p.returncode,
            "output": out[-12000:], "seconds": round(time.time() - t0, 2),
-           "cmd": "python3 " + " ".join(os.path.basename(c) if c == path else c for c in cmd[1:])}
+           "cmd": "python3 " + " ".join(os.path.basename(c) if c == path else c for c in cmd[1:]),
+           "policy": "allowed"}
     try:  # the witness never breaks the act it witnesses
         import run_ledger
-        res["certificate"] = run_ledger.certificate_for(module)
-        run_ledger.record(module, list(argv) + extra, ok=res["ok"],
-                          verdict=out.strip().replace("\n", " · ")[-160:],
+        res["certificate"] = run_ledger.certificate_for(key[0])
+        run_ledger.record(key[0], list(key[1]) + extra, ok=res["ok"],
+                          # Console output can contain user-selected text; the ledger
+                          # records only the operation outcome and redacted argument
+                          # witnesses, never a tail of that output.
+                          verdict=f"exit {p.returncode}",
                           seconds=res["seconds"], certificate=res["certificate"],
-                          source="console")
+                          source="console", redact=True)
     except Exception:
         pass
     return res
@@ -184,15 +288,16 @@ button{background:#1d6feb;color:#fff;border:0;border-radius:8px;padding:7px 12px
 input{background:#0a0e16;color:#e6edf6;border:1px solid #2c3850;border-radius:8px;padding:7px;font-family:ui-monospace,monospace;font-size:12px}
 pre{background:#0a0e16;border:1px solid #1e2a3b;border-radius:10px;padding:12px;white-space:pre-wrap;max-height:380px;overflow:auto;font-size:12px}
 .qs{background:#0e1a16;border:1px solid #2b5444;border-radius:10px;padding:10px 14px}</style></head><body>
-<h2>Run anything in Chiron</h2>
+<h2>Run read-only Chiron analysis</h2>
 <div class=qs><b>Quick start:</b> <code>python3 chiron.py serve</code> (console :8765) ·
-<code>python3 console_server.py serve</code> (this :8768) — full guide in docs/RUNNING.md.</div>
+<code>python3 console_server.py serve</code> (this :8768). Growth, writes, builds, and process
+control are operator-only: review and run those commands from the local CLI.</div>
 <div id=out></div><div id=cat></div>
 <script>const B='';
 async function j(p,b){const o=b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{};const r=await fetch(B+p,o);return r.json()}
 async function go(m,argv,el){const a=el.querySelector('input');const args=a?a.value:'';document.getElementById('out').innerHTML='<pre>running '+m+' '+argv.join(' ')+' …</pre>';
 const r=await j('/api/console/run',{module:m,argv:argv,args:args});
-document.getElementById('out').innerHTML='<pre>$ '+(r.cmd||'')+'  ('+(r.seconds||0)+'s, '+(r.ok?'ok':'exit '+(r.returncode??'?'))+')\\n\\n'+(r.output||'').replace(/</g,'&lt;')+'</pre>';window.scrollTo(0,0)}
+document.getElementById('out').innerHTML='<pre>'+(r.policy||'unknown policy')+' · $ '+(r.cmd||'')+'  ('+(r.seconds||0)+'s, '+(r.ok?'ok':'exit '+(r.returncode??'?'))+')\\n\\n'+(r.output||'').replace(/</g,'&lt;')+'</pre>';window.scrollTo(0,0)}
 async function load(){const groups=await j('/api/console/catalog');let h='';
 for(const g of groups){h+='<h3>'+g.title+'</h3><div class=grp>';
 for(const it of g.items){const id='i'+Math.random().toString(36).slice(2);
@@ -264,18 +369,20 @@ def _selftest():
         checks.append((name, bool(cond)))
 
     cat = catalog()
-    ok("catalog has featured groups + the auto self-test group", len(cat) >= 6)
-    ok("auto-discovery found many modules", len(cat[-1]["items"]) >= 15)
-    ok("no blocked (serve) verbs in the catalog",
-       not any("serve" in it["argv"] for g in cat for it in g["items"]))
-    ok("rejects path-y module names", run("../etc/passwd", [])["ok"] is False)
-    ok("rejects unknown module", run("nope_not_real", ["selftest"])["ok"] is False)
-
-    r = run("legal_corpus", ["selftest"])      # fast, no chiron import
-    ok("runs a real module and captures output", r["ok"] and "PASS" in r["output"].upper())
-
-    rc = run("chiron", ["collapse", "2", "4", "6", "8", "10"])
-    ok("runs a chiron verb with args", "arithmetic" in rc["output"].lower())
+    catalog_keys = {(it["module"], tuple(it["argv"])) for g in cat for it in g["items"]}
+    ok("catalog has read-only featured groups", len(cat) >= 5)
+    ok("every catalog row is an exact read-only allowlist entry",
+       catalog_keys and catalog_keys <= READ_ONLY_COMMANDS
+       and all(it.get("policy") == "read-only" for g in cat for it in g["items"]))
+    ok("a normal analysis action is allowlisted",
+       command_policy("chiron", ["collapse"])["status"] == "allowed")
+    ok("known growth mutation is escalated",
+       run("grow_clean", ["file"], "./notes.txt")["policy"] == "escalated")
+    ok("unknown sibling script is refused, never auto-discovered",
+       run("legal_corpus", ["selftest"])["policy"] == "refused")
+    ok("rejects path-y module names", run("../etc/passwd", [])["policy"] == "refused")
+    ok("rejects option injection into an allowlisted action",
+       run("chiron", ["collapse"], "--memory /tmp/other.json")["policy"] == "refused")
 
     passed = sum(1 for _, c in checks if c)
     print("console_server self-test")
@@ -286,7 +393,7 @@ def _selftest():
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Run any Chiron function from one launcher.")
+    ap = argparse.ArgumentParser(description="Run exact read-only Chiron actions from one launcher.")
     sub = ap.add_subparsers(dest="cmd")
     sub.add_parser("selftest")
     sub.add_parser("catalog")
