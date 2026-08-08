@@ -18,10 +18,15 @@ let package = Package(
         // is a bounded client for the versioned /v1 routes.
         .library(name: "ChironContract", targets: ["ChironContract"]),
         .library(name: "ChironService", targets: ["ChironService"]),
+        // On-device model assistance. It proposes spans; it never disposes.
+        .library(name: "ChironIntelligence", targets: ["ChironIntelligence"]),
     ],
     targets: [
         .target(name: "ChironContract"),
         .target(name: "ChironService", dependencies: ["ChironContract"]),
+        // Deliberately depends on nothing: a proposer must not be able to
+        // reach a client, an engine, or a certificate.
+        .target(name: "ChironIntelligence"),
         .target(name: "ChironKit", dependencies: ["ChironContract"]),
         .executableTarget(name: "ChironApp", dependencies: ["ChironKit"]),
         .testTarget(
@@ -32,6 +37,10 @@ let package = Package(
         .testTarget(
             name: "ChironServiceTests",
             dependencies: ["ChironService", "ChironContract"]
+        ),
+        .testTarget(
+            name: "ChironIntelligenceTests",
+            dependencies: ["ChironIntelligence"]
         ),
     ]
 )
