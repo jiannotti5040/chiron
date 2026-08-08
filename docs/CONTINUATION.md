@@ -15,8 +15,8 @@ battery. Nothing below overrides them.
 |---|---|
 | Repository | `~/Desktop/Intellectual/Jacob-s-Portfolio-Vault` |
 | Working branch | `codex/macos-recovery-20260808` |
-| Last commits | `bc199e8` consolidation, `60d76ce` iOS restoration |
-| Baseline | Python gate battery green, Swift package green, iOS builds |
+| Commits this session | `bc199e8` consolidation → `60d76ce` iOS restoration → `ac6e17a` this record → `2b3a2c0` on-device model → `58afc31` readiness record |
+| Baseline | Python 54/54 green, Swift 33 deterministic gates green, iOS builds, macOS app runs |
 
 ## Restart in one minute
 
@@ -56,9 +56,11 @@ These were run, and the stated result was seen. Nothing here is inferred.
 | Check | Result |
 |---|---|
 | `python3 bin/chiron test --full` | GATE BATTERY GREEN — 54/54 modules through the fold |
-| `swift test` (App package) | 10 XCTest gates + 11 swift-testing gates green |
+| `swift test` (App package) | 33 deterministic gates green (11 ChironKit, 10 ChironService, 12 ChironIntelligence) |
 | `swift test` with a live server | 3 live gates green; certify returned `VERIFIED` + `REFUTED` unaltered; collapse recovered the order-2 recurrence with zero residual |
-| `swift test` offline | the 3 live gates skip; they never pass with nothing listening |
+| `swift test` offline | the 4 live gates skip; they never pass with nothing listening |
+| `CHIRON_LIVE_MODEL=1 swift test` | on-device model ran; every surviving span was verbatim source text, including the false claim the engine refutes |
+| on-device model availability | `available` on this host |
 | `xcodebuild … ChironMobile … build` | **BUILD SUCCEEDED** — the first completed iOS build recorded here |
 | `./make_app.sh` | built `App/build/Chiron.app`, ad-hoc signed |
 | `open build/Chiron.app` | launched and stayed running |
@@ -96,12 +98,20 @@ by earlier work on this branch.
 
 | Gap | Status | Why it matters |
 |---|---|---|
-| Apple Foundation Models | **absent** — no `FoundationModels` or `SystemLanguageModel` reference exists in any Swift file | Mandate item 10. Needs `#if canImport` + `@available` gating and honest availability reporting. |
-| App Intents / Siri / Shortcuts | **absent** — no `AppIntent` or `AppShortcut` type exists | Mandate item 19. |
-| `docs/APP_STORE_READINESS.md` | **deleted** on this branch | It was an honest evidence record; it should be restored and re-dated, not dropped. |
+| App Intents / Siri / Shortcuts | **absent** — no `AppIntent` or `AppShortcut` type exists | Mandate item 19. The natural first intent is "certify selected text", since that path is already proven. |
 | iOS test runner | **blocked** | `xcodebuild test` stalls without output on this host; `simctl install` hangs. CoreSimulator appears wedged. No completed iOS test result exists. |
 | MCP client validation | **not observed** | `.mcp.json` registers both servers, but no Claude Code / Codex client was observed invoking a tool this session. |
+| On-device model in the UI | **adapter only** | `ChironIntelligence` is implemented and tested but no app screen calls it yet. Wiring it into the macOS workspace is the natural next feature. |
+| Privacy manifest for model use | **absent** | Required before any store submission that ships the on-device path. |
 | Signing, notarization, archive | **absent** | Ad-hoc signing only. No distribution evidence of any kind. |
+
+### Closed since this record was first written
+
+- **Apple Foundation Models** — implemented as `ChironIntelligence`, gated and
+  tested; `availability == available` on this host and a live generation was
+  observed. The model proposes spans and structurally cannot express a verdict.
+- **`docs/APP_STORE_READINESS.md`** — restored and re-dated to observed
+  evidence.
 
 ## Known environment blockers
 
@@ -119,13 +129,19 @@ by earlier work on this branch.
 
 ## The exact next autonomous action
 
-1. Add the Apple Foundation Models adapter behind `#if canImport(FoundationModels)`
-   and `@available`, with a mock path so it is testable where Apple
-   Intelligence hardware is unavailable. It must never stamp a verdict: it
-   proposes, and the canonical engine disposes.
-2. Restore `docs/APP_STORE_READINESS.md`, re-dated, with the observed rows
-   above and the not-ready verdicts that remain true.
-3. Only then consider App Intents.
+1. **Wire `ChironIntelligence` into the macOS workspace.** The adapter is
+   tested but unreached by any UI. Add a "suggest claims" affordance to
+   `WorkspaceView` that calls `ProposerRouter.proposer()`, shows the
+   availability explanation verbatim when it cannot run, and sends surviving
+   spans to the existing certify path. Show rejected proposals too — a
+   discarded hallucination is information the operator should see. Do not let
+   a proposal render as a verdict anywhere in the view.
+2. **Unwedge CoreSimulator and close the iOS test gate:**
+   `sudo pkill -9 -f CoreSimulator`, re-boot the device, then retry
+   `xcodebuild … test`. If it stalls again, record the retry rather than
+   inferring a pass.
+3. **Then App Intents** — "certify selected text" first, since that path is
+   already proven end to end.
 
 Do not widen a gate, mute a test, or convert a refusal into a score to make
 any of this look finished.
