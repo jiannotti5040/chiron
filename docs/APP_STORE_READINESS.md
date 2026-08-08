@@ -47,7 +47,9 @@ cannot be observed from source control.
   with `Foundation.Process`, discovering a local `python3` and a vault that
   contains `Chiron/` and `Primus/`. A shipped bundle therefore does **not**
   currently contain a self-sufficient engine.
-- The UI uses normal file import/drop flows, bounds reads at 2 MB, preserves a
+- The UI uses normal file import/drop flows, bounds reads at 8 MiB
+  (`FileLoad.maxBytes`; this record previously said 2 MB, which no longer
+  matched the source), preserves a
   truncation warning, and uses stdin for the Full Stack flow. It persists the
   user-selected vault *path* in `UserDefaults`; a release data-flow inventory
   must account for that behavior.
