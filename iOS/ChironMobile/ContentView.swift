@@ -3,12 +3,12 @@
 import SwiftUI
 import UniformTypeIdentifiers
 import ChironContract
-import ChironRemote
+import ChironService
 
 struct ContentView: View {
     // The endpoint is not a credential, so user-controlled endpoint selection
     // can persist normally. Tokens stay exclusively in Keychain.
-    @AppStorage("chiron.mobile.endpoint") private var endpointText = ""
+    @AppStorage("chiron.service.endpoint") private var endpointText = ""
     @State private var sourceText = "The sum of 2 and 2 is 4. The product of 3 and 4 is 11."
     @State private var result: JSONValue?
     @State private var requestID: String?
@@ -18,7 +18,7 @@ struct ContentView: View {
     @State private var showSettings = false
 
     private var endpointIsConfigured: Bool {
-        (try? MobileEndpoint(text: endpointText)) != nil
+        (try? ServiceEndpoint(text: endpointText)) != nil
     }
 
     var body: some View {
@@ -158,7 +158,7 @@ struct ContentView: View {
         requestID = nil
         let text = sourceText
         do {
-            try MobileTextInput.validate(text)
+            try ServiceTextInput.validate(text)
         } catch {
             errorText = error.localizedDescription
             return
@@ -168,16 +168,16 @@ struct ContentView: View {
         Task {
             defer { working = false }
             do {
-                let configuredEndpoint = try MobileEndpoint(text: endpoint).url
-                let client = try MobileAPIClient(
+                let configuredEndpoint = try ServiceEndpoint(text: endpoint).url
+                let client = try LocalServiceClient(
                     baseURL: configuredEndpoint,
-                    authorizer: MobileAPIAuthorizer(nextBearerToken: {
+                    authorizer: LocalServiceAuthorizer(nextBearerToken: {
                         KeychainTokenStore.read(for: configuredEndpoint)
                     }))
                 let certified = try await client.certify(text: text)
                 result = certified.certificate
                 requestID = certified.envelope.requestID
-            } catch let error as MobileAPIClientError {
+            } catch let error as LocalServiceClientError {
                 errorText = message(for: error)
             } catch {
                 errorText = "The certification request could not be completed."
@@ -190,7 +190,7 @@ struct ContentView: View {
             guard let url = try result.get().first else { return }
             let scoped = url.startAccessingSecurityScopedResource()
             defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-            sourceText = try MobileTextInput.read(from: url)
+            sourceText = try ServiceTextInput.read(from: url)
             errorText = nil
         } catch {
             errorText = error.localizedDescription
@@ -205,7 +205,7 @@ private struct ConnectionSettings: View {
     @State private var message: String?
 
     private var configuredEndpoint: URL? {
-        try? MobileEndpoint(text: endpointText).url
+        try? ServiceEndpoint(text: endpointText).url
     }
 
     private var hasStoredToken: Bool {
@@ -254,7 +254,7 @@ private struct ConnectionSettings: View {
     private func saveToken() {
         do {
             guard let endpoint = configuredEndpoint else {
-                throw MobileAPIClientError.invalidEndpoint
+                throw LocalServiceClientError.invalidEndpoint
             }
             try KeychainTokenStore.save(tokenDraft, for: endpoint)
             tokenDraft = ""
@@ -267,7 +267,7 @@ private struct ConnectionSettings: View {
     private func removeToken() {
         do {
             guard let endpoint = configuredEndpoint else {
-                throw MobileAPIClientError.invalidEndpoint
+                throw LocalServiceClientError.invalidEndpoint
             }
             try KeychainTokenStore.remove(for: endpoint)
             message = "Stored gateway token removed."
@@ -277,7 +277,7 @@ private struct ConnectionSettings: View {
     }
 }
 
-private func message(for error: MobileAPIClientError) -> String {
+private func message(for error: LocalServiceClientError) -> String {
     switch error {
     case .refusal(let refusal):
         return "REFUSED: \(refusal.reason)"

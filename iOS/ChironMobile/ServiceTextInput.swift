@@ -5,12 +5,12 @@ import Foundation
 /// The one bounded, byte-preserving text intake shared by typing and import.
 /// The service accepts inline text only; a client must never turn an oversized
 /// or invalid byte stream into a silently altered request.
-enum MobileTextInput {
+enum ServiceTextInput {
     static let maximumBytes = 100_000
 
     static func validate(_ text: String) throws {
         guard text.utf8.count <= maximumBytes else {
-            throw MobileTextInputError.tooLarge(limit: maximumBytes)
+            throw ServiceTextInputError.tooLarge(limit: maximumBytes)
         }
     }
 
@@ -25,16 +25,16 @@ enum MobileTextInput {
 
     static func decode(_ data: Data) throws -> String {
         guard data.count <= maximumBytes else {
-            throw MobileTextInputError.tooLarge(limit: maximumBytes)
+            throw ServiceTextInputError.tooLarge(limit: maximumBytes)
         }
         guard let text = String(data: data, encoding: .utf8) else {
-            throw MobileTextInputError.invalidUTF8
+            throw ServiceTextInputError.invalidUTF8
         }
         return text
     }
 }
 
-enum MobileTextInputError: LocalizedError, Equatable {
+enum ServiceTextInputError: LocalizedError, Equatable {
     case tooLarge(limit: Int)
     case invalidUTF8
 

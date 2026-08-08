@@ -7,7 +7,7 @@ release candidate.
 
 ## Boundary
 
-The app links `ChironContract` and `ChironRemote` from `../App`. It does not
+The app links `ChironContract` and `ChironService` from `../App`. It does not
 link the macOS-only `ChironKit` adapter and therefore cannot launch Python,
 discover or read a vault path, invoke a dynamic module, or recompute a
 certificate on device.
@@ -20,11 +20,11 @@ The current user interface exposes one vertical slice:
 - the returned certificate is displayed as returned, including exact JSON
   number tokens, without a second on-device verdict.
 
-`ChironRemote` also defines fixed `capabilities` and `collapse` operations,
+`ChironService` also defines fixed `capabilities` and `collapse` operations,
 but the current iOS UI intentionally does not expose them. It bounds requests
 and streamed responses, validates the `/v1` response envelope, and has no
 local-process fallback. The server contract is documented in
-[`../Primus/MOBILE_API.md`](../Primus/MOBILE_API.md).
+[`../Primus/LOCAL_API.md`](../Primus/LOCAL_API.md).
 
 ## Endpoint and credentials
 

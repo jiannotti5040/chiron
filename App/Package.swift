@@ -5,18 +5,23 @@ import PackageDescription
 
 let package = Package(
     name: "ChironApp",
-    // The contract and URLSession client are portable to the future iOS
-    // surface. ChironKit remains the macOS-only local-process adapter.
+    // Two interfaces, one canonical core. ChironContract and ChironService
+    // build for both platforms so the macOS app and the iOS app share one
+    // decoding boundary and one endpoint policy. ChironKit stays macOS-only on
+    // purpose: it launches `python3` through Foundation.Process, which iOS does
+    // not have and must never appear to have.
     platforms: [.macOS(.v14), .iOS(.v17)],
     products: [
-        .library(name: "ChironContract", targets: ["ChironContract"]),
-        .library(name: "ChironRemote", targets: ["ChironRemote"]),
-        .library(name: "ChironKit", targets: ["ChironKit"]),
         .executable(name: "chiron-app", targets: ["ChironApp"]),
+        // Both are linked by iOS/ChironMobile.xcodeproj. Neither carries a
+        // verifier: the contract is a decoding boundary and the service target
+        // is a bounded client for the versioned /v1 routes.
+        .library(name: "ChironContract", targets: ["ChironContract"]),
+        .library(name: "ChironService", targets: ["ChironService"]),
     ],
     targets: [
         .target(name: "ChironContract"),
-        .target(name: "ChironRemote", dependencies: ["ChironContract"]),
+        .target(name: "ChironService", dependencies: ["ChironContract"]),
         .target(name: "ChironKit", dependencies: ["ChironContract"]),
         .executableTarget(name: "ChironApp", dependencies: ["ChironKit"]),
         .testTarget(
@@ -25,8 +30,8 @@ let package = Package(
             resources: [.copy("Fixtures")]
         ),
         .testTarget(
-            name: "ChironRemoteTests",
-            dependencies: ["ChironRemote", "ChironContract"]
+            name: "ChironServiceTests",
+            dependencies: ["ChironService", "ChironContract"]
         ),
     ]
 )

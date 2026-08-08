@@ -66,7 +66,7 @@ enum KeychainTokenStore {
     }
 
     private static func account(for endpoint: URL) -> String {
-        // `MobileEndpoint` has already rejected credentials, query, and
+        // `ServiceEndpoint` has already rejected credentials, query, and
         // fragments. Retaining the exact base URL, including a routing path,
         // prevents a bearer for `/tenant-a` being sent to `/tenant-b`.
         "gateway-bearer:\(endpoint.absoluteString)"

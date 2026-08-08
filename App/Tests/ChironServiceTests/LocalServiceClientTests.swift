@@ -3,9 +3,9 @@
 import Foundation
 import XCTest
 @testable import ChironContract
-@testable import ChironRemote
+@testable import ChironService
 
-final class MobileAPIClientTests: XCTestCase {
+final class LocalServiceClientTests: XCTestCase {
     func testCertifyAndCollapseUseOnlyTheVersionedHTTPContract() async throws {
         let transport = RecordingTransport(responses: [
             envelope(operation: "certify", result: certifyResult),
@@ -62,9 +62,9 @@ final class MobileAPIClientTests: XCTestCase {
         let transport = RecordingTransport(responses: [
             envelope(operation: "capabilities", result: capabilitiesResult),
         ])
-        let client = try MobileAPIClient(
+        let client = try LocalServiceClient(
             baseURL: URL(string: "https://gateway.example.test")!,
-            authorizer: MobileAPIAuthorizer(nextBearerToken: {
+            authorizer: LocalServiceAuthorizer(nextBearerToken: {
                 throw AuthorizationProbe.invoked
             }),
             transport: transport)
@@ -79,7 +79,7 @@ final class MobileAPIClientTests: XCTestCase {
             envelope(operation: "certify", result: certifyResult, schema: "other.mobile/1"),
         ])
         let schemaClient = try makeClient(transport: wrongSchema)
-        await assertError(.schemaMismatch(expected: "chiron.mobile_api/1", actual: "other.mobile/1")) {
+        await assertError(.schemaMismatch(expected: "chiron.local_api/1", actual: "other.mobile/1")) {
             _ = try await schemaClient.certify(text: "2+2=4")
         }
 
@@ -125,7 +125,7 @@ final class MobileAPIClientTests: XCTestCase {
 
     func testRedirectResponsesAreRejectedWithoutEnvelopeParsing() async throws {
         let redirected = RecordingTransport(responses: [
-            MobileHTTPResponse(statusCode: 302,
+            LocalServiceHTTPResponse(statusCode: 302,
                                headers: ["Content-Type": "text/html"],
                                body: Data()),
         ])
@@ -141,9 +141,9 @@ final class MobileAPIClientTests: XCTestCase {
         RedirectProbeURLProtocol.reset()
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [RedirectProbeURLProtocol.self]
-        let client = try MobileAPIClient(
+        let client = try LocalServiceClient(
             baseURL: URL(string: "https://redirect-probe.example.test")!,
-            transport: URLSessionMobileAPITransport(configuration: configuration))
+            transport: URLSessionLocalServiceTransport(configuration: configuration))
 
         await assertError(.redirected(statusCode: 302)) {
             _ = try await client.certify(text: "2+2=4")
@@ -154,7 +154,7 @@ final class MobileAPIClientTests: XCTestCase {
 
     func testMalformedOutputAndTransportFailureNeverFallBack() async throws {
         let malformed = RecordingTransport(responses: [
-            MobileHTTPResponse(statusCode: 200,
+            LocalServiceHTTPResponse(statusCode: 200,
                                headers: ["Content-Type": "application/json"],
                                body: Data("{not-json".utf8)),
         ])
@@ -176,9 +176,9 @@ final class MobileAPIClientTests: XCTestCase {
         let oversizedTransport = RecordingTransport(responses: [
             envelope(operation: "certify", result: certifyResult),
         ])
-        let tinyRequestLimit = try MobileAPIClientConfiguration(
+        let tinyRequestLimit = try LocalServiceClientConfiguration(
             maximumRequestBytes: 16, maximumResponseBytes: 4_096, timeout: 5)
-        let oversizedClient = try MobileAPIClient(
+        let oversizedClient = try LocalServiceClient(
             baseURL: URL(string: "https://gateway.example.test")!,
             configuration: tinyRequestLimit,
             transport: oversizedTransport)
@@ -190,12 +190,12 @@ final class MobileAPIClientTests: XCTestCase {
         }
         XCTAssertEqual(oversizedTransport.recordedRequests.count, 0)
 
-        let responseLimit = try MobileAPIClientConfiguration(
+        let responseLimit = try LocalServiceClientConfiguration(
             maximumRequestBytes: 4_096, maximumResponseBytes: 32, timeout: 5)
         let largeResponseTransport = RecordingTransport(responses: [
             envelope(operation: "certify", result: certifyResult),
         ])
-        let limitedClient = try MobileAPIClient(
+        let limitedClient = try LocalServiceClient(
             baseURL: URL(string: "https://gateway.example.test")!,
             configuration: responseLimit,
             transport: largeResponseTransport)
@@ -206,9 +206,9 @@ final class MobileAPIClientTests: XCTestCase {
         let authorizedTransport = RecordingTransport(responses: [
             envelope(operation: "certify", result: certifyResult),
         ])
-        let authorizedClient = try MobileAPIClient(
+        let authorizedClient = try LocalServiceClient(
             baseURL: URL(string: "https://gateway.example.test")!,
-            authorizer: MobileAPIAuthorizer(nextBearerToken: { "runtime-short-lived" }),
+            authorizer: LocalServiceAuthorizer(nextBearerToken: { "runtime-short-lived" }),
             transport: authorizedTransport)
         _ = try await authorizedClient.certify(text: "2+2=4")
         XCTAssertEqual(authorizedTransport.recordedRequests.first?
@@ -217,49 +217,49 @@ final class MobileAPIClientTests: XCTestCase {
 
     func testPlaintextHTTPIsLimitedToExactLoopbackDevelopmentHosts() throws {
         XCTAssertThrowsError(
-            try MobileAPIClient(baseURL: URL(string: "http://gateway.example.test")!,
+            try LocalServiceClient(baseURL: URL(string: "http://gateway.example.test")!,
                                 transport: RecordingTransport(responses: []))
         ) { error in
-            XCTAssertEqual(error as? MobileAPIClientError, .invalidEndpoint)
+            XCTAssertEqual(error as? LocalServiceClientError, .invalidEndpoint)
         }
         XCTAssertThrowsError(
-            try MobileAPIClient(baseURL: URL(string: "http://127.0.0.1.nip.io")!,
+            try LocalServiceClient(baseURL: URL(string: "http://127.0.0.1.nip.io")!,
                                 transport: RecordingTransport(responses: []))
         ) { error in
-            XCTAssertEqual(error as? MobileAPIClientError, .invalidEndpoint)
+            XCTAssertEqual(error as? LocalServiceClientError, .invalidEndpoint)
         }
 
         XCTAssertThrowsError(
-            try MobileAPIClient(baseURL: URL(string: "http://localhost:8790")!,
+            try LocalServiceClient(baseURL: URL(string: "http://localhost:8790")!,
                                 transport: RecordingTransport(responses: []))
         ) { error in
-            XCTAssertEqual(error as? MobileAPIClientError, .invalidEndpoint)
+            XCTAssertEqual(error as? LocalServiceClientError, .invalidEndpoint)
         }
         for endpoint in ["http://127.0.0.1:8790", "http://[::1]:8790"] {
             XCTAssertNoThrow(
-                try MobileAPIClient(baseURL: URL(string: endpoint)!,
+                try LocalServiceClient(baseURL: URL(string: endpoint)!,
                                     transport: RecordingTransport(responses: [])),
                 "\(endpoint) is an explicit loopback development endpoint")
         }
     }
 
-    private func makeClient(transport: any MobileAPITransport) throws -> MobileAPIClient {
-        try MobileAPIClient(baseURL: URL(string: "https://gateway.example.test/gateway")!,
+    private func makeClient(transport: any LocalServiceTransport) throws -> LocalServiceClient {
+        try LocalServiceClient(baseURL: URL(string: "https://gateway.example.test/gateway")!,
                             transport: transport)
     }
 
-    private func assertError(_ expected: MobileAPIClientError,
+    private func assertError(_ expected: LocalServiceClientError,
                              operation: () async throws -> Void) async {
         await assertError(expected, operation: operation, matching: { $0 == expected })
     }
 
-    private func assertError(_ expected: MobileAPIClientError,
+    private func assertError(_ expected: LocalServiceClientError,
                              operation: () async throws -> Void,
-                             matching: (MobileAPIClientError) -> Bool) async {
+                             matching: (LocalServiceClientError) -> Bool) async {
         do {
             try await operation()
             XCTFail("expected \(expected)")
-        } catch let error as MobileAPIClientError {
+        } catch let error as LocalServiceClientError {
             XCTAssertTrue(matching(error), "expected \(expected), got \(error)")
         } catch {
             XCTFail("unexpected error \(error)")
@@ -289,27 +289,27 @@ private func refusalResult(error: String, reason: String) -> String {
 
 private func envelope(operation: String,
                       result: String,
-                      schema: String = "chiron.mobile_api/1",
-                      statusCode: Int = 200) -> MobileHTTPResponse {
+                      schema: String = "chiron.local_api/1",
+                      statusCode: Int = 200) -> LocalServiceHTTPResponse {
     let json = """
     {"schema":"\(schema)","request_id":"0123456789abcdef0123456789abcdef","operation":"\(operation)","engine":{"primus_version":"0.7.0","certificate_schema":"primus.certificate/2"},"result":\(result)}
     """
-    return MobileHTTPResponse(statusCode: statusCode,
+    return LocalServiceHTTPResponse(statusCode: statusCode,
                               headers: ["Content-Type": "application/json; charset=utf-8"],
                               body: Data(json.utf8))
 }
 
-private final class RecordingTransport: MobileAPITransport, @unchecked Sendable {
+private final class RecordingTransport: LocalServiceTransport, @unchecked Sendable {
     private let lock = NSLock()
-    private var responses: [MobileHTTPResponse]
+    private var responses: [LocalServiceHTTPResponse]
     private var requests: [URLRequest] = []
 
-    init(responses: [MobileHTTPResponse]) {
+    init(responses: [LocalServiceHTTPResponse]) {
         self.responses = responses
     }
 
     func send(_ request: URLRequest,
-              maximumResponseBytes: Int) async throws -> MobileHTTPResponse {
+              maximumResponseBytes: Int) async throws -> LocalServiceHTTPResponse {
         try lock.withLock {
             requests.append(request)
             guard !responses.isEmpty else { throw URLError(.badServerResponse) }
@@ -324,7 +324,7 @@ private final class RecordingTransport: MobileAPITransport, @unchecked Sendable 
     }
 }
 
-private final class FailingTransport: MobileAPITransport, @unchecked Sendable {
+private final class FailingTransport: LocalServiceTransport, @unchecked Sendable {
     private let lock = NSLock()
     private let error: Error
     private var count = 0
@@ -332,7 +332,7 @@ private final class FailingTransport: MobileAPITransport, @unchecked Sendable {
     init(error: Error) { self.error = error }
 
     func send(_ request: URLRequest,
-              maximumResponseBytes: Int) async throws -> MobileHTTPResponse {
+              maximumResponseBytes: Int) async throws -> LocalServiceHTTPResponse {
         let storedError: Error = lock.withLock {
             count += 1
             return error
