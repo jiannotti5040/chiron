@@ -2,7 +2,7 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
-## Unreleased
+## 0.7.1 — 2026-08-08
 
 - **A narrow `/v1` local mobile-safe HTTP contract now wraps the canonical
   engine routes.** `GET /v1/capabilities`, `POST /v1/collapse`, and `POST
