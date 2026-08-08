@@ -24,6 +24,10 @@ VERIFIED, REFUTED, or REFUSED; free text is honestly UNVERIFIABLE.
 The engine never certifies what it cannot exactly verify. That refusal is
 the product.
 """
+from pathlib import Path
+import re
+from typing import Optional
+
 from primus.engine import (  # noqa: F401
     collapse,
     same_family,
@@ -45,13 +49,32 @@ from primus.engine import (  # noqa: F401
 from primus.certify import certify, extract_claims  # noqa: F401
 from primus.conjecture import conjecture, verify_closed_form  # noqa: F401
 
-# Single source of version truth is pyproject.toml; read it from the
-# installed package metadata, with a fallback for raw source-tree use.
-try:
-    from importlib.metadata import version as _pkg_version
-    __version__ = _pkg_version("primus-intelligence")
-except Exception:  # not installed (e.g. sys.path use via the shim)
-    __version__ = "0.6.2+source"
+def _source_tree_version() -> Optional[str]:
+    """Read the project version when this module runs directly from the tree.
+
+    Package metadata describes the last installed wheel, which can be older
+    than checked-out source during development or a release gate. Prefer the
+    adjacent project file only in that source-tree case; installed wheels keep
+    using their distribution metadata.
+    """
+    project_file = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    try:
+        text = project_file.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    match = re.search(r'^version\s*=\s*"([^"\n]+)"\s*$', text, re.MULTILINE)
+    return match.group(1) if match else None
+
+
+# `pyproject.toml` is authoritative in a checkout; package metadata is
+# authoritative in an installed wheel.
+__version__ = _source_tree_version()
+if __version__ is None:
+    try:
+        from importlib.metadata import version as _pkg_version
+        __version__ = _pkg_version("primus-intelligence")
+    except Exception:  # not installed and no readable project file
+        __version__ = "0.7.2+source"
 
 __all__ = [
     "collapse", "same_family", "same_generator", "same_structure", "cast",

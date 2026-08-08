@@ -383,9 +383,9 @@ python3 fastops.py               # native if built (cargo), else identical pure-
 python3 chiron.py bench-native   # the embedded C kernel + timing
 ```
 
-## Evaluation & honest limits
+## Evaluation and limits
 
-Beyond `selftest`, three reproducible, offline tools let anyone check the claims:
+Beyond `selftest`, these reproducible offline tools exercise specific paths:
 
 ```bash
 python3 benchmark.py      # OEIS-core + ciphers + adversarial, scored for FALSE POSITIVES
@@ -396,13 +396,12 @@ python3 formal_check.py             # property-based soundness check (see docs/F
 python3 mine_code.py                # code mining: structural skeletons + clones
 ```
 
-Measured: **22/29** OEIS-core sequences recovered (all 22 in-scope), **42/44**
-classical ciphers cracked ciphertext-only, and **0 false positives** across
-~5,070 scored cases — corrupted inputs abstain rather than fabricate a rule, and
-the naive polynomial baseline that cannot abstain is confidently wrong on 18 of
-the same 29. Where the engine stops — prose yield, non-closed-form sequences,
-what "verified" does and does not mean, and what is not externally audited — is
-documented plainly in **[WHY_CHIRON.md](docs/WHY_CHIRON.md)** and
+Older benchmark snapshots in this repository contain dated local counts. Do not
+read those figures as a current external validation claim. The chronological
+protocol, failures, repairs, and latest recorded external run are in
+**[Primus/EXTERNAL_VALIDATION.md](../Primus/EXTERNAL_VALIDATION.md)**. The
+implemented scope, prose yield, non-closed-form refusals, and the meaning of a
+stamp are documented in **[WHY_CHIRON.md](docs/WHY_CHIRON.md)** and
 **[KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)**.
 
 ## Verifying

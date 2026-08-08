@@ -1,28 +1,28 @@
-# Local mobile-safe HTTP contract (`/v1`)
+# Local HTTP contract (`/v1`)
 
 **Status: implemented and tested locally.** The routes in this document are a
 small, versioned wire contract around the canonical Primus engine. They are
-not an iOS app, a hosted service, or a production mobile-authentication
-system. `python3 test_engine_server.py` exercises the contract over a real
-local HTTP subprocess (48/48 gates at this revision).
+not a hosted service or a production authentication system.
+`python3 test_engine_server.py` exercises the contract over a real local HTTP
+subprocess.
 
 ## Boundary first
 
 `primus.engine_server` binds to `127.0.0.1` by default. The supported use of
 `/v1` today is a private local process or a separately designed, authenticated
 gateway. There is no project-operated public endpoint and no claim that the
-server's static bearer setting supplies mobile identity, token rotation,
+server's static bearer setting supplies identity, token rotation,
 revocation, scopes, TLS termination, or abuse protection.
 
 `CHIRON_API_TOKEN` optionally requires the same fixed bearer on every `POST`.
-It is a local/development control only. Do not embed it in an iOS application
-or treat it as production authorization. A public mobile deployment needs a
+It is a local/development control only. Do not embed it in an application or
+treat it as production authorization. A public deployment needs a
 gateway outside this process that supplies TLS, short-lived scoped credentials,
 issuer/audience validation, rotation/revocation, rate and abuse controls, and
 an auditable authorization policy.
 
-Browser CORS is disabled by default because native `URLSession` clients do not
-need it. An owner may opt one exact browser origin in with
+Browser CORS is disabled by default because local process clients do not need
+it. An owner may opt one exact browser origin in with
 `CHIRON_CORS_ORIGIN=https://ui.example.test`; wildcards and reflected origins
 are not supported. CORS is not authentication.
 
@@ -51,11 +51,11 @@ Every `/v1` response has this outer envelope:
 
 ```json
 {
-  "schema": "chiron.mobile_api/1",
+  "schema": "chiron.local_api/1",
   "request_id": "0123456789abcdef0123456789abcdef",
   "operation": "collapse",
   "engine": {
-    "primus_version": "0.7.0",
+    "primus_version": "0.7.2",
     "certificate_schema": "primus.certificate/2"
   },
   "result": {}
@@ -97,11 +97,11 @@ envelope for the `/v1` namespace. The nested `result` is the ordinary
 
 ```json
 {
-  "schema": "chiron.mobile_api/1",
+  "schema": "chiron.local_api/1",
   "request_id": "0123456789abcdef0123456789abcdef",
   "operation": "certify",
   "engine": {
-    "primus_version": "0.7.0",
+    "primus_version": "0.7.2",
     "certificate_schema": "primus.certificate/2"
   },
   "result": {
@@ -140,4 +140,4 @@ python3 test_engine_server.py
 
 The first command serves only the local endpoint by default. The second
 command is the evidence for the contract described here; it is not evidence
-of public gateway, native iOS, or production authentication readiness.
+of a public gateway or production authentication readiness.

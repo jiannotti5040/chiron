@@ -59,4 +59,24 @@ import Testing
         #expect(cert.counts?.verified == 1)
         #expect(cert.counts?.refuted == 0)
     }
+
+    @Test func liveSourceRecordUsesTheCanonicalRegistrar() async throws {
+        guard let client = client() else {
+            Issue.record("SKIP: vault or python3 not found — nothing was proven")
+            return
+        }
+        let file = FileManager.default.temporaryDirectory
+            .appendingPathComponent("chiron-source-record-\(UUID().uuidString).txt")
+        try Data("aé\nz".utf8).write(to: file)
+        defer { try? FileManager.default.removeItem(at: file) }
+
+        let record = try await client.sourceRecord(fileURL: file)
+        #expect(record.schema == "chiron.source_record/1")
+        #expect(record.encoding == "utf-8")
+        #expect(record.byteCount == 5)
+        #expect(record.characterCount == 4)
+        #expect(record.lineSpans.count == 2)
+        #expect(record.lineSpans[0].byteEnd == 4)
+        #expect(record.lineSpans[1].characterEnd == 4)
+    }
 }

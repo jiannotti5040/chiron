@@ -2,11 +2,24 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.7.2 — 2026-08-08
+
+- **The versioned endpoint is now named for what it is: a local API.** Its
+  stable envelope changed from `chiron.mobile_api/1` to `chiron.local_api/1`,
+  and `MOBILE_API.md` is now `LOCAL_API.md`. The supported boundary remains
+  `GET /v1/capabilities`, `POST /v1/collapse`, and `POST /v1/certify` over a
+  local/private process. This is a deliberate wire-schema name change:
+  clients of the old envelope must update rather than silently treating a
+  local tooling interface as a shipped mobile service.
+- **Source-tree version reporting now reads the checked-out project version.**
+  A local server no longer reports the version of a previously installed wheel
+  when it is executing newer source from this repository.
+
 ## 0.7.1 — 2026-08-08
 
-- **A narrow `/v1` local mobile-safe HTTP contract now wraps the canonical
-  engine routes.** `GET /v1/capabilities`, `POST /v1/collapse`, and `POST
-  /v1/certify` use the stable `chiron.mobile_api/1` envelope with a
+- **Historical note: a narrow `/v1` local HTTP contract was first added around
+  the canonical engine routes.** `GET /v1/capabilities`, `POST /v1/collapse`,
+  and `POST /v1/certify` initially used the `chiron.mobile_api/1` envelope with a
   server-generated request id, Primus version/certificate-schema metadata,
   and the unchanged `primus.engine_server/1` result nested inside. Request
   bodies are strict, inline, bounded JSON with no unknown fields, paths, or
@@ -23,9 +36,9 @@ All notable changes to the installable seed. Dates are UTC.
   `CHIRON_CORS_ORIGIN` to one exact `http(s)` origin only when a browser UI
   needs it; native clients do not use CORS. This is not authentication.
 - **Deployment posture corrected.** The versioned route is local and
-  implemented-and-tested, not a public/mobile deployment. `CHIRON_API_TOKEN`
-  remains an optional fixed development bearer, not mobile identity or
-  production authorization. `MOBILE_API.md` and `DEPLOY_ENDPOINT.md` record
+  implemented-and-tested, not a public deployment. `CHIRON_API_TOKEN`
+  remains an optional fixed development bearer, not production identity or
+  authorization. `MOBILE_API.md` (renamed in 0.7.2) and `DEPLOY_ENDPOINT.md` record
   the required external gateway, TLS, scoped short-lived credentials,
   rotation/revocation, and edge controls before any such claim is made.
 

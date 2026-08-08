@@ -98,24 +98,24 @@ is a *result*, not a tool error — `isError` is reserved for real failures.
 Protocol conformance is gated by `python3 test_mcp_server.py` (10 handshake
 gates against the live subprocess).
 
-## Local HTTP and the future mobile boundary
+## Local HTTP boundary
 
 `primus-serve` / `python3 -m primus.engine_server` exposes the same canonical
 engine on local HTTP. The legacy routes remain available for local tooling;
 the narrower versioned contract is `GET /v1/capabilities`, `POST
 /v1/collapse`, and `POST /v1/certify`. Its envelope is
-`chiron.mobile_api/1`, and its `result` preserves the existing
+`chiron.local_api/1`, and its `result` preserves the existing
 `primus.engine_server/1` output so it does not create another engine or
 certificate format.
 
-Read [MOBILE_API.md](MOBILE_API.md) before building any client. This is an
-implemented-and-tested local wire contract, **not** a shipped iOS client,
-public endpoint, cloud integration, or production mobile-authentication
-service. The optional `CHIRON_API_TOKEN` is a fixed local/development bearer,
-not something to embed in an app. The default service binding is loopback;
-production gateway, TLS, short-lived scoped credentials, rotation/revocation,
-and edge abuse controls remain external work. `python3 test_engine_server.py`
-drives the local routes over real HTTP.
+Read [LOCAL_API.md](LOCAL_API.md) before building a client. This is an
+implemented-and-tested local wire contract, **not** a public endpoint, cloud
+integration, or production authentication service. The optional
+`CHIRON_API_TOKEN` is a fixed local/development bearer, not something to
+embed in an app. The default service binding is loopback; production gateway,
+TLS, short-lived scoped credentials, rotation/revocation, and edge abuse
+controls remain external work. `python3 test_engine_server.py` drives the
+local routes over real HTTP.
 
 ## The code
 

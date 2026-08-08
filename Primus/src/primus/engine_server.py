@@ -24,7 +24,7 @@ not a crash:
     with a conservative `Retry-After` hint (60 seconds for rate limits,
     1 second for a saturated concurrency gate)
   * optional static bearer auth: set CHIRON_API_TOKEN and every POST requires
-    it. This is a local/development control, not production mobile auth.
+    it. This is a local/development control, not production authentication.
   * CORS is disabled by default. A single exact browser origin may be opted in
     with CHIRON_CORS_ORIGIN; native clients do not need CORS.
 
@@ -46,15 +46,15 @@ Endpoints (all request/response bodies are JSON):
   POST /conjecture {"terms": ..., "seed": 0}
                                         guess-and-prove behind the exact gate
 
-  GET  /v1/capabilities                 versioned mobile-safe contract index
+  GET  /v1/capabilities                 versioned local contract index
   POST /v1/collapse {"surface": ...}   strict inline request -> wrapped result
   POST /v1/certify  {"text": ...}      strict inline request -> wrapped result
 
 `/v1` deliberately exposes only the deterministic canonical operations. Its
-responses use `chiron.mobile_api/1` with a server-generated request id and
+responses use `chiron.local_api/1` with a server-generated request id and
 wrap the existing engine-server result. It accepts no paths, dynamic tool
 names, or unknown request fields. The contract is implemented and HTTP-tested
-locally; it is not a public deployment or a mobile authentication system.
+locally; it is not a public deployment or an authentication system.
 
 Access log: one structured line per request — client IP, method, normalized
 path (query string never logged), status, and the input LENGTH plus a short
@@ -80,7 +80,7 @@ Boundary: see DEPLOY_ENDPOINT.md for the local-only deployment posture.
 
 Status: implemented-and-tested locally (test_engine_server.py drives a real
 server process over real HTTP). The server wraps the engine; it changes
-nothing on any stamping path. A public/mobile deployment still needs an
+nothing on any stamping path. A public deployment still needs an
 authenticated gateway, TLS termination, short-lived scoped credentials,
 rotation/revocation, and abuse controls outside this process.
 """
@@ -103,7 +103,7 @@ from urllib.parse import urlsplit
 
 MAX_BODY_BYTES = 128 * 1024  # certify MAX_TEXT_CHARS (100k) + JSON overhead
 SCHEMA = "primus.engine_server/1"
-MOBILE_SCHEMA = "chiron.mobile_api/1"
+LOCAL_API_SCHEMA = "chiron.local_api/1"
 RATE_LIMIT_RETRY_AFTER_SECONDS = 60
 BUSY_RETRY_AFTER_SECONDS = 1
 
@@ -112,7 +112,7 @@ def _refused(reason: str, error: str = "refused") -> Dict[str, Any]:
     return {"schema": SCHEMA, "status": "REFUSED", "error": error, "reason": reason}
 
 
-def _mobile_engine_metadata() -> Dict[str, str]:
+def _local_api_engine_metadata() -> Dict[str, str]:
     """Import canonical version/schema values only when a v1 response needs them."""
     import primus
     from primus.certify import SCHEMA as certificate_schema
@@ -121,17 +121,17 @@ def _mobile_engine_metadata() -> Dict[str, str]:
             "certificate_schema": certificate_schema}
 
 
-def _mobile_envelope(operation: str, result: Dict[str, Any]) -> Dict[str, Any]:
+def _local_api_envelope(operation: str, result: Dict[str, Any]) -> Dict[str, Any]:
     """Stable, server-authored v1 envelope around a bounded engine result.
 
     The request id is deliberately generated here, never accepted from the
     caller. It is useful for a client log or a future gateway correlation
     layer, but carries no ambient authority and no caller-controlled text.
     """
-    return {"schema": MOBILE_SCHEMA,
+    return {"schema": LOCAL_API_SCHEMA,
             "request_id": secrets.token_hex(16),
             "operation": operation,
-            "engine": _mobile_engine_metadata(),
+            "engine": _local_api_engine_metadata(),
             "result": result}
 
 
@@ -243,18 +243,18 @@ _TOOLS = {"/collapse": ("surface", _do_collapse),
           "/conjecture": ("terms", _do_conjecture)}
 
 # The legacy routes above retain their permissive historical request shape.
-# The versioned boundary is intentionally smaller and strict: mobile clients
+# The versioned boundary is intentionally smaller and strict: local clients
 # can submit only inline data for the two deterministic canonical operations.
 # In particular, conjecture is not a v1 operation. Its optional proposer may
 # use stochastic search, so exposing it would blur the compact, exact
 # collapse/certify contract this boundary is meant to stabilize.
-_MOBILE_TOOLS = {
+_LOCAL_API_TOOLS = {
     "/v1/collapse": ("collapse", "surface", _do_collapse),
     "/v1/certify": ("certify", "text", _do_certify),
 }
 
 
-def _validate_mobile_body(operation: str, required: str,
+def _validate_local_api_body(operation: str, required: str,
                           body: Any) -> Optional[Dict[str, Any]]:
     """Reject v1 schema drift before it reaches the canonical implementation.
 
@@ -290,15 +290,15 @@ def _validate_mobile_body(operation: str, required: str,
     return _refused("text must be a string", "bad request")
 
 
-def _is_mobile_path(path: str) -> bool:
+def _is_local_api_path(path: str) -> bool:
     """Whether a path is in the versioned namespace, including bad routes."""
     return path == "/v1" or path.startswith("/v1/")
 
 
-def _mobile_operation(path: str) -> str:
+def _local_api_operation(path: str) -> str:
     if path == "/v1/capabilities":
         return "capabilities"
-    spec = _MOBILE_TOOLS.get(path)
+    spec = _LOCAL_API_TOOLS.get(path)
     return spec[0] if spec else "unknown"
 
 # ------------------------------------------------------------- route table
@@ -416,10 +416,10 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(data)
         self._access(code)
 
-    def _send_mobile(self, code: int, operation: str, result: Dict[str, Any],
+    def _send_local_api(self, code: int, operation: str, result: Dict[str, Any],
                      extra: Tuple = (), with_body: bool = True) -> None:
         """Send a versioned response while keeping `_send` as the sole I/O path."""
-        self._send(code, _mobile_envelope(operation, result), extra=extra,
+        self._send(code, _local_api_envelope(operation, result), extra=extra,
                    with_body=with_body)
 
     # -- logging ------------------------------------------------------------
@@ -455,8 +455,8 @@ class Handler(BaseHTTPRequestHandler):
                   "error": "not found",
                   "valid_routes": list(VALID_ROUTES),
                   "reason": "no such endpoint"}
-        if _is_mobile_path(path):
-            self._send_mobile(404, "unknown", result)
+        if _is_local_api_path(path):
+            self._send_local_api(404, "unknown", result)
         else:
             self._send(404, result)
 
@@ -466,8 +466,8 @@ class Handler(BaseHTTPRequestHandler):
                   "allow": list(allow),
                   "reason": "this path answers a different method"}
         extra = (("Allow", ", ".join(allow)),)
-        if _is_mobile_path(path):
-            self._send_mobile(405, _mobile_operation(path), result, extra=extra)
+        if _is_local_api_path(path):
+            self._send_local_api(405, _local_api_operation(path), result, extra=extra)
         else:
             self._send(405, result, extra=extra)
 
@@ -485,8 +485,8 @@ class Handler(BaseHTTPRequestHandler):
         result = {"schema": SCHEMA, "status": "REFUSED",
                   "error": "internal error", "reason": "internal error"}
         path = self._route_path()
-        if _is_mobile_path(path):
-            self._send_mobile(500, _mobile_operation(path), result)
+        if _is_local_api_path(path):
+            self._send_local_api(500, _local_api_operation(path), result)
         else:
             self._send(500, result)
 
@@ -506,8 +506,8 @@ class Handler(BaseHTTPRequestHandler):
                   "error": _ERROR_TEXT.get(code, "request refused"),
                   "reason": _ERROR_TEXT.get(code, "request refused")}
         path = self._route_path()
-        if _is_mobile_path(path):
-            self._send_mobile(code, _mobile_operation(path), result)
+        if _is_local_api_path(path):
+            self._send_local_api(code, _local_api_operation(path), result)
         else:
             self._send(code, result)
 
@@ -571,8 +571,8 @@ class Handler(BaseHTTPRequestHandler):
         origin = self.headers.get("Origin")
         if origin and not self._cors_allowed():
             result = _refused("CORS origin not allowed", "forbidden")
-            if _is_mobile_path(path):
-                self._send_mobile(403, _mobile_operation(path), result)
+            if _is_local_api_path(path):
+                self._send_local_api(403, _local_api_operation(path), result)
             else:
                 self._send(403, result)
             return
@@ -591,7 +591,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/v1/capabilities":
             from primus.certify import MAX_SEQ_TERMS, MAX_TEXT_CHARS
 
-            self._send_mobile(200, "capabilities", {
+            self._send_local_api(200, "capabilities", {
                 "operations": [
                     {"operation": "collapse", "method": "POST",
                      "path": "/v1/collapse",
@@ -632,18 +632,18 @@ class Handler(BaseHTTPRequestHandler):
                    with_body=with_body)
 
     def _post(self, path: str) -> None:
-        mobile_spec = _MOBILE_TOOLS.get(path)
-        if mobile_spec is None:
+        local_api_spec = _LOCAL_API_TOOLS.get(path)
+        if local_api_spec is None:
             required, impl = _TOOLS[path]
             operation = None
         else:
-            operation, required, impl = mobile_spec
+            operation, required, impl = local_api_spec
 
         def respond(code: int, obj: Dict[str, Any], extra: Tuple = ()) -> None:
             if operation is None:
                 self._send(code, obj, extra=extra)
             else:
-                self._send_mobile(code, operation, obj, extra=extra)
+                self._send_local_api(code, operation, obj, extra=extra)
 
         if self.token:
             auth = self.headers.get("Authorization", "")
@@ -691,7 +691,7 @@ class Handler(BaseHTTPRequestHandler):
             respond(400, _refused("body must be valid JSON", "bad request"))
             return
         if operation is not None:
-            invalid = _validate_mobile_body(operation, required, body)
+            invalid = _validate_local_api_body(operation, required, body)
             if invalid is not None:
                 respond(400, invalid)
                 return

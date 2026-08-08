@@ -182,3 +182,47 @@ public struct Certificate: Codable, Sendable {
         }
     }
 }
+
+// MARK: - chiron.source_record/1
+
+/// Metadata from Chiron's bounded local-source registrar.  This record never
+/// contains source bytes or a raw filesystem path: it identifies one observed
+/// UTF-8 file by its digest and exact, end-exclusive line offsets.
+public struct SourceRecord: Codable, Sendable {
+    public let schema: String
+    public let sourceID: String
+    public let sourceKind: String
+    public let encoding: String
+    public let contentSHA256: String
+    public let byteCount: Int
+    public let characterCount: Int
+    public let lineSpans: [LineSpan]
+    public let observedMtimeNS: Int64
+
+    enum CodingKeys: String, CodingKey {
+        case schema, encoding
+        case sourceID = "source_id"
+        case sourceKind = "source_kind"
+        case contentSHA256 = "content_sha256"
+        case byteCount = "byte_count"
+        case characterCount = "character_count"
+        case lineSpans = "line_spans"
+        case observedMtimeNS = "observed_mtime_ns"
+    }
+
+    public struct LineSpan: Codable, Sendable {
+        public let line: Int
+        public let byteStart: Int
+        public let byteEnd: Int
+        public let characterStart: Int
+        public let characterEnd: Int
+
+        enum CodingKeys: String, CodingKey {
+            case line
+            case byteStart = "byte_start"
+            case byteEnd = "byte_end"
+            case characterStart = "character_start"
+            case characterEnd = "character_end"
+        }
+    }
+}

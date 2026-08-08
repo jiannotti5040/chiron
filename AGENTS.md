@@ -1,68 +1,54 @@
-# Agent instructions — Jacob's Portfolio Vault (Chiron / Primus)
+# Agent instructions — Chiron / Primus vault
 
-Any agent working in this repository: read `notes/SOP.md` first. It is the
-operating manual; this file is only the gate summary.
+Read [`notes/SOP.md`](notes/SOP.md) before changing the vault. It is the
+operating manual; this file is the short gate summary.
 
-## Current architecture and boundaries
+## Architecture and boundaries
 
-`docs/RECONSTRUCTION.md` is the current evidence record and the place to
-start after this gate summary. The Python vault is canonical; macOS reaches it
-through a local process, while iOS is a narrow `URLSession` client of the
-versioned Primus `/v1` service. iOS never starts Python, accepts a vault path,
-or carries a bundled bearer. Never claim a cloud provider, Apple Foundation
-Models, Foundry/AIP, signing, distribution integration, or public gateway
-exists without its own observed evidence and gate.
+The Python vault is canonical. The macOS app is a local SwiftUI operator
+surface that invokes the vault through a local process; it must not become a
+second stamping implementation. Preserve the canonical claim vocabulary:
+`VERIFIED`, `REFUTED`, and `REFUSED`.
 
-## The one inviolable law
+Do not claim a cloud provider, public service, Foundry/AIP delivery, signing,
+notarization, or distribution integration without its own observed evidence.
+`docs/RECONSTRUCTION.md` is the current local-boundary record;
+`docs/RESEARCH_MAP.md` separates executable evidence from bounded research and
+theory.
 
-**Zero false verifications.** A change that makes any engine stamp something it
-cannot exactly prove is wrong, even if every benchmark number improves. Refusal
-is a feature. When forced to choose between recall and honesty, choose honesty
-— the project's entire value is that its `verified` stamp is never allowed to
-lie and stand.
+## The inviolable law
 
-## Before you claim anything works
+**Zero false verifications.** A change that makes any engine stamp what it
+cannot exactly prove is wrong. Refusal is a feature. When recall and honesty
+conflict, choose honesty.
 
-Run the gate battery; all green before any commit that touches an engine or the
-gate. From the repo root:
+## Before claiming a change works
 
-```
-python3 Chiron/chiron.py selftest        # CHIRON core (12/12)
-python3 Chiron/stress_test.py            # invariant-operation probes (23/23)
-python3 Chiron/tests/test_mcp_server.py  # Chiron MCP real-stdio contract
-cd Primus
-python3 test_invariant_engine.py         # stress gates (55/55)
-python3 test_certify_fuzz.py             # adversarial certify gates (16/16)
-python3 test_mcp_server.py               # MCP protocol gates (11/11)
-python3 test_engine_server.py            # HTTP endpoint gates (48/48)
-python3 benchmark.py                     # internal proving run
-python3 oeis_live.py                     # EXTERNAL validation (cached corpus)
-python3 drift_check.py                   # seed vs Chiron differential
-cd "../Chiron Monolith"
-python3 chiron_monolith.py --smoke       # folded core engines (5/5)
-cd ../App
-swift test --scratch-path /tmp/chiron-build
-xcodebuild -project ../iOS/ChironMobile.xcodeproj -scheme ChironMobile \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0' \
-  -derivedDataPath /tmp/chiron-ios CODE_SIGNING_ALLOWED=NO build
+Run the relevant gates. For a broad change from the repository root:
+
+```bash
+python3 bin/chiron test --full
+python3 bin/chiron parity
+cd App && swift test --scratch-path /tmp/chiron-build
 ```
 
-A failing gate is information, not an obstacle: find the root cause. Never
-widen a tolerance or mute a gate to get green.
+A failing gate is information: find the root cause. Never widen a tolerance or
+mute a gate to obtain green.
 
 ## Hard rules
 
-- Exact arithmetic only on the stamping path: Fractions and exact integer
-  equality; float predictions past 2^53 are refused, not trusted.
-- Edit sources of truth only (see `notes/SOP.md`). Never hand-edit
-  `Chiron Monolith/chiron_monolith.py` — regenerate it:
-  `cd "Chiron Monolith" && python3 build_monolith.py`, then re-run `--smoke`.
-- Seed/Chiron divergence must be ledgered in `Primus/drift_check.py`
-  (`SEED_AHEAD_LEDGER`) with a dated entry, or the build fails — by design.
-- Do not build new layers, dashboards, folds, or copies of the engine. The
-  vault grows outward (users, external validation, exactness), not inward.
+- Exact arithmetic only on the stamping path: use fractions and exact integer
+  equality; float predictions beyond 2^53 are refused, not trusted.
+- Edit sources of truth only. Never hand-edit
+  `Chiron Monolith/chiron_monolith.py`; regenerate it after a Chiron change:
+  `cd "Chiron Monolith" && python3 build_monolith.py`, then run its self-test.
+- After a module-set or gate change, run
+  `python3 Chiron/build_manifest.py --run && python3 Chiron/build_encyclopedia.py`.
+- Seed/Chiron divergence must be recorded in `Primus/drift_check.py`'s
+  `SEED_AHEAD_LEDGER`, with a dated reason, or the build fails by design.
+- Do not build a parallel verifier, dashboard, or copy of an existing engine.
+  Grow outward through users, external validation, and exactness.
 - Never `git add -A` at the vault root: `Jacob Dylan Iannotti/` is deliberately
-  untracked and contains an embedded git repo.
-- Label epistemic status plainly: implemented-and-tested, prototype, or theory.
-  Overclaiming is the one style error this project cannot afford — including in
-  READMEs, sales copy, and commit messages.
+  untracked and contains an embedded Git repository.
+- Label work plainly as implemented-and-tested, prototype, bounded evidence,
+  or theory. Overclaiming is a defect in code, docs, and commit messages.

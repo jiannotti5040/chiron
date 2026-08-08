@@ -4,30 +4,24 @@ import SwiftUI
 import ChironKit
 
 enum Screen: String, CaseIterable, Identifiable {
-    case fullStack = "Full Stack"
-    case modules = "Modules"
+    case workspace = "Workspace"
     case attest = "Attest"
-    case certify = "Certify"
     case gates = "Gates"
 
     var id: String { rawValue }
 
     var symbol: String {
         switch self {
-        case .fullStack: "square.stack.3d.up"
-        case .modules: "cube.transparent"
+        case .workspace: "rectangle.3.group"
         case .attest: "text.magnifyingglass"
-        case .certify: "checkmark.seal"
         case .gates: "shield.checkerboard"
         }
     }
 
     var subtitle: String {
         switch self {
-        case .fullStack: "Every applicable module over one text"
-        case .modules: "Every module in the vault, discovered not enumerated"
+        case .workspace: "One source, one full-stack record, one exact certificate"
         case .attest: "Which input produced each word"
-        case .certify: "Exact claims: VERIFIED · REFUTED · REFUSED"
         case .gates: "Run the vault's own selftests"
         }
     }
@@ -35,7 +29,7 @@ enum Screen: String, CaseIterable, Identifiable {
 
 struct ContentView: View {
     @Environment(AppModel.self) private var model
-    @State private var screen: Screen = .fullStack
+    @State private var screen: Screen = .workspace
 
     var body: some View {
         if let client = model.client {
@@ -59,10 +53,8 @@ struct ContentView: View {
                 }
             } detail: {
                 switch screen {
-                case .fullStack: FullStackView(client: client)
-                case .modules: ModulesView(client: client)
+                case .workspace: WorkspaceView(client: client)
                 case .attest: AttestView(client: client)
-                case .certify: CertifyView(client: client)
                 case .gates: GatesView(client: client)
                 }
             }

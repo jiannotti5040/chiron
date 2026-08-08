@@ -62,6 +62,25 @@ private func fixture(_ name: String) throws -> Data {
         #expect(cert.attestation?.kind == "tamper-evident-hash")
     }
 
+    @Test func sourceRecordDecodesWithoutSourceBytes() throws {
+        let json = """
+        {"schema":"chiron.source_record/1","source_id":"local-file:opaque",
+         "source_kind":"local_text_file","encoding":"utf-8",
+         "content_sha256":"abc","byte_count":5,"character_count":4,
+         "line_spans":[{"line":1,"byte_start":0,"byte_end":4,
+                         "character_start":0,"character_end":3},
+                       {"line":2,"byte_start":4,"byte_end":5,
+                         "character_start":3,"character_end":4}],
+         "observed_mtime_ns":123}
+        """
+        let record = try JSONDecoder().decode(SourceRecord.self, from: Data(json.utf8))
+        #expect(record.schema == "chiron.source_record/1")
+        #expect(record.encoding == "utf-8")
+        #expect(record.byteCount == 5)
+        #expect(record.characterCount == 4)
+        #expect(record.lineSpans.map(\.byteEnd) == [4, 5])
+    }
+
     @Test func unknownVerdictSurvivesDecoding() throws {
         // The wrapper preserves an unexpected word instead of crashing —
         // and instead of silently mapping it onto the real vocabulary.

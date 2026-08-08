@@ -1,9 +1,9 @@
 {
   "schema": "chiron.reconstruction_inventory/1",
   "observed_on": "2026-08-08",
-  "baseline_commit": "2aa2d0760ab2b42557d6472ae62953075df7904a",
+  "document_status": "maintained evidence inventory",
   "scope": {
-    "repository": "Jacob-s-Portfolio-Vault",
+    "repository": "chiron",
     "root": ".",
     "excluded_runtime_state": [
       "Chiron/chiron_memory.json",
@@ -28,14 +28,14 @@
       "status": "canonical"
     },
     {
-      "area": "court-grade decision certification",
+      "area": "court-oriented decision certification",
       "paths": ["JDICert/cert_engine.py", "JDICert/primer.py"],
       "status": "canonical"
     },
     {
       "area": "offline fold",
       "paths": ["Chiron Monolith/chiron_monolith.py"],
-      "status": "generated"
+      "status": "generated-from-Chiron-sources"
     }
   ],
   "components": [
@@ -49,46 +49,35 @@
       "id": "chiron",
       "role": "analysis, provenance, certification, and adjudication engines",
       "status": "implemented-and-tested",
-      "interfaces": ["full stack CLI", "stdio MCP", "offline monolith"]
+      "interfaces": ["full-stack CLI", "stdio MCP", "offline monolith"]
     },
     {
       "id": "jdicert",
-      "role": "decision and court-grade certificate layer",
+      "role": "decision and court-oriented certificate layer",
       "status": "implemented-and-tested",
       "interfaces": ["Python entry points", "Chiron bridges"]
     },
     {
       "id": "macos_app",
-      "role": "native SwiftUI front end",
-      "status": "implemented-and-tested",
-      "interfaces": ["SwiftPM executable", "Foundation.Process to canonical vault"]
+      "role": "native SwiftUI operator interface",
+      "status": "implemented-and-tested locally",
+      "paths": ["App/Sources/"],
+      "interfaces": ["SwiftPM executable", "Foundation.Process to canonical vault"],
+      "notes": "The app is a local process boundary and has no independent verification implementation."
     },
     {
-      "id": "ios_app",
-      "role": "native iOS front end",
-      "status": "implemented; simulator build previously observed",
-      "paths": ["iOS/ChironMobile.xcodeproj", "App/Sources/ChironContract", "App/Sources/ChironRemote"],
-      "interfaces": ["versioned Primus /v1 HTTP", "URLSession", "Keychain credential storage"],
-      "notes": "The native iOS 17+ client is limited to the v1 certification flow and does not execute Python or accept vault paths. A Simulator app build was observed earlier in this reconstruction; after final local hardening changes, Xcode's local build service stalled before compiler output, while the current shared contract, remote client, and iOS sources typechecked directly against the installed arm64 iOS Simulator SDK. The Simulator test runner stalled before a result bundle. A deployed authenticated gateway is still required for end-to-end use."
+      "id": "local_source_provenance",
+      "role": "bounded metadata-only local source records",
+      "status": "implemented-and-tested locally",
+      "paths": ["Chiron/source_provenance.py"],
+      "notes": "Records are limited to regular UTF-8 files and metadata; raw text is not persisted or delivered."
     },
     {
-      "id": "provider_adapters",
-      "role": "cloud language-model proposal layer",
-      "status": "partial-and-configuration-gated",
-      "paths": ["Chiron/llm_providers.py"],
-      "notes": "The offline-tested default chain includes Gemini, OpenRouter, Groq, Cerebras, OpenAI, Anthropic, and Perplexity. Live providers remain unverified without owner-configured credentials."
-    },
-    {
-      "id": "apple_foundation_models",
-      "role": "on-device language-model adapter",
-      "status": "unimplemented"
-    },
-    {
-      "id": "palantir_foundry_aip",
-      "role": "external ontology and agent integration",
+      "id": "foundry_aip_boundary",
+      "role": "typed external-ontology configuration and mapping boundary",
       "status": "boundary-only-unconfigured",
       "paths": ["Chiron/foundry_boundary.py", "docs/FOUNDRY_AIP_INTEGRATION.md"],
-      "reason": "A typed, non-delivering external-ontology boundary is implemented. No authorized credentials, endpoint, ontology, or live client implementation was supplied."
+      "reason": "No authorized credentials, endpoint, ontology identifiers, live transport, or delivery observation was supplied."
     }
   ],
   "shared_interfaces": [
@@ -111,7 +100,7 @@
       "entry": "Primus/src/primus/engine_server.py",
       "transport": "local HTTP by default",
       "status": "implemented-and-tested",
-      "notes": "Legacy routes remain; strict mobile-safe /v1 exposes capabilities, collapse, and certify only, with a chiron.mobile_api/1 outer envelope."
+      "notes": "The strict v1 surface exposes capabilities, collapse, and certify only. It is not a public deployment."
     },
     {
       "name": "vault CLI",
@@ -124,14 +113,13 @@
     "claim_vocabulary": ["VERIFIED", "REFUTED", "REFUSED"],
     "decision_vocabulary": ["K", "U", "Omega"],
     "invariant": "Zero false verifications; refusal is a result.",
-    "file_policy": "Mac app reads a visible 2 MB text bound and displays truncation.",
-    "network_policy": "Deterministic core is local; no public HTTP/MCP exposure is enabled by default. Native iOS uses HTTPS except exact loopback HTTP development hosts."
+    "file_policy": "The macOS app shows its bounded-file and truncation state.",
+    "network_policy": "The deterministic core is local; no public HTTP or MCP exposure is enabled by default."
   },
   "external_blockers": [
-    "Claude Code is installed and can health-check MCP servers, but is not logged in for a model-driven tool invocation.",
-    "iOS has a native client with an earlier observed Simulator build, but the local Xcode build/test service stalled after final hardening; it also needs an owner-operated HTTPS gateway, short-lived scoped identity, and an end-to-end device/gateway test before distribution.",
-    "Distribution requires account-owned signing, notarization, entitlements, privacy review, and release decisions.",
-    "Palantir Foundry/AIP requires authorized credentials and ontology identifiers."
+    "No public endpoint, authentication service, or deployment evidence is recorded.",
+    "Mac distribution requires account-owned signing, notarization, entitlements, privacy review, and release decisions.",
+    "A real Foundry/AIP delivery requires authorized credentials, ontology identifiers, transport configuration, and a delivery-observation gate."
   ],
   "migration_notes": [
     "Do not hand-edit Chiron Monolith; rebuild it from Chiron sources.",

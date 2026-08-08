@@ -1,7 +1,9 @@
-# Why Chiron
+# What Chiron does and does not do
 
-A three-minute read. No philosophy, no lore — what problem this solves, how it
-differs from the usual tools, and exactly where it stops.
+This is a concise scope note for the local exact-recovery engine. For dated
+benchmark evidence and failures, read
+[Primus/EXTERNAL_VALIDATION.md](../../Primus/EXTERNAL_VALIDATION.md) alongside
+this page.
 
 ## The problem
 
@@ -26,12 +28,13 @@ wrong one, and you find out downstream when a prediction misses.
 - **Hand-written extractors (regex, parsers)** are exact but brittle: each one is
   built for a single known pattern and recovers nothing it wasn't told to expect.
 
-## The gap
+## The narrower problem addressed here
 
-There is no widely-used tool that takes an arbitrary codified surface, searches a
-space of *exact* generators, returns the minimal one **with a proof**, and —
-critically — **abstains** when it has no proof. Exactness, minimality, and honest
-refusal in one move.
+Chiron addresses a narrow task: given a supported codified surface, search a
+fixed space of exact generators and return a candidate only when its held-out
+terms reproduce exactly. It reports a classified residual when that condition
+is not met. The task is not arbitrary inference, general semantic truth, or a
+proof that no other generator exists.
 
 ## What Chiron does
 
@@ -43,27 +46,17 @@ the **minimal** generator under a two-part Minimum Description Length criterion 
 **classified residual**, never hidden. Decoding a cipher is the same move:
 ciphertext in, the cipher out.
 
-It is one portable file, runs offline with zero installs, and is owner-signed end
-to end.
+The core can run offline. It is implementation evidence, not independent
+validation or a universal guarantee.
 
-## What you get — measured, reproducibly (`python3 benchmark.py`)
+## Historical local benchmark snapshots
 
-- **OEIS-core sequences: 22 of 29 recovered, 0 false positives.** It recovers
-  every one of the 22 that is algebraically generated and **abstains** on all 7
-  that are not (primes, partitions, Euler totient, divisor counts and sums, Bell
-  numbers, nⁿ). The textbook polynomial baseline recovers only the 11 pure
-  polynomials and is **confidently wrong on the other 18**.
-- **Classical ciphers: 42 of 44 recovered, ciphertext-only** (a rot13-only
-  baseline gets 4).
-- **Zero false positives across ~5,070 scored cases**, including a 5,000-case
-  randomized fuzz and the labeled gauntlet.
-- **Compression vs. understanding** (`python3 compare.py`): on an algebraic
-  sequence Chiron's stored law is a handful of bytes *and can regenerate term one
-  million*; gzip/bz2/lzma store a blob that grows with the input and can
-  regenerate nothing past it.
-
-The single number that matters is the **0**: it never claimed a rule it could not
-predict.
+`benchmark.py`, `compare.py`, and the self-tests are useful local regression
+tools. Their historical outputs are not a substitute for an independent
+replication, and a zero-false-positive count in a finite test corpus is not a
+universal soundness claim. The external-validation record retains the failures
+that invalidated earlier counts and is the correct source for the current dated
+protocol and result.
 
 ## Where it stops (the honest part)
 

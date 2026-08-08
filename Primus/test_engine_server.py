@@ -148,7 +148,7 @@ LEAK_MARKERS = ["Traceback", "File \"", ".py", "src/primus", "site-packages",
                 "/opt/", "/Users/", "primus.certify", "primus.engine",
                 "json.decoder", "Unsupported method", "<html", "<!DOCTYPE",
                 "Error response", "self.", "line "]
-MOBILE_SCHEMA = "chiron.mobile_api/1"
+LOCAL_API_SCHEMA = "chiron.local_api/1"
 ENGINE_SCHEMA = "primus.engine_server/1"
 CERTIFICATE_SCHEMA = "primus.certificate/2"
 
@@ -161,10 +161,10 @@ def leaks_in(obj):
     return [m for m in LEAK_MARKERS if m in blob]
 
 
-def is_mobile_envelope(obj, operation):
+def is_local_api_envelope(obj, operation):
     """The v1 response contract, independent of the underlying result."""
     engine = obj.get("engine") if isinstance(obj, dict) else None
-    return (isinstance(obj, dict) and obj.get("schema") == MOBILE_SCHEMA and
+    return (isinstance(obj, dict) and obj.get("schema") == LOCAL_API_SCHEMA and
             obj.get("operation") == operation and
             isinstance(obj.get("request_id"), str) and
             re.fullmatch(r"[0-9a-f]{32}", obj["request_id"]) is not None and
@@ -217,11 +217,11 @@ def main():
         gate("certify: refuted and verified counted exactly",
              code == 200 and c["refuted"] == 1 and c["verified"] == 2, repr(c))
 
-        # ---- v1 mobile-safe contract: only canonical inline operations ---
+        # ---- v1 local contract: only canonical inline operations ----------
         code, caps = call(base, "/v1/capabilities")
         capability_ops = caps.get("result", {}).get("operations", [])
         gate("v1 capabilities has the stable envelope and only two operations",
-             code == 200 and is_mobile_envelope(caps, "capabilities") and
+             code == 200 and is_local_api_envelope(caps, "capabilities") and
              [item.get("operation") for item in capability_ops] ==
              ["collapse", "certify"] and
              caps["result"].get("content_type") == "application/json" and
@@ -230,77 +230,77 @@ def main():
              caps["result"].get("request_fields") == "unknown fields are refused",
              repr(caps)[:500])
 
-        code, mobile_collapse = call(
+        code, local_api_collapse = call(
             base, "/v1/collapse",
             {"surface": "1 1 2 3 5 8 13 21 34 55 89 144"})
         gate("v1 collapse wraps the canonical collapse result without a new engine",
-             code == 200 and is_mobile_envelope(mobile_collapse, "collapse") and
-             mobile_collapse["result"].get("schema") == ENGINE_SCHEMA and
-             mobile_collapse["result"].get("tool") == "collapse" and
-             mobile_collapse["result"].get("certificate", {}).get("verified") is True,
-             repr(mobile_collapse)[:500])
+             code == 200 and is_local_api_envelope(local_api_collapse, "collapse") and
+             local_api_collapse["result"].get("schema") == ENGINE_SCHEMA and
+             local_api_collapse["result"].get("tool") == "collapse" and
+             local_api_collapse["result"].get("certificate", {}).get("verified") is True,
+             repr(local_api_collapse)[:500])
 
-        code, mobile_certify = call(base, "/v1/certify", {"text": "2+2=5"})
+        code, local_api_certify = call(base, "/v1/certify", {"text": "2+2=5"})
         gate("v1 certify wraps the canonical certificate schema",
-             code == 200 and is_mobile_envelope(mobile_certify, "certify") and
-             mobile_certify["request_id"] != mobile_collapse["request_id"] and
-             mobile_certify["result"].get("schema") == ENGINE_SCHEMA and
-             mobile_certify["result"].get("tool") == "certify" and
-             mobile_certify["result"].get("certificate", {}).get("schema") ==
+             code == 200 and is_local_api_envelope(local_api_certify, "certify") and
+             local_api_certify["request_id"] != local_api_collapse["request_id"] and
+             local_api_certify["result"].get("schema") == ENGINE_SCHEMA and
+             local_api_certify["result"].get("tool") == "certify" and
+             local_api_certify["result"].get("certificate", {}).get("schema") ==
              CERTIFICATE_SCHEMA and
-             mobile_certify["result"]["certificate"]["counts"]["refuted"] == 1,
-             repr(mobile_certify)[:500])
+             local_api_certify["result"]["certificate"]["counts"]["refuted"] == 1,
+             repr(local_api_certify)[:500])
 
         canary = "v1-raw-input-canary-71a4"
-        code, mobile_bad_fields = call(
+        code, local_api_bad_fields = call(
             base, "/v1/certify", {"text": canary, "unrecognized": canary})
-        mobile_bad_blob = json.dumps(mobile_bad_fields)
+        local_api_bad_blob = json.dumps(local_api_bad_fields)
         gate("v1 rejects unknown request fields without reflecting caller input",
-             code == 400 and is_mobile_envelope(mobile_bad_fields, "certify") and
-             mobile_bad_fields["result"].get("status") == "REFUSED" and
-             canary not in mobile_bad_blob and "Traceback" not in mobile_bad_blob and
-             "src/primus" not in mobile_bad_blob,
-             repr(mobile_bad_fields)[:500])
+             code == 400 and is_local_api_envelope(local_api_bad_fields, "certify") and
+             local_api_bad_fields["result"].get("status") == "REFUSED" and
+             canary not in local_api_bad_blob and "Traceback" not in local_api_bad_blob and
+             "src/primus" not in local_api_bad_blob,
+             repr(local_api_bad_fields)[:500])
 
-        code, mobile_bad_shape = call(base, "/v1/collapse", {"surface": [1, True, 3]})
+        code, local_api_bad_shape = call(base, "/v1/collapse", {"surface": [1, True, 3]})
         gate("v1 rejects non-integer surface arrays before the engine",
-             code == 400 and is_mobile_envelope(mobile_bad_shape, "collapse") and
-             mobile_bad_shape["result"].get("status") == "REFUSED",
-             repr(mobile_bad_shape)[:500])
+             code == 400 and is_local_api_envelope(local_api_bad_shape, "collapse") and
+             local_api_bad_shape["result"].get("status") == "REFUSED",
+             repr(local_api_bad_shape)[:500])
 
-        code, mobile_bad_media = call(
+        code, local_api_bad_media = call(
             base, "/v1/certify", {"text": "2+2=4"},
             headers={"Content-Type": "text/plain"})
         gate("v1 rejects a non-JSON Content-Type before parsing the body",
-             code == 415 and is_mobile_envelope(mobile_bad_media, "certify") and
-             mobile_bad_media["result"].get("status") == "REFUSED" and
-             mobile_bad_media["result"].get("error") == "unsupported media type",
-             repr(mobile_bad_media)[:500])
+             code == 415 and is_local_api_envelope(local_api_bad_media, "certify") and
+             local_api_bad_media["result"].get("status") == "REFUSED" and
+             local_api_bad_media["result"].get("error") == "unsupported media type",
+             repr(local_api_bad_media)[:500])
 
-        code, mobile_bad_json = call(
+        code, local_api_bad_json = call(
             base, "/v1/certify", raw=(b'{"text":"' +
                                          canary.encode() + b'"'))
-        mobile_bad_json_blob = json.dumps(mobile_bad_json)
+        local_api_bad_json_blob = json.dumps(local_api_bad_json)
         gate("v1 malformed JSON remains a versioned no-leak refusal",
-             code == 400 and is_mobile_envelope(mobile_bad_json, "certify") and
-             mobile_bad_json["result"].get("status") == "REFUSED" and
-             canary not in mobile_bad_json_blob and
-             "Traceback" not in mobile_bad_json_blob and
-             "src/primus" not in mobile_bad_json_blob,
-             repr(mobile_bad_json)[:500])
+             code == 400 and is_local_api_envelope(local_api_bad_json, "certify") and
+             local_api_bad_json["result"].get("status") == "REFUSED" and
+             canary not in local_api_bad_json_blob and
+             "Traceback" not in local_api_bad_json_blob and
+             "src/primus" not in local_api_bad_json_blob,
+             repr(local_api_bad_json)[:500])
 
-        code, mobile_unknown = call(base, "/v1/conjecture", {"terms": [1, 2, 3]})
+        code, local_api_unknown = call(base, "/v1/conjecture", {"terms": [1, 2, 3]})
         gate("v1 keeps conjecture closed and returns a versioned 404 refusal",
-             code == 404 and is_mobile_envelope(mobile_unknown, "unknown") and
-             mobile_unknown["result"].get("error") == "not found",
-             repr(mobile_unknown)[:500])
+             code == 404 and is_local_api_envelope(local_api_unknown, "unknown") and
+             local_api_unknown["result"].get("error") == "not found",
+             repr(local_api_unknown)[:500])
 
-        code, hdrs, mobile_wrong_method = call_ex(base, "/v1/collapse", method="GET")
+        code, hdrs, local_api_wrong_method = call_ex(base, "/v1/collapse", method="GET")
         gate("v1 wrong method is a versioned 405 with Allow: POST",
              code == 405 and hdrs.get("Allow") == "POST" and
-             is_mobile_envelope(mobile_wrong_method, "collapse") and
-             mobile_wrong_method["result"].get("allow") == ["POST"],
-             repr(mobile_wrong_method)[:500])
+             is_local_api_envelope(local_api_wrong_method, "collapse") and
+             local_api_wrong_method["result"].get("allow") == ["POST"],
+             repr(local_api_wrong_method)[:500])
 
         code, r = call(base, "/conjecture", {"terms": [1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78]})
         gate("conjecture: triangulars stamped by the exact gate",
@@ -456,7 +456,7 @@ def main():
 
     # An owner can opt a single browser UI into CORS, but no wildcard or
     # reflective origin is ever emitted. This is deliberately separate from
-    # authentication: browser access is not a mobile auth system.
+    # authentication: browser access is not an authentication system.
     origin = "https://app.example.test"
     proc, base = start_server({"CHIRON_RATE_PER_MIN": "1000",
                                "CHIRON_CORS_ORIGIN": origin})
@@ -513,7 +513,7 @@ def main():
                                          headers=v1_headers)
         gate("v1 rate limit keeps its envelope and Retry-After: 60",
              first == 200 and code == 429 and hdrs.get("Retry-After") == "60" and
-             is_mobile_envelope(v1_limited, "certify") and
+             is_local_api_envelope(v1_limited, "certify") and
              v1_limited["result"].get("status") == "REFUSED" and
              not leaks_in({k: v for k, v in v1_limited.items() if k != "result"}) and
              "Traceback" not in json.dumps(v1_limited), repr(v1_limited)[:500])
@@ -534,7 +534,7 @@ def main():
              code == 429 and legacy_hdrs.get("Retry-After") == "1" and
              legacy_busy.get("status") == "REFUSED" and
              code_v1 == 429 and v1_hdrs.get("Retry-After") == "1" and
-             is_mobile_envelope(v1_busy, "collapse") and
+             is_local_api_envelope(v1_busy, "collapse") and
              v1_busy["result"].get("status") == "REFUSED",
              f"legacy={code}/{legacy_hdrs.get('Retry-After')}/{legacy_busy!r} "
              f"v1={code_v1}/{v1_hdrs.get('Retry-After')}/{v1_busy!r}")
@@ -582,12 +582,12 @@ def main():
              code == 200 and r["certificate"]["verified"] is True, repr(r)[:200])
         code, r = call(base, "/v1/certify", {"text": "2+2=4"})
         gate("auth on: v1 POST without token is a versioned 401 refusal",
-             code == 401 and is_mobile_envelope(r, "certify") and
+             code == 401 and is_local_api_envelope(r, "certify") and
              r["result"].get("status") == "REFUSED", repr(r)[:500])
         code, r = call(base, "/v1/certify", {"text": "2+2=4"},
                        headers={"Authorization": "Bearer sekrit"})
         gate("auth on: v1 POST with the static development bearer answers",
-             code == 200 and is_mobile_envelope(r, "certify") and
+             code == 200 and is_local_api_envelope(r, "certify") and
              r["result"].get("certificate", {}).get("counts", {}).get("verified") == 1,
              repr(r)[:500])
         code, _ = call(base, "/health")

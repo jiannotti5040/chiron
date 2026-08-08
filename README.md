@@ -1,134 +1,101 @@
 # Chiron
 
-### Every other AI tool competes to be right more often. This one competes to never be wrong.
+Chiron is a local, macOS-first workspace for exact checks, bounded analysis,
+and auditable records. Its Python core does not try to turn every input into an
+answer. For the claim families it implements, it returns one of three
+dispositions:
 
-[![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
-[![live-eval](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml/badge.svg)](https://github.com/jiannotti5040/chiron/actions/workflows/live-eval.yml)
-[![Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue)](LICENSE)
-[![PyPI](https://img.shields.io/badge/pip-primus--intelligence-informational)](https://pypi.org/project/primus-intelligence/)
+- **VERIFIED** — a defined exact check succeeded, with the supporting record.
+- **REFUTED** — a defined exact check failed.
+- **REFUSED** — the input is outside the checker's warranted scope.
 
-The way it does that is by shutting up a lot.
+That vocabulary is deliberately narrow. A certificate is not a general truth
+judgment, a probability that prose was machine-written, legal advice, or a
+replacement for review.
 
-```console
-$ primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"
-VERIFIED  linear_recurrence_order2 — recovered from the first 9 terms, then
-          EXACTLY predicts all 3 held-out terms it was never shown.
+## Use it locally
 
-$ primus collapse "2 3 5 7 11 13 17 19 23 29 31 37"
-Best model in class: 'power_law' — Does Not Meaningfully Compress.
-          Held-out prediction: 0/3 — treat as a candidate, not yet verified.
+The core runs with Python. The native interface is a local macOS SwiftUI app;
+it invokes the same Python entry points and contains no second verifier.
+
+```bash
+git clone https://github.com/jiannotti5040/chiron.git
+cd chiron
+python3 -m pip install ./Primus
+
+primus collapse "1 1 2 3 5 8 13 21 34 55"
+printf '%s\n' '17 * 3 = 51 and 2^10 = 1025' | primus certify - --gate
 ```
 
-It never grades its own homework. It sees a prefix, the rest is withheld, and it must reproduce
-the withheld terms *exactly* — right integer, every time — before it is allowed to say anything.
+For the macOS interface (macOS 14+, Swift 6, a local Python installation):
 
-The second command is the product. Any model will hand you a formula for the primes if you ask
-nicely: confidently, instantly, wrongly. This one shows its best guess and then tells you the
-guess failed the only test that counted.
-
-**Somewhere in your stack a number came out of a language model and got treated as a fact.**
-"94% confident" is not something you can put in a change request, a filing, or an incident review.
-
-```console
-pip install primus-intelligence
+```bash
+cd App
+swift run chiron-app
+swift test --scratch-path /tmp/chiron-build
+./make_app.sh
 ```
 
----
+The app locates a checkout by walking up from its working directory. A
+double-clickable bundle records the checkout used to build it; set
+`CHIRON_VAULT` to choose another checkout and `CHIRON_PYTHON` to choose a
+specific interpreter. See [the macOS operator guide](App/README.md).
 
-## What this actually is
+## What is here
 
-Four layers, each answering what the one below it structurally cannot. They were built as
-separate projects over two years; they are one system.
-
-| Question | Answer | Where |
+| Surface | Role | Boundary |
 |---|---|---|
-| Can this claim be proved exactly? | `VERIFIED` · `REFUTED` · `REFUSED` | [`Primus/`](Primus/) · [`Chiron/`](Chiron/) |
-| Does it match the system of record? | ontology grounding | [readiness gate ↗](https://github.com/jiannotti5040/operational-readiness-gate) |
-| Would this survive being challenged? | an adversarial court — defence, precedent, six judges | [`Chiron/judgment.py`](Chiron/judgment.py) |
-| Would the record hold up in a hearing? | Daubert · FRE 702 · FRCP 26 | [`JDICert/`](JDICert/) |
+| [Primus](Primus/) | Exact recovery and claim certification | It stamps only the claim families and holdout tests it can perform exactly. |
+| [Chiron](Chiron/) | Local analysis, provenance, adjudication, and composition tools | Source modules are canonical; the monolith is generated from them. |
+| [Chiron Monolith](Chiron%20Monolith/) | Offline, generated fold of Chiron modules | Regenerate after a Chiron-source change; never edit the fold directly. |
+| [App](App/) | Local macOS SwiftUI interface | Uses `Foundation.Process` to call the canonical vault; it does not recalculate verdicts. |
+| [JDICert](JDICert/) | Decision-certificate and court-analysis material | Auditable software artifacts, not a claim of legal admissibility. |
+| [studies](studies/) | Reproducible research capsules and records | Each capsule states its finite scope and non-claims. |
+| [UMA Suite](UMA%20Suite/) | Separate computational/theory work | Its empirical claims remain separate from the exact-verification core. |
 
-The gap that makes the stack necessary is **measured, not assumed**: every `certify` claim kind is
-self-contained, so on realistic operational text coverage is about **0.09**. It verifies
-`4200 / 1400 = 3` and leaves *"Unit Bravo has 3 days of fuel"* — the sentence a human acts on —
-uncertified. That is not the disappointing part. That is the deliverable: you now know which 9% is
-machine-provable and which 91% is yours, *before* you sign your name to it.
+MCP and local HTTP interfaces are available for local integration. They are not
+a hosted service, a public gateway, or evidence of a configured third-party
+deployment. The Foundry/AIP material is an unconfigured typed boundary only;
+it does not deliver to an ontology or make a live Foundry claim.
 
-**A confidence score cannot be appealed.** The record this produces can — every court in it is
-separately addressable and separately wrong-able. → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+## Evidence before narrative
 
-The current evidence-backed implementation boundary, surface inventory, and
-external blockers are recorded in [`docs/RECONSTRUCTION.md`](docs/RECONSTRUCTION.md).
+The useful reading order is:
 
----
+1. [Research map](docs/RESEARCH_MAP.md) — separates executable evidence,
+   bounded computation, and experimental theory.
+2. [External validation record](Primus/EXTERNAL_VALIDATION.md) — including
+   failures caught from external data and their repairs.
+3. [Known limitations](Chiron/docs/KNOWN_LIMITATIONS.md) — where the engine
+   abstains and what its stamps do not mean.
+4. [Reconstruction record](docs/RECONSTRUCTION.md) — the present local
+   implementation boundary and validation commands.
 
-## Has it ever lied?
+The paper draft, theory documents, benchmark results, and historical logs have
+different evidentiary status. The repository does not treat a test suite,
+bounded computation, or self-authored theory as interchangeable with an
+independent result.
 
-**Yes. Three times. All published, in the commit log, with the repair beside them.**
+## Verify a checkout
 
-The worst: the very first external run — against live OEIS data, after ~5,070 internal cases had
-passed clean — caught it stamping a wrong number. The cause was that the held-out check compared
-with a `1e-6` tolerance while the documentation promised exact equality. At those magnitudes that
-forgave an error of about ten thousand.
+Run the standard gate battery from the repository root:
 
-It got caught because the check runs against data the author does not control. Exact arithmetic is
-structural now, and every external run since reports **zero false verifications** — the one number
-here that is not allowed to move.
-
-→ [`Primus/EXTERNAL_VALIDATION.md`](Primus/EXTERNAL_VALIDATION.md) — the failures, unedited.
-
----
-
-## What it has been pointed at
-
-| | Result |
-|---|---|
-| **3,195 open conjectures** (DeepMind `formal-conjectures`) | discharged 302, **refused 90.5%** — the correct answer |
-| **Jacobian conjecture** counterexample (open since 1939) | 12/12 gates, exact polynomial identity over ℚ |
-| **Dinitz–Garg–Goemans** counterexample (open since the 1990s) | 15/15 gates; whole family **456/456** in exact integers |
-| **Live OEIS**, graded against data the author doesn't control | 20 verified / 0 false / n=29 |
-| Head-to-head vs PySR symbolic regression | 18 exact / **0 wrong** / 11 refused, vs 5 exact / 24 wrong |
-
-Open problems are open *because* they are not finitely checkable. A tool reporting a high success
-rate on that corpus would be broken, not brilliant.
-
-→ [`docs/AI_CLAIMS.md`](docs/AI_CLAIMS.md) — what was verified and what was refused.
-
----
-
-## Verify it yourself
-
-```console
-./demo.sh                  # prototype + demo-core gates + the frozen-output grade
-./demo.sh --live           # the same, plus a live oeis.org grade
-python3 bin/chiron test    # the full battery
+```bash
+python3 bin/chiron test --full
+python3 bin/chiron parity
 ```
 
-Nothing is held back and nothing needs a key. → [`docs/BATTERIES.md`](docs/BATTERIES.md) is the
-single reconciled source for every gate count; if two numbers ever disagree, that page wins.
+If a Chiron source module changes, regenerate its derived records before
+claiming the fold is current:
 
----
+```bash
+cd "Chiron Monolith" && python3 build_monolith.py && python3 chiron_monolith.py --selftest
+cd .. && python3 Chiron/build_manifest.py --run && python3 Chiron/build_encyclopedia.py
+```
 
-## Repository map
+## License
 
-| | |
-|---|---|
-| [`Primus/`](Primus/) | the seed engine and the `primus-intelligence` package — recovery, certify, MCP server, HTTP server |
-| [`Chiron/`](Chiron/) | the flagship certification layer, composer, and courts — see its generated manifest for the current module inventory |
-| [`Chiron Monolith/`](Chiron%20Monolith/) | the whole flagship folded into one deterministic file that runs offline |
-| [`JDICert/`](JDICert/) | decision certification — 18 sections, K/U/Ω partition, Daubert analyser, 280/280 |
-| [`studies/`](studies/) | the research: OEIS extensions, conjecture sweeps, retractions, replay capsules |
-| [`UMA Suite/`](UMA%20Suite/) | the physics framework and its falsification checkpoints |
-| [`App/`](App/) · [`iOS/`](iOS/) | native macOS and narrow iOS front ends — SwiftUI over canonical engines or the versioned service, never a second verifier |
-| [`docs/`](docs/) · [`notes/`](notes/) | the published site · the working records, kept unedited including the failures |
-
----
-
-## Licence
-
-Code is **Apache-2.0**. Prose and books are **CC BY 4.0**. Commercial use, modification and
-redistribution are all permitted; attribution is the only condition. There is no paid tier, no
-private repository, and nothing behind a licence key.
-
-→ [`LICENSES.md`](LICENSES.md) · [`CONTRIBUTING.md`](CONTRIBUTING.md) · [`NOTICE`](NOTICE)
-
-> Copyright © 2026 Jacob Iannotti
+Code is licensed under [Apache-2.0](LICENSE). Prose and books are licensed
+under [CC BY 4.0](LICENSES.md). See [NOTICE](NOTICE) and
+[CONTRIBUTING.md](CONTRIBUTING.md) for repository-specific notices and
+contribution guidance.

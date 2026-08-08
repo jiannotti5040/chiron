@@ -8,8 +8,8 @@ Part II tells you how to maintain the vault without breaking its one law.
 Every command and output below is from a real session, unedited.
 
 Companions: [DICTIONARY.md](DICTIONARY.md) (the vocabulary),
-[ENCYCLOPEDIA.md](ENCYCLOPEDIA.md) (all 72 modules, generated from the
-manifest), [RUNNING.md](../Chiron/docs/RUNNING.md) (the dashboard guide).
+[ENCYCLOPEDIA.md](ENCYCLOPEDIA.md) (the generated module inventory),
+[RUNNING.md](../Chiron/docs/RUNNING.md) (the dashboard guide).
 
 ---
 

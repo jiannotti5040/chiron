@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 
-// Keep existing macOS callers source-compatible while the Codable records
-// live in the platform-neutral ChironContract target.  ChironRemote depends
-// on ChironContract directly and has no Process/Python dependency.
+// Keep the app and the local-process adapter on the same Codable records.
+// ChironContract stays internal to this macOS package; callers go through
+// ChironKit rather than carrying a second transport surface.
 @_exported import ChironContract

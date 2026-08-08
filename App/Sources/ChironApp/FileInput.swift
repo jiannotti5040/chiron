@@ -2,19 +2,36 @@
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import SwiftUI
 import UniformTypeIdentifiers
+import CryptoKit
 
 enum FileLoad {
-    /// Files can be arbitrarily large and are not all text. Read a bounded
-    /// prefix and say so rather than hanging or pretending the whole file
-    /// was analysed.
-    static let maxBytes = 2_000_000
+    /// Match the source-provenance module's hard input limit. A complete file
+    /// at or below this size can be registered as one canonical source; a
+    /// larger file is only analysed as an explicitly marked prefix.
+    static let maxBytes = 8 * 1024 * 1024
 
     struct Loaded {
+        let url: URL
         let name: String
         let text: String
         let bytes: Int
+        let analysedBytes: Int
         let sizeKnown: Bool
         let truncated: Bool
+        /// Present only when `text` is the complete selected file, so a later
+        /// source-record observation can be tied to the exact analysed bytes.
+        let contentSHA256: String?
+    }
+
+    enum LoadError: LocalizedError {
+        case invalidUTF8
+
+        var errorDescription: String? {
+            switch self {
+            case .invalidUTF8:
+                return "The selected file is not valid UTF-8 text. It was not imported."
+            }
+        }
     }
 
     static func read(_ url: URL) throws -> Loaded {
@@ -31,13 +48,68 @@ enum FileLoad {
         // available, but this makes truncation truthful even when a file
         // provider cannot report the size.
         let raw = try handle.read(upToCount: maxBytes + 1) ?? Data()
-        let truncated = raw.count > maxBytes
+        let truncated = (knownSize ?? raw.count) > maxBytes || raw.count > maxBytes
         let data = raw.prefix(maxBytes)
-        return Loaded(name: url.lastPathComponent,
-                      text: String(decoding: data, as: UTF8.self),
+        let decoded = try strictUTF8Text(from: Data(data),
+                                         mayEndMidCharacter: truncated)
+        let contentSHA256 = truncated ? nil : SHA256.hash(data: data)
+            .map { String(format: "%02x", $0) }
+            .joined()
+        return Loaded(url: url,
+                      name: url.lastPathComponent,
+                      text: decoded.text,
                       bytes: max(knownSize ?? raw.count, raw.count),
+                      analysedBytes: decoded.bytes,
                       sizeKnown: knownSize != nil,
-                      truncated: truncated)
+                      truncated: truncated,
+                      contentSHA256: contentSHA256)
+    }
+
+    /// `String(decoding:as:)` repairs invalid UTF-8, which would turn a bad
+    /// source into different text without saying so. Decode strictly instead.
+    /// When a deliberately bounded read stops inside one multi-byte code
+    /// point, remove only that provably incomplete suffix and report the exact
+    /// byte count that was actually analysed.
+    private static func strictUTF8Text(
+        from data: Data,
+        mayEndMidCharacter: Bool
+    ) throws -> (text: String, bytes: Int) {
+        if let text = String(data: data, encoding: .utf8) {
+            return (text, data.count)
+        }
+        guard mayEndMidCharacter,
+              let suffixLength = incompleteUTF8SuffixLength(Array(data)),
+              suffixLength < data.count
+        else { throw LoadError.invalidUTF8 }
+
+        let prefix = Data(data.dropLast(suffixLength))
+        guard let text = String(data: prefix, encoding: .utf8) else {
+            throw LoadError.invalidUTF8
+        }
+        return (text, prefix.count)
+    }
+
+    /// Returns the byte count of a trailing UTF-8 sequence that was cut off
+    /// before it could complete. Invalid bytes are never treated as a suffix.
+    private static func incompleteUTF8SuffixLength(_ bytes: [UInt8]) -> Int? {
+        guard !bytes.isEmpty else { return nil }
+        var index = bytes.count - 1
+        var continuations = 0
+        while index >= 0, (bytes[index] & 0b1100_0000) == 0b1000_0000 {
+            continuations += 1
+            index -= 1
+        }
+        guard index >= 0 else { return nil }
+
+        let requiredContinuations: Int
+        switch bytes[index] {
+        case 0xC2...0xDF: requiredContinuations = 1
+        case 0xE0...0xEF: requiredContinuations = 2
+        case 0xF0...0xF4: requiredContinuations = 3
+        default: return nil
+        }
+        guard continuations < requiredContinuations else { return nil }
+        return continuations + 1
     }
 
     static func byteLabel(_ n: Int) -> String {
@@ -57,9 +129,8 @@ struct FileLoadWarning: View {
             let total = loaded.sizeKnown
                 ? FileLoad.byteLabel(loaded.bytes)
                 : "at least \(FileLoad.byteLabel(loaded.bytes))"
-            Text("Read the first \(FileLoad.byteLabel(FileLoad.maxBytes)) of \(total) "
-                 + "from \(loaded.name) — "
-                 + "the rest was not analysed.")
+            Text("Analysed a strict UTF-8 prefix of \(FileLoad.byteLabel(loaded.analysedBytes)) "
+                 + "from \(total) in \(loaded.name) — the rest was not analysed.")
                 .font(.caption)
                 .foregroundStyle(.orange)
         }

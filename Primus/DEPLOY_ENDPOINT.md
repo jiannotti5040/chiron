@@ -1,7 +1,7 @@
 # Engine endpoint boundary notes
 
-**Status: local HTTP service implemented and tested; public/mobile deployment
-not implemented.** `python3 test_engine_server.py` drives the endpoint over
+**Status: local HTTP service implemented and tested; public deployment not
+implemented.** `python3 test_engine_server.py` drives the endpoint over
 real local sockets (48/48 gates at this revision). That validates the engine
 wrapper and the `/v1` wire contract — it does not provision, authenticate, or
 operate an internet-facing service.
@@ -16,8 +16,8 @@ PYTHONPATH=src python3 -m primus.engine_server --host 127.0.0.1 --port 8790
 ```
 
 The closed legacy routes are `GET /`, `GET /health`, and `POST`
-`/collapse`, `/certify`, and `/conjecture`. The small versioned boundary for a
-future native client is documented in [MOBILE_API.md](MOBILE_API.md):
+`/collapse`, `/certify`, and `/conjecture`. The small versioned local boundary
+is documented in [LOCAL_API.md](LOCAL_API.md):
 `GET /v1/capabilities`, `POST /v1/collapse`, and `POST /v1/certify`.
 
 The server enforces bounded bodies, exact engine limits, a closed route table,
@@ -35,8 +35,8 @@ availability guarantee.
 
 `CHIRON_API_TOKEN` makes each `POST` require one fixed
 `Authorization: Bearer` value. It is a development/local deployment control,
-not mobile authentication. In particular, it does not provide an identity
-issuer, token expiration, audience or scope checks, secure mobile storage,
+not production authentication. In particular, it does not provide an identity
+issuer, token expiration, audience or scope checks, secure client storage,
 rotation, revocation, gateway audit logs, TLS termination, or distributed
 abuse controls. Do not embed it in an application binary.
 
@@ -44,11 +44,11 @@ abuse controls. Do not embed it in an application binary.
 Set it only behind a proxy you operate and know overwrites
 `X-Forwarded-For`; it is not an authentication feature.
 
-## Before a public or iOS deployment
+## Before a public deployment
 
-No public endpoint, cloud provider integration, or native iOS network client
-is claimed by this repository. A future deployment must supply and validate,
-outside `primus.engine_server`:
+No public endpoint or cloud provider integration is claimed by this
+repository. A future deployment must supply and validate, outside
+`primus.engine_server`:
 
 - TLS termination and a network policy that exposes only the intended v1
   routes;
@@ -60,7 +60,7 @@ outside `primus.engine_server`:
   without float rounding or client-side re-verification.
 
 The existing Dockerfile and any historical PaaS notes are not a validated
-mobile deployment recipe. Choosing a non-loopback bind or putting this
+deployment recipe. Choosing a non-loopback bind or putting this
 process behind a public proxy is an explicit operator decision outside the
 tested boundary above, not an authorization implied by this document.
 

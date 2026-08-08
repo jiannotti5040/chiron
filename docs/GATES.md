@@ -3,7 +3,7 @@
 Chiron's claims are backed by gate batteries you can run, not by adjectives. This
 page records the current results honestly, including their scope and limits.
 
-## Current build — 2026-07-21, Python 3.14
+## Historical build snapshot — 2026-07-21, Python 3.14
 
 | Gate battery | Result | What it proves |
 |---|---|---|
@@ -34,6 +34,7 @@ Tolerances on the stamping path are zero by design.
 
 ## Reproduce it
 
-License the engine and run the full battery yourself (`bin/chiron test`), or run
-the public [`../prototype/`](../prototype/) for the recover/verify/refuse core
-without a license. Every number above regenerates deterministically.
+Run the full current battery yourself with `python3 bin/chiron test --full`.
+The counts above describe the dated snapshot, not a continuously updated release
+dashboard. See [BATTERIES.md](BATTERIES.md) and the repository root
+[README](../README.md) for the current command paths and evidence boundaries.

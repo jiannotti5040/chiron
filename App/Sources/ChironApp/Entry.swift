@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import SwiftUI
+import Foundation
 import ChironKit
 
 @main
 enum Entry {
     static func main() async {
         let args = Array(CommandLine.arguments.dropFirst())
-        if let verb = args.first, ["run", "certify", "catalog", "call"].contains(verb) {
+        if let verb = args.first, ["run", "certify"].contains(verb) {
             exit(await Headless.main(args))
         }
         ChironUIApp.main()
@@ -30,63 +31,28 @@ enum Headless {
         let wantJSON = rest.contains("--json")
         rest.removeAll { $0 == "--json" }
 
-        // `catalog` takes no text; everything else needs some.
-        if args[0] == "catalog" {
+        // A bare argument that names a readable file is treated as a bounded,
+        // strictly decoded text input. The command is intentionally limited to
+        // the same two canonical records shown by the macOS workspace.
+        var text = rest.joined(separator: " ")
+        if rest.count == 1, FileManager.default.fileExists(atPath: rest[0]) {
             do {
-                let cat = try await client.catalog()
-                print("schema: \(cat.schema)")
-                print("\(cat.importedCount)/\(cat.modules.count) modules import clean · "
-                      + "\(cat.entrypointCount) entrypoints · "
-                      + "\(cat.modules.flatMap(\.functions).filter(\.isRunnable).count) runnable from one input")
-                for m in cat.modules where m.status != "OK" {
-                    print("  FAILED \(m.name): \(m.error ?? "")")
-                }
-                return 0
-            } catch {
-                FileHandle.standardError.write(Data("chiron-app: \(error.localizedDescription)\n".utf8))
-                return 1
-            }
-        }
-
-        if args[0] == "call" {
-            guard rest.count >= 3 else {
+                let loaded = try FileLoad.read(URL(fileURLWithPath: rest[0]))
+                text = loaded.text
+                let scope = loaded.truncated
+                    ? "strict UTF-8 prefix \(loaded.analysedBytes) of \(loaded.bytes) bytes"
+                    : "\(loaded.bytes) strict UTF-8 bytes"
                 FileHandle.standardError.write(Data(
-                    "usage: chiron-app call <module> <function> <text>\n".utf8))
+                    "chiron-app: read \(scope) from \(rest[0])\n".utf8))
+            } catch {
+                FileHandle.standardError.write(Data(
+                    "chiron-app: \(error.localizedDescription)\n".utf8))
                 return 2
             }
-            let mod = rest[0], fn = rest[1]
-            let text = rest.dropFirst(2).joined(separator: " ")
-            do {
-                let cat = try await client.catalog()
-                guard let info = cat.modules.first(where: { $0.name == mod })?
-                    .functions.first(where: { $0.name == fn }) else {
-                    FileHandle.standardError.write(Data("chiron-app: no \(mod).\(fn)\n".utf8))
-                    return 2
-                }
-                let r = try await client.call(module: mod, function: fn,
-                                              text: text, kind: info.firstArgKind)
-                print("[\(r.status)] \(r.module).\(r.function) \(Int(r.ms ?? 0)) ms")
-                if let v = r.result { print(v.rendered()) }
-                if let e = r.error { print(e) }
-                return r.status == "OK" ? 0 : 1
-            } catch {
-                FileHandle.standardError.write(Data("chiron-app: \(error.localizedDescription)\n".utf8))
-                return 1
-            }
-        }
-
-        // A bare argument that names a readable file is treated as that file.
-        // Analysing a file is the ordinary case, not a special mode.
-        var text = rest.joined(separator: " ")
-        if rest.count == 1, FileManager.default.fileExists(atPath: rest[0]),
-           let data = FileManager.default.contents(atPath: rest[0]) {
-            text = String(decoding: data.prefix(FileLoad.maxBytes), as: UTF8.self)
-            FileHandle.standardError.write(Data(
-                "chiron-app: read \(data.count) bytes from \(rest[0])\n".utf8))
         }
         guard !text.isEmpty else {
             FileHandle.standardError.write(Data(
-                "usage: chiron-app run|certify [--json] <text|file> | catalog | call <module> <fn> <text>\n".utf8))
+                "usage: chiron-app run|certify [--json] <text|file>\n".utf8))
             return 2
         }
         do {
