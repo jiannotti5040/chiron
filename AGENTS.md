@@ -1,7 +1,16 @@
 # Agent instructions — Jacob's Portfolio Vault (Chiron / Primus)
 
-Any agent working in this repository: read `docs/SOP.md` first. It is the
+Any agent working in this repository: read `notes/SOP.md` first. It is the
 operating manual; this file is only the gate summary.
+
+## Current architecture and boundaries
+
+`docs/RECONSTRUCTION.md` is the current evidence record and the place to
+start after this gate summary. The Python vault is canonical; macOS is the
+implemented native interface, while iOS must wait for an authenticated service
+boundary or audited engine port. Never claim a cloud provider, Apple Foundation
+Models, Foundry/AIP, signing, or distribution integration exists without its
+own observed evidence and gate.
 
 ## The one inviolable law
 
@@ -19,6 +28,7 @@ gate. From the repo root:
 ```
 python3 Chiron/chiron.py selftest        # CHIRON core (12/12)
 python3 Chiron/stress_test.py            # invariant-operation probes (23/23)
+python3 Chiron/tests/test_mcp_server.py  # Chiron MCP real-stdio contract
 cd Primus
 python3 test_invariant_engine.py         # stress gates (55/55)
 python3 test_certify_fuzz.py             # adversarial certify gates (13/13)
@@ -38,7 +48,7 @@ widen a tolerance or mute a gate to get green.
 
 - Exact arithmetic only on the stamping path: Fractions and exact integer
   equality; float predictions past 2^53 are refused, not trusted.
-- Edit sources of truth only (see `docs/SOP.md`). Never hand-edit
+- Edit sources of truth only (see `notes/SOP.md`). Never hand-edit
   `Chiron Monolith/chiron_monolith.py` — regenerate it:
   `cd "Chiron Monolith" && python3 build_monolith.py`, then re-run `--smoke`.
 - Seed/Chiron divergence must be ledgered in `Primus/drift_check.py`

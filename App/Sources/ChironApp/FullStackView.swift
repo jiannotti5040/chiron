@@ -10,6 +10,7 @@ struct FullStackView: View {
     @State private var record: FullStackRecord?
     @State private var running = false
     @State private var errorText: String?
+    @State private var inputFile: FileLoad.Loaded?
 
     static let sample = "The archive holds 4200 records and 1400 were revised "
         + "this quarter, so three in ten changed. Sequence: 1, 4, 9, 16, 25."
@@ -22,8 +23,12 @@ struct FullStackView: View {
                 .font(.body)
                 .frame(height: 110)
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
-                .acceptsFileDrop(text: $text)
-            FileLoadBar(label: "Analyse a file…", text: $text)
+                .acceptsFileDrop(text: $text,
+                                 onLoad: { inputFile = $0 },
+                                 onError: { errorText = $0 })
+            FileLoadBar(label: "Analyse a file…", text: $text,
+                        onLoad: { inputFile = $0 })
+            if let inputFile { FileLoadWarning(loaded: inputFile) }
             HStack {
                 Button {
                     run()

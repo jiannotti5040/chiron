@@ -10,7 +10,7 @@ import Testing
 // absence must never look like green.
 @Suite struct LiveVaultTests {
 
-    private func client() -> VaultClient? { VaultClient.discover() }
+    private func client() -> VaultClient? { testVaultClient() }
 
     @Test func liveFullStack() async throws {
         guard let client = client() else {

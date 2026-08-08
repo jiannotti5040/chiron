@@ -56,6 +56,9 @@ machine-provable and which 91% is yours, *before* you sign your name to it.
 **A confidence score cannot be appealed.** The record this produces can — every court in it is
 separately addressable and separately wrong-able. → [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
 
+The current evidence-backed implementation boundary, surface inventory, and
+external blockers are recorded in [`docs/RECONSTRUCTION.md`](docs/RECONSTRUCTION.md).
+
 ---
 
 ## Has it ever lied?

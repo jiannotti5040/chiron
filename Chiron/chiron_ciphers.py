@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Jacob Iannotti
-# (c) 2026 Jacob Iannotti. Apache-2.0 - noncommercial use permitted;
-# Apache-2.0 — commercial use permitted with attribution. See LICENSE.
-# SPDX-License-Identifier: Apache-2.0
+# Licensed under the Apache License, Version 2.0. Use, modification,
+# distribution, and commercial use are permitted with the required copyright
+# and license notices preserved. See LICENSE.
 # ============================================================================
 #  chiron_ciphers.py — seed Chiron with a CRYPTOGRAPHY basis.
 #

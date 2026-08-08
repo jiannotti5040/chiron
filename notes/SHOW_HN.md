@@ -83,7 +83,8 @@ published, root-caused, and fixed, then re-run with 44 verified and zero false.
 The falsification is in the repo on purpose; a caught-and-repaired defect is
 worth more than an unblemished claim.
 
-Apache-2.0 — free to use, study, and modify noncommercially.
+Apache-2.0 — free to use, study, modify, distribute, and use commercially
+with the required notices preserved.
 
 https://github.com/jiannotti5040/chiron
 

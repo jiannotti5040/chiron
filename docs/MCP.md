@@ -1,6 +1,7 @@
 # Gate your agent's output — an MCP server, free, 30 seconds
 
-**Author: Jacob Iannotti. Apache-2.0 (see [../LICENSE.md](../LICENSE.md)) — free for any noncommercial use.**
+**Author: Jacob Iannotti. [Apache-2.0](../LICENSE) — free to use, modify,
+distribute, and use commercially with the required notices preserved.**
 
 Your agent asserts things. Some of those assertions are checkable. This is an
 MCP server that checks them exactly and **refuses** when it can't, so a
@@ -67,13 +68,18 @@ refuted** — not that the text is true. Coverage tells you how much of it the
 gate could even see. The tool is built to make that distinction impossible to
 lose.
 
+The full Chiron server is separate from this focused Primus gate. It exposes
+`attest`, `analyze`, `certify`, `catalog`, and `call` through the same local
+stdio transport; see [`USING-WITH-CLAUDE.md`](USING-WITH-CLAUDE.md) for the
+current Claude Code and Codex setup instructions and transport gates.
+
 ## What it will not do
 
 - It does not certify arbitrary prose, opinions, or judgment calls.
 - It does not do regulatory compliance or legal conclusions.
 - A high coverage number is not a safety score.
-- Free for noncommercial use; commercial use is licensed — see
-  [LICENSES.md](../LICENSES.md).
+- It is Apache-2.0 software: commercial use is permitted; retain the required
+  copyright and license notices. See [LICENSES.md](../LICENSES.md).
 
 ## Try it before installing
 

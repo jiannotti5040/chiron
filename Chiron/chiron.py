@@ -9,11 +9,9 @@
 # ============================================================================
 #  Author & copyright owner: Jacob Iannotti. Copyright (c) 2026.
 #
-#  Licensed under the Apache License 2.0. You may use, copy,
-#  modify, and share this software for ANY NONCOMMERCIAL purpose — research,
-#  experiment, study, teaching, hobby, or noncommercial organizations — free of
-#  charge. Commercial use is reserved to the owner. Full text: LICENSE.md at the
-#  repository root, or https://www.apache.org/licenses/LICENSE-2.0
+#  Licensed under the Apache License, Version 2.0. Use, modification,
+#  distribution, and commercial use are permitted with the required copyright
+#  and license notices preserved. See LICENSE at the repository root.
 #  SPDX-License-Identifier: Apache-2.0
 #  Required Notice: Copyright (c) 2026 Jacob Iannotti
 #
@@ -70,8 +68,8 @@ from __future__ import annotations
 # Copyright (c) 2026 Jacob Iannotti.
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, distribution, and commercial use are permitted with
-# reserved to the owner. See LICENSE.md at the repository root.
+# distribution, and commercial use are permitted with the required copyright
+# and license notices preserved. See LICENSE at the repository root.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Author: J. Iannotti, 2026.
@@ -13111,8 +13109,8 @@ def jdicert_selfcheck() -> int:
 # Copyright (c) 2026 Jacob Iannotti.
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, distribution, and commercial use are permitted with
-# reserved to the owner. See LICENSE.md at the repository root.
+# distribution, and commercial use are permitted with the required copyright
+# and license notices preserved. See LICENSE at the repository root.
 # SPDX-License-Identifier: Apache-2.0
 #
 # Author: J. Iannotti, 2026.

@@ -22,6 +22,8 @@ struct AttestView: View {
     @State private var running = false
     @State private var errorText: String?
     @State private var addFiles = false
+    @State private var outputFile: FileLoad.Loaded?
+    @State private var truncatedCandidateFiles: [FileLoad.Loaded] = []
 
     var body: some View {
         HSplitView {
@@ -32,8 +34,12 @@ struct AttestView: View {
                     .font(.body)
                     .frame(minHeight: 90)
                     .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
-                    .acceptsFileDrop(text: $output)
-                FileLoadBar(label: "Load the output from a file…", text: $output)
+                    .acceptsFileDrop(text: $output,
+                                     onLoad: { outputFile = $0 },
+                                     onError: { errorText = $0 })
+                FileLoadBar(label: "Load the output from a file…", text: $output,
+                            onLoad: { outputFile = $0 })
+                if let outputFile { FileLoadWarning(loaded: outputFile) }
 
                 HStack {
                     Text("Candidate inputs")
@@ -96,7 +102,11 @@ struct AttestView: View {
                             continue
                         }
                         candidates.append(Candidate(name: loaded.name, text: loaded.text))
+                        if loaded.truncated { truncatedCandidateFiles.append(loaded) }
                     }
+                }
+                ForEach(Array(truncatedCandidateFiles.enumerated()), id: \.offset) { _, loaded in
+                    FileLoadWarning(loaded: loaded)
                 }
                 // The module's own contract, stated where the user acts on it.
                 Text("Attribution is relative to the candidate inputs you supply. "

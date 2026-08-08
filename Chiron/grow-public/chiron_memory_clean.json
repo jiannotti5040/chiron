@@ -27,7 +27,7 @@
 "growth_gen_seen": [],
 "ingested_sources": [],
 "library": {},
-"license": "LICENSE: Proprietary and strictly restricted. Unauthorized use, alteration, or distribution is computationally verifiable.",
+"license": "LICENSE: Apache-2.0. Use, modification, distribution, and commercial use are permitted with the required notices preserved.",
 "manifest_entries": [],
 "manifest_rooms": {
 "bank": "d3acf052626f213b",

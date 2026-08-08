@@ -11,7 +11,7 @@ recomputes them.
 
 | Screen | What it runs | Record |
 |---|---|---|
-| Full Stack | `Chiron/full_stack.py --json` | `chiron.full_stack/1` |
+| Full Stack | `Chiron/full_stack.py --json --stdin` | `chiron.full_stack/1` |
 | Modules | every module in `Chiron/`, discovered by introspection | `chiron.app.catalog/1` |
 | Attest | `attest.attest()` via a stdin shim | `chiron.attestation/1` |
 | Certify | `primus certify --json -` | `primus.certificate/2` |
@@ -26,9 +26,20 @@ argument are listed and say why they cannot be run, rather than being hidden.
 ## Files
 
 Every text box takes a file: drop one on it, or use the button beside it.
-Files are read to a 2 MB bound and the app says so when a file was truncated
-— a partly-read file must never look like a fully analysed one. The CLI
-takes a path anywhere it takes text.
+Files are read to a 2 MB bound and every picker, drop, and multi-file
+candidate path carries the truncation warning through to the analysis screen
+— a partly-read file must never look like a fully analysed one. Full Stack
+uses stdin rather than a command-line argument, so this accepted file bound
+does not collide with the host's `ARG_MAX` limit. The CLI takes a path
+anywhere it takes text.
+
+## Platform status
+
+This is an implemented-and-tested **macOS** app, not an iOS target disguised
+as one. It delegates to the local Python vault through `Foundation.Process`;
+that is appropriate on macOS but cannot run in an iOS sandbox. An iOS app
+needs a separately authenticated service boundary or an audited engine port
+before a target should be added. See [`docs/RECONSTRUCTION.md`](../docs/RECONSTRUCTION.md).
 
 ## Run
 
@@ -68,7 +79,10 @@ Or open `App/Package.swift` in Xcode and press Run. Requires macOS 14+,
 a Swift 6 toolchain, and `python3` on the machine. The app finds the vault
 by walking up from its working directory; a double-clicked binary instead
 uses `CHIRON_VAULT` (and optionally `CHIRON_PYTHON`), or the in-app folder
-picker.
+picker. When no interpreter is specified, it prefers normal Homebrew or
+`/usr/local` installations before PATH and ignores Xcode's bundled developer
+Python there, so it does not accidentally replace the dependency-equipped
+runtime.
 
 ## What it refuses to do
 

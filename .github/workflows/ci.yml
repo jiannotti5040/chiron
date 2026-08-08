@@ -76,6 +76,10 @@ jobs:
         run: |
           python Chiron/tests/test_chiron.py
           python Chiron/tests/test_grow.py
+      - name: Chiron MCP transport (real stdio JSON-RPC)
+        run: python Chiron/tests/test_mcp_server.py
+      - name: Current license claims match Apache-2.0
+        run: python ci/check_license_claims.py
       - name: Drift detector — seed vs monolith must not contradict
         working-directory: Primus
         run: python drift_check.py

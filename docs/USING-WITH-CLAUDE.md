@@ -15,7 +15,7 @@ result rather than a failure.
 ## Register
 
 From a clone of this repository, the checked-in `.mcp.json` is picked up
-automatically by Claude Code. To register them by hand instead:
+automatically by Claude Code. To register them by hand at user scope instead:
 
 ```bash
 claude mcp add chiron --scope user -- python3 "$PWD/Chiron/mcp_server.py"
@@ -27,6 +27,31 @@ claude mcp add primus --scope user --env PYTHONPATH="$PWD/Primus/src" -- python3
 
 Check them with `claude mcp list`; both should report Connected. For Claude
 Desktop, put the same command and args in `claude_desktop_config.json`.
+
+Choose **one** Claude Code scope for a server. A project `.mcp.json` and a
+user-scoped registration with different command paths create two endpoints and
+can leave one pending approval or unauthenticated. Use `claude mcp remove
+chiron -s user` (or the corresponding project scope) before changing scope.
+
+### Codex CLI (user scope)
+
+The installed Codex CLI registers stdio MCP servers in its user configuration.
+From the vault root, use an explicit Python path so a GUI-launched Codex client
+does not depend on its inherited `PATH`:
+
+```bash
+VAULT="$PWD"
+PYTHON="$(command -v python3)"
+codex mcp add chiron -- "$PYTHON" "$VAULT/Chiron/mcp_server.py"
+codex mcp add --env "PYTHONPATH=$VAULT/Primus/src" primus -- "$PYTHON" -m primus.mcp_server
+codex mcp list
+```
+
+To replace an existing registration, first run `codex mcp remove chiron` or
+`codex mcp remove primus`. Codex CLI `0.147.0-alpha.6.5` exposes no
+project-scope flag in `codex mcp add`; the checked-in `.mcp.json` remains the
+portable Claude Code project declaration. Do not invent a Codex project config
+syntax until the installed client documents one.
 
 ## The tool that matters: `attest`
 
@@ -84,5 +109,6 @@ When a file is truncated, the record says so.
 
 ```bash
 python3 Chiron/mcp_server.py selftest    # 17/17
+python3 Chiron/tests/test_mcp_server.py  # 11/11, real Chiron stdio session
 python3 Primus/test_mcp_server.py        # 11/11, live subprocess over stdio
 ```

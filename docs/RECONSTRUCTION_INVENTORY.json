@@ -1,0 +1,136 @@
+{
+  "schema": "chiron.reconstruction_inventory/1",
+  "observed_on": "2026-08-08",
+  "baseline_commit": "2aa2d0760ab2b42557d6472ae62953075df7904a",
+  "scope": {
+    "repository": "Jacob-s-Portfolio-Vault",
+    "root": ".",
+    "excluded_runtime_state": [
+      "Chiron/chiron_memory.json",
+      "Chiron/artifacts/*/[0-9]*.json",
+      "studies/.oeis_cache/"
+    ]
+  },
+  "sources_of_truth": [
+    {
+      "area": "exact invariant recovery",
+      "paths": ["Primus/src/primus/engine.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "exact claim certification",
+      "paths": ["Primus/src/primus/certify.py", "Primus/SCHEMA.md"],
+      "status": "canonical"
+    },
+    {
+      "area": "Chiron engines",
+      "paths": ["Chiron/*.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "court-grade decision certification",
+      "paths": ["JDICert/cert_engine.py", "JDICert/primer.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "offline fold",
+      "paths": ["Chiron Monolith/chiron_monolith.py"],
+      "status": "generated"
+    }
+  ],
+  "components": [
+    {
+      "id": "primus",
+      "role": "deterministic exact core",
+      "status": "implemented-and-tested",
+      "interfaces": ["package CLI", "stdio MCP", "local HTTP"]
+    },
+    {
+      "id": "chiron",
+      "role": "analysis, provenance, certification, and adjudication engines",
+      "status": "implemented-and-tested",
+      "interfaces": ["full stack CLI", "stdio MCP", "offline monolith"]
+    },
+    {
+      "id": "jdicert",
+      "role": "decision and court-grade certificate layer",
+      "status": "implemented-and-tested",
+      "interfaces": ["Python entry points", "Chiron bridges"]
+    },
+    {
+      "id": "macos_app",
+      "role": "native SwiftUI front end",
+      "status": "implemented-and-tested",
+      "interfaces": ["SwiftPM executable", "Foundation.Process to canonical vault"]
+    },
+    {
+      "id": "ios_app",
+      "role": "native iOS front end",
+      "status": "unimplemented",
+      "reason": "The macOS local-Python process boundary cannot run in an iOS sandbox."
+    },
+    {
+      "id": "provider_adapters",
+      "role": "cloud language-model proposal layer",
+      "status": "partial-and-configuration-gated",
+      "paths": ["Chiron/llm_providers.py"]
+    },
+    {
+      "id": "apple_foundation_models",
+      "role": "on-device language-model adapter",
+      "status": "unimplemented"
+    },
+    {
+      "id": "palantir_foundry_aip",
+      "role": "external ontology and agent integration",
+      "status": "unimplemented",
+      "reason": "No authorized credentials, endpoint, ontology, or client implementation was found."
+    }
+  ],
+  "shared_interfaces": [
+    {
+      "name": "Chiron MCP",
+      "entry": "Chiron/mcp_server.py",
+      "transport": "local stdio JSON-RPC",
+      "tools": ["attest", "analyze", "certify", "catalog", "call"],
+      "status": "implemented-and-tested"
+    },
+    {
+      "name": "Primus MCP",
+      "entry": "Primus/src/primus/mcp_server.py",
+      "transport": "local stdio JSON-RPC",
+      "tools": ["certify", "collapse", "conjecture"],
+      "status": "implemented-and-tested"
+    },
+    {
+      "name": "Primus HTTP",
+      "entry": "Primus/src/primus/engine_server.py",
+      "transport": "local HTTP by default",
+      "status": "implemented-and-tested"
+    },
+    {
+      "name": "vault CLI",
+      "entry": "bin/chiron",
+      "transport": "terminal",
+      "status": "implemented-and-tested"
+    }
+  ],
+  "provenance_and_safety": {
+    "claim_vocabulary": ["VERIFIED", "REFUTED", "REFUSED"],
+    "decision_vocabulary": ["K", "U", "Omega"],
+    "invariant": "Zero false verifications; refusal is a result.",
+    "file_policy": "Mac app reads a visible 2 MB text bound and displays truncation.",
+    "network_policy": "Deterministic core is local; no public HTTP/MCP exposure is enabled by default."
+  },
+  "external_blockers": [
+    "Claude Code is installed and can health-check MCP servers, but is not logged in for a model-driven tool invocation.",
+    "iOS requires a new authenticated service or audited portable-engine boundary; no native target exists.",
+    "Distribution requires account-owned signing, notarization, entitlements, privacy review, and release decisions.",
+    "Palantir Foundry/AIP requires authorized credentials and ontology identifiers."
+  ],
+  "migration_notes": [
+    "Do not hand-edit Chiron Monolith; rebuild it from Chiron sources.",
+    "Do not commit Chiron/chiron_memory.json.",
+    "Historical certificate artifacts may retain historical license text; do not alter hash-pinned evidence without its migration record."
+  ]
+}

@@ -3,8 +3,8 @@
 # Copyright 2026 Jacob Iannotti
 #
 # Licensed under the Apache License, Version 2.0: use, modification,
-# modification, distribution, and commercial use are permitted with
-# reserved to the owner. See LICENSE.md at the repository root.
+# distribution, and commercial use are permitted with the required copyright
+# and license notices preserved. See LICENSE at the repository root.
 #
 # Author: J. Iannotti, 2026.
 """

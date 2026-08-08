@@ -275,12 +275,21 @@ def _selftest() -> int:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument("text", nargs="?", default="selftest")
+    p.add_argument("text", nargs="?",
+                   help="Text to analyse. Omit to run the self-test.")
     p.add_argument("--json", action="store_true")
+    p.add_argument("--stdin", action="store_true",
+                   help="Read the text from standard input instead of argv.")
     a = p.parse_args(argv)
-    if a.text == "selftest":
+    if a.stdin and a.text is not None:
+        p.error("pass text as an argument or use --stdin, not both")
+    # argv has a platform-sized limit. stdin is the canonical path for files
+    # and other large, user-authorized inputs; an empty stdin is still a
+    # legitimate surface and must not accidentally trigger selftest.
+    text = sys.stdin.read() if a.stdin else (a.text or "selftest")
+    if text == "selftest" and not a.stdin:
         return _selftest()
-    rec = run(a.text)
+    rec = run(text)
     print(json.dumps(rec, indent=2, default=str) if a.json else render(rec))
     return 0
 

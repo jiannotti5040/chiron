@@ -10,6 +10,7 @@ struct CertifyView: View {
     @State private var cert: Certificate?
     @State private var running = false
     @State private var errorText: String?
+    @State private var inputFile: FileLoad.Loaded?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -19,8 +20,12 @@ struct CertifyView: View {
                 .font(.body)
                 .frame(height: 110)
                 .overlay(RoundedRectangle(cornerRadius: 6).strokeBorder(.quaternary))
-                .acceptsFileDrop(text: $text)
-            FileLoadBar(label: "Certify a file…", text: $text)
+                .acceptsFileDrop(text: $text,
+                                 onLoad: { inputFile = $0 },
+                                 onError: { errorText = $0 })
+            FileLoadBar(label: "Certify a file…", text: $text,
+                        onLoad: { inputFile = $0 })
+            if let inputFile { FileLoadWarning(loaded: inputFile) }
             HStack {
                 Button {
                     run()
