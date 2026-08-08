@@ -40,6 +40,7 @@ struct WorkspaceView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             inputPanel
+            ProposalPanel(client: client, sourceText: text)
             if let errorText { ErrorBanner(text: errorText) }
             if let record {
                 resultHeader(record)

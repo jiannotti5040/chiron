@@ -28,7 +28,8 @@ let package = Package(
         // reach a client, an engine, or a certificate.
         .target(name: "ChironIntelligence"),
         .target(name: "ChironKit", dependencies: ["ChironContract"]),
-        .executableTarget(name: "ChironApp", dependencies: ["ChironKit"]),
+        .executableTarget(name: "ChironApp",
+                          dependencies: ["ChironKit", "ChironIntelligence"]),
         .testTarget(
             name: "ChironKitTests",
             dependencies: ["ChironKit", "ChironContract"],
