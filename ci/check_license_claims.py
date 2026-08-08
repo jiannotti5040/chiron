@@ -6,7 +6,7 @@
 Historical records may correctly mention the previous PolyForm license. This
 gate does not rewrite or grade those hash-pinned records. It scans tracked
 current code, configuration, and public documentation for wording that would
-tell a user Apache-2.0 is noncommercial or owner-restricted.
+misstate Apache-2.0 as imposing owner-controlled commercial restrictions.
 """
 from __future__ import annotations
 
