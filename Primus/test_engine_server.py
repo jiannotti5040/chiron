@@ -43,6 +43,17 @@ def free_port():
     return port
 
 
+def stop_server(proc):
+    """Reap a test child instead of carrying a zombie into the next gate."""
+    if proc.poll() is None:
+        proc.kill()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.terminate()
+        proc.wait(timeout=5)
+
+
 def start_server(env_extra=None):
     port = free_port()
     env = dict(os.environ)
@@ -59,15 +70,22 @@ def start_server(env_extra=None):
         [sys.executable, "-m", "primus.engine_server", "--port", str(port)],
         env=env, cwd=HERE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     base = f"http://127.0.0.1:{port}"
-    for _ in range(50):
+    # A fresh interpreter can take longer than five seconds to be scheduled
+    # on a heavily loaded developer/CI machine (for example while Xcode is
+    # compiling). This remains a one-minute bounded startup check, but does
+    # not confuse temporary process scheduling pressure with an endpoint
+    # regression.
+    deadline = time.monotonic() + 60
+    while time.monotonic() < deadline:
         try:
             with urllib.request.urlopen(base + "/health", timeout=2) as r:
                 if r.status == 200:
                     return proc, base
         except Exception:
             time.sleep(0.1)
-    proc.kill()
-    raise RuntimeError("server did not come up")
+    stop_server(proc)
+    stderr = proc.stderr.read().decode("utf-8", "replace")[-500:]
+    raise RuntimeError(f"server did not come up (returncode={proc.returncode}; stderr={stderr!r})")
 
 
 def call(base, path, body=None, method=None, headers=None, raw=None):
@@ -422,7 +440,7 @@ def main():
              all(v.get("status") == "REFUSED" for v in error_bodies.values()) and
              set(schemas.values()) == {"primus.engine_server/1"}, repr(schemas))
     finally:
-        proc.kill()
+        stop_server(proc)
 
     bad_cors_env = dict(os.environ)
     bad_cors_env["PYTHONPATH"] = os.path.join(HERE, "src")
@@ -430,7 +448,7 @@ def main():
     bad_cors = subprocess.run(
         [sys.executable, "-m", "primus.engine_server", "--port", str(free_port())],
         env=bad_cors_env, cwd=HERE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-        timeout=15)
+        timeout=60)
     gate("CORS configuration rejects a wildcard rather than echoing it",
          bad_cors.returncode != 0 and
          "one exact http(s) origin" in bad_cors.stderr.decode("utf-8", "replace"),
@@ -466,7 +484,7 @@ def main():
              f"allowed={allowed_code}/{allowed_origin}/{allowed_vary} "
              f"denied={denied_code}/{denied_origin} preflight={preflight_code}/{preflight_origin}")
     finally:
-        proc.kill()
+        stop_server(proc)
 
     # rate limit, per tool: one server, three distinct forwarded client IPs so
     # each tool gets its own per-IP bucket. Budget 1/min -> the 2nd call trips.
@@ -500,7 +518,7 @@ def main():
              not leaks_in({k: v for k, v in v1_limited.items() if k != "result"}) and
              "Traceback" not in json.dumps(v1_limited), repr(v1_limited)[:500])
     finally:
-        proc.kill()
+        stop_server(proc)
 
     # A zero-sized gate gives a deterministic real-HTTP exercise of the busy
     # path. It does not change engine semantics; it verifies both contracts
@@ -521,7 +539,7 @@ def main():
              f"legacy={code}/{legacy_hdrs.get('Retry-After')}/{legacy_busy!r} "
              f"v1={code_v1}/{v1_hdrs.get('Retry-After')}/{v1_busy!r}")
     finally:
-        proc.kill()
+        stop_server(proc)
 
     # log hygiene: /health must not bury the human traffic, and the caller's
     # input must never appear verbatim in the access log.
@@ -532,7 +550,7 @@ def main():
         call(base, "/certify", {"text": "CANARY7f3a9 says 2+2=4"})
         call(base, "/nope-not-here")
     finally:
-        proc.kill()
+        stop_server(proc)
         log = proc.stderr.read().decode("utf-8", "replace")
     gate("access log: /health suppressed, real routes logged, input never verbatim",
          "path=/health" not in log            # 5 probes, zero lines
@@ -550,7 +568,7 @@ def main():
         gate("per-IP rate limit trips on request 4 (429)",
              codes[:3] == [200, 200, 200] and codes[3] == 429, repr(codes))
     finally:
-        proc.kill()
+        stop_server(proc)
 
     # auth: token required when configured
     proc, base = start_server({"CHIRON_API_TOKEN": "sekrit"})
@@ -575,7 +593,7 @@ def main():
         code, _ = call(base, "/health")
         gate("auth on: /health stays open", code == 200)
     finally:
-        proc.kill()
+        stop_server(proc)
 
     print(f"\n  {GATES - FAILS}/{GATES} endpoint gates passed")
     return 1 if FAILS else 0
