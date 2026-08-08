@@ -90,6 +90,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `jurisdiction.py` | per-domain SoCPM admissibility threshold (jurisprudence) |
 | `candor_bridge.py` | anti-patronization audit of an explanation |
 | `provenance.py` | conserved-history DAG + minimal blame (HCT A3/T3) |
+| `source_provenance.py` | bounded metadata-only UTF-8 local-file source records + exact spans |
 | `axioms.py` | runs the HCT axioms A1-A8 + theorems T1-T6, executed |
 | `language.py` | offline NL: n-gram + PPMI semantics + prose brief (no API) |
 | `discernment.py` | independent witnesses; confidence by convergence |
