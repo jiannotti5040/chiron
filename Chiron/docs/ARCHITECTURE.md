@@ -100,7 +100,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `epistemic.py` | the abstract primitive — Surface→Hypothesis→Constraint→Verify→Certificate, with chiron / semic / governance / energy as instances |
 | `grow_clean.py` | unified grower over any file, the Wikipedia preset, or ingestion-driven search; LLM-aided (propose→verify) |
 | `president_grow.py` | the compartmentalized LLM grow service — the model proposes, chiron verifies; nothing enters unverified |
-| `llm_providers.py` | multi-provider LLM client — a fallback chain (gemini → openrouter → groq → openai → anthropic → perplexity), each keyed from its own env var; the proposer for the Chat assistant |
+| `llm_providers.py` | multi-provider LLM client — a fallback chain (gemini → openrouter → groq → cerebras → openai → anthropic → perplexity), each keyed from its own env var; the proposer for the Chat assistant |
 | `build.py` | lossless split/recompile of the single-file engines, byte-identical round-trip gate |
 | `intake_salvage.py` | fault-tolerant ingestion over strict `intake.py` (never overwrites a good parse) |
 | `vault.py` | one command that starts every local service and prints one URL (Ctrl-C stops all) |

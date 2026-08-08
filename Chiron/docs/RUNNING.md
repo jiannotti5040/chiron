@@ -92,7 +92,7 @@ python3 llm_providers.py check --live    # which keys are set + a live ping to e
 python3 llm_providers.py ask "..."       # run the chain; it prints which provider answered
 ```
 
-Order is `gemini → openrouter → groq → openai → anthropic → perplexity` (override with
+Order is `gemini → openrouter → groq → cerebras → openai → anthropic → perplexity` (override with
 `CHIRON_LLM_CHAIN="openrouter,groq"`). Keys live only in your environment — never in the repo.
 
 **Two ways to add your own key.**

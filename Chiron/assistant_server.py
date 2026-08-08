@@ -133,10 +133,11 @@ def _extract_json(text):
 def _need_key():
     return {"enabled": False, "action": None, "result": None,
             "reply": "The assistant needs at least one LLM key. Set any of GEMINI_API_KEY, "
-                     "OPENROUTER_API_KEY, GROQ_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY "
-                     "(e.g. `export OPENROUTER_API_KEY=...`) and restart this service. Run "
-                     "`python3 llm_providers.py check` to see what's keyed. (The Run tab works "
-                     "without a key.)"}
+            "OPENROUTER_API_KEY, GROQ_API_KEY, CEREBRAS_API_KEY, OPENAI_API_KEY, "
+            "ANTHROPIC_API_KEY, or PERPLEXITY_API_KEY "
+            "(e.g. `export OPENROUTER_API_KEY=...`) and restart this service. Run "
+            "`python3 llm_providers.py check` to see what's keyed. (The Run tab works "
+            "without a key.)"}
 
 
 def chat(message, history=None, cfg=None, transport=None):

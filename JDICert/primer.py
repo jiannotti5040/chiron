@@ -124,12 +124,12 @@ def llm_standardize(raw_intel: str, prompt: str,
       CERT_ENGINE_LLM_ENDPOINT  — full API URL
       CERT_ENGINE_LLM_API_KEY   — bearer token (NEVER embedded in code)
       CERT_ENGINE_LLM_MODEL     — model identifier
-      CERT_ENGINE_LLM_PROVIDER  — "anthropic" | "openai" | "google" |
+      CERT_ENGINE_LLM_PROVIDER  — "anthropic" | "openai" |
                                    "openai_compatible" | "local_openai_compatible"
 
-    The function is provider-agnostic by way of OpenAI-compatible
-    chat-completions formatting. For Anthropic-native or Google-native
-    APIs, add the provider-specific branch below.
+    The function supports OpenAI-compatible chat-completions APIs and
+    Anthropic's native messages API. A provider needs its own tested branch
+    before it can be named here.
     """
     endpoint = api_endpoint or os.environ.get("CERT_ENGINE_LLM_ENDPOINT")
     key = os.environ.get(api_key_env)

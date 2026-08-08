@@ -86,7 +86,7 @@ committed. It can contain third-party source material; the tracked
 | Local service | implemented-and-tested locally | `primus.engine_server` is an authenticated-when-configured HTTP boundary. It is not a public deployment. |
 | macOS app | implemented-and-tested locally | SwiftPM SwiftUI app delegates to the vault; it has no independent verification implementation. |
 | iOS app | unimplemented | The current `Foundation.Process` execution boundary is macOS-only. |
-| Cloud language providers | partial / configuration-gated | `Chiron/llm_providers.py` contains provider adapters. No configured key or live provider was treated as evidence in this record. |
+| Cloud language providers | partial / configuration-gated | `Chiron/llm_providers.py` has an offline-tested fallback chain (Gemini, OpenRouter, Groq, Cerebras, OpenAI, Anthropic, Perplexity). No configured key or live provider was treated as evidence in this record. |
 | Apple Foundation Models | unimplemented | No supported Foundation Models adapter was found in the current source. |
 | Palantir Foundry / AIP | unimplemented | No authorized credentials, endpoint, ontology, or client integration was found in this vault. |
 
@@ -100,6 +100,10 @@ committed. It can contain third-party source material; the tracked
   truncation.
 - `Chiron/full_stack.py --stdin` is a canonical CLI path and rejects ambiguous
   simultaneous argv and stdin text.
+- The provider chain now includes every registered default provider, including
+  Cerebras; an offline mock test proves that a Cerebras-only configuration
+  reaches the chain. This is routing-contract evidence, not a claim of a live
+  account or provider invocation.
 - A real Chiron MCP transport test drives initialization, tool discovery,
   `analyze`, `certify`, `attest`, `catalog`, `call`, unknown-tool handling, and
   ping through a subprocess—not only in-process helpers.

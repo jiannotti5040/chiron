@@ -57,7 +57,7 @@
   "llm_providers": {
     "title": "The Proposer Chain",
     "math": "a fallback ordering over providers returning the first non-empty answer, plus a fan-out that gathers every keyed provider's proposal for the verifier to test.",
-    "prog": "an env-keyed registry (gemini, openrouter, groq, openai, anthropic, perplexity; llama/qwen via OpenRouter), mock-testable, keys read only from the environment.",
+    "prog": "an env-keyed registry (gemini, openrouter, groq, cerebras, openai, anthropic, perplexity; llama/qwen via OpenRouter), mock-testable, keys read only from the environment.",
     "concept": "many possible proposers, one exact verifier — the proposer can be anyone; the source of truth is never the model."
   },
   "chiron_artifact": {

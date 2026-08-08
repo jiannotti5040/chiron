@@ -73,7 +73,8 @@
       "id": "provider_adapters",
       "role": "cloud language-model proposal layer",
       "status": "partial-and-configuration-gated",
-      "paths": ["Chiron/llm_providers.py"]
+      "paths": ["Chiron/llm_providers.py"],
+      "notes": "The offline-tested default chain includes Gemini, OpenRouter, Groq, Cerebras, OpenAI, Anthropic, and Perplexity. Live providers remain unverified without owner-configured credentials."
     },
     {
       "id": "apple_foundation_models",

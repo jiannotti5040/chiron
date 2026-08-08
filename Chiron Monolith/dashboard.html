@@ -228,6 +228,7 @@ python3 bin/chiron doctor   # environment + vault sanity</pre>
             <option value="gemini">Gemini</option>
             <option value="openrouter">OpenRouter — Llama / Qwen / GPT</option>
             <option value="groq">Groq</option>
+            <option value="cerebras">Cerebras</option>
             <option value="openai">OpenAI</option>
             <option value="anthropic">Anthropic</option>
             <option value="perplexity">Perplexity</option>
@@ -237,7 +238,7 @@ python3 bin/chiron doctor   # environment + vault sanity</pre>
         </div>
         <p class="note" id="keyMsg" style="margin-top:8px">Held in the running service's memory for this session only — <b>never written to disk or the repo</b>, and it never leaves your machine. To make it permanent, export it as an environment variable instead.</p>
       </details>
-      <p class="note">The assistant tries providers in a chain. You can set a key above, or in your shell: any of <code>GEMINI_API_KEY</code>, <code>OPENROUTER_API_KEY</code> (Llama/Qwen/GPT), <code>GROQ_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, then <code>python3 assistant_server.py serve</code>. Verify with <code>python3 llm_providers.py check --live</code>.</p>
+      <p class="note">The assistant tries providers in a chain. You can set a key above, or in your shell: any of <code>GEMINI_API_KEY</code>, <code>OPENROUTER_API_KEY</code> (Llama/Qwen/GPT), <code>GROQ_API_KEY</code>, <code>CEREBRAS_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>ANTHROPIC_API_KEY</code>, or <code>PERPLEXITY_API_KEY</code>, then <code>python3 assistant_server.py serve</code>. Verify with <code>python3 llm_providers.py check --live</code>.</p>
     </div>
   </section>
   <!-- CONGRESS -->
