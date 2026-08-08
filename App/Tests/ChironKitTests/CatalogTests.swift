@@ -6,7 +6,7 @@ import Testing
 
 @Suite struct CatalogTests {
 
-    private func client() -> VaultClient? { VaultClient.discover() }
+    private func client() -> VaultClient? { testVaultClient() }
 
     @Test func numericSurfaceMatchesTheVault() {
         // full_stack.py derives its surface with \b\d[\d,]*\b — commas inside

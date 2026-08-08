@@ -17,14 +17,14 @@ and the other page is stale — tell us.
 | Browser demo core (`prototype/browser_core.py selftest`) | the [playground](playground/)'s verify-or-refuse core: exact arithmetic, stamp only on exact held-out prediction, h ≥ p evidence rule, floats refused not rounded — **strictly weaker than the full engine by design** (it refuses Tribonacci/Catalan/factorials the engine stamps) | this repo, one file, stdlib only — the same file the browser runs | **17/17** |
 | **Public eval build** (`eval/grade.py`) | the engine's **headline property itself** — frozen engine outputs (12 terms shown, exact predictions for terms 13..20 or refusal) graded against oeis.org **live**; tamper-evident freeze (commit + sha256); `eval/challenge.py` lets you grade sequences **you** choose | this repo, stdlib only, no engine code | **22 stamped / 22 externally correct / 0 false stamps / 12 refusals** (freeze 2026-07-21) |
 
-| Local engine endpoint (`primus-serve`, then `eval/remote.py --url http://localhost:8790`) | the **real engine** over HTTP — verifies supported sequence inputs or explicitly does not stamp them; rate-limited, refuses over budget | any instance you run yourself; no managed host | 33/33 endpoint gates |
+| Local engine endpoint (`primus-serve`, then `eval/remote.py --url http://localhost:8790`) | the **real engine** over HTTP — verifies supported sequence inputs or explicitly does not stamp them; rate-limited, refuses over budget | any instance you run yourself; no managed host | 48/48 endpoint gates |
 
 Those run from a single file with nothing installed: the discipline, a
 working core, the zero-false property verified on the published external
 evaluation, and — via the local endpoint — the real engine's behavior on
 supported inputs you choose.
 
-## Tier 2 — the full vault install — as most recently run, 2026-08-05
+## Tier 2 — the full vault install — as most recently run, 2026-08-08
 
 **Primus, the packaged seed engine:**
 
@@ -34,7 +34,7 @@ supported inputs you choose.
 | `primus selftest` | engine 4 + certificate layer 35 + guess-and-prove conjecture layer 16 | **55/55** |
 | Certify fuzz | hostile input: floods, bombs, bounds, noise-stability, determinism | **16/16** |
 | MCP handshake | the live server process over real stdio JSON-RPC | **11/11** |
-| HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): verify/refuse round-trips, over-budget refusals at the certify bounds, rate limits, auth, and the no-leak rule (no traceback or source path in any hostile response); closed route table (404 / 405 + Allow), adversarial-JSON bounded refusal, log hygiene | **33/33** |
+| HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): legacy verify/refuse round-trips plus strict `/v1` capabilities/collapse/certify envelopes, over-budget refusals, rate limits with retry hints, development auth, CORS default-deny, and the no-leak rule (no traceback or source path in hostile responses); closed route table (404 / 405 + Allow), adversarial-JSON bounded refusal, log hygiene | **48/48** |
 | Twin cross-lock | exact combinatorial corpus agreement | **12/12** |
 | Certify property grid | soundness invariant across a generated grid | pass, 0 violations |
 | Internal benchmark | recovery + precision, zero false confidence | pass |
@@ -81,6 +81,6 @@ claim this project exists to reject — the code and every gate above are
 Apache-2.0 in this repository, with nothing behind a licence key.
 
 *Single-file scope, precisely: the standalone 5/5 runs from one file with
-no vault beside it; the 51/51 sweep includes modules (servers, packaged
+no vault beside it; the 52/52 sweep includes modules (servers, packaged
 seed, growth tooling) that need the full vault install. We do not claim
 the servers run from the single file, because they don't.*

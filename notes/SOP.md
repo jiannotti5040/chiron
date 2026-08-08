@@ -321,7 +321,8 @@ commands and lenses in the [ENCYCLOPEDIA](ENCYCLOPEDIA.md).
 - **HTTP, if you want services.** `python3 bin/chiron serve` starts the
   stack; the endpoints are plain JSON you can hit from anything —
   `GET :8769/api/assistant/manifest` (the module index),
-  `:8768/api/console/…` (run any function), `:8767/api/control/…` (grower).
+  `:8768/api/console/…` (static read-only analysis/status allowlist),
+  `:8767/api/control/…` (grower).
   The dashboard is just a client of these.
 - **Machine-readable results.** Every certifying run leaves
   `Chiron/artifacts/<module>/latest.json` — poll those files instead of
@@ -331,7 +332,7 @@ commands and lenses in the [ENCYCLOPEDIA](ENCYCLOPEDIA.md).
 
 ## 1.12 · Zero-install: the browser
 
-<https://jiannotti5040.github.io/chiron-vault/playground.html> — the real
+<https://jiannotti5040.github.io/chiron/playground/> — the real
 engine sources, fetched verbatim from this repo, running client-side on
 CPython/WebAssembly. Nothing leaves the tab.
 
@@ -464,9 +465,11 @@ pager retries and grades the honest partial. Baselines:
 
 ## 2.6 · Release (PyPI)
 
-Trusted publishing registered (project `primus-intelligence`, owner
-`jiannotti5040`, repo `chiron-vault`, workflow `release.yml`, environment
-`pypi`).
+Trusted publishing is the intended no-token release path (project
+`primus-intelligence`, owner `jiannotti5040`, repo `chiron`, workflow
+`release.yml`, environment `pypi`). Before tagging, verify that the PyPI
+trusted-publisher entry exactly matches those values; the pre-migration
+`chiron-vault` registration cannot publish this repository.
 
 1. **Never release with open external defects** — green gates don't override
    the law.

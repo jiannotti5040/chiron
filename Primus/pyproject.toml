@@ -1,14 +1,15 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "primus-intelligence"
-version = "0.7.0"
+version = "0.7.1"
 description = "Exact invariant recovery with held-out verification and refusal — collapse codified surfaces to their minimal generators, and certify the checkable claims in LLM/agent output."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "Apache-2.0"
+license-files = ["LICENSE"]
 authors = [{ name = "Jacob Iannotti", email = "jiannotti5040@gmail.com" }]
 keywords = [
   "verification", "mdl", "minimum-description-length", "symbolic-regression",
@@ -43,11 +44,6 @@ Repository = "https://github.com/jiannotti5040/chiron"
 Documentation = "https://github.com/jiannotti5040/chiron/blob/main/docs/BATTERIES.md"
 "Live demo" = "https://jiannotti5040.github.io/chiron/"
 "Public eval" = "https://github.com/jiannotti5040/chiron/tree/main/eval"
-
-[tool.setuptools]
-# Apache-2.0 requires the license notice to travel with the code: embed the
-# license text in every wheel/sdist.
-license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

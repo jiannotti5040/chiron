@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
+import ChironContract
+
+#if os(macOS)
 
 // The catalog is discovered, never enumerated. Drop a module into Chiron/ and
 // it appears in the app with no edit here — the same discipline full_stack.py
@@ -63,3 +66,5 @@ public struct ModuleCallResult: Codable, Sendable {
     public let error: String?
     public let result: JSONValue?
 }
+
+#endif

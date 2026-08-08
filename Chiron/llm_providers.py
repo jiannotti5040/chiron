@@ -20,7 +20,7 @@ from its OWN environment variable. No key ever lives in the repo; the code only 
   llama, qwen  OPENROUTER_API_KEY                                   named OpenRouter models
 
 Chain order (override with CHIRON_LLM_CHAIN="gemini,openrouter,groq"):
-  gemini, openrouter, groq, openai, anthropic, perplexity
+  gemini, openrouter, groq, cerebras, openai, anthropic, perplexity
 
     python3 llm_providers.py check            # which providers have a key (add --live to ping each)
     python3 llm_providers.py ask "..."        # run the chain, print which provider answered
@@ -60,7 +60,7 @@ REGISTRY = {
                    "https://api.cerebras.ai/v1", "llama-3.3-70b", "openai"),
 }
 
-DEFAULT_CHAIN = ["gemini", "openrouter", "groq", "openai", "anthropic", "perplexity"]
+DEFAULT_CHAIN = ["gemini", "openrouter", "groq", "cerebras", "openai", "anthropic", "perplexity"]
 
 
 # ---------------------------------------------------------------------
@@ -281,6 +281,18 @@ def _selftest():
         # 8. llama/qwen are OpenRouter models, reachable with the OpenRouter key
         ok("llama via openrouter key", call_one("llama", "hi", mock) == "OPENAI-SAYS")
         ok("qwen via openrouter key", call_one("qwen", "hi", mock) == "OPENAI-SAYS")
+
+        # 9. A provider in the registry must be reachable through the default
+        # chain, not merely callable with an explicit override. This caught the
+        # original Cerebras omission from DEFAULT_CHAIN.
+        for key in saved:
+            if key != "CEREBRAS_API_KEY":
+                os.environ.pop(key, None)
+        os.environ["CEREBRAS_API_KEY"] = "k"
+        r = generate("hi", transport=mock)
+        ok("cerebras-only environment reaches the default chain",
+           r["provider"] == "cerebras" and r["text"] == "OPENAI-SAYS"
+           and r["tried"] == ["cerebras"])
     finally:
         for k, v in saved.items():
             if v is None:

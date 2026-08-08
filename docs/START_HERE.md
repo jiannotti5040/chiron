@@ -18,7 +18,7 @@ primus collapse "2 3 5 7 11 13 17"
 #  → REFUSES: primes have no such rule, so it will not guess
 ```
 
-The refusal is the point. There's also a browser demo that runs the *real* engine, no install: **[playground.html](playground.html)**.
+The refusal is the point. There's also a browser demo that runs the *real* engine, no install: **[playground](playground/)**.
 
 To operate the whole vault (dashboard, function launcher, assistant, grower) it's one command from the repo root: `python3 bin/chiron serve` — and `python3 bin/chiron test` runs the same gate battery CI runs. Where it's all going: [docs/HORIZON.md](docs/HORIZON.md).
 

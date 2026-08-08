@@ -20,9 +20,10 @@ test, never a widened tolerance. The probes:
   P3  the ledger survives concurrency   many writers at once produce only whole,
                               valid records — no torn or interleaved lines — and
                               the rolling window is bounded (no disk-exhaustion).
-  P4  the launcher is not a shell   console_server.run refuses path traversal,
-                              dotted/slashed names, and modules outside the
-                              folder; it accepts only real sibling modules.
+  P4  the launcher is not a shell   console_server.run accepts only exact static
+                              read-only commands; path traversal, unlisted sibling
+                              scripts, option injection, and mutations are refused
+                              or escalated before subprocess creation.
   P5  zero false verification, adversarially   random integer surfaces: whenever
                               collapse stamps VERIFIED, its held-out prediction
                               is exactly right — the one promise, under fuzz.
@@ -212,13 +213,22 @@ def p4_console_security():
     rejected = [m for m in hostile if cs.run(m, ["selftest"])["ok"] is False]
     checks.append((f"every hostile module name is rejected ({len(rejected)}/{len(hostile)})",
                    len(rejected) == len(hostile)))
-    # and a legitimate sibling still runs (fast, no chiron import)
-    ok_real = cs.run("legal_corpus", ["selftest"])
-    checks.append(("a real sibling module still runs", ok_real.get("ok") is True))
-    # the launcher must never offer a blocking 'serve' verb
+    checks.append(("an exact analysis action is allowlisted",
+                   cs.command_policy("chiron", ["collapse"]).get("status") == "allowed"))
+    unlisted = cs.run("legal_corpus", ["selftest"])
+    checks.append(("an unlisted sibling module is refused (no auto-discovery)",
+                   unlisted.get("policy") == "refused"))
+    grow = cs.run("grow_clean", ["file"], "./notes.txt")
+    checks.append(("a known growth mutation is escalated, not launched",
+                   grow.get("policy") == "escalated"))
+    opts = cs.run("chiron", ["collapse"], "--memory /tmp/other.json")
+    checks.append(("option injection into an allowlisted action is refused",
+                   opts.get("policy") == "refused"))
+    # the launcher must never advertise something outside its exact allowlist
     cat = cs.catalog()
-    has_serve = any("serve" in it["argv"] for g in cat for it in g["items"])
-    checks.append(("no blocking 'serve' verb is exposed in the catalog", not has_serve))
+    shown = {(it["module"], tuple(it["argv"])) for g in cat for it in g["items"]}
+    checks.append(("every catalog action is in the read-only allowlist",
+                   bool(shown) and shown <= cs.READ_ONLY_COMMANDS))
     return checks
 
 

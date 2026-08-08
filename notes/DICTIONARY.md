@@ -155,7 +155,7 @@ outcomes required — 138 named gates. PARITY GREEN is the proof that the fold
 is the spine.
 
 **playground.** The browser demo
-(`https://jiannotti5040.github.io/chiron-vault/playground.html`): the real
+(`https://jiannotti5040.github.io/chiron/playground/`): the real
 engine sources on CPython/WebAssembly, fetched verbatim from the repo, running
 client-side. Not a mock.
 

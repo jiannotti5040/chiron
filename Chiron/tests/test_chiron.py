@@ -5,6 +5,8 @@ Run: python Chiron/tests/test_chiron.py   (or: pytest Chiron/tests)"""
 import os
 import sys
 import tempfile
+import json
+import subprocess
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import chiron
@@ -44,6 +46,51 @@ def test_save_load_roundtrip_preserves_growth():
     o2 = chiron.Chiron.load_memory(p)
     assert o2.growth["integral"] == o.growth["integral"]
     os.remove(p)
+
+
+def test_full_stack_cli_reads_stdin_without_argv():
+    """The app and automation path must not depend on the host's ARG_MAX."""
+    chiron_dir = os.path.join(os.path.dirname(__file__), "..")
+    proc = subprocess.run(
+        [sys.executable, os.path.join(chiron_dir, "full_stack.py"), "--json", "--stdin"],
+        input="The sum of 2 and 3 is 5. Sequence: 1, 4, 9, 16, 25.",
+        text=True,
+        capture_output=True,
+        cwd=chiron_dir,
+        timeout=60,
+    )
+    assert proc.returncode == 0, proc.stderr
+    rec = json.loads(proc.stdout)
+    assert rec["schema"] == "chiron.full_stack/1"
+    assert rec["stages_run"] == len(rec["results"])
+
+
+def test_full_stack_cli_treats_selftest_from_stdin_as_user_text():
+    chiron_dir = os.path.join(os.path.dirname(__file__), "..")
+    proc = subprocess.run(
+        [sys.executable, os.path.join(chiron_dir, "full_stack.py"), "--json", "--stdin"],
+        input="selftest",
+        text=True,
+        capture_output=True,
+        cwd=chiron_dir,
+        timeout=60,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["text"] == "selftest"
+
+
+def test_full_stack_cli_refuses_ambiguous_stdin_and_argv():
+    chiron_dir = os.path.join(os.path.dirname(__file__), "..")
+    proc = subprocess.run(
+        [sys.executable, os.path.join(chiron_dir, "full_stack.py"), "--stdin", "direct text"],
+        input="stdin text",
+        text=True,
+        capture_output=True,
+        cwd=chiron_dir,
+        timeout=30,
+    )
+    assert proc.returncode == 2
+    assert "not both" in proc.stderr
 
 
 if __name__ == "__main__":

@@ -3,9 +3,10 @@ INTEL STANDARDIZATION PROMPT
 For any frontier LLM (Claude / GPT / Gemini / Grok / Llama)
 ================================================================
 
-Copyright (c) 2026 Jacob Iannotti. Licensed under the Apache-2.0
-License 1.0.0: noncommercial use, modification, and sharing permitted;
-Licensed under the Apache License, Version 2.0. See LICENSE at the repository root.
+Copyright (c) 2026 Jacob Iannotti. Licensed under the Apache License,
+Version 2.0. Use, modification, distribution, and commercial use are
+permitted with the required copyright and license notices preserved.
+See LICENSE at the repository root.
 
 ================================================================
 ROLE

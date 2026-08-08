@@ -2,6 +2,8 @@
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
 
+#if os(macOS)
+
 public struct PythonResult: Sendable {
     public let stdout: Data
     public let stderrText: String
@@ -67,7 +69,9 @@ public struct PythonRunner: Sendable {
         signal(SIGPIPE, SIG_IGN)
     }()
 
-    /// CHIRON_PYTHON wins, then PATH, then the usual macOS install locations.
+    /// CHIRON_PYTHON wins. Prefer ordinary user-installed Pythons ahead of
+    /// PATH because Xcode prepends its bundled developer Python, which is not
+    /// a general-purpose runtime and commonly lacks the vault's dependencies.
     public static func locate(
         environment: [String: String] = ProcessInfo.processInfo.environment
     ) -> PythonRunner? {
@@ -75,17 +79,19 @@ public struct PythonRunner: Sendable {
         if let p = environment["CHIRON_PYTHON"], fm.isExecutableFile(atPath: p) {
             return PythonRunner(pythonPath: p)
         }
-        var candidates: [String] = []
-        if let path = environment["PATH"] {
-            candidates += path.split(separator: ":").map { "\($0)/python3" }
-        }
-        candidates += [
+        var candidates = [
             "/opt/homebrew/bin/python3",
             "/usr/local/bin/python3",
-            "/usr/bin/python3",
         ]
-        for c in candidates where fm.isExecutableFile(atPath: c) {
-            return PythonRunner(pythonPath: c)
+        if let path = environment["PATH"] {
+            candidates += path.split(separator: ":")
+                .map { "\($0)/python3" }
+                .filter { !$0.contains(".app/Contents/Developer/") }
+        }
+        candidates.append("/usr/bin/python3")
+        var seen = Set<String>()
+        for c in candidates where seen.insert(c).inserted {
+            if fm.isExecutableFile(atPath: c) { return PythonRunner(pythonPath: c) }
         }
         return nil
     }
@@ -166,3 +172,5 @@ public struct PythonRunner: Sendable {
         }
     }
 }
+
+#endif

@@ -92,7 +92,7 @@ python3 llm_providers.py check --live    # which keys are set + a live ping to e
 python3 llm_providers.py ask "..."       # run the chain; it prints which provider answered
 ```
 
-Order is `gemini → openrouter → groq → openai → anthropic → perplexity` (override with
+Order is `gemini → openrouter → groq → cerebras → openai → anthropic → perplexity` (override with
 `CHIRON_LLM_CHAIN="openrouter,groq"`). Keys live only in your environment — never in the repo.
 
 **Two ways to add your own key.**
@@ -120,28 +120,49 @@ python3 grow_clean.py wikipedia "prime numbers"
 
 ```bash
 python3 chiron.py serve &          # engine + console        :8765
-python3 console_server.py serve &  # run any function        :8768
+python3 console_server.py serve &  # read-only launcher      :8768
 python3 assistant_server.py serve &# chat assistant          :8769
 python3 grow_control.py serve &    # start/stop/point grow   :8767
 python3 president_grow.py serve &  # LLM grow (if key set)    :8766
 # open http://127.0.0.1:8765  —  the Run and Chat tabs drive everything below
 ```
 
-Once those are up, the console's **Run** tab lists every engine and subfunction and runs any of them
-live; the **Chat** tab lets you say what you want in plain language — it reads your intent and runs
-the real, deterministic functions (recover a rule, speak it back, search or summarize the Congress,
-run any engine). The model directs, the engine does the work, so every result is exact. The
-assistant and `president_grow` need a free LLM key (`export GROW_LLM_API_KEY=…`; get one at
+Once those are up, the console's **Run** tab lists a static, exact allowlist of read-only analysis
+and status actions; it does not discover modules or execute arbitrary scripts. The **Chat** tab lets
+you say what you want in plain language and may recover a rule, summarize the Congress, or search it.
+The model never receives a generic command, growth, write, deployment, or credential tool: those
+requests are escalated for a trusted local operator to review and run from the CLI. The assistant and
+`president_grow` need a free LLM key (`export GROW_LLM_API_KEY=…`; get one at
 https://aistudio.google.com/apikey); everything else runs with no key.
 
 | Service | Port | What it is |
 |---|---|---|
 | `chiron.py serve` | 8765 | the engine + operator console (offline) |
-| `console_server.py serve` | 8768 | the launcher — run any function across all engines (Run tab) |
-| `assistant_server.py serve` | 8769 | natural-language assistant over the engine + Congress (Chat tab) |
+| `console_server.py serve` | 8768 | static read-only analysis/status launcher (Run tab) |
+| `assistant_server.py serve` | 8769 | bounded read-only natural-language assistant over the engine + Congress (Chat tab) |
 | `grow_control.py serve` | 8767 | start / stop / point the continuous grower |
 | `president_grow.py serve` | 8766 | LLM-assisted growth (propose → verify) |
 | `heartbeat.py serve` | — | the autonomous pulse — a signed vault certificate every beat (no socket) |
+
+### Local browser origin policy
+
+The Run and Chat services bind to loopback and, by default, grant browser CORS only to the
+documented dashboard origin `http://127.0.0.1:8765`. To use a different local dashboard, set an
+explicit comma-separated allowlist before starting the services:
+
+```bash
+export CHIRON_CORS_ORIGINS="http://127.0.0.1:8765,http://localhost:8765"
+python3 console_server.py serve
+```
+
+Only `http`/`https` loopback origins are accepted; an empty value disables cross-origin browser
+access, and arbitrary web origins receive no CORS permission (their preflights are rejected).
+CORS is a browser policy, **not authentication**: keep these services bound to loopback and do not
+expose their ports through a proxy or public network.
+
+The console policy is a separate boundary: a loopback request must exactly match the static
+read-only allowlist. Growth, file writes, builds, process control, and unlisted scripts are never
+launched through `:8768`; use a reviewed direct local CLI command for those operator actions.
 
 ## 6. Verify and benchmark
 

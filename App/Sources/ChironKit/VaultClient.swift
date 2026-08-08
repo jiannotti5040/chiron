@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
+import ChironContract
+
+#if os(macOS)
 
 /// The one bridge between the app and the vault. Every call shells out to
 /// the vault's own entry points; nothing is recomputed on the Swift side,
@@ -29,11 +32,15 @@ public struct VaultClient: Sendable {
 
     // MARK: - Full stack (chiron.full_stack/1)
 
-    /// Raw bytes straight from `full_stack.py --json` — the headless mode
-    /// prints these untouched so nothing is lost in translation.
+    /// Raw bytes straight from `full_stack.py --json --stdin` — the headless
+    /// mode prints these untouched so nothing is lost in translation. Files
+    /// are bounded by the UI, but still travel on stdin: sending them as one
+    /// argv element would fail before Python starts on hosts with a smaller
+    /// ARG_MAX than the accepted file bound.
     public func fullStackRaw(text: String) async throws -> Data {
         let res = try await runner.run(
-            arguments: ["Chiron/full_stack.py", "--json", "--", text],
+            arguments: ["Chiron/full_stack.py", "--json", "--stdin"],
+            stdin: Data(text.utf8),
             currentDirectory: vaultRoot)
         guard res.exitCode == 0 else {
             throw VaultError.processFailed(exitCode: res.exitCode, stderr: res.stderrText)
@@ -224,7 +231,7 @@ public struct VaultClient: Sendable {
             "function": .string(function),
             "kind": .string(kind),
             "text": .string(text),
-            "surface": .array(surface.map { .number(Double($0)) }),
+            "surface": .array(surface.map { .number(JSONNumber(integer: $0)) }),
         ])
         let body = try JSONEncoder().encode(payload)
         let chiron = vaultRoot.appendingPathComponent("Chiron").path
@@ -305,3 +312,5 @@ public struct GateSpec: Sendable, Identifiable, Hashable {
                  extraEnvironment: ["PYTHONPATH": "src"]),
     ]
 }
+
+#endif

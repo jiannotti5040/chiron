@@ -5,10 +5,10 @@
 assistant_server.py — a natural-language assistant over the Chiron engine and the Congress.
 
 Tell it what you want in plain language; it figures out the intent, runs the REAL deterministic
-functions (recover a rule, speak it back, search or summarize the Congress, run any engine), and
-replies. The discipline is the portfolio's: the LLM *directs*, the engine *does the work* — every
-factual result comes from exact, verifiable code, not from the model. The LLM is the front door,
-never the source of truth.
+read-only functions (recover a rule, speak it back, search or summarize the Congress), and replies.
+The discipline is the portfolio's: the LLM can select only this bounded read-only tool surface;
+every factual result comes from exact, verifiable code, not from the model. The LLM is the front
+door, never the source of truth or a command dispatcher.
 
 It reuses the free-LLM client from president_grow (Gemini by default; Groq/OpenRouter via env), so
 it needs a free key (GROW_LLM_API_KEY). Without a key it says so and stays out of the way.
@@ -19,6 +19,9 @@ it needs a free key (GROW_LLM_API_KEY). Without a key it says so and stays out o
     python3 assistant_server.py selftest   # offline (mock LLM, real engine)
 
 Status: implemented & tested offline (mock LLM + real engine actions).
+
+Browser requests from the documented local dashboard are explicitly allowlisted;
+this loopback service never uses a wildcard CORS policy.
 """
 import os
 import re
@@ -29,13 +32,14 @@ import argparse
 _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 import president_grow as pg          # noqa: E402  the free-LLM client
-import console_server as cs          # noqa: E402  the allowlisted function runner
+import local_cors                    # noqa: E402  strict browser-origin policy
 
 CONGRESS = os.path.join(_HERE, "chiron_memory.json")
 
 
 # ---------------------------------------------------------------------
-# actions — each runs real engine/Congress code; the LLM only chooses one
+# actions — each is a deterministic, read-only engine/Congress operation.
+# The LLM is untrusted planner input, never a command dispatcher.
 # ---------------------------------------------------------------------
 def _seq(s):
     return [int(x) for x in re.findall(r"-?\d+", str(s))]
@@ -90,33 +94,58 @@ def act_search(args):
     return {"term": term, "match_count": text.lower().count(term), "samples": hits}
 
 
-def act_run(args):
-    module = args.get("module", "")
-    argv = args.get("argv", [])
-    if isinstance(argv, str):
-        argv = argv.split()
-    return cs.run(module, argv, args.get("args", ""))
-
-
 def act_answer(args):
     return None
 
 
 ACTIONS = {"collapse": act_collapse, "congress": act_congress, "search": act_search,
-           "run": act_run, "answer": act_answer}
+           "answer": act_answer}
+
+# These names are intentionally explicit instead of attempting to infer whether an
+# LLM-proposed command mutates state. The assistant has no command-execution tool at
+# all: a human can review an operator action and invoke the local CLI directly.
+MODEL_READ_ONLY_ACTIONS = frozenset(("collapse", "congress", "search", "answer"))
+MODEL_ESCALATED_ACTIONS = frozenset((
+    "run", "exec", "execute", "shell", "script", "grow", "grow_clean", "grow_control",
+    "ingest", "write", "edit",
+    "delete", "mutate", "build", "install", "serve", "start", "stop", "publish", "deploy",
+    "commit", "push", "key", "set_key", "beat", "heartbeat", "upload", "release",
+))
+
+
+def model_action_policy(action):
+    """Classify untrusted model output before it reaches a real operation.
+
+    Read-only engine actions are the complete assistant tool surface. Known mutation or
+    execution requests are escalated to the trusted local operator; unknown requests are
+    refused rather than being interpreted as a command.
+    """
+    normalized = str(action or "answer").strip().lower()
+    if normalized in MODEL_READ_ONLY_ACTIONS:
+        return {"status": "allowed", "action": normalized}
+    if normalized in MODEL_ESCALATED_ACTIONS:
+        return {
+            "status": "escalated",
+            "action": normalized,
+            "reason": ("Model-directed execution and mutation are disabled. Review this "
+                       "operation and run it from the trusted local CLI if appropriate."),
+        }
+    return {
+        "status": "refused",
+        "action": normalized,
+        "reason": "The assistant only exposes deterministic read-only engine actions.",
+    }
 
 SYSTEM = """You are the assistant for Chiron, a deterministic invariant-recovery engine with a
 memory called the Congress. Decide what the user wants and reply with ONE JSON object only:
-{"action": <one of collapse|articulate|congress|search|run|answer>, "args": {...}, "say": <a short
+{"action": <one of collapse|congress|search|answer>, "args": {...}, "say": <a short
 natural-language reply to the user>}.
 - collapse: recover + verify the rule behind a sequence/string. args: {"surface": "1 1 2 3 5 8"}.
   (Use this for "what's the rule", "speak it back", "predict the next terms".)
 - congress: summarize the Congress (domains, laws, size). args: {}.
 - search: find something in the Congress. args: {"term": "fibonacci"}.
-- run: run a named engine function. args: {"module": "bench_suite", "argv": [], "args": ""} or
-  {"module":"semic","argv":["selftest"]}. Allowed modules are the engine files (chiron, semic,
-  epistemic, bench_*, govern, build, ...).
 - answer: just answer in words (capabilities, explanations). args: {}.
+Never request command execution, growth, writes, credentials, network operations, or deployment.
 Always include a friendly "say". Output the JSON and nothing else."""
 
 
@@ -125,7 +154,8 @@ def _extract_json(text):
     if not m:
         return {"action": "answer", "args": {}, "say": text.strip()[:500]}
     try:
-        return json.loads(m.group(0))
+        parsed = json.loads(m.group(0))
+        return parsed if isinstance(parsed, dict) else {"action": "answer", "args": {}, "say": ""}
     except Exception:
         return {"action": "answer", "args": {}, "say": text.strip()[:500]}
 
@@ -133,10 +163,11 @@ def _extract_json(text):
 def _need_key():
     return {"enabled": False, "action": None, "result": None,
             "reply": "The assistant needs at least one LLM key. Set any of GEMINI_API_KEY, "
-                     "OPENROUTER_API_KEY, GROQ_API_KEY, OPENAI_API_KEY, or ANTHROPIC_API_KEY "
-                     "(e.g. `export OPENROUTER_API_KEY=...`) and restart this service. Run "
-                     "`python3 llm_providers.py check` to see what's keyed. (The Run tab works "
-                     "without a key.)"}
+            "OPENROUTER_API_KEY, GROQ_API_KEY, CEREBRAS_API_KEY, OPENAI_API_KEY, "
+            "ANTHROPIC_API_KEY, or PERPLEXITY_API_KEY "
+            "(e.g. `export OPENROUTER_API_KEY=...`) and restart this service. Run "
+            "`python3 llm_providers.py check` to see what's keyed. (The Run tab works "
+            "without a key.)"}
 
 
 def chat(message, history=None, cfg=None, transport=None):
@@ -164,17 +195,23 @@ def chat(message, history=None, cfg=None, transport=None):
             return {"enabled": False, "action": None, "result": None,
                     "reply": "No LLM provider answered — run `python3 llm_providers.py check`."}
     plan = _extract_json(raw)
-    action = (plan.get("action") or "answer").strip()
-    args = plan.get("args") or {}
-    say = plan.get("say") or ""
+    action = str(plan.get("action") or "answer").strip().lower()
+    args = plan.get("args") if isinstance(plan.get("args"), dict) else {}
+    say = str(plan.get("say") or "")[:500]
     result = None
-    if action in ACTIONS and action != "answer":
+    policy = model_action_policy(action)
+    if policy["status"] == "allowed" and action != "answer":
         try:
             result = ACTIONS[action](args)
         except Exception as e:
             result = {"error": str(e)}
+    elif policy["status"] != "allowed":
+        result = policy
+        # Do not display a model-authored claim that an operator action ran when the
+        # policy blocked it. The policy result is the authoritative user-facing reply.
+        say = policy["reason"]
     return {"enabled": True, "reply": say, "action": action, "args": args,
-            "result": result, "provider": provider}
+            "result": result, "provider": provider, "policy": policy["status"]}
 
 
 # ---------------------------------------------------------------------
@@ -198,17 +235,21 @@ ph.innerHTML=h;hist.push({role:'assistant',content:r.reply||''})}catch(e){ph.inn
 </script></body></html>"""
 
 
-def serve(port=8769):
+def make_server(port=8769, cors_origins=None):
+    """Create the loopback server without starting it (also used by HTTP contract tests)."""
     import http.server
+    origins = (local_cors.configured_origins() if cors_origins is None
+               else local_cors.normalize_origins(cors_origins))
+
     class H(http.server.BaseHTTPRequestHandler):
-        def _send(self, code, body, ctype="application/json"):
+        def _send(self, code, body, ctype="application/json", *, preflight=False):
             data = body.encode() if isinstance(body, str) else body
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            for name, value in local_cors.headers_for(
+                    self.headers.get("Origin"), preflight=preflight, origins=origins):
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(data)
 
@@ -216,7 +257,10 @@ def serve(port=8769):
             pass
 
         def do_OPTIONS(self):
-            self._send(204, b"")
+            origin = self.headers.get("Origin")
+            if origin and not local_cors.allowed_origin(origin, origins):
+                return self._send(403, json.dumps({"error": "CORS origin not allowed"}))
+            self._send(204, b"", preflight=bool(origin))
 
         def do_GET(self):
             if self.path in ("/", "/chat"):
@@ -307,7 +351,11 @@ def serve(port=8769):
                                                     "providers": avail, "chain": llm.chain()}))
             self._send(404, json.dumps({"error": "not found"}))
 
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+    return http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+
+
+def serve(port=8769):
+    httpd = make_server(port)
     cfg = pg.LLMConfig.from_env()
     print(f"assistant on http://127.0.0.1:{port}/chat  (enabled={cfg.enabled} provider={cfg.provider})")
     try:
@@ -340,12 +388,26 @@ def _selftest():
               transport=pg._mock_gemini(json.dumps({"action": "congress", "args": {}, "say": "Here it is."})))
     ok("routes to congress summary", r2["action"] == "congress" and isinstance(r2["result"], dict))
 
-    # 4. intent -> run an allowlisted function
-    r3 = chat("run the semic gates", cfg=keyed,
+    # 4. The model cannot turn Chat into a generic command or mutation surface.
+    r3 = chat("run this arbitrary script", cfg=keyed,
               transport=pg._mock_gemini(json.dumps({"action": "run",
-                                                    "args": {"module": "legal_corpus", "argv": ["selftest"]},
+                                                    "args": {"module": "arbitrary_script", "argv": ["now"]},
                                                     "say": "Running it."})))
-    ok("routes to run and executes a real module", r3["action"] == "run" and r3["result"]["ok"] is True)
+    ok("model-directed arbitrary script is escalated, never executed",
+       "run" not in ACTIONS and r3["policy"] == "escalated"
+       and r3["result"]["status"] == "escalated")
+
+    r_grow = chat("grow from this file", cfg=keyed,
+                  transport=pg._mock_gemini(json.dumps({"action": "grow",
+                                                        "args": {"target": "/tmp/never-run"},
+                                                        "say": "Growing it."})))
+    ok("model-directed growth is escalated, never invoked",
+       r_grow["policy"] == "escalated" and r_grow["result"]["action"] == "grow")
+
+    r_unknown = chat("do a novel tool action", cfg=keyed,
+                     transport=pg._mock_gemini(json.dumps({"action": "arbitrary_script",
+                                                           "args": {}, "say": "Done."})))
+    ok("unknown model action is refused, never interpreted", r_unknown["policy"] == "refused")
 
     # 5. plain answer needs no action
     r4 = chat("what are you?", cfg=keyed,

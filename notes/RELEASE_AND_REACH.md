@@ -30,14 +30,15 @@ tag that doesn't match `pyproject`.
 
 ## Item 3 — reach (GitHub Pages + playground). Unaffected by the bug.
 
-`playground.html` exists at the repo root and runs the real engine in-browser.
+The browser playground lives at `docs/playground/` and runs the real engine
+in-browser.
 To put it online:
 
 1. GitHub → repo **Settings → Pages**.
 2. **Build and deployment → Source:** "Deploy from a branch".
-3. **Branch:** `main`, **folder:** `/ (root)` → **Save**.
+3. **Branch:** `main`, **folder:** `/docs` → **Save**.
 4. Wait ~1 min, then open
-   `https://jiannotti5040.github.io/chiron-vault/playground.html`
+   `https://jiannotti5040.github.io/chiron/playground/`
    and do one sanity pass (enter a sequence, confirm a VERIFIED and a REFUSED).
 
 Show HN post is drafted in `SHOW_HN_DRAFT.md` — **hold it until the fix lands**;

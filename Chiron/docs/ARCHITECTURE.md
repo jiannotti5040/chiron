@@ -90,6 +90,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `jurisdiction.py` | per-domain SoCPM admissibility threshold (jurisprudence) |
 | `candor_bridge.py` | anti-patronization audit of an explanation |
 | `provenance.py` | conserved-history DAG + minimal blame (HCT A3/T3) |
+| `source_provenance.py` | bounded metadata-only UTF-8 local-file source records + exact spans |
 | `axioms.py` | runs the HCT axioms A1-A8 + theorems T1-T6, executed |
 | `language.py` | offline NL: n-gram + PPMI semantics + prose brief (no API) |
 | `discernment.py` | independent witnesses; confidence by convergence |
@@ -100,12 +101,13 @@ costing the properties above (`python3 build.py verify-all`).
 | `epistemic.py` | the abstract primitive — Surface→Hypothesis→Constraint→Verify→Certificate, with chiron / semic / governance / energy as instances |
 | `grow_clean.py` | unified grower over any file, the Wikipedia preset, or ingestion-driven search; LLM-aided (propose→verify) |
 | `president_grow.py` | the compartmentalized LLM grow service — the model proposes, chiron verifies; nothing enters unverified |
-| `llm_providers.py` | multi-provider LLM client — a fallback chain (gemini → openrouter → groq → openai → anthropic → perplexity), each keyed from its own env var; the proposer for the Chat assistant |
+| `llm_providers.py` | multi-provider LLM client — a fallback chain (gemini → openrouter → groq → cerebras → openai → anthropic → perplexity), each keyed from its own env var; the proposer for the Chat assistant |
 | `build.py` | lossless split/recompile of the single-file engines, byte-identical round-trip gate |
 | `intake_salvage.py` | fault-tolerant ingestion over strict `intake.py` (never overwrites a good parse) |
 | `vault.py` | one command that starts every local service and prints one URL (Ctrl-C stops all) |
-| `console_server.py` | the launcher service — run any function from the dashboard Run tab (port 8768) |
-| `assistant_server.py` | the natural-language assistant — intent → real engine actions (Chat tab, port 8769) |
+| `console_server.py` | static read-only analysis/status launcher; mutation and unlisted commands are escalated (port 8768) |
+| `assistant_server.py` | bounded natural-language assistant — intent → deterministic read-only engine/Congress actions (Chat tab, port 8769) |
+| `local_cors.py` | strict loopback-only browser-origin allowlist shared by the Run and Chat services; CORS is not authentication |
 | `grow_control.py` | start / stop / point the continuous grower from the dashboard (Feed tab, port 8767) |
 | `run_ledger.py` | the vault's operational memory — every engine invocation appended as one append-only, crash-healing, replay-exact record (`artifacts/run_ledger.jsonl`) |
 | `heartbeat.py` | the autonomous pulse — each beat reads one own organ inward, grows outward, runs a rotating battery gate, and emits the signed **vault certificate**; never stamps unverified, never edits source, never flatters a failed beat |

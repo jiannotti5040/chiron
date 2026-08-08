@@ -39,8 +39,8 @@ Chiron/
   ../Chiron Monolith/    all 68 modules folded into ONE runnable file (chiron_monolith.py)
   bench_suite.py         external benchmarks — six tasks vs established baselines
   vault.py               ONE command starts every service + prints one URL (Ctrl-C stops all)
-  console_server.py      launcher service — run any function from the dashboard Run tab (:8768)
-  assistant_server.py    natural-language assistant — intent -> real engine actions (Chat tab, :8769)
+  console_server.py      static read-only analysis/status launcher for the dashboard Run tab (:8768)
+  assistant_server.py    bounded natural-language assistant — read-only engine/Congress actions (Chat tab, :8769)
   grow_control.py        start / stop / point the grower from the dashboard (Feed tab, :8767)
   heartbeat.py           the autonomous pulse — beats on its own, emits the vault certificate
   run_ledger.py          the operational memory — every invocation, append-only + replay-exact

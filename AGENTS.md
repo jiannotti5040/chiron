@@ -1,7 +1,17 @@
 # Agent instructions — Jacob's Portfolio Vault (Chiron / Primus)
 
-Any agent working in this repository: read `docs/SOP.md` first. It is the
+Any agent working in this repository: read `notes/SOP.md` first. It is the
 operating manual; this file is only the gate summary.
+
+## Current architecture and boundaries
+
+`docs/RECONSTRUCTION.md` is the current evidence record and the place to
+start after this gate summary. The Python vault is canonical; macOS reaches it
+through a local process, while iOS is a narrow `URLSession` client of the
+versioned Primus `/v1` service. iOS never starts Python, accepts a vault path,
+or carries a bundled bearer. Never claim a cloud provider, Apple Foundation
+Models, Foundry/AIP, signing, distribution integration, or public gateway
+exists without its own observed evidence and gate.
 
 ## The one inviolable law
 
@@ -19,16 +29,22 @@ gate. From the repo root:
 ```
 python3 Chiron/chiron.py selftest        # CHIRON core (12/12)
 python3 Chiron/stress_test.py            # invariant-operation probes (23/23)
+python3 Chiron/tests/test_mcp_server.py  # Chiron MCP real-stdio contract
 cd Primus
 python3 test_invariant_engine.py         # stress gates (55/55)
-python3 test_certify_fuzz.py             # adversarial certify gates (13/13)
-python3 test_mcp_server.py               # MCP protocol gates (10/10)
-python3 test_engine_server.py            # HTTP endpoint gates (33/33)
+python3 test_certify_fuzz.py             # adversarial certify gates (16/16)
+python3 test_mcp_server.py               # MCP protocol gates (11/11)
+python3 test_engine_server.py            # HTTP endpoint gates (48/48)
 python3 benchmark.py                     # internal proving run
 python3 oeis_live.py                     # EXTERNAL validation (cached corpus)
 python3 drift_check.py                   # seed vs Chiron differential
 cd "../Chiron Monolith"
 python3 chiron_monolith.py --smoke       # folded core engines (5/5)
+cd ../App
+swift test --scratch-path /tmp/chiron-build
+xcodebuild -project ../iOS/ChironMobile.xcodeproj -scheme ChironMobile \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0' \
+  -derivedDataPath /tmp/chiron-ios CODE_SIGNING_ALLOWED=NO build
 ```
 
 A failing gate is information, not an obstacle: find the root cause. Never
@@ -38,7 +54,7 @@ widen a tolerance or mute a gate to get green.
 
 - Exact arithmetic only on the stamping path: Fractions and exact integer
   equality; float predictions past 2^53 are refused, not trusted.
-- Edit sources of truth only (see `docs/SOP.md`). Never hand-edit
+- Edit sources of truth only (see `notes/SOP.md`). Never hand-edit
   `Chiron Monolith/chiron_monolith.py` — regenerate it:
   `cd "Chiron Monolith" && python3 build_monolith.py`, then re-run `--smoke`.
 - Seed/Chiron divergence must be ledgered in `Primus/drift_check.py`

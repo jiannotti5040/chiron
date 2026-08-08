@@ -13,7 +13,8 @@ enum FileLoad {
         let name: String
         let text: String
         let bytes: Int
-        var truncated: Bool { bytes > maxBytes }
+        let sizeKnown: Bool
+        let truncated: Bool
     }
 
     static func read(_ url: URL) throws -> Loaded {
@@ -22,13 +23,46 @@ enum FileLoad {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
 
-        let size = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
+        let resourceValues = try? url.resourceValues(forKeys: [.fileSizeKey])
+        let knownSize = resourceValues?.fileSize
         let handle = try FileHandle(forReadingFrom: url)
         defer { try? handle.close() }
-        let data = try handle.read(upToCount: maxBytes) ?? Data()
+        // Read one byte past the visible bound. File metadata is normally
+        // available, but this makes truncation truthful even when a file
+        // provider cannot report the size.
+        let raw = try handle.read(upToCount: maxBytes + 1) ?? Data()
+        let truncated = raw.count > maxBytes
+        let data = raw.prefix(maxBytes)
         return Loaded(name: url.lastPathComponent,
                       text: String(decoding: data, as: UTF8.self),
-                      bytes: size)
+                      bytes: max(knownSize ?? raw.count, raw.count),
+                      sizeKnown: knownSize != nil,
+                      truncated: truncated)
+    }
+
+    static func byteLabel(_ n: Int) -> String {
+        n < 1024 ? "\(n) B"
+            : n < 1024 * 1024 ? String(format: "%.0f KB", Double(n) / 1024)
+            : String(format: "%.1f MB", Double(n) / 1_048_576)
+    }
+}
+
+/// A bounded read is useful only when the boundary remains visible at the
+/// point of analysis. Reuse this for picker, drag/drop, and multi-file flows.
+struct FileLoadWarning: View {
+    let loaded: FileLoad.Loaded
+
+    var body: some View {
+        if loaded.truncated {
+            let total = loaded.sizeKnown
+                ? FileLoad.byteLabel(loaded.bytes)
+                : "at least \(FileLoad.byteLabel(loaded.bytes))"
+            Text("Read the first \(FileLoad.byteLabel(FileLoad.maxBytes)) of \(total) "
+                 + "from \(loaded.name) — "
+                 + "the rest was not analysed.")
+                .font(.caption)
+                .foregroundStyle(.orange)
+        }
     }
 }
 
@@ -37,6 +71,7 @@ enum FileLoad {
 struct FileLoadBar: View {
     let label: String
     @Binding var text: String
+    let onLoad: (FileLoad.Loaded) -> Void
     @State private var importing = false
     @State private var loaded: FileLoad.Loaded?
     @State private var errorText: String?
@@ -54,7 +89,7 @@ struct FileLoadBar: View {
                         .font(.caption.monospaced())
                         .lineLimit(1)
                         .truncationMode(.middle)
-                    Text(byteLabel(loaded.bytes))
+                    Text(FileLoad.byteLabel(loaded.bytes) + (loaded.sizeKnown ? "" : "+"))
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
@@ -62,12 +97,6 @@ struct FileLoadBar: View {
                 Text("or drop a file on the text box")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
-            }
-            if let loaded, loaded.truncated {
-                Text("Read the first \(byteLabel(FileLoad.maxBytes)) of "
-                     + "\(byteLabel(loaded.bytes)) — the rest was not analysed.")
-                    .font(.caption)
-                    .foregroundStyle(.orange)
             }
             if let errorText { ErrorBanner(text: errorText) }
         }
@@ -88,22 +117,20 @@ struct FileLoadBar: View {
             let l = try FileLoad.read(url)
             loaded = l
             text = l.text
+            onLoad(l)
             errorText = nil
         } catch {
             errorText = "Could not read \(url.lastPathComponent): \(error.localizedDescription)"
         }
     }
 
-    private func byteLabel(_ n: Int) -> String {
-        n < 1024 ? "\(n) B"
-            : n < 1024 * 1024 ? String(format: "%.0f KB", Double(n) / 1024)
-            : String(format: "%.1f MB", Double(n) / 1_048_576)
-    }
 }
 
 /// Drop-to-load for any text box.
 struct FileDropModifier: ViewModifier {
     @Binding var text: String
+    let onLoad: (FileLoad.Loaded) -> Void
+    let onError: (String) -> Void
     @State private var targeted = false
 
     func body(content: Content) -> some View {
@@ -114,8 +141,15 @@ struct FileDropModifier: ViewModifier {
                 guard let provider = providers.first else { return false }
                 _ = provider.loadObject(ofClass: URL.self) { url, _ in
                     guard let url else { return }
-                    if let loaded = try? FileLoad.read(url) {
-                        Task { @MainActor in text = loaded.text }
+                    do {
+                        let loaded = try FileLoad.read(url)
+                        Task { @MainActor in
+                            text = loaded.text
+                            onLoad(loaded)
+                        }
+                    } catch {
+                        let detail = "Could not read \(url.lastPathComponent): \(error.localizedDescription)"
+                        Task { @MainActor in onError(detail) }
                     }
                 }
                 return true
@@ -124,7 +158,11 @@ struct FileDropModifier: ViewModifier {
 }
 
 extension View {
-    func acceptsFileDrop(text: Binding<String>) -> some View {
-        modifier(FileDropModifier(text: text))
+    func acceptsFileDrop(
+        text: Binding<String>,
+        onLoad: @escaping (FileLoad.Loaded) -> Void = { _ in },
+        onError: @escaping (String) -> Void = { _ in }
+    ) -> some View {
+        modifier(FileDropModifier(text: text, onLoad: onLoad, onError: onError))
     }
 }

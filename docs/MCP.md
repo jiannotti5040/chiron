@@ -1,6 +1,7 @@
 # Gate your agent's output — an MCP server, free, 30 seconds
 
-**Author: Jacob Iannotti. Apache-2.0 (see [../LICENSE.md](../LICENSE.md)) — free for any noncommercial use.**
+**Author: Jacob Iannotti. [Apache-2.0](../LICENSE) — free to use, modify,
+distribute, and use commercially with the required notices preserved.**
 
 Your agent asserts things. Some of those assertions are checkable. This is an
 MCP server that checks them exactly and **refuses** when it can't, so a
@@ -67,13 +68,22 @@ refuted** — not that the text is true. Coverage tells you how much of it the
 gate could even see. The tool is built to make that distinction impossible to
 lose.
 
+The full Chiron server is separate from this focused Primus gate. It exposes
+the reviewed static surface `attest`, `analyze`, `certify`, `collapse`,
+`trace`, and `catalog` through the same local stdio transport. Each tool
+declaration names its input schema, caller authority, side-effect posture, and
+canonical implementation; `catalog` returns that allowlist. It deliberately
+does not offer arbitrary module/function dispatch. See
+[`USING-WITH-CLAUDE.md`](USING-WITH-CLAUDE.md) for the current Claude Code and
+Codex setup instructions and transport gates.
+
 ## What it will not do
 
 - It does not certify arbitrary prose, opinions, or judgment calls.
 - It does not do regulatory compliance or legal conclusions.
 - A high coverage number is not a safety score.
-- Free for noncommercial use; commercial use is licensed — see
-  [LICENSES.md](../LICENSES.md).
+- It is Apache-2.0 software: commercial use is permitted; retain the required
+  copyright and license notices. See [LICENSES.md](../LICENSES.md).
 
 ## Try it before installing
 
@@ -82,7 +92,7 @@ The same engine runs in your browser, no install:
 
 ## Verify the tool itself
 
-The MCP layer is gated: **11/11** handshake gates drive the real server
+The Chiron MCP layer is gated: **14/14** handshake gates drive the real server
 process over real stdio JSON-RPC (initialize / tools/list / tools/call for
 every tool, plus unknown-tool and ping). The engine behind it has a published
 zero-false-verification record on external data —

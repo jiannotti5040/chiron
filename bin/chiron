@@ -60,8 +60,11 @@ def _run(argv, cwd=None, **kw):
         sys.path.insert(0, CHIRON)
         import run_ledger
         engine = os.path.basename(str(argv[1])) if len(argv) > 1 else "?"
+        # argv may contain a complete prompt or imported document.  The
+        # operational ledger needs a correlation witness, not that content.
         run_ledger.record(engine, [str(a) for a in argv[2:6]], ok=(rc == 0),
-                          verdict=f"exit {rc}", seconds=time.time() - t0, source="cli")
+                          verdict=f"exit {rc}", seconds=time.time() - t0,
+                          source="cli", redact=True)
     except Exception:
         pass
     return rc
@@ -69,6 +72,20 @@ def _run(argv, cwd=None, **kw):
 
 def _script(name):
     return os.path.join(CHIRON, name)
+
+
+def _primus_cli(args, **kw):
+    """Run the canonical packaged Primus CLI from a source checkout too.
+
+    `bin/chiron` is deliberately usable before `pip install ./Primus`; add the
+    source package only to this child process rather than relying on a global
+    installation or changing the caller's environment.
+    """
+    env = os.environ.copy()
+    source = os.path.join(PRIMUS, "src")
+    inherited = env.get("PYTHONPATH")
+    env["PYTHONPATH"] = source if not inherited else source + os.pathsep + inherited
+    return _run([PY, "-m", "primus.cli"] + args, env=env, **kw)
 
 
 def cmd_dev(args):
@@ -105,7 +122,21 @@ def cmd_test(args):
         ("primus stress tests (48 gates)", [PY, "test_invariant_engine.py"], PRIMUS),
         ("twin cross-lock (corpus <-> exact <-> engine)", [PY, "test_twins_exact.py"], PRIMUS),
         ("unit: chiron", [PY, _script(os.path.join("tests", "test_chiron.py"))], None),
+        ("CLI contract (canonical exact verify)",
+         [PY, _script(os.path.join("tests", "test_bin_cli.py"))], None),
         ("unit: grow", [PY, _script(os.path.join("tests", "test_grow.py"))], None),
+        ("Chiron MCP transport (real stdio JSON-RPC)",
+         [PY, _script(os.path.join("tests", "test_mcp_server.py"))], None),
+        ("local browser CORS (real loopback HTTP)",
+         [PY, _script(os.path.join("tests", "test_local_cors.py"))], None),
+        ("assistant and console execution policy",
+         [PY, _script(os.path.join("tests", "test_execution_policy.py"))], None),
+        ("bounded local source provenance",
+         [PY, _script(os.path.join("tests", "test_source_provenance.py"))], None),
+        ("external ontology / Foundry boundary",
+         [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
+        ("license claims (current surfaces match Apache-2.0)",
+         [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
         ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",
                           _script(os.path.join("grow-public", "parameters.json")),
                           "--dry-run", "--once"], None),
@@ -155,13 +186,36 @@ def cmd_grow(args):
 
 
 def cmd_verify(args):
-    if not args:
-        print("usage: chiron verify <string-or-file>"); return 2
-    target = args[0]
+    """Certify exactly one supplied text value, file, or stdin stream.
+
+    This must remain a thin adapter around `primus certify`: the organism's
+    ingestion workflow is valuable, but it is not an exact claim certificate
+    and must never be substituted for one.
+    """
+    flags = [arg for arg in args if arg in ("--json", "--gate")]
+    targets = [arg for arg in args if arg not in ("--json", "--gate")]
+    bad = [arg for arg in targets if arg.startswith("-") and arg != "-"]
+    if len(targets) != 1 or bad:
+        print("usage: chiron verify <string-or-file|-> [--json] [--gate]")
+        return 2
+    target = targets[0]
+    if os.path.isdir(target):
+        print("[chiron] verify accepts one regular file, not a directory")
+        return 2
+    command = ["certify", "-"] + flags
+    if target == "-":
+        return _primus_cli(command)
     if os.path.isfile(target):
-        return _run([PY, _script("chiron.py"), "run",
-                     os.path.dirname(os.path.abspath(target)) or "."])
-    return _run([PY, _script("chiron.py"), "ingest", target])
+        # Stream exactly the selected file rather than treating its parent
+        # directory as an ingestion target.  The canonical certificate hashes
+        # and records any text truncation itself.
+        try:
+            with open(target, "rb") as source:
+                return _primus_cli(command, stdin=source)
+        except OSError as exc:
+            print(f"[chiron] could not read selected file: {exc}")
+            return 2
+    return _primus_cli(["certify", target] + flags)
 
 
 def cmd_benchmark(args):

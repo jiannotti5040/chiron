@@ -9,13 +9,13 @@ result rather than a failure.
 
 | Server | Tools | Contract |
 |---|---|---|
-| `chiron` | `attest` · `analyze` · `certify` · `catalog` · `call` | `chiron.attestation/1`, `chiron.full_stack/1` |
+| `chiron` | `attest` · `analyze` · `certify` · `collapse` · `trace` · `catalog` | `chiron.attestation/1`, `chiron.full_stack/1`, `chiron.mcp.collapse/1`, `chiron.trace/1`, `chiron.catalog/2` |
 | `primus` | `certify` · `collapse` · `conjecture` | `primus.certificate/2` |
 
 ## Register
 
 From a clone of this repository, the checked-in `.mcp.json` is picked up
-automatically by Claude Code. To register them by hand instead:
+automatically by Claude Code. To register them by hand at user scope instead:
 
 ```bash
 claude mcp add chiron --scope user -- python3 "$PWD/Chiron/mcp_server.py"
@@ -27,6 +27,31 @@ claude mcp add primus --scope user --env PYTHONPATH="$PWD/Primus/src" -- python3
 
 Check them with `claude mcp list`; both should report Connected. For Claude
 Desktop, put the same command and args in `claude_desktop_config.json`.
+
+Choose **one** Claude Code scope for a server. A project `.mcp.json` and a
+user-scoped registration with different command paths create two endpoints and
+can leave one pending approval or unauthenticated. Use `claude mcp remove
+chiron -s user` (or the corresponding project scope) before changing scope.
+
+### Codex CLI (user scope)
+
+The installed Codex CLI registers stdio MCP servers in its user configuration.
+From the vault root, use an explicit Python path so a GUI-launched Codex client
+does not depend on its inherited `PATH`:
+
+```bash
+VAULT="$PWD"
+PYTHON="$(command -v python3)"
+codex mcp add chiron -- "$PYTHON" "$VAULT/Chiron/mcp_server.py"
+codex mcp add --env "PYTHONPATH=$VAULT/Primus/src" primus -- "$PYTHON" -m primus.mcp_server
+codex mcp list
+```
+
+To replace an existing registration, first run `codex mcp remove chiron` or
+`codex mcp remove primus`. Codex CLI `0.147.0-alpha.6.5` exposes no
+project-scope flag in `codex mcp add`; the checked-in `.mcp.json` remains the
+portable Claude Code project declaration. Do not invent a Codex project config
+syntax until the installed client documents one.
 
 ## The tool that matters: `attest`
 
@@ -58,9 +83,10 @@ evidence is the failure this repository was built to refuse.
 
 ## Files are first-class
 
-Every tool that takes `text` also takes `path`, and `attest` takes
-`input_paths`. Pass the two together and never both for the same slot —
-that is an error, not a silent preference.
+The text tools take `text` or `path`; `collapse` and `trace` take `surface`
+or `path`; and `attest` takes `input_paths`. Pass exactly one alternate for a
+slot — that is an error, not a silent preference. Surface arrays accept JSON
+integers only, so caller-provided integers do not cross a float boundary.
 
 Bounds are stated rather than implied: files are read to 2,000,000 bytes,
 text to 400,000 characters, and at most 32 candidate inputs are accepted.
@@ -76,13 +102,18 @@ When a file is truncated, the record says so.
   equals the number of results.
 - `attest` — report `REFUSED` spans to the reader as unattributed. Dropping
   them turns an honest gap into a false clean bill.
-- `catalog` then `call` — reach any individual module. `call` is dispatch
-  only: you get exactly what the module returned, or the exception type it
-  raised, never a substitute value.
+- `collapse` — delegates to the canonical Primus invariant engine; its
+  `verified` field is the engine's held-out exact result, never an MCP guess.
+- `trace` — returns the canonical Chiron diagnostic trace. It explains a
+  result but does not issue a new verification stamp.
+- `catalog` — lists only the reviewed static tool allowlist, including each
+  tool's schema, authority, side-effect posture, and canonical implementation.
+  Arbitrary module/function dispatch is intentionally unavailable.
 
 ## Gates
 
 ```bash
-python3 Chiron/mcp_server.py selftest    # 17/17
+python3 Chiron/mcp_server.py selftest    # 20/20
+python3 Chiron/tests/test_mcp_server.py  # 14/14, real Chiron stdio session
 python3 Primus/test_mcp_server.py        # 11/11, live subprocess over stdio
 ```

@@ -1,117 +1,76 @@
-# Deploying the engine endpoint (Fly.io / Render notes)
+# Engine endpoint boundary notes
 
-**Author: Jacob Iannotti. Apache-2.0 (see LICENSE).**
-Status: implemented-and-tested locally (`test_engine_server.py`, 33/33 over
-real HTTP). These are deploy NOTES — nothing below has been provisioned;
-deploying is an explicit owner action.
+**Status: local HTTP service implemented and tested; public/mobile deployment
+not implemented.** `python3 test_engine_server.py` drives the endpoint over
+real local sockets (48/48 gates at this revision). That validates the engine
+wrapper and the `/v1` wire contract — it does not provision, authenticate, or
+operate an internet-facing service.
 
-## What gets deployed, and what never leaves
+## Supported posture today
 
-`primus.engine_server` — request in, certificate out. The engine source is
-in the container but is **never serialized**: responses are certificate JSON
-only; exceptions surface as a REFUSED envelope carrying the exception type
-name, never a message or traceback; routing is a closed table with no
-catch-all (`GET /`, `GET /health`, and the three tool POSTs — anything else
-is a 404, a wrong method is a 405 with `Allow:`); no error path ever emits
-HTML, a traceback, or an echo of the caller's request; there is no file
-serving of any kind. Hard budgets at the door: 128 KiB bodies,
-the certify/conjecture sequence caps (256 terms), per-IP and global
-rate limits, bounded concurrency — everything over budget is REFUSED.
+Run the service on loopback, where it is private to the machine by default:
 
-## Container
-
-```dockerfile
-FROM python:3.12-slim
-WORKDIR /app
-COPY Primus/ /app/Primus/
-RUN pip install --no-cache-dir numpy && pip install --no-cache-dir ./Primus
-# gplearn is OPTIONAL: without it /conjecture's GP fallback honestly REFUSES
-# when the exact engine abstains. Add `pip install gplearn` to enable it.
-EXPOSE 8790
-CMD ["python3", "-m", "primus.engine_server", "--host", "0.0.0.0", "--port", "8790"]
+```bash
+cd Primus
+PYTHONPATH=src python3 -m primus.engine_server --host 127.0.0.1 --port 8790
 ```
 
-Build context is the vault root (so `COPY Primus/` resolves). Nothing else
-from the vault goes into the image.
+The closed legacy routes are `GET /`, `GET /health`, and `POST`
+`/collapse`, `/certify`, and `/conjecture`. The small versioned boundary for a
+future native client is documented in [MOBILE_API.md](MOBILE_API.md):
+`GET /v1/capabilities`, `POST /v1/collapse`, and `POST /v1/certify`.
 
-## Environment
+The server enforces bounded bodies, exact engine limits, a closed route table,
+rate/concurrency budgets, fixed-string errors, and no source/exception/input
+reflection on error paths. It changes nothing on a stamping path. CORS is off
+by default; an owner can configure exactly one browser origin with
+`CHIRON_CORS_ORIGIN`. Native clients do not need CORS.
 
-| Var | Meaning | Suggested public value |
-|---|---|---|
-| `CHIRON_API_TOKEN` | require `Authorization: Bearer <token>` on every POST | set one unless you intend an open demo |
-| `CHIRON_RATE_PER_MIN` | per-IP requests/minute | 30 |
-| `CHIRON_RATE_GLOBAL_PER_MIN` | total requests/minute | 240 |
-| `CHIRON_MAX_CONCURRENCY` | simultaneous engine calls | 4 |
-| `CHIRON_TRUST_FORWARDED` | `1` to take client IP from `X-Forwarded-For` | `1` on Fly/Render (their proxy sets it); NEVER when exposed directly |
+The two `429` refusal classes include standard retry guidance: `Retry-After:
+60` for a rate budget and `Retry-After: 1` for a temporarily saturated
+concurrency gate. These are conservative local hints, not a public-service
+availability guarantee.
 
-## Fly.io
+## What the static bearer is — and is not
 
-```toml
-# fly.toml
-app = "chiron-engine"
-[build]
-[http_service]
-  internal_port = 8790
-  force_https = true
-  auto_stop_machines = true      # scale-to-zero: free-ish when idle
-  auto_start_machines = true
-  min_machines_running = 0
-[env]
-  CHIRON_TRUST_FORWARDED = "1"
+`CHIRON_API_TOKEN` makes each `POST` require one fixed
+`Authorization: Bearer` value. It is a development/local deployment control,
+not mobile authentication. In particular, it does not provide an identity
+issuer, token expiration, audience or scope checks, secure mobile storage,
+rotation, revocation, gateway audit logs, TLS termination, or distributed
+abuse controls. Do not embed it in an application binary.
+
+`CHIRON_TRUST_FORWARDED=1` only changes which source IP feeds the rate limiter.
+Set it only behind a proxy you operate and know overwrites
+`X-Forwarded-For`; it is not an authentication feature.
+
+## Before a public or iOS deployment
+
+No public endpoint, cloud provider integration, or native iOS network client
+is claimed by this repository. A future deployment must supply and validate,
+outside `primus.engine_server`:
+
+- TLS termination and a network policy that exposes only the intended v1
+  routes;
+- an authenticated gateway issuing short-lived, scoped credentials and
+  enforcing audience/issuer validation, rotation, revocation, and audit logs;
+- request-size, rate, abuse, and observability controls at the deployment
+  edge; and
+- a separate native client test suite that preserves JSON certificate values
+  without float rounding or client-side re-verification.
+
+The existing Dockerfile and any historical PaaS notes are not a validated
+mobile deployment recipe. Choosing a non-loopback bind or putting this
+process behind a public proxy is an explicit operator decision outside the
+tested boundary above, not an authorization implied by this document.
+
+## Verify the local boundary
+
+```bash
+cd Primus
+python3 test_engine_server.py
 ```
 
-```
-fly launch --no-deploy        # from the vault root, with the Dockerfile above
-fly secrets set CHIRON_API_TOKEN=<token>
-fly deploy
-curl https://chiron-engine.fly.dev/health
-```
-
-## Render (Blueprint — the committed path)
-
-A `render.yaml` Blueprint and a `Dockerfile` live at the vault root, so Render
-can provision the whole service from this repo. Steps:
-
-1. Render dashboard → **New → Blueprint**.
-2. **Connect a repository** → authorize your host's GitHub app for `chiron`
-   (this grants Render read access to the private repo so it can build — the
-   running service still exposes only the API, never source).
-3. Pick this repo; Render reads `render.yaml` and shows the `chiron-engine`
-   web service. Click **Apply**.
-4. First build takes a few minutes (numpy install). When it's live, hit
-   `http://localhost:8790/health` (exact host shown in the
-   dashboard).
-
-The Blueprint is **open by design** (no token — the value is public eval on
-caller input) but bounded: per-IP 20/min, global 120/min, concurrency 2, the
-certify input caps, REFUSED over budget. To lock it down, add
-`CHIRON_API_TOKEN` in the dashboard (Environment tab) — no code redeploy — and
-clients send `Authorization: Bearer <token>`. `gplearn` is intentionally not
-installed, so `/conjecture` honestly REFUSES when the exact engine abstains;
-add it to the Dockerfile if you want GP proposals (costs memory on free tier).
-
-Free instance note: it spins down after ~15 min idle and cold-starts on the
-next request (a few seconds). Fine for a demo; bump `plan` in `render.yaml`
-for always-on.
-
-### Alternative: prebuilt image (keeps Render off the source repo)
-
-If you'd rather not give Render read access to the repo, build locally/in CI
-and push to a registry (GHCR), then point a Render service at
-`runtime: image`. The image still contains the engine (any runner does), but
-Render never clones the repo. More steps; the Blueprint above is simpler.
-
-## Smoke, from anywhere
-
-The public repo ships the client: `eval/remote.py`.
-
-```
-python3 eval/remote.py --url https://<host> health
-python3 eval/remote.py --url https://<host> collapse "1 1 2 3 5 8 13 21 34 55 89 144"
-python3 eval/remote.py --url https://<host> collapse "2 3 5 7 11 13 17 19 23 29 31 37"
-CHIRON_API_TOKEN=<token> python3 eval/remote.py --url https://<host> certify "2+2=5"
-```
-
-Expected: Fibonacci verifies, primes come back honestly unstamped. If you
-publish the URL, publish the rate budget next to it — refusing over-budget
-requests loudly is part of the contract, not an outage.
+The test covers legacy compatibility, v1 envelopes and strict body shapes,
+closed routes, auth behavior, CORS default-deny/exact-origin opt-in, bounded
+hostile requests, and error no-leak behavior.

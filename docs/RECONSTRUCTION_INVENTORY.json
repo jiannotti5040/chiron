@@ -1,0 +1,141 @@
+{
+  "schema": "chiron.reconstruction_inventory/1",
+  "observed_on": "2026-08-08",
+  "baseline_commit": "2aa2d0760ab2b42557d6472ae62953075df7904a",
+  "scope": {
+    "repository": "Jacob-s-Portfolio-Vault",
+    "root": ".",
+    "excluded_runtime_state": [
+      "Chiron/chiron_memory.json",
+      "Chiron/artifacts/*/[0-9]*.json",
+      "studies/.oeis_cache/"
+    ]
+  },
+  "sources_of_truth": [
+    {
+      "area": "exact invariant recovery",
+      "paths": ["Primus/src/primus/engine.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "exact claim certification",
+      "paths": ["Primus/src/primus/certify.py", "Primus/SCHEMA.md"],
+      "status": "canonical"
+    },
+    {
+      "area": "Chiron engines",
+      "paths": ["Chiron/*.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "court-grade decision certification",
+      "paths": ["JDICert/cert_engine.py", "JDICert/primer.py"],
+      "status": "canonical"
+    },
+    {
+      "area": "offline fold",
+      "paths": ["Chiron Monolith/chiron_monolith.py"],
+      "status": "generated"
+    }
+  ],
+  "components": [
+    {
+      "id": "primus",
+      "role": "deterministic exact core",
+      "status": "implemented-and-tested",
+      "interfaces": ["package CLI", "stdio MCP", "local HTTP"]
+    },
+    {
+      "id": "chiron",
+      "role": "analysis, provenance, certification, and adjudication engines",
+      "status": "implemented-and-tested",
+      "interfaces": ["full stack CLI", "stdio MCP", "offline monolith"]
+    },
+    {
+      "id": "jdicert",
+      "role": "decision and court-grade certificate layer",
+      "status": "implemented-and-tested",
+      "interfaces": ["Python entry points", "Chiron bridges"]
+    },
+    {
+      "id": "macos_app",
+      "role": "native SwiftUI front end",
+      "status": "implemented-and-tested",
+      "interfaces": ["SwiftPM executable", "Foundation.Process to canonical vault"]
+    },
+    {
+      "id": "ios_app",
+      "role": "native iOS front end",
+      "status": "implemented; simulator build previously observed",
+      "paths": ["iOS/ChironMobile.xcodeproj", "App/Sources/ChironContract", "App/Sources/ChironRemote"],
+      "interfaces": ["versioned Primus /v1 HTTP", "URLSession", "Keychain credential storage"],
+      "notes": "The native iOS 17+ client is limited to the v1 certification flow and does not execute Python or accept vault paths. A Simulator app build was observed earlier in this reconstruction; after final local hardening changes, Xcode's local build service stalled before compiler output, while the current shared contract, remote client, and iOS sources typechecked directly against the installed arm64 iOS Simulator SDK. The Simulator test runner stalled before a result bundle. A deployed authenticated gateway is still required for end-to-end use."
+    },
+    {
+      "id": "provider_adapters",
+      "role": "cloud language-model proposal layer",
+      "status": "partial-and-configuration-gated",
+      "paths": ["Chiron/llm_providers.py"],
+      "notes": "The offline-tested default chain includes Gemini, OpenRouter, Groq, Cerebras, OpenAI, Anthropic, and Perplexity. Live providers remain unverified without owner-configured credentials."
+    },
+    {
+      "id": "apple_foundation_models",
+      "role": "on-device language-model adapter",
+      "status": "unimplemented"
+    },
+    {
+      "id": "palantir_foundry_aip",
+      "role": "external ontology and agent integration",
+      "status": "boundary-only-unconfigured",
+      "paths": ["Chiron/foundry_boundary.py", "docs/FOUNDRY_AIP_INTEGRATION.md"],
+      "reason": "A typed, non-delivering external-ontology boundary is implemented. No authorized credentials, endpoint, ontology, or live client implementation was supplied."
+    }
+  ],
+  "shared_interfaces": [
+    {
+      "name": "Chiron MCP",
+      "entry": "Chiron/mcp_server.py",
+      "transport": "local stdio JSON-RPC",
+      "tools": ["attest", "analyze", "certify", "collapse", "trace", "catalog"],
+      "status": "implemented-and-tested"
+    },
+    {
+      "name": "Primus MCP",
+      "entry": "Primus/src/primus/mcp_server.py",
+      "transport": "local stdio JSON-RPC",
+      "tools": ["certify", "collapse", "conjecture"],
+      "status": "implemented-and-tested"
+    },
+    {
+      "name": "Primus HTTP",
+      "entry": "Primus/src/primus/engine_server.py",
+      "transport": "local HTTP by default",
+      "status": "implemented-and-tested",
+      "notes": "Legacy routes remain; strict mobile-safe /v1 exposes capabilities, collapse, and certify only, with a chiron.mobile_api/1 outer envelope."
+    },
+    {
+      "name": "vault CLI",
+      "entry": "bin/chiron",
+      "transport": "terminal",
+      "status": "implemented-and-tested"
+    }
+  ],
+  "provenance_and_safety": {
+    "claim_vocabulary": ["VERIFIED", "REFUTED", "REFUSED"],
+    "decision_vocabulary": ["K", "U", "Omega"],
+    "invariant": "Zero false verifications; refusal is a result.",
+    "file_policy": "Mac app reads a visible 2 MB text bound and displays truncation.",
+    "network_policy": "Deterministic core is local; no public HTTP/MCP exposure is enabled by default. Native iOS uses HTTPS except exact loopback HTTP development hosts."
+  },
+  "external_blockers": [
+    "Claude Code is installed and can health-check MCP servers, but is not logged in for a model-driven tool invocation.",
+    "iOS has a native client with an earlier observed Simulator build, but the local Xcode build/test service stalled after final hardening; it also needs an owner-operated HTTPS gateway, short-lived scoped identity, and an end-to-end device/gateway test before distribution.",
+    "Distribution requires account-owned signing, notarization, entitlements, privacy review, and release decisions.",
+    "Palantir Foundry/AIP requires authorized credentials and ontology identifiers."
+  ],
+  "migration_notes": [
+    "Do not hand-edit Chiron Monolith; rebuild it from Chiron sources.",
+    "Do not commit Chiron/chiron_memory.json.",
+    "Historical certificate artifacts may retain historical license text; do not alter hash-pinned evidence without its migration record."
+  ]
+}
