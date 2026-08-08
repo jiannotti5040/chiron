@@ -15,10 +15,11 @@ servers, a CLI, and a macOS SwiftUI front end. These pieces are valuable only
 when they execute the same underlying engines and preserve the same
 `VERIFIED` / `REFUTED` / `REFUSED` contract.
 
-The macOS app currently reaches that core through `Foundation.Process` and a
-local Python runtime. That is a valid native macOS boundary. It cannot be
-copied unchanged to iOS, where an app cannot ship or execute this external
-Python vault through the same mechanism.
+The macOS app reaches that core through `Foundation.Process` and a local
+Python runtime. That is a valid native macOS boundary. It cannot be copied
+unchanged to iOS, where an app cannot ship or execute this external Python
+vault through the same mechanism. The iOS client therefore uses only the
+small, versioned HTTP boundary documented in `Primus/MOBILE_API.md`.
 
 ### Decision
 
@@ -38,6 +39,7 @@ flowchart LR
   R --> MCP["Primus MCP / Chiron MCP"]
   R --> HTTP["Primus local HTTP service"]
   R --> MAC["macOS SwiftUI app"]
+  HTTP --> IOS["iOS SwiftUI client\nURLSession · /v1 only"]
 ```
 
 ### Options considered
@@ -47,14 +49,20 @@ flowchart LR
 | Rewrite the core in Swift | Rejected | It would create a second stamping path before parity could be proven. |
 | Add an iOS target that shells out to Python | Rejected | iOS sandboxing makes that architecture non-functional. |
 | Keep the Python core and make interface boundaries explicit | Accepted | Preserves existing engines, gates, provenance, and the macOS product. |
+| Add a narrow iOS `URLSession` client for the versioned service | Accepted | The client carries no engine or bundled bearer and can validate the canonical response envelope. |
 | Expose the existing local HTTP surface publicly by default | Rejected | A remote service needs authentication and transport security; local-only is the safe default. |
 
 ### Consequences
 
 - macOS remains a first-class product surface today.
-- iOS is explicitly **unimplemented**, not a paper target: it requires an
-  authenticated service client or an audited portable engine before a target
-  should be created.
+- iOS has a native SwiftUI target for the narrow `/v1/certify` flow. It uses
+  `URLSession`, sends user-selected inline text only, preserves JSON numeric
+  tokens rather than recomputing them, and cannot run Python or access a vault
+  path. Its simulator app build is verified; a stalled local simulator runner
+  is not represented as a passing device test.
+- A deployable iOS product still requires an owner-operated HTTPS gateway and
+  short-lived scoped identity. The local static bearer is development-only and
+  is never embedded in the client.
 - MCP, CLI, HTTP, and the app share the existing Python core rather than
   presenting competing interpretations of a result.
 - Any Chiron source edit must still regenerate the monolith and manifest.
@@ -83,9 +91,9 @@ committed. It can contain third-party source material; the tracked
 | Chiron monolith | generated, tested artifact | Lossless fold of `Chiron/*.py`; regenerate after source changes. |
 | CLI | implemented-and-tested | `bin/chiron` delegates to the canonical engines; Primus also ships package entry points. |
 | MCP | implemented-and-tested locally | Primus exposes `certify`, `collapse`, `conjecture`; Chiron exposes `attest`, `analyze`, `certify`, `catalog`, `call` over stdio. |
-| Local service | implemented-and-tested locally | `primus.engine_server` is an authenticated-when-configured HTTP boundary. It is not a public deployment. |
+| Local service | implemented-and-tested locally | `primus.engine_server` has strict `/v1/capabilities`, `/v1/collapse`, and `/v1/certify` envelopes (48 real-HTTP gates), loopback binding by default, default-deny CORS, and development-only static bearer auth. It is not a public deployment. |
 | macOS app | implemented-and-tested locally | SwiftPM SwiftUI app delegates to the vault; it has no independent verification implementation. |
-| iOS app | unimplemented | The current `Foundation.Process` execution boundary is macOS-only. |
+| iOS app | implemented, simulator-build verified | `iOS/ChironMobile.xcodeproj` consumes `ChironContract` and `ChironRemote`; it exposes only the v1 certification vertical slice and never starts a local process. It needs a real gateway for end-to-end use. |
 | Cloud language providers | partial / configuration-gated | `Chiron/llm_providers.py` has an offline-tested fallback chain (Gemini, OpenRouter, Groq, Cerebras, OpenAI, Anthropic, Perplexity). No configured key or live provider was treated as evidence in this record. |
 | Apple Foundation Models | unimplemented | No supported Foundation Models adapter was found in the current source. |
 | Palantir Foundry / AIP | unimplemented | No authorized credentials, endpoint, ontology, or client integration was found in this vault. |
@@ -117,6 +125,14 @@ committed. It can contain third-party source material; the tracked
 - Xcode 27.0's SwiftPM scheme ran the 13-test macOS suite end to end after
   the test harness anchored the checkout and Python selection avoided Xcode's
   dependency-light bundled runtime.
+- An earlier Xcode run built an `arm64-apple-ios17.0-simulator`
+  `ChironMobile.app` using the shared `ChironContract` and `ChironRemote`
+  packages. After the final local hardening changes, Xcode's local build
+  service stalled before compiler output, so that exact revision has not been
+  re-built there. The current shared contract, remote client, and all iOS app
+  sources do typecheck directly against the installed `arm64` iOS Simulator
+  SDK. Its test runner also stalled before producing a result bundle; no iOS
+  unit-test or device-test pass is claimed here.
 
 ## Security and release posture
 
@@ -126,8 +142,16 @@ committed. It can contain third-party source material; the tracked
   external account configuration.
 - MCP is stdio-only and local. Its `call` tool is a trusted-local dispatch
   surface; it must not be exposed as a remote unauthenticated API.
-- The Primus HTTP deployment notes describe request limits and optional bearer
-  authentication. No production endpoint is configured by this record.
+- Primus v1 and the local assistant/console services deny browser CORS by
+  default; configured origins are exact, loopback-only where applicable, and
+  CORS is never treated as authentication. The Primus deployment notes
+  describe request limits and optional bearer authentication. No production
+  endpoint is configured by this record.
+- `ChironRemote` permits plaintext HTTP only to literal `127.0.0.1` or `::1`
+  for development; a network host (including the resolver name `localhost`)
+  must use HTTPS, and its transport refuses redirects. The iOS app asks its
+  credential source at request time and scopes an optional owner-provided
+  bearer to the exact base URL in the device Keychain.
 - `App/build/Chiron.app` is a local, ad-hoc-signed artifact. There is no
   distribution signing identity, notarization result, App Store entitlement
   review, privacy manifest, or release archive evidence here.
@@ -143,9 +167,13 @@ python3 Chiron/tests/test_chiron.py
 python3 Chiron/tests/test_mcp_server.py
 python3 Chiron/mcp_server.py selftest
 python3 bin/chiron test --full
+cd Primus && python3 test_engine_server.py
 cd App && swift test --scratch-path /tmp/chiron-build
 cd App && xcodebuild -scheme ChironApp-Package -destination 'platform=macOS' \
   -derivedDataPath /tmp/chiron-xcode test
+xcodebuild -project iOS/ChironMobile.xcodeproj -scheme ChironMobile \
+  -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0' \
+  -derivedDataPath /tmp/chiron-ios CODE_SIGNING_ALLOWED=NO build
 ```
 
 After a Chiron module change, regenerate the fold and the manifest before
@@ -158,8 +186,8 @@ cd .. && python3 Chiron/build_manifest.py --run && python3 Chiron/build_encyclop
 
 ## Next autonomous action
 
-Design and test the smallest authenticated service contract that an iOS client
-could use **without** copying the stamping path into Swift. The first change
-should be a versioned, local-only request/response schema and mocked Swift
-client tests; do not add an iOS target until that boundary, its file-consent
-model, and its authentication behavior are explicit.
+Provision an owner-approved HTTPS gateway in front of the narrow `/v1`
+boundary, with short-lived audience-bound identity and an authorization policy;
+then run a real iOS client-to-gateway integration test. Do not turn the local
+static bearer, MCP, console, dashboard, or arbitrary-module paths into that
+gateway.

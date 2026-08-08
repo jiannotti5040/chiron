@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
+import ChironContract
+
+#if os(macOS)
 
 /// The one bridge between the app and the vault. Every call shells out to
 /// the vault's own entry points; nothing is recomputed on the Swift side,
@@ -228,7 +231,7 @@ public struct VaultClient: Sendable {
             "function": .string(function),
             "kind": .string(kind),
             "text": .string(text),
-            "surface": .array(surface.map { .number(Double($0)) }),
+            "surface": .array(surface.map { .number(JSONNumber(integer: $0)) }),
         ])
         let body = try JSONEncoder().encode(payload)
         let chiron = vaultRoot.appendingPathComponent("Chiron").path
@@ -309,3 +312,5 @@ public struct GateSpec: Sendable, Identifiable, Hashable {
                  extraEnvironment: ["PYTHONPATH": "src"]),
     ]
 }
+
+#endif

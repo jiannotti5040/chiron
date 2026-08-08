@@ -66,8 +66,10 @@
     {
       "id": "ios_app",
       "role": "native iOS front end",
-      "status": "unimplemented",
-      "reason": "The macOS local-Python process boundary cannot run in an iOS sandbox."
+      "status": "implemented; simulator build previously observed",
+      "paths": ["iOS/ChironMobile.xcodeproj", "App/Sources/ChironContract", "App/Sources/ChironRemote"],
+      "interfaces": ["versioned Primus /v1 HTTP", "URLSession", "Keychain credential storage"],
+      "notes": "The native iOS 17+ client is limited to the v1 certification flow and does not execute Python or accept vault paths. A Simulator app build was observed earlier in this reconstruction; after final local hardening changes, Xcode's local build service stalled before compiler output, while the current shared contract, remote client, and iOS sources typechecked directly against the installed arm64 iOS Simulator SDK. The Simulator test runner stalled before a result bundle. A deployed authenticated gateway is still required for end-to-end use."
     },
     {
       "id": "provider_adapters",
@@ -107,7 +109,8 @@
       "name": "Primus HTTP",
       "entry": "Primus/src/primus/engine_server.py",
       "transport": "local HTTP by default",
-      "status": "implemented-and-tested"
+      "status": "implemented-and-tested",
+      "notes": "Legacy routes remain; strict mobile-safe /v1 exposes capabilities, collapse, and certify only, with a chiron.mobile_api/1 outer envelope."
     },
     {
       "name": "vault CLI",
@@ -121,11 +124,11 @@
     "decision_vocabulary": ["K", "U", "Omega"],
     "invariant": "Zero false verifications; refusal is a result.",
     "file_policy": "Mac app reads a visible 2 MB text bound and displays truncation.",
-    "network_policy": "Deterministic core is local; no public HTTP/MCP exposure is enabled by default."
+    "network_policy": "Deterministic core is local; no public HTTP/MCP exposure is enabled by default. Native iOS uses HTTPS except exact loopback HTTP development hosts."
   },
   "external_blockers": [
     "Claude Code is installed and can health-check MCP servers, but is not logged in for a model-driven tool invocation.",
-    "iOS requires a new authenticated service or audited portable-engine boundary; no native target exists.",
+    "iOS has a native client with an earlier observed Simulator build, but the local Xcode build/test service stalled after final hardening; it also needs an owner-operated HTTPS gateway, short-lived scoped identity, and an end-to-end device/gateway test before distribution.",
     "Distribution requires account-owned signing, notarization, entitlements, privacy review, and release decisions.",
     "Palantir Foundry/AIP requires authorized credentials and ontology identifiers."
   ],

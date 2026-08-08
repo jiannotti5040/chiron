@@ -2,6 +2,8 @@
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
 
+#if os(macOS)
+
 public struct PythonResult: Sendable {
     public let stdout: Data
     public let stderrText: String
@@ -170,3 +172,5 @@ public struct PythonRunner: Sendable {
         }
     }
 }
+
+#endif

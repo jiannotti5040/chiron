@@ -2,6 +2,8 @@
 // Copyright 2026 Jacob Iannotti. See LICENSE.
 import Foundation
 
+#if os(macOS)
+
 public enum VaultLocator {
     /// A vault root is recognized by its own files, not by its folder name —
     /// the repository has been cloned under several names.
@@ -40,3 +42,5 @@ public enum VaultLocator {
         return nil
     }
 }
+
+#endif
