@@ -90,7 +90,7 @@ committed. It can contain third-party source material; the tracked
 | Chiron full stack | implemented-and-tested | `Chiron/full_stack.py` runs every applicable layer and marks non-applicable stages `SKIPPED`. It accepts stdin for bounded file flows. |
 | Chiron monolith | generated, tested artifact | Lossless fold of `Chiron/*.py`; regenerate after source changes. |
 | CLI | implemented-and-tested | `bin/chiron` delegates to the canonical engines; Primus also ships package entry points. |
-| MCP | implemented-and-tested locally | Primus exposes `certify`, `collapse`, `conjecture`; Chiron exposes `attest`, `analyze`, `certify`, `catalog`, `call` over stdio. |
+| MCP | implemented-and-tested locally | Primus exposes `certify`, `collapse`, `conjecture`; Chiron exposes the reviewed static `attest`, `analyze`, `certify`, `collapse`, `trace`, and `catalog` surface over stdio. Each declaration states schema, authority, side effects, and canonical provenance. |
 | Local service | implemented-and-tested locally | `primus.engine_server` has strict `/v1/capabilities`, `/v1/collapse`, and `/v1/certify` envelopes (48 real-HTTP gates), loopback binding by default, default-deny CORS, and development-only static bearer auth. It is not a public deployment. |
 | macOS app | implemented-and-tested locally | SwiftPM SwiftUI app delegates to the vault; it has no independent verification implementation. |
 | iOS app | implemented, simulator-build verified | `iOS/ChironMobile.xcodeproj` consumes `ChironContract` and `ChironRemote`; it exposes only the v1 certification vertical slice and never starts a local process. It needs a real gateway for end-to-end use. |
@@ -112,9 +112,10 @@ committed. It can contain third-party source material; the tracked
   Cerebras; an offline mock test proves that a Cerebras-only configuration
   reaches the chain. This is routing-contract evidence, not a claim of a live
   account or provider invocation.
-- A real Chiron MCP transport test drives initialization, tool discovery,
-  `analyze`, `certify`, `attest`, `catalog`, `call`, unknown-tool handling, and
-  ping through a subprocess—not only in-process helpers.
+- A real Chiron MCP transport test drives initialization, reviewed tool
+  discovery/metadata, `analyze`, `certify`, `attest`, `catalog`, `collapse`,
+  `trace`, rejected legacy dynamic dispatch, unknown-tool handling, and ping
+  through a subprocess—not only in-process helpers.
 - Codex CLI successfully invoked `chiron/analyze` and received
   `chiron.full_stack/1`. In this environment, that local MCP subprocess did
   not start under Codex's read-only sandbox; it did under the local execution
@@ -140,8 +141,10 @@ committed. It can contain third-party source material; the tracked
   files. A filename/pattern scan found no committed high-confidence private
   keys or provider-token signatures; that is not a claim about history or
   external account configuration.
-- MCP is stdio-only and local. Its `call` tool is a trusted-local dispatch
-  surface; it must not be exposed as a remote unauthenticated API.
+- MCP is stdio-only and local. Its static allowlist has no arbitrary
+  module/function dispatch and declares caller authority, side effects, and
+  canonical provenance for each tool; it must not be exposed as a remote
+  unauthenticated API.
 - Primus v1 and the local assistant/console services deny browser CORS by
   default; configured origins are exact, loopback-only where applicable, and
   CORS is never treated as authentication. The Primus deployment notes

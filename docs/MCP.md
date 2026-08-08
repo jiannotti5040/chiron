@@ -69,9 +69,13 @@ gate could even see. The tool is built to make that distinction impossible to
 lose.
 
 The full Chiron server is separate from this focused Primus gate. It exposes
-`attest`, `analyze`, `certify`, `catalog`, and `call` through the same local
-stdio transport; see [`USING-WITH-CLAUDE.md`](USING-WITH-CLAUDE.md) for the
-current Claude Code and Codex setup instructions and transport gates.
+the reviewed static surface `attest`, `analyze`, `certify`, `collapse`,
+`trace`, and `catalog` through the same local stdio transport. Each tool
+declaration names its input schema, caller authority, side-effect posture, and
+canonical implementation; `catalog` returns that allowlist. It deliberately
+does not offer arbitrary module/function dispatch. See
+[`USING-WITH-CLAUDE.md`](USING-WITH-CLAUDE.md) for the current Claude Code and
+Codex setup instructions and transport gates.
 
 ## What it will not do
 
@@ -88,7 +92,7 @@ The same engine runs in your browser, no install:
 
 ## Verify the tool itself
 
-The MCP layer is gated: **11/11** handshake gates drive the real server
+The Chiron MCP layer is gated: **14/14** handshake gates drive the real server
 process over real stdio JSON-RPC (initialize / tools/list / tools/call for
 every tool, plus unknown-tool and ping). The engine behind it has a published
 zero-false-verification record on external data —

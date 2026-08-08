@@ -43,12 +43,10 @@ Register (Claude Code):  claude mcp add chiron -- python3 /abs/path/Chiron/mcp_s
 """
 from __future__ import annotations
 
-import importlib
-import inspect
 import json
 import os
+import re
 import sys
-import time
 from typing import Any, Dict, List, Optional
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -56,13 +54,30 @@ if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
 PROTOCOL_DEFAULT = "2025-06-18"
-SCHEMA = "chiron.mcp/1"
+# Version two deliberately replaces the former arbitrary ``call`` dispatch
+# with a small, reviewed capability surface.  Tool names are API, so the
+# version is exposed in initialize rather than silently changing the meaning
+# of an existing name.
+SCHEMA = "chiron.mcp/2"
+TOOL_METADATA_SCHEMA = "chiron.mcp.tool/1"
 
 # Bounds. A tool that reads whatever it is pointed at needs stated limits, and
 # truncation must be visible in the result rather than silent.
 MAX_FILE_BYTES = 2_000_000
 MAX_TEXT_CHARS = 400_000
 MAX_INPUTS = 32
+# Collapse and trace can have superlinear work for some surfaces.  Unlike
+# general prose analysis, truncating a surface would alter the object being
+# proven, so these tools reject over-limit inputs rather than silently trim.
+MAX_SURFACE_CHARS = 20_000
+MAX_SURFACE_TERMS = 1_024
+
+# This is an intentionally static review boundary.  It is repeated in the
+# ``analyze`` schema and validated before it reaches full_stack.run().
+ALLOWED_ANALYZE_LAYERS = (
+    "language", "provenance", "verification", "candor", "recovery",
+    "adjudication", "record",
+)
 
 
 # --------------------------------------------------------------------------
@@ -130,7 +145,46 @@ def _candidate_inputs(args: Dict[str, Any]) -> Dict[str, str]:
 
 
 # --------------------------------------------------------------------------
-# tool declarations
+# reviewed tool declarations
+
+# MCP's standard annotations make the operational posture visible to clients.
+# ``_meta.chiron`` is the stable, machine-readable policy record for clients
+# that need the fuller authority/provenance statement. Keep every callable in
+# this file declared here and in _IMPL below; do not reintroduce generic
+# module/function dispatch.
+
+
+def _tool(
+    name: str,
+    description: str,
+    input_schema: Dict[str, Any],
+    *,
+    contract: str,
+    authority: str,
+    side_effects: str,
+    provenance: Dict[str, str],
+) -> Dict[str, Any]:
+    return {
+        "name": name,
+        "description": description,
+        "inputSchema": input_schema,
+        "annotations": {
+            "readOnlyHint": True,
+            "destructiveHint": False,
+            "idempotentHint": True,
+            "openWorldHint": False,
+        },
+        "_meta": {
+            "chiron": {
+                "schema": TOOL_METADATA_SCHEMA,
+                "contract": contract,
+                "authority": authority,
+                "side_effects": side_effects,
+                "provenance": provenance,
+            },
+        },
+    }
+
 
 _TEXT_OR_PATH = {
     "text": {"type": "string", "description": "The text to analyse."},
@@ -139,10 +193,29 @@ _TEXT_OR_PATH = {
                             "Absolute, or ~-relative."},
 }
 
+_SURFACE_OR_PATH = {
+    "type": "object",
+    "properties": {
+        "surface": {
+            "description": "An integer sequence (JSON integer array or whitespace/"
+                           "comma-separated string), or an arbitrary string surface.",
+            "oneOf": [
+                {"type": "string", "maxLength": MAX_SURFACE_CHARS},
+                {"type": "array", "maxItems": MAX_SURFACE_TERMS,
+                 "items": {"type": "integer"}},
+            ],
+        },
+        "path": _TEXT_OR_PATH["path"],
+    },
+    # Exactly one alternate is accepted. The implementation repeats this check
+    # so malformed clients receive a clear tool error even without schema validation.
+    "oneOf": [{"required": ["surface"]}, {"required": ["path"]}],
+}
+
 TOOLS = [
-    {
-        "name": "attest",
-        "description": (
+    _tool(
+        "attest",
+        (
             "Attribute generated text to the inputs that produced it, span by "
             "span. THIS IS THE TOOL TO USE ON YOUR OWN OUTPUT: pass what you "
             "wrote as `output` and the documents you read as `input_paths` "
@@ -154,7 +227,7 @@ TOOLS = [
             "probability that text is machine-written — that measurement does "
             "not exist. Contract: chiron.attestation/1."
         ),
-        "inputSchema": {
+        {
             "type": "object",
             "properties": {
                 "output": {"type": "string",
@@ -169,10 +242,16 @@ TOOLS = [
                                                "named by its basename."},
             },
         },
-    },
-    {
-        "name": "analyze",
-        "description": (
+        contract="chiron.attestation/1",
+        authority=("inline output and candidate text, plus only caller-named "
+                   "local files bounded by MAX_FILE_BYTES"),
+        side_effects="none; reads caller-authorized local files only",
+        provenance={"implementation": "Chiron/attest.py:attest",
+                    "source_of_truth": "Chiron/attest.py"},
+    ),
+    _tool(
+        "analyze",
+        (
             "Run every applicable Chiron stage over one text or file — "
             "structure, register, readability, outlier sentences, provenance, "
             "extractable claims, exact certification, candour, and (when the "
@@ -182,19 +261,26 @@ TOOLS = [
             "raised says ERROR. Neither is reported as a pass. Contract: "
             "chiron.full_stack/1."
         ),
-        "inputSchema": {
+        {
             "type": "object",
             "properties": dict(_TEXT_OR_PATH, **{
-                "layers": {"type": "array", "items": {"type": "string"},
-                           "description": "Restrict to these layers: language, "
+                "layers": {"type": "array", "items": {"type": "string",
+                                                            "enum": list(ALLOWED_ANALYZE_LAYERS)},
+                           "description": "Restrict to reviewed layers: language, "
                                           "provenance, verification, candor, "
                                           "recovery, adjudication, record."},
             }),
         },
-    },
-    {
-        "name": "certify",
-        "description": (
+        contract="chiron.full_stack/1",
+        authority=("inline text or one caller-named local file bounded by "
+                   "MAX_FILE_BYTES; only the reviewed full_stack stage list"),
+        side_effects="none; in-process deterministic analysis only",
+        provenance={"implementation": "Chiron/full_stack.py:run",
+                    "source_of_truth": "Chiron/full_stack.py"},
+    ),
+    _tool(
+        "certify",
+        (
             "Certify the exactly checkable claims in text or a file. Each claim "
             "returns VERIFIED, REFUTED, or REFUSED; the free-text remainder is "
             "reported as unverifiable and is never blessed. Gate on "
@@ -202,41 +288,68 @@ TOOLS = [
             "nothing checkable was refuted, not that the text is true. "
             "Contract: primus.certificate/2."
         ),
-        "inputSchema": {"type": "object", "properties": dict(_TEXT_OR_PATH)},
-    },
-    {
-        "name": "catalog",
-        "description": (
-            "List every module in the vault with its entrypoints, discovered by "
-            "introspection rather than from a hardcoded list. Use this to find "
-            "which module answers a question before calling `call`."
+        {"type": "object", "properties": dict(_TEXT_OR_PATH)},
+        contract="primus.certificate/2",
+        authority=("inline text or one caller-named local file bounded by "
+                   "MAX_FILE_BYTES"),
+        side_effects="none; exact local verification only",
+        provenance={"implementation": "Primus/src/primus/certify.py:certify",
+                    "source_of_truth": "Primus/src/primus/certify.py"},
+    ),
+    _tool(
+        "collapse",
+        (
+            "Recover the best compression model for a numeric integer sequence "
+            "or a string surface. VERIFIED is returned only when Primus's "
+            "canonical held-out exact check succeeds; otherwise read the result "
+            "as a candidate or honest refusal. This tool delegates directly to "
+            "the canonical Primus collapse engine."
         ),
-        "inputSchema": {
+        _SURFACE_OR_PATH,
+        contract="chiron.mcp.collapse/1",
+        authority=("one caller-supplied surface, or one caller-named local file; "
+                   "integer arrays are preserved exactly and inputs are bounded"),
+        side_effects="none; exact local analysis only",
+        provenance={"implementation": "Primus/src/primus/engine.py:collapse",
+                    "source_of_truth": "Primus/src/primus/engine.py"},
+    ),
+    _tool(
+        "trace",
+        (
+            "Return the canonical Chiron diagnostic trace for one numeric "
+            "surface or string: candidate models/decodings, winner, and its "
+            "held-out re-test. This explains a result; it does not create a new "
+            "verification stamp."
+        ),
+        _SURFACE_OR_PATH,
+        contract="chiron.trace/1",
+        authority=("one caller-supplied surface, or one caller-named local file; "
+                   "integer arrays are preserved exactly and inputs are bounded"),
+        side_effects="none; deterministic local diagnostic only",
+        provenance={"implementation": "Chiron/trace.py:_trace_sequence,_trace_string",
+                    "source_of_truth": "Chiron/trace.py"},
+    ),
+    _tool(
+        "catalog",
+        (
+            "List the reviewed static Chiron MCP capability allowlist and each "
+            "tool's input schema, authority, side-effect posture, and canonical "
+            "implementation. It does not enumerate or invoke arbitrary vault "
+            "modules."
+        ),
+        {
             "type": "object",
             "properties": {
                 "filter": {"type": "string",
-                           "description": "Only modules or functions matching "
-                                          "this substring."},
+                           "description": "Only reviewed MCP tools matching this substring."},
             },
         },
-    },
-    {
-        "name": "call",
-        "description": (
-            "Invoke one entrypoint of one module by name, on text or on the "
-            "integers found in it. Dispatch only: the result is exactly what "
-            "the module returned, or the exception type it raised — never a "
-            "substitute value. Use `catalog` first to find the name."
-        ),
-        "inputSchema": {
-            "type": "object",
-            "properties": dict(_TEXT_OR_PATH, **{
-                "module": {"type": "string", "description": "Module name, e.g. 'language'."},
-                "function": {"type": "string", "description": "Entrypoint name, e.g. 'stylometry'."},
-            }),
-            "required": ["module", "function"],
-        },
-    },
+        contract="chiron.catalog/2",
+        authority="static capability declarations in this MCP server",
+        side_effects="none",
+        provenance={"implementation": "Chiron/mcp_server.py:_catalog",
+                    "source_of_truth": "Chiron/mcp_server.py:TOOLS"},
+    ),
 ]
 
 
@@ -279,6 +392,12 @@ def _tool_analyze(args: Dict[str, Any]) -> Dict[str, Any]:
     layers = args.get("layers") or None
     if layers is not None and not isinstance(layers, list):
         raise ToolError("layers must be an array of strings")
+    if layers is not None:
+        unknown = [layer for layer in layers
+                   if not isinstance(layer, str) or layer not in ALLOWED_ANALYZE_LAYERS]
+        if unknown:
+            raise ToolError("layers must be drawn from the reviewed allowlist: %s"
+                            % ", ".join(ALLOWED_ANALYZE_LAYERS))
     rec = full_stack.run(got["text"], only_layers=layers)
     rec["source"] = got["source"]
     return _wrap(rec)
@@ -300,70 +419,118 @@ def _tool_certify(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
-_TEXT_HINTS = ("text", "output", "s", "string", "prose", "passage", "content",
-               "sentence", "doc", "body", "claim", "message")
-_SEQ_HINTS = ("surface", "seq", "sequence", "values", "terms", "nums",
-              "numbers", "data", "series", "xs")
+_INTEGER_SEQUENCE = re.compile(r"[+-]?\d+(?:[\s,]+[+-]?\d+)*")
 
 
-def _kind_of(param) -> str:
-    name = param.name.lower()
-    ann = getattr(param.annotation, "__name__", str(param.annotation)).lower()
-    if name in _SEQ_HINTS or "list" in ann or "sequence" in ann or "iterable" in ann:
-        return "surface"
-    if name in _TEXT_HINTS or "str" in ann:
-        return "text"
-    return "unknown"
+def _surface_from(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Resolve a bounded surface without coercing caller integers through float.
+
+    This is deliberately distinct from _text_from(): a surface is the evidence
+    for a collapse proof, so truncating or lossy conversion would change its
+    meaning.  The only numeric array accepted is JSON integers; callers with a
+    non-integer surface can submit it as a string and receive the canonical
+    string-surface analysis instead of an accidental exactness claim.
+    """
+    has_surface = args.get("surface") is not None
+    has_path = args.get("path") is not None
+    if has_surface == has_path:
+        raise ToolError("pass surface or path, exactly one")
+
+    if has_path:
+        got = _text_from(args, key="__surface__", path_key="path")
+        if got["source"].get("truncated"):
+            raise ToolError("surface file exceeds MAX_FILE_BYTES; refusing to truncate evidence")
+        raw: Any = got["text"]
+        source = got["source"]
+    else:
+        raw = args["surface"]
+        source = {"from": "argument"}
+
+    if isinstance(raw, list):
+        if len(raw) > MAX_SURFACE_TERMS:
+            raise ToolError("surface has too many terms: %d (max %d)"
+                            % (len(raw), MAX_SURFACE_TERMS))
+        if any(isinstance(value, bool) or not isinstance(value, int) for value in raw):
+            raise ToolError("numeric surface arrays must contain JSON integers only")
+        source.update(kind="integer-array", terms=len(raw), truncated=False)
+        return {"surface": list(raw), "source": source}
+
+    if not isinstance(raw, str):
+        raise ToolError("surface must be a string or an array of JSON integers")
+    if len(raw) > MAX_SURFACE_CHARS:
+        raise ToolError("string surface exceeds %d characters; refusing to truncate evidence"
+                        % MAX_SURFACE_CHARS)
+    if _INTEGER_SEQUENCE.fullmatch(raw.strip()):
+        parts = re.split(r"[\s,]+", raw.strip())
+        if len(parts) > MAX_SURFACE_TERMS:
+            raise ToolError("surface has too many terms: %d (max %d)"
+                            % (len(parts), MAX_SURFACE_TERMS))
+        source.update(kind="integer-sequence", terms=len(parts), truncated=False)
+        return {"surface": [int(part) for part in parts], "source": source}
+    source.update(kind="string", chars=len(raw), truncated=False)
+    return {"surface": raw, "source": source}
+
+
+def _tool_collapse(args: Dict[str, Any]) -> Dict[str, Any]:
+    got = _surface_from(args)
+    try:
+        from primus.engine import collapse
+    except ImportError:
+        seed = os.path.join(os.path.dirname(_HERE), "Primus", "src")
+        if seed not in sys.path:
+            sys.path.insert(0, seed)
+        from primus.engine import collapse
+    inv = collapse(got["surface"])
+    rec = inv.to_dict()
+    # ``to_dict`` intentionally leaves the convenience property out; preserve
+    # the engine's exact held-out verdict rather than reinterpreting it here.
+    rec["schema"] = "chiron.mcp.collapse/1"
+    rec["verified"] = bool(inv.verified)
+    rec["source"] = got["source"]
+    return _wrap(rec)
+
+
+def _tool_trace(args: Dict[str, Any]) -> Dict[str, Any]:
+    from trace import _trace_sequence, _trace_string
+
+    got = _surface_from(args)
+    surface = got["surface"]
+    # The trace module is itself the canonical diagnostic implementation. It
+    # does not stamp a result; it reports the engine's own verdict verbatim.
+    rec = _trace_sequence(surface) if isinstance(surface, list) else _trace_string(surface)
+    rec["schema"] = "chiron.trace/1"
+    rec["source"] = got["source"]
+    return _wrap(rec)
 
 
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
-    mods = sorted(f[:-3] for f in os.listdir(_HERE) if f.endswith(".py"))
+    """Return the static tool allowlist without importing arbitrary modules."""
+    if filter_ is not None and not isinstance(filter_, str):
+        raise ToolError("filter must be a string")
+    query = (filter_ or "").lower()
     out: List[Dict[str, Any]] = []
-    for name in mods:
-        entry: Dict[str, Any] = {"name": name, "functions": []}
-        try:
-            mod = importlib.import_module(name)
-        except BaseException as exc:                       # noqa: BLE001
-            entry.update(status="FAILED",
-                         error="%s: %s" % (type(exc).__name__, exc))
-            out.append(entry)
+    for tool in TOOLS:
+        policy = tool["_meta"]["chiron"]
+        haystack = " ".join((tool["name"], tool["description"],
+                              policy["contract"], policy["authority"],
+                              policy["side_effects"],
+                              policy["provenance"]["implementation"]))
+        if query and query not in haystack.lower():
             continue
-        entry["status"] = "OK"
-        entry["doc"] = ((mod.__doc__ or "").strip().splitlines() or [""])[0][:200]
-        for fname, obj in vars(mod).items():
-            if fname.startswith("_") or not inspect.isfunction(obj):
-                continue
-            if getattr(obj, "__module__", None) != name:
-                continue
-            try:
-                sig = inspect.signature(obj)
-            except (ValueError, TypeError):
-                continue
-            params = list(sig.parameters.values())
-            positional = [p for p in params
-                          if p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]
-            required = [p for p in positional if p.default is p.empty]
-            entry["functions"].append({
-                "name": fname,
-                "doc": ((obj.__doc__ or "").strip().splitlines() or [""])[0][:160],
-                "params": [p.name for p in params],
-                "required_arity": len(required),
-                "first_arg_kind": _kind_of(positional[0]) if positional else "unknown",
-            })
-        entry["functions"].sort(key=lambda f: f["name"])
-        out.append(entry)
-
-    if filter_:
-        q = filter_.lower()
-        out = [m for m in out
-               if q in m["name"].lower()
-               or any(q in f["name"].lower() for f in m["functions"])]
+        out.append({
+            "name": tool["name"],
+            "description": tool["description"],
+            "inputSchema": tool["inputSchema"],
+            "annotations": tool["annotations"],
+            "metadata": policy,
+        })
     return {
-        "schema": "chiron.catalog/1",
-        "modules": out,
-        "module_count": len(out),
-        "imported": sum(1 for m in out if m["status"] == "OK"),
-        "entrypoints": sum(len(m["functions"]) for m in out),
+        "schema": "chiron.catalog/2",
+        "reviewed_static_allowlist": True,
+        "tools": out,
+        "tool_count": len(out),
+        "scope": ("Only reviewed MCP tools are listed. Arbitrary Chiron "
+                  "module/function dispatch is intentionally unavailable."),
     }
 
 
@@ -371,67 +538,13 @@ def _tool_catalog(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(_catalog(args.get("filter")))
 
 
-def _numbers(text: str) -> List[int]:
-    import re
-    out = []
-    for tok in re.findall(r"\b\d[\d,]*\b", text or ""):
-        try:
-            out.append(int(tok.replace(",", "")))
-        except ValueError:
-            pass
-    return out
-
-
-def _tool_call(args: Dict[str, Any]) -> Dict[str, Any]:
-    module = args.get("module")
-    function = args.get("function")
-    if not module or not function:
-        raise ToolError("module and function are both required")
-    got = _text_from(args)
-    rec: Dict[str, Any] = {"schema": "chiron.call/1",
-                           "module": module, "function": function,
-                           "source": got["source"]}
-    t0 = time.time()
-    try:
-        mod = importlib.import_module(str(module))
-    except ImportError as exc:
-        raise ToolError("no such module: %s (%s)" % (module, exc))
-    fn = getattr(mod, str(function), None)
-    if fn is None or not callable(fn):
-        raise ToolError("%s has no callable %s" % (module, function))
-    try:
-        sig = inspect.signature(fn)
-        positional = [p for p in sig.parameters.values()
-                      if p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD)]
-        kind = _kind_of(positional[0]) if positional else "unknown"
-        if kind == "surface":
-            arg: Any = _numbers(got["text"])
-        elif kind == "text":
-            arg = got["text"]
-        else:
-            raise ToolError(
-                "%s.%s takes %r, which is neither text nor a numeric surface; "
-                "this tool can only drive one-argument text or surface "
-                "entrypoints" % (module, function,
-                                 positional[0].name if positional else None))
-        rec["arg_kind"] = kind
-        rec["result"] = fn(arg)
-        rec["status"] = "OK"
-    except ToolError:
-        raise
-    except BaseException as exc:                           # noqa: BLE001
-        rec["status"] = "ERROR"
-        rec["error"] = ("%s: %s" % (type(exc).__name__, exc))[:400]
-    rec["ms"] = round((time.time() - t0) * 1000, 1)
-    return _wrap(rec)
-
-
 _IMPL = {
     "attest": _tool_attest,
     "analyze": _tool_analyze,
     "certify": _tool_certify,
+    "collapse": _tool_collapse,
+    "trace": _tool_trace,
     "catalog": _tool_catalog,
-    "call": _tool_call,
 }
 
 
@@ -458,10 +571,12 @@ INSTRUCTIONS = (
     "trace to the sources you were given and which words you supplied — pass "
     "the files you read as input_paths. Use `analyze` for a full reading of a "
     "text or file, `certify` to gate checkable claims (refuted == 0 passes; "
-    "the remainder stays unverified), and `catalog` then `call` to reach any "
-    "individual module. Every tool accepts a local file path. Report REFUSED "
-    "spans to the user as unattributed rather than dropping them, and never "
-    "describe any output here as a probability that text is machine-written."
+    "the remainder stays unverified), `collapse` for the canonical Primus "
+    "invariant result, and `trace` for a diagnostic explanation. `catalog` "
+    "lists the reviewed static allowlist and its authority metadata; arbitrary "
+    "module dispatch is intentionally unavailable. Report REFUSED spans to the "
+    "user as unattributed rather than dropping them, and never describe any "
+    "output here as a probability that text is machine-written."
 )
 
 
@@ -512,7 +627,7 @@ def main(argv: Optional[list] = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] == "selftest":
         return _selftest()
-    print("chiron-mcp: serving attest + analyze + certify + catalog + call "
+    print("chiron-mcp: serving attest + analyze + certify + collapse + trace + catalog "
           "over stdio (newline-delimited JSON-RPC)", file=sys.stderr)
     for line in sys.stdin:
         line = line.strip()
@@ -605,33 +720,51 @@ def _selftest() -> int:
     except ToolError:
         check("analyze: missing file rejected", True)
 
-    # catalog discovers the vault
+    # Catalog is now a reviewed static capability record, never a dynamic
+    # importer/dispatcher over the rest of the vault.
     cat = body(_tool_catalog({}))
-    check("catalog: every module imports",
-          cat["imported"] == cat["module_count"] and cat["module_count"] > 50,
-          "%d/%d" % (cat["imported"], cat["module_count"]))
+    check("catalog: returns the reviewed static allowlist",
+          cat["schema"] == "chiron.catalog/2"
+          and cat["reviewed_static_allowlist"] is True
+          and cat["tool_count"] == len(TOOLS))
     check("catalog: filter narrows", len(body(_tool_catalog(
-        {"filter": "attest"}))["modules"]) < cat["module_count"])
+        {"filter": "attest"}))["tools"]) < cat["tool_count"])
 
-    # call dispatches, and refuses what it cannot drive
-    r = body(_tool_call({"module": "language", "function": "readability",
-                         "text": "Short sentence. Another one here."}))
-    check("call: dispatches a text entrypoint", r["status"] == "OK",
-          str(r.get("error")))
-    r = body(_tool_call({"module": "aesthetics", "function": "aesthetic",
-                         "text": "1, 4, 9, 16, 25"}))
-    check("call: dispatches a surface entrypoint",
-          r["status"] == "OK" and r["arg_kind"] == "surface", str(r.get("error")))
+    # Narrow typed tools delegate to their canonical cores.
+    r = body(_tool_collapse({"surface": [1, 1, 2, 3, 5, 8, 13, 21]}))
+    check("collapse: canonical exact held-out result is preserved",
+          r.get("verified") is True and "recurrence" in str(r.get("model_class")))
+    r = body(_tool_trace({"surface": "1 1 2 3 5 8 13 21"}))
+    check("trace: canonical diagnostic keeps its non-stamping contract",
+          r.get("schema") == "chiron.trace/1"
+          and r.get("engine_verdict") in ("VERIFIED", "ABSTAINED"))
+
     try:
-        _tool_call({"module": "language", "function": "does_not_exist",
-                    "text": "x"})
-        check("call: unknown function rejected", False)
+        _tool_collapse({"surface": [1, 1.5, 2]})
+        check("collapse: non-integer numeric arrays rejected", False)
     except ToolError:
-        check("call: unknown function rejected", True)
+        check("collapse: non-integer numeric arrays rejected", True)
+    try:
+        _tool_analyze({"text": "x", "layers": ["not-reviewed"]})
+        check("analyze: unreviewed layer rejected", False)
+    except ToolError:
+        check("analyze: unreviewed layer rejected", True)
 
     # protocol surface
     check("tools: all declared tools have an implementation",
           {t["name"] for t in TOOLS} == set(_IMPL))
+    check("tools: no generic arbitrary module dispatcher remains",
+          "call" not in _IMPL and "call" not in {t["name"] for t in TOOLS})
+    check("tools: every declaration carries reviewed authority metadata",
+          all(
+              t.get("annotations") == {
+                  "readOnlyHint": True, "destructiveHint": False,
+                  "idempotentHint": True, "openWorldHint": False,
+              }
+              and set(t.get("_meta", {}).get("chiron", {}))
+              >= {"schema", "contract", "authority", "side_effects", "provenance"}
+              and t["_meta"]["chiron"]["schema"] == TOOL_METADATA_SCHEMA
+              for t in TOOLS))
     check("tools: every tool documents a file path",
           all("path" in json.dumps(t["inputSchema"]) for t in TOOLS
               if t["name"] != "catalog"))

@@ -66,14 +66,22 @@ def main():
                  "output": "The report lists 4200 units shipped and 1400 returned.",
                  "input_paths": [source]}}},
             {"jsonrpc": "2.0", "id": 6, "method": "tools/call",
-             "params": {"name": "catalog", "arguments": {"filter": "attest"}}},
+             "params": {"name": "catalog", "arguments": {}}},
             {"jsonrpc": "2.0", "id": 7, "method": "tools/call",
+             "params": {"name": "collapse", "arguments": {
+                 "surface": [1, 1, 2, 3, 5, 8, 13, 21]}}},
+            {"jsonrpc": "2.0", "id": 8, "method": "tools/call",
+             "params": {"name": "trace", "arguments": {
+                 "surface": "1 1 2 3 5 8 13 21"}}},
+            # This was the former generic dispatcher. It must now fail at the
+            # real stdio boundary, not merely be absent from an in-process map.
+            {"jsonrpc": "2.0", "id": 9, "method": "tools/call",
              "params": {"name": "call", "arguments": {
                  "module": "language", "function": "readability",
                  "text": "A short sentence. Another follows."}}},
-            {"jsonrpc": "2.0", "id": 8, "method": "tools/call",
+            {"jsonrpc": "2.0", "id": 10, "method": "tools/call",
              "params": {"name": "not_a_tool", "arguments": {}}},
-            {"jsonrpc": "2.0", "id": 9, "method": "ping"},
+            {"jsonrpc": "2.0", "id": 11, "method": "ping"},
         ])
 
     gate("server exits cleanly after stdio closes", proc.returncode == 0)
@@ -81,8 +89,19 @@ def main():
     gate("initialize identifies Chiron", init.get("serverInfo", {}).get("name") == "chiron")
     gate("initialize echoes the requested protocol", init.get("protocolVersion") == "2025-06-18")
     tools = {tool.get("name") for tool in response.get(2, {}).get("result", {}).get("tools", [])}
-    gate("tools/list exposes the canonical Chiron surface",
-         tools == {"attest", "analyze", "certify", "catalog", "call"})
+    tool_records = response.get(2, {}).get("result", {}).get("tools", [])
+    gate("tools/list exposes only the reviewed static Chiron surface",
+         tools == {"attest", "analyze", "certify", "collapse", "trace", "catalog"})
+    gate("tools/list makes schema, authority, side effects, and provenance explicit",
+         all(
+             tool.get("annotations") == {
+                 "readOnlyHint": True, "destructiveHint": False,
+                 "idempotentHint": True, "openWorldHint": False,
+             }
+             and set(tool.get("_meta", {}).get("chiron", {}))
+             >= {"schema", "contract", "authority", "side_effects", "provenance"}
+             and tool["_meta"]["chiron"]["schema"] == "chiron.mcp.tool/1"
+             for tool in tool_records))
 
     analyzed = response.get(3, {}).get("result", {}).get("structuredContent", {})
     gate("analyze reads a caller-authorized file with visible source metadata",
@@ -100,14 +119,29 @@ def main():
          "quarterly_report.txt" in attestation.get("candidate_inputs", []))
 
     catalog = response.get(6, {}).get("result", {}).get("structuredContent", {})
-    gate("catalog is a discovered record, not a hardcoded success",
-         catalog.get("schema") == "chiron.catalog/1" and catalog.get("module_count", 0) >= 1)
+    gate("catalog records the reviewed static allowlist and its policy metadata",
+         catalog.get("schema") == "chiron.catalog/2"
+         and catalog.get("reviewed_static_allowlist") is True
+         and {tool.get("name") for tool in catalog.get("tools", [])} == tools
+         and all("metadata" in tool for tool in catalog.get("tools", [])))
 
-    call = response.get(7, {}).get("result", {}).get("structuredContent", {})
-    gate("call dispatches through the canonical module", call.get("status") == "OK")
+    collapsed = response.get(7, {}).get("result", {}).get("structuredContent", {})
+    gate("collapse delegates to the canonical exact engine without float coercion",
+         collapsed.get("schema") == "chiron.mcp.collapse/1"
+         and collapsed.get("verified") is True
+         and "recurrence" in str(collapsed.get("model_class"))
+         and collapsed.get("source", {}).get("kind") == "integer-array")
+
+    trace = response.get(8, {}).get("result", {}).get("structuredContent", {})
+    gate("trace returns the canonical diagnostic record, not a new stamp",
+         trace.get("schema") == "chiron.trace/1"
+         and trace.get("engine_verdict") in ("VERIFIED", "ABSTAINED"))
+
+    gate("the former generic call tool is refused at the stdio boundary",
+         response.get(9, {}).get("error", {}).get("code") == -32602)
     gate("unknown tools return an MCP invalid-params error",
-         response.get(8, {}).get("error", {}).get("code") == -32602)
-    gate("ping receives an empty result", response.get(9, {}).get("result") == {})
+         response.get(10, {}).get("error", {}).get("code") == -32602)
+    gate("ping receives an empty result", response.get(11, {}).get("result") == {})
 
     passed = sum(1 for _, good in checks if good)
     print("\n  %d/%d Chiron MCP transport gates passed" % (passed, len(checks)))

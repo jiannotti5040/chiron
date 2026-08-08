@@ -9,7 +9,7 @@ result rather than a failure.
 
 | Server | Tools | Contract |
 |---|---|---|
-| `chiron` | `attest` · `analyze` · `certify` · `catalog` · `call` | `chiron.attestation/1`, `chiron.full_stack/1` |
+| `chiron` | `attest` · `analyze` · `certify` · `collapse` · `trace` · `catalog` | `chiron.attestation/1`, `chiron.full_stack/1`, `chiron.mcp.collapse/1`, `chiron.trace/1`, `chiron.catalog/2` |
 | `primus` | `certify` · `collapse` · `conjecture` | `primus.certificate/2` |
 
 ## Register
@@ -83,9 +83,10 @@ evidence is the failure this repository was built to refuse.
 
 ## Files are first-class
 
-Every tool that takes `text` also takes `path`, and `attest` takes
-`input_paths`. Pass the two together and never both for the same slot —
-that is an error, not a silent preference.
+The text tools take `text` or `path`; `collapse` and `trace` take `surface`
+or `path`; and `attest` takes `input_paths`. Pass exactly one alternate for a
+slot — that is an error, not a silent preference. Surface arrays accept JSON
+integers only, so caller-provided integers do not cross a float boundary.
 
 Bounds are stated rather than implied: files are read to 2,000,000 bytes,
 text to 400,000 characters, and at most 32 candidate inputs are accepted.
@@ -101,14 +102,18 @@ When a file is truncated, the record says so.
   equals the number of results.
 - `attest` — report `REFUSED` spans to the reader as unattributed. Dropping
   them turns an honest gap into a false clean bill.
-- `catalog` then `call` — reach any individual module. `call` is dispatch
-  only: you get exactly what the module returned, or the exception type it
-  raised, never a substitute value.
+- `collapse` — delegates to the canonical Primus invariant engine; its
+  `verified` field is the engine's held-out exact result, never an MCP guess.
+- `trace` — returns the canonical Chiron diagnostic trace. It explains a
+  result but does not issue a new verification stamp.
+- `catalog` — lists only the reviewed static tool allowlist, including each
+  tool's schema, authority, side-effect posture, and canonical implementation.
+  Arbitrary module/function dispatch is intentionally unavailable.
 
 ## Gates
 
 ```bash
-python3 Chiron/mcp_server.py selftest    # 17/17
-python3 Chiron/tests/test_mcp_server.py  # 11/11, real Chiron stdio session
+python3 Chiron/mcp_server.py selftest    # 20/20
+python3 Chiron/tests/test_mcp_server.py  # 14/14, real Chiron stdio session
 python3 Primus/test_mcp_server.py        # 11/11, live subprocess over stdio
 ```
