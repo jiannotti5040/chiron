@@ -4,6 +4,31 @@ All notable changes to the installable seed. Dates are UTC.
 
 ## Unreleased
 
+- **A narrow `/v1` local mobile-safe HTTP contract now wraps the canonical
+  engine routes.** `GET /v1/capabilities`, `POST /v1/collapse`, and `POST
+  /v1/certify` use the stable `chiron.mobile_api/1` envelope with a
+  server-generated request id, Primus version/certificate-schema metadata,
+  and the unchanged `primus.engine_server/1` result nested inside. Request
+  bodies are strict, inline, bounded JSON with no unknown fields, paths, or
+  dynamic dispatch. `/v1/conjecture` is deliberately absent because its
+  optional proposer may use stochastic search. The legacy routes are
+  unchanged. `test_engine_server.py`: **48/48** real-HTTP gates, including
+  success, schema, closed-route, no-leak, auth, and CORS checks.
+- **Safe retry hints on every `429`.** Rate-limited responses now carry
+  `Retry-After: 60`; a saturated concurrency gate carries `Retry-After: 1`.
+  Both the legacy and v1 routes are live-HTTP gated, and v1 capabilities
+  reports the same conservative integer hints for clients.
+- **CORS is now default-deny and exact-origin opt-in.** The prior wildcard
+  policy let arbitrary browser pages preflight a local endpoint. Set
+  `CHIRON_CORS_ORIGIN` to one exact `http(s)` origin only when a browser UI
+  needs it; native clients do not use CORS. This is not authentication.
+- **Deployment posture corrected.** The versioned route is local and
+  implemented-and-tested, not a public/mobile deployment. `CHIRON_API_TOKEN`
+  remains an optional fixed development bearer, not mobile identity or
+  production authorization. `MOBILE_API.md` and `DEPLOY_ENDPOINT.md` record
+  the required external gateway, TLS, scoped short-lived credentials,
+  rotation/revocation, and edge controls before any such claim is made.
+
 - **`certify` now checks `product of ...` in prose.** `sum`, `total`,
   `average`, and `mean` were all matched in their written-out form;
   `product` was not, so "the product of 3 and 4 is 11" passed through

@@ -5,16 +5,17 @@
 test_engine_server.py — real HTTP against the real endpoint process.
 
 Spawns `python -m primus.engine_server` and drives it over actual sockets:
-verify/refuse round-trips for all three tools, the over-budget refusals,
-rate limiting, concurrency budget, auth, the closed route table (404 / 405
-with Allow), log hygiene, and the no-leak rule (no tracebacks, no source
-paths, ever). Same discipline as test_mcp_server.py: exact expected
-fields, no tolerance.
+verify/refuse round-trips for legacy and versioned routes, the over-budget
+refusals, rate limiting, concurrency budget, auth, the closed route table
+(404 / 405 with Allow), strict v1 schema behavior, CORS opt-in, log hygiene,
+and the no-leak rule (no tracebacks, no source paths, ever). Same discipline
+as test_mcp_server.py: exact expected fields, no tolerance.
 
     python3 test_engine_server.py
 """
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -44,7 +45,16 @@ def free_port():
 
 def start_server(env_extra=None):
     port = free_port()
-    env = dict(os.environ, PYTHONPATH=os.path.join(HERE, "src"), **(env_extra or {}))
+    env = dict(os.environ)
+    # Test each server's security posture explicitly, rather than inheriting a
+    # developer shell's token, origin, or rate-limit configuration.
+    for name in ("CHIRON_API_TOKEN", "CHIRON_RATE_PER_MIN",
+                 "CHIRON_RATE_GLOBAL_PER_MIN", "CHIRON_MAX_CONCURRENCY",
+                 "CHIRON_LOG_HEALTH", "CHIRON_CORS_ORIGIN",
+                 "CHIRON_TRUST_FORWARDED"):
+        env.pop(name, None)
+    env["PYTHONPATH"] = os.path.join(HERE, "src")
+    env.update(env_extra or {})
     proc = subprocess.Popen(
         [sys.executable, "-m", "primus.engine_server", "--port", str(port)],
         env=env, cwd=HERE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -120,6 +130,9 @@ LEAK_MARKERS = ["Traceback", "File \"", ".py", "src/primus", "site-packages",
                 "/opt/", "/Users/", "primus.certify", "primus.engine",
                 "json.decoder", "Unsupported method", "<html", "<!DOCTYPE",
                 "Error response", "self.", "line "]
+MOBILE_SCHEMA = "chiron.mobile_api/1"
+ENGINE_SCHEMA = "primus.engine_server/1"
+CERTIFICATE_SCHEMA = "primus.certificate/2"
 
 
 def leaks_in(obj):
@@ -128,6 +141,19 @@ def leaks_in(obj):
         if isinstance(obj, dict) else obj
     blob = json.dumps(scanned)
     return [m for m in LEAK_MARKERS if m in blob]
+
+
+def is_mobile_envelope(obj, operation):
+    """The v1 response contract, independent of the underlying result."""
+    engine = obj.get("engine") if isinstance(obj, dict) else None
+    return (isinstance(obj, dict) and obj.get("schema") == MOBILE_SCHEMA and
+            obj.get("operation") == operation and
+            isinstance(obj.get("request_id"), str) and
+            re.fullmatch(r"[0-9a-f]{32}", obj["request_id"]) is not None and
+            isinstance(engine, dict) and
+            isinstance(engine.get("primus_version"), str) and
+            engine.get("certificate_schema") == CERTIFICATE_SCHEMA and
+            isinstance(obj.get("result"), dict))
 
 
 def main():
@@ -139,18 +165,25 @@ def main():
              sorted(health["tools"]) == ["certify", "collapse", "conjecture"],
              repr(health))
 
-        # CORS — a browser must be able to preflight and read the response
+        # CORS is deliberately off by default. Native clients do not need it;
+        # an arbitrary web origin must not be able to preflight local POSTs.
         preflight = urllib.request.Request(base + "/collapse", method="OPTIONS")
+        preflight.add_header("Origin", "https://untrusted.example")
         try:
             with urllib.request.urlopen(preflight, timeout=10) as r:
-                pf_code, pf_acao = r.status, r.headers.get("Access-Control-Allow-Origin")
+                pf_code, pf_acao, pf_body = (r.status,
+                    r.headers.get("Access-Control-Allow-Origin"), _decode(r.read()))
         except urllib.error.HTTPError as e:
-            pf_code, pf_acao = e.code, e.headers.get("Access-Control-Allow-Origin")
-        gate("CORS preflight (OPTIONS) -> 204 + Allow-Origin *",
-             pf_code == 204 and pf_acao == "*", f"{pf_code} {pf_acao}")
-        with urllib.request.urlopen(base + "/health", timeout=10) as r:
+            pf_code, pf_acao, pf_body = (e.code,
+                e.headers.get("Access-Control-Allow-Origin"), _decode(e.read()))
+        gate("CORS default denies an unconfigured browser origin",
+             pf_code == 403 and pf_acao is None and
+             pf_body.get("status") == "REFUSED", f"{pf_code} {pf_acao} {pf_body!r}")
+        health_request = urllib.request.Request(base + "/health")
+        health_request.add_header("Origin", "https://untrusted.example")
+        with urllib.request.urlopen(health_request, timeout=10) as r:
             acao = r.headers.get("Access-Control-Allow-Origin")
-        gate("CORS Allow-Origin header on normal responses", acao == "*", repr(acao))
+        gate("normal responses never emit wildcard CORS", acao is None, repr(acao))
 
         code, r = call(base, "/collapse", {"surface": "1 1 2 3 5 8 13 21 34 55 89 144"})
         gate("collapse: fibonacci VERIFIED via string surface",
@@ -165,6 +198,91 @@ def main():
         c = r["certificate"]["counts"]
         gate("certify: refuted and verified counted exactly",
              code == 200 and c["refuted"] == 1 and c["verified"] == 2, repr(c))
+
+        # ---- v1 mobile-safe contract: only canonical inline operations ---
+        code, caps = call(base, "/v1/capabilities")
+        capability_ops = caps.get("result", {}).get("operations", [])
+        gate("v1 capabilities has the stable envelope and only two operations",
+             code == 200 and is_mobile_envelope(caps, "capabilities") and
+             [item.get("operation") for item in capability_ops] ==
+             ["collapse", "certify"] and
+             caps["result"].get("content_type") == "application/json" and
+             caps["result"].get("retry_after_seconds") ==
+             {"rate_limited": 60, "busy": 1} and
+             caps["result"].get("request_fields") == "unknown fields are refused",
+             repr(caps)[:500])
+
+        code, mobile_collapse = call(
+            base, "/v1/collapse",
+            {"surface": "1 1 2 3 5 8 13 21 34 55 89 144"})
+        gate("v1 collapse wraps the canonical collapse result without a new engine",
+             code == 200 and is_mobile_envelope(mobile_collapse, "collapse") and
+             mobile_collapse["result"].get("schema") == ENGINE_SCHEMA and
+             mobile_collapse["result"].get("tool") == "collapse" and
+             mobile_collapse["result"].get("certificate", {}).get("verified") is True,
+             repr(mobile_collapse)[:500])
+
+        code, mobile_certify = call(base, "/v1/certify", {"text": "2+2=5"})
+        gate("v1 certify wraps the canonical certificate schema",
+             code == 200 and is_mobile_envelope(mobile_certify, "certify") and
+             mobile_certify["request_id"] != mobile_collapse["request_id"] and
+             mobile_certify["result"].get("schema") == ENGINE_SCHEMA and
+             mobile_certify["result"].get("tool") == "certify" and
+             mobile_certify["result"].get("certificate", {}).get("schema") ==
+             CERTIFICATE_SCHEMA and
+             mobile_certify["result"]["certificate"]["counts"]["refuted"] == 1,
+             repr(mobile_certify)[:500])
+
+        canary = "v1-raw-input-canary-71a4"
+        code, mobile_bad_fields = call(
+            base, "/v1/certify", {"text": canary, "unrecognized": canary})
+        mobile_bad_blob = json.dumps(mobile_bad_fields)
+        gate("v1 rejects unknown request fields without reflecting caller input",
+             code == 400 and is_mobile_envelope(mobile_bad_fields, "certify") and
+             mobile_bad_fields["result"].get("status") == "REFUSED" and
+             canary not in mobile_bad_blob and "Traceback" not in mobile_bad_blob and
+             "src/primus" not in mobile_bad_blob,
+             repr(mobile_bad_fields)[:500])
+
+        code, mobile_bad_shape = call(base, "/v1/collapse", {"surface": [1, True, 3]})
+        gate("v1 rejects non-integer surface arrays before the engine",
+             code == 400 and is_mobile_envelope(mobile_bad_shape, "collapse") and
+             mobile_bad_shape["result"].get("status") == "REFUSED",
+             repr(mobile_bad_shape)[:500])
+
+        code, mobile_bad_media = call(
+            base, "/v1/certify", {"text": "2+2=4"},
+            headers={"Content-Type": "text/plain"})
+        gate("v1 rejects a non-JSON Content-Type before parsing the body",
+             code == 415 and is_mobile_envelope(mobile_bad_media, "certify") and
+             mobile_bad_media["result"].get("status") == "REFUSED" and
+             mobile_bad_media["result"].get("error") == "unsupported media type",
+             repr(mobile_bad_media)[:500])
+
+        code, mobile_bad_json = call(
+            base, "/v1/certify", raw=(b'{"text":"' +
+                                         canary.encode() + b'"'))
+        mobile_bad_json_blob = json.dumps(mobile_bad_json)
+        gate("v1 malformed JSON remains a versioned no-leak refusal",
+             code == 400 and is_mobile_envelope(mobile_bad_json, "certify") and
+             mobile_bad_json["result"].get("status") == "REFUSED" and
+             canary not in mobile_bad_json_blob and
+             "Traceback" not in mobile_bad_json_blob and
+             "src/primus" not in mobile_bad_json_blob,
+             repr(mobile_bad_json)[:500])
+
+        code, mobile_unknown = call(base, "/v1/conjecture", {"terms": [1, 2, 3]})
+        gate("v1 keeps conjecture closed and returns a versioned 404 refusal",
+             code == 404 and is_mobile_envelope(mobile_unknown, "unknown") and
+             mobile_unknown["result"].get("error") == "not found",
+             repr(mobile_unknown)[:500])
+
+        code, hdrs, mobile_wrong_method = call_ex(base, "/v1/collapse", method="GET")
+        gate("v1 wrong method is a versioned 405 with Allow: POST",
+             code == 405 and hdrs.get("Allow") == "POST" and
+             is_mobile_envelope(mobile_wrong_method, "collapse") and
+             mobile_wrong_method["result"].get("allow") == ["POST"],
+             repr(mobile_wrong_method)[:500])
 
         code, r = call(base, "/conjecture", {"terms": [1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78]})
         gate("conjecture: triangulars stamped by the exact gate",
@@ -220,12 +338,14 @@ def main():
         gate("unmapped path -> 404 'not found' + valid_routes (no catch-all)",
              code == 404 and r.get("error") == "not found" and
              sorted(r.get("valid_routes") or []) == ["GET /", "GET /health",
+                                           "GET /v1/capabilities",
                                            "POST /certify", "POST /collapse",
-                                           "POST /conjecture"], f"{code} {r!r}")
+                                           "POST /conjecture", "POST /v1/certify",
+                                           "POST /v1/collapse"], f"{code} {r!r}")
 
         code, r = call(base, "/")
         gate("GET / -> 200 short banner listing the routes",
-             code == 200 and len(r.get("routes") or []) == 5 and
+             code == 200 and len(r.get("routes") or []) == 8 and
              r.get("service") == "chiron-engine", f"{code} {repr(r)[:200]}")
 
         code, hdrs, r = call_ex(base, "/certify", method="GET")
@@ -304,6 +424,50 @@ def main():
     finally:
         proc.kill()
 
+    bad_cors_env = dict(os.environ)
+    bad_cors_env["PYTHONPATH"] = os.path.join(HERE, "src")
+    bad_cors_env["CHIRON_CORS_ORIGIN"] = "*"
+    bad_cors = subprocess.run(
+        [sys.executable, "-m", "primus.engine_server", "--port", str(free_port())],
+        env=bad_cors_env, cwd=HERE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        timeout=15)
+    gate("CORS configuration rejects a wildcard rather than echoing it",
+         bad_cors.returncode != 0 and
+         "one exact http(s) origin" in bad_cors.stderr.decode("utf-8", "replace"),
+         repr(bad_cors.stderr.decode("utf-8", "replace")[-300:]))
+
+    # An owner can opt a single browser UI into CORS, but no wildcard or
+    # reflective origin is ever emitted. This is deliberately separate from
+    # authentication: browser access is not a mobile auth system.
+    origin = "https://app.example.test"
+    proc, base = start_server({"CHIRON_RATE_PER_MIN": "1000",
+                               "CHIRON_CORS_ORIGIN": origin})
+    try:
+        allowed = urllib.request.Request(base + "/v1/capabilities")
+        allowed.add_header("Origin", origin)
+        with urllib.request.urlopen(allowed, timeout=10) as response:
+            allowed_code = response.status
+            allowed_origin = response.headers.get("Access-Control-Allow-Origin")
+            allowed_vary = response.headers.get("Vary")
+        denied = urllib.request.Request(base + "/v1/capabilities")
+        denied.add_header("Origin", "https://other.example.test")
+        with urllib.request.urlopen(denied, timeout=10) as response:
+            denied_code = response.status
+            denied_origin = response.headers.get("Access-Control-Allow-Origin")
+        preflight = urllib.request.Request(base + "/v1/certify", method="OPTIONS")
+        preflight.add_header("Origin", origin)
+        with urllib.request.urlopen(preflight, timeout=10) as response:
+            preflight_code = response.status
+            preflight_origin = response.headers.get("Access-Control-Allow-Origin")
+        gate("CORS opt-in emits only the configured exact origin",
+             allowed_code == 200 and allowed_origin == origin and allowed_vary == "Origin" and
+             denied_code == 200 and denied_origin is None and
+             preflight_code == 204 and preflight_origin == origin,
+             f"allowed={allowed_code}/{allowed_origin}/{allowed_vary} "
+             f"denied={denied_code}/{denied_origin} preflight={preflight_code}/{preflight_origin}")
+    finally:
+        proc.kill()
+
     # rate limit, per tool: one server, three distinct forwarded client IPs so
     # each tool gets its own per-IP bucket. Budget 1/min -> the 2nd call trips.
     proc, base = start_server({"CHIRON_RATE_PER_MIN": "1",
@@ -317,13 +481,45 @@ def main():
         for path, body, ip in tools:
             h = {"X-Forwarded-For": ip}
             first = call(base, path, body, headers=h)[0]
-            code, r = call(base, path, body, headers=h)
-            results[path] = (first, code)
+            code, hdrs, r = call_ex(base, path, body, headers=h)
+            results[path] = (first, code, hdrs.get("Retry-After"))
             if code == 429 and (leaks_in(r) or r.get("status") != "REFUSED"):
                 dirty[path] = r
-        gate("per-IP rate limit trips on ALL THREE tools (429 + clean JSON)",
-             all(v == (200, 429) for v in results.values()) and not dirty,
+        gate("per-IP rate limit trips on ALL THREE tools (429 + Retry-After)",
+             all(v == (200, 429, "60") for v in results.values()) and not dirty,
              f"{results!r} dirty={dirty!r}")
+        v1_headers = {"X-Forwarded-For": "203.0.113.20"}
+        first = call(base, "/v1/certify", {"text": "2+2=4"},
+                     headers=v1_headers)[0]
+        code, hdrs, v1_limited = call_ex(base, "/v1/certify", {"text": "2+2=4"},
+                                         headers=v1_headers)
+        gate("v1 rate limit keeps its envelope and Retry-After: 60",
+             first == 200 and code == 429 and hdrs.get("Retry-After") == "60" and
+             is_mobile_envelope(v1_limited, "certify") and
+             v1_limited["result"].get("status") == "REFUSED" and
+             not leaks_in({k: v for k, v in v1_limited.items() if k != "result"}) and
+             "Traceback" not in json.dumps(v1_limited), repr(v1_limited)[:500])
+    finally:
+        proc.kill()
+
+    # A zero-sized gate gives a deterministic real-HTTP exercise of the busy
+    # path. It does not change engine semantics; it verifies both contracts
+    # tell a client to retry quickly when no execution slot is available.
+    proc, base = start_server({"CHIRON_RATE_PER_MIN": "1000",
+                               "CHIRON_MAX_CONCURRENCY": "0"})
+    try:
+        code, legacy_hdrs, legacy_busy = call_ex(
+            base, "/collapse", {"surface": "1 1 2 3 5 8 13 21"})
+        code_v1, v1_hdrs, v1_busy = call_ex(
+            base, "/v1/collapse", {"surface": "1 1 2 3 5 8 13 21"})
+        gate("busy 429 gives Retry-After: 1 on legacy and v1 routes",
+             code == 429 and legacy_hdrs.get("Retry-After") == "1" and
+             legacy_busy.get("status") == "REFUSED" and
+             code_v1 == 429 and v1_hdrs.get("Retry-After") == "1" and
+             is_mobile_envelope(v1_busy, "collapse") and
+             v1_busy["result"].get("status") == "REFUSED",
+             f"legacy={code}/{legacy_hdrs.get('Retry-After')}/{legacy_busy!r} "
+             f"v1={code_v1}/{v1_hdrs.get('Retry-After')}/{v1_busy!r}")
     finally:
         proc.kill()
 
@@ -366,6 +562,16 @@ def main():
                        headers={"Authorization": "Bearer sekrit"})
         gate("auth on: correct bearer -> engine answers (geometric VERIFIED)",
              code == 200 and r["certificate"]["verified"] is True, repr(r)[:200])
+        code, r = call(base, "/v1/certify", {"text": "2+2=4"})
+        gate("auth on: v1 POST without token is a versioned 401 refusal",
+             code == 401 and is_mobile_envelope(r, "certify") and
+             r["result"].get("status") == "REFUSED", repr(r)[:500])
+        code, r = call(base, "/v1/certify", {"text": "2+2=4"},
+                       headers={"Authorization": "Bearer sekrit"})
+        gate("auth on: v1 POST with the static development bearer answers",
+             code == 200 and is_mobile_envelope(r, "certify") and
+             r["result"].get("certificate", {}).get("counts", {}).get("verified") == 1,
+             repr(r)[:500])
         code, _ = call(base, "/health")
         gate("auth on: /health stays open", code == 200)
     finally:
