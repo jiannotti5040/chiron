@@ -29,6 +29,7 @@ import json
 import os
 import sys
 import time
+import hashlib
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 LEDGER = os.path.join(_HERE, "artifacts", "run_ledger.jsonl")
@@ -64,8 +65,25 @@ def incarnation() -> str:
     return "fold" if "chiron_monolith" in os.path.basename(probe) else "spine"
 
 
+def redact_argv(argv):
+    """Return bounded, non-reversible argument witnesses for audit logs.
+
+    The ledger is useful for answering *which operation ran*, but it is not a
+    place to copy a user's document, prompt, or provider response.  Callers
+    that receive user-controlled arguments opt into this representation: a
+    short content hash permits correlation with a supplied value while the
+    length preserves operational diagnostics.
+    """
+    out = []
+    for arg in (argv or []):
+        value = str(arg)
+        digest = hashlib.sha256(value.encode("utf-8", "surrogatepass")).hexdigest()[:16]
+        out.append(f"sha256:{digest} chars:{len(value)}")
+    return out[:12]
+
+
 def record(engine, argv=None, ok=None, verdict="", seconds=None,
-           certificate=None, source="console", path=None):
+           certificate=None, source="console", path=None, redact=False):
     """Append one record. Returns the record, or None if recording failed.
     Never raises — the witness must not break the act it witnesses."""
     path = path or LEDGER
@@ -74,7 +92,8 @@ def record(engine, argv=None, ok=None, verdict="", seconds=None,
             "t": round(time.time(), 3),
             "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "engine": str(engine)[:80],
-            "argv": [str(a)[:120] for a in (argv or [])][:12],
+            "argv": (redact_argv(argv) if redact
+                     else [str(a)[:120] for a in (argv or [])][:12]),
             "ok": (None if ok is None else bool(ok)),
             "verdict": str(verdict)[:200],
             "seconds": (None if seconds is None else round(float(seconds), 3)),
@@ -155,6 +174,11 @@ def _selftest():
         ok("torn line is skipped, not fatal", len(read(10, path=lp)) == 2)
         r3 = record("chiron", None, ok=False, verdict="exit 1", path=lp)
         ok("failures are first-class records", r3 is not None and read(1, path=lp)[0]["ok"] is False)
+        secret = "never-copy-this-user-text"
+        r4 = record("cli", [secret], ok=True, path=lp, redact=True)
+        rendered = json.dumps(r4, sort_keys=True)
+        ok("redacted argv preserves a witness without storing user text",
+           secret not in rendered and r4["argv"] == redact_argv([secret]))
         ok("recording never raises on a bad path", record("x", path=os.path.join(td, "no", "dir", "deep",
            "x" * 300, "l.jsonl")) is None or True)
         ok("read of a missing ledger is empty, not an error", read(5, path=os.path.join(td, "absent")) == [])
