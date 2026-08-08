@@ -143,6 +143,22 @@ https://aistudio.google.com/apikey); everything else runs with no key.
 | `president_grow.py serve` | 8766 | LLM-assisted growth (propose → verify) |
 | `heartbeat.py serve` | — | the autonomous pulse — a signed vault certificate every beat (no socket) |
 
+### Local browser origin policy
+
+The Run and Chat services bind to loopback and, by default, grant browser CORS only to the
+documented dashboard origin `http://127.0.0.1:8765`. To use a different local dashboard, set an
+explicit comma-separated allowlist before starting the services:
+
+```bash
+export CHIRON_CORS_ORIGINS="http://127.0.0.1:8765,http://localhost:8765"
+python3 console_server.py serve
+```
+
+Only `http`/`https` loopback origins are accepted; an empty value disables cross-origin browser
+access, and arbitrary web origins receive no CORS permission (their preflights are rejected).
+CORS is a browser policy, **not authentication**: keep these services bound to loopback and do not
+expose their ports through a proxy or public network.
+
 ## 6. Verify and benchmark
 
 ```bash

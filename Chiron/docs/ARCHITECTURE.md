@@ -106,6 +106,7 @@ costing the properties above (`python3 build.py verify-all`).
 | `vault.py` | one command that starts every local service and prints one URL (Ctrl-C stops all) |
 | `console_server.py` | the launcher service — run any function from the dashboard Run tab (port 8768) |
 | `assistant_server.py` | the natural-language assistant — intent → real engine actions (Chat tab, port 8769) |
+| `local_cors.py` | strict loopback-only browser-origin allowlist shared by the Run and Chat services; CORS is not authentication |
 | `grow_control.py` | start / stop / point the continuous grower from the dashboard (Feed tab, port 8767) |
 | `run_ledger.py` | the vault's operational memory — every engine invocation appended as one append-only, crash-healing, replay-exact record (`artifacts/run_ledger.jsonl`) |
 | `heartbeat.py` | the autonomous pulse — each beat reads one own organ inward, grows outward, runs a rotating battery gate, and emits the signed **vault certificate**; never stamps unverified, never edits source, never flatters a failed beat |

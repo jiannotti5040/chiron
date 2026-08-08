@@ -19,6 +19,9 @@ catalog.
     python3 console_server.py selftest
 
 Status: implemented & tested.
+
+Browser requests from the documented local dashboard are explicitly allowlisted;
+this loopback service never uses a wildcard CORS policy.
 """
 import os
 import sys
@@ -28,6 +31,8 @@ import time
 import shlex
 import argparse
 import subprocess
+
+import local_cors
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -198,18 +203,21 @@ h+='</div>'}document.getElementById('cat').innerHTML=h}
 load()</script></body></html>"""
 
 
-def serve(port=8768):
+def make_server(port=8768, cors_origins=None):
+    """Create the loopback server without starting it (also used by HTTP contract tests)."""
     import http.server
+    origins = (local_cors.configured_origins() if cors_origins is None
+               else local_cors.normalize_origins(cors_origins))
 
     class H(http.server.BaseHTTPRequestHandler):
-        def _send(self, code, body, ctype="application/json"):
+        def _send(self, code, body, ctype="application/json", *, preflight=False):
             data = body.encode() if isinstance(body, str) else body
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            for name, value in local_cors.headers_for(
+                    self.headers.get("Origin"), preflight=preflight, origins=origins):
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(data)
 
@@ -217,7 +225,10 @@ def serve(port=8768):
             pass
 
         def do_OPTIONS(self):
-            self._send(204, b"")
+            origin = self.headers.get("Origin")
+            if origin and not local_cors.allowed_origin(origin, origins):
+                return self._send(403, json.dumps({"error": "CORS origin not allowed"}))
+            self._send(204, b"", preflight=bool(origin))
 
         def do_GET(self):
             if self.path in ("/", "/run", "/console"):
@@ -234,7 +245,11 @@ def serve(port=8768):
                                                        body.get("args", ""))))
             self._send(404, json.dumps({"error": "not found"}))
 
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+    return http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+
+
+def serve(port=8768):
+    httpd = make_server(port)
     print(f"console on http://127.0.0.1:{port}/run")
     try:
         httpd.serve_forever()

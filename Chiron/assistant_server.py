@@ -19,6 +19,9 @@ it needs a free key (GROW_LLM_API_KEY). Without a key it says so and stays out o
     python3 assistant_server.py selftest   # offline (mock LLM, real engine)
 
 Status: implemented & tested offline (mock LLM + real engine actions).
+
+Browser requests from the documented local dashboard are explicitly allowlisted;
+this loopback service never uses a wildcard CORS policy.
 """
 import os
 import re
@@ -30,6 +33,7 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _HERE)
 import president_grow as pg          # noqa: E402  the free-LLM client
 import console_server as cs          # noqa: E402  the allowlisted function runner
+import local_cors                    # noqa: E402  strict browser-origin policy
 
 CONGRESS = os.path.join(_HERE, "chiron_memory.json")
 
@@ -199,17 +203,21 @@ ph.innerHTML=h;hist.push({role:'assistant',content:r.reply||''})}catch(e){ph.inn
 </script></body></html>"""
 
 
-def serve(port=8769):
+def make_server(port=8769, cors_origins=None):
+    """Create the loopback server without starting it (also used by HTTP contract tests)."""
     import http.server
+    origins = (local_cors.configured_origins() if cors_origins is None
+               else local_cors.normalize_origins(cors_origins))
+
     class H(http.server.BaseHTTPRequestHandler):
-        def _send(self, code, body, ctype="application/json"):
+        def _send(self, code, body, ctype="application/json", *, preflight=False):
             data = body.encode() if isinstance(body, str) else body
             self.send_response(code)
             self.send_header("Content-Type", ctype)
             self.send_header("Content-Length", str(len(data)))
-            self.send_header("Access-Control-Allow-Origin", "*")
-            self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-            self.send_header("Access-Control-Allow-Headers", "Content-Type")
+            for name, value in local_cors.headers_for(
+                    self.headers.get("Origin"), preflight=preflight, origins=origins):
+                self.send_header(name, value)
             self.end_headers()
             self.wfile.write(data)
 
@@ -217,7 +225,10 @@ def serve(port=8769):
             pass
 
         def do_OPTIONS(self):
-            self._send(204, b"")
+            origin = self.headers.get("Origin")
+            if origin and not local_cors.allowed_origin(origin, origins):
+                return self._send(403, json.dumps({"error": "CORS origin not allowed"}))
+            self._send(204, b"", preflight=bool(origin))
 
         def do_GET(self):
             if self.path in ("/", "/chat"):
@@ -308,7 +319,11 @@ def serve(port=8769):
                                                     "providers": avail, "chain": llm.chain()}))
             self._send(404, json.dumps({"error": "not found"}))
 
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+    return http.server.ThreadingHTTPServer(("127.0.0.1", port), H)
+
+
+def serve(port=8769):
+    httpd = make_server(port)
     cfg = pg.LLMConfig.from_env()
     print(f"assistant on http://127.0.0.1:{port}/chat  (enabled={cfg.enabled} provider={cfg.provider})")
     try:
