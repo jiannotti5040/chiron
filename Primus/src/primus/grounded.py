@@ -70,11 +70,20 @@ def normalise_subject(subject: str) -> str:
     start matching subjects the caller never wrote, which is the failure mode
     this whole module exists to avoid.
 
+    Leading articles are dropped for the same reason, and that one is safe in
+    both directions: no two distinct subjects differ only by "the".
+
     Folding need not be linguistically correct, only *consistent*: "readiness"
     folds to "readines" on both sides, so it still matches itself. What must
     never happen is two different subjects folding together.
     """
     words = _WORD.findall(str(subject).lower())
+    # A leading article is not part of a subject. "The 2nd Brigade" and
+    # "2nd Brigade" are the same thing, and refusing over one is the kind of
+    # uselessness that makes an honest gate look broken. Safe to strip: it
+    # cannot merge two subjects that were otherwise distinct.
+    while words and words[0] in ("the", "a", "an"):
+        words = words[1:]
     out = []
     for word in words:
         for suffix in _PLURAL:
@@ -338,6 +347,8 @@ def _selftest() -> int:
 
     gate("plural and possessive fold to the same key",
          normalise_subject("Vehicles'") == normalise_subject("vehicle"))
+    gate("a leading article does not prevent a match",
+         normalise_subject("The 2nd Brigade") == normalise_subject("2nd Brigade"))
     gate("a near-miss subject does not match",
          statuses("Vehicle readiness was 74%.", facts) == ["REFUSED"])
 
