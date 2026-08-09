@@ -173,6 +173,8 @@ def cmd_test(args):
          [PY, _script("service.py"), "--selftest"], None),
         ("exact relations across columns + anomaly localisation",
          [PY, os.path.join(PRIMUS, "src", "primus", "relate.py"), "selftest"], None),
+        ("inverse solving + transformation discovery",
+         [PY, os.path.join(PRIMUS, "src", "primus", "invert.py"), "selftest"], None),
         ("falsifiers + experiment design (what would overturn this)",
          [PY, _script("falsify.py"), "selftest"], None),
         ("grounded claims (exact against supplied facts, or refuse)",
