@@ -32,6 +32,20 @@ python3 bin/chiron parity
 cd App && swift test --scratch-path /tmp/chiron-build
 ```
 
+**Run them one at a time.** The full battery regenerates
+`Chiron/artifacts/*/latest.json` while other gates read them, so racing it
+against a Swift build or the Primus gates produces failures that do not
+reproduce. `unit: chiron` and `CLI contract` failing together, while both pass
+individually, is that race and not a regression.
+
+**The `--scratch-path` is load-bearing, not a preference.** This checkout lives
+under an iCloud-synced Desktop, and the file provider stamps
+`com.apple.FinderInfo` onto the `.xctest` bundles faster than it can be
+stripped. `codesign` then rejects them — "resource fork, Finder information, or
+similar detritus not allowed" — and `swift test` fails with `error: fatalError`
+that looks like a code fault and is not. Build outside the synced tree. The
+same applies to `swift build` when it produces signed products.
+
 A failing gate is information: find the root cause. Never widen a tolerance or
 mute a gate to obtain green.
 
@@ -48,6 +62,22 @@ mute a gate to obtain green.
   `SEED_AHEAD_LEDGER`, with a dated reason, or the build fails by design.
 - Do not build a parallel verifier, dashboard, or copy of an existing engine.
   Grow outward through users, external validation, and exactness.
+- **One dispatch.** `Chiron/mcp_server.py:_IMPL` is the single place a tool name
+  becomes a call. `bin/chiron`'s reading verbs (`analyze`, `attest`, `collapse`,
+  `trace`) and every MCP client go through it, and `engines` reads the same
+  `TOOLS` table the server advertises. Adding a surface means routing it there,
+  never reimplementing the operation beside it.
+- `chiron mcp` must never print to stdout. Stdio MCP requires stdout to carry
+  framed JSON-RPC and nothing else; the `[chiron] $ …` banner every other verb
+  prints goes to stderr for this one, and the process is replaced with `execv`.
+- Model output is a proposal, never an authority. Anything a model emits into a
+  typed schema must be a closed symbol the app can render, not free text the UI
+  displays verbatim — a `@Guide` sentence asking a model not to judge is not a
+  boundary. `ProposedCheckKind` is the pattern.
+- Attribution and checkability are independent. A span may trace to a source
+  with cosine 1.00 and still be `REFUSED` because no exact checker covers its
+  domain. Never render such a span as unattributed, and never report any
+  probability that text is machine-written.
 - Never `git add -A` at the vault root: `Jacob Dylan Iannotti/` is deliberately
   untracked and contains an embedded Git repository.
 - Label work plainly as implemented-and-tested, prototype, bounded evidence,
