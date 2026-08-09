@@ -614,13 +614,35 @@ public struct LocalServiceClient: Sendable {
         }
     }
 
+    /// Accept both server shapes.
+    ///
+    /// `primus.engine_server` wraps a certificate as
+    /// `{schema, tool, certificate}`. `chiron.service` returns the engine
+    /// record directly, because it serves twelve operations whose records
+    /// have no common wrapper. Requiring the wrapper made the app's Certify
+    /// screen fail against the newer server with "did not match the expected
+    /// Chiron v1 contract" — a true statement about a contract that should
+    /// never have been singular.
+    ///
+    /// Detection is by shape, not by configuration: a wrapper is a wrapper,
+    /// and a certificate that arrives as itself is recognised by carrying its
+    /// own schema rather than by being asked which server sent it.
     private func certificate(in response: LocalServiceResponse,
                              operation: LocalServiceOperation) throws -> [String: JSONValue] {
-        try validateEngineResult(response.result, operation: operation)
-        guard let object = response.result.objectValue,
-              let certificate = object["certificate"]?.objectValue
-        else { throw LocalServiceClientError.malformedEnvelope }
-        return certificate
+        guard let object = response.result.objectValue else {
+            throw LocalServiceClientError.malformedEnvelope
+        }
+        if object["tool"] != nil || object["certificate"] != nil {
+            try validateEngineResult(response.result, operation: operation)
+            guard let certificate = object["certificate"]?.objectValue else {
+                throw LocalServiceClientError.malformedEnvelope
+            }
+            return certificate
+        }
+        guard object["schema"]?.stringValue != nil else {
+            throw LocalServiceClientError.malformedEnvelope
+        }
+        return object
     }
 
     private static func transportFailure(for error: URLError) -> LocalServiceTransportFailure {

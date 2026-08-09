@@ -74,6 +74,7 @@ VAULT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CHIRON = os.path.join(VAULT, "Chiron")
 PRIMUS = os.path.join(VAULT, "Primus")
 MONO_DIR = os.path.join(VAULT, "Chiron Monolith")
+PRIMUS_SRC = os.path.join(PRIMUS, "src")
 MONOLITH = os.path.join(MONO_DIR, "chiron_monolith.py")
 PY = sys.executable or "python3"
 
@@ -170,6 +171,8 @@ def cmd_test(args):
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
         ("full-surface HTTP service (real socket, closed routes)",
          [PY, _script("service.py"), "--selftest"], None),
+        ("exact relations across columns + anomaly localisation",
+         [PY, os.path.join(PRIMUS, "src", "primus", "relate.py"), "selftest"], None),
         ("falsifiers + experiment design (what would overturn this)",
          [PY, _script("falsify.py"), "selftest"], None),
         ("grounded claims (exact against supplied facts, or refuse)",
