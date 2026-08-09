@@ -90,8 +90,11 @@ def main():
     gate("initialize echoes the requested protocol", init.get("protocolVersion") == "2025-06-18")
     tools = {tool.get("name") for tool in response.get(2, {}).get("result", {}).get("tools", [])}
     tool_records = response.get(2, {}).get("result", {}).get("tools", [])
+    # Pinned deliberately: the allowlist is API, so widening it is an edit here
+    # and never a silent expansion.
     gate("tools/list exposes only the reviewed static Chiron surface",
-         tools == {"attest", "analyze", "certify", "collapse", "trace", "catalog"})
+         tools == {"attest", "analyze", "certify", "collapse", "trace",
+                   "solve", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {
@@ -136,6 +139,25 @@ def main():
     gate("trace returns the canonical diagnostic record, not a new stamp",
          trace.get("schema") == "chiron.trace/1"
          and trace.get("engine_verdict") in ("VERIFIED", "ABSTAINED"))
+
+    # solve composes planner.run_campaign rather than solving anything itself.
+    # The property that matters is the one the planner enforces: it does not
+    # perform an irreversible step, it escalates it. A campaign that reported
+    # COMPLETED after reaching `publish` would mean the sandbox had leaked.
+    import json as _json
+    import sys as _sys
+    import os as _os
+    _sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+    from mcp_server import _tool_solve
+    solved = _json.loads(_tool_solve({"surface": "1 1 2 3 5 8 13 21"})["content"][0]["text"])
+    irreversible = [s for s in solved.get("steps", []) if s.get("irreversible")]
+    gate("solve escalates an irreversible step instead of performing it",
+         solved.get("schema") == "chiron.solve/1"
+         and solved.get("status") == "ESCALATED"
+         and irreversible
+         and all("escalated" in str(s.get("verdict", "")).lower() for s in irreversible))
+    gate("solve reports its epistemic status rather than implying completeness",
+         solved.get("epistemic_status") == "prototype")
 
     gate("the former generic call tool is refused at the stdio boundary",
          response.get(9, {}).get("error", {}).get("code") == -32602)

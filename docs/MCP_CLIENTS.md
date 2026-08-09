@@ -16,7 +16,23 @@ module dispatch, by design.
 | `certify` | `primus.certificate/2` | gate checkable claims; pass = `counts.refuted == 0` |
 | `collapse` | — | the canonical exact invariant, or an honest refusal |
 | `trace` | `chiron.trace/1` | why a surface did or did not collapse; never stamps |
+| `solve` | `chiron.solve/1` | a goal-directed campaign: recover, prove, record, escalate |
 | `catalog` | `chiron.catalog/2` | the reviewed static allowlist and its authority metadata |
+
+`solve` is worth reading the disposition of rather than the result. It composes
+`planner.run_campaign` and returns that campaign's own status:
+
+- `COMPLETED` — the plan finished inside the reversible sandbox.
+- `HALTED_ON_REFUSAL` — a step could not be verified, so the campaign stopped
+  rather than advancing on an unproven premise.
+- `ESCALATED` — the plan reached a step that leaves the sandbox (publish,
+  network, spend, deploy) and **declined to take it**.
+- `BUDGET_EXHAUSTED` / `INVARIANT_VIOLATED` — bounds reported, never exceeded.
+
+None of these is an error. `ESCALATED` in particular is the planner working:
+it means an irreversible action was identified and handed back rather than
+performed. Its epistemic status is `prototype` and the tool says so in every
+response.
 
 Two properties worth knowing before you wire this in. A **refusal is a
 result**, not an error — `REFUSED` means no exact checker covers the claim, and

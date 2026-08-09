@@ -28,6 +28,10 @@ Daily verbs:
     chiron attest <input> --input=<file> [--input=...]
                                which supplied source produced each span;
                                with no --input the answer is REFUSED, by design
+    chiron solve <input> [--intent="..."]
+                               goal-directed campaign: recover, prove, record;
+                               HALTs on an unproven step, ESCALATEs an
+                               irreversible one — both are results (prototype)
     chiron engines [query]     the reviewed static allowlist an agent may invoke
     chiron mcp                 serve the vault over stdio to Claude Code / Codex
 
@@ -334,6 +338,19 @@ def _render(name, record):
                 lines.append(f"      novel words ({len(novel)}): "
                              + ", ".join(novel[:12]))
         return "\n".join(lines)
+    if name == "solve":
+        lines = [f"[chiron] solve · {record.get('status')} · "
+                 f"{record.get('steps_used')} step(s) · "
+                 f"{record.get('epistemic_status')}"]
+        for st in (record.get("steps") or []):
+            mark = "ok " if st.get("ok") else "NO "
+            irr = " [irreversible — not performed]" if st.get("irreversible") else ""
+            lines.append(f"  {mark}{st.get('step'):<16}{str(st.get('verdict'))[:72]}{irr}")
+        for law in (record.get("laws") or []):
+            lines.append(f"  law: {law.get('model_class')} "
+                         f"verified={law.get('verified')} "
+                         f"predicts {law.get('predicts_next')}")
+        return "\n".join(lines)
     if name in ("collapse", "trace"):
         return json.dumps({k: record.get(k) for k in
                            ("schema", "verified", "engine_verdict",
@@ -396,6 +413,26 @@ def cmd_trace(args):
     if text is None:
         return 2
     return _tool_call("trace", {"surface": text}, "--json" in flags)
+
+
+def cmd_solve(args):
+    """Run a goal-directed campaign: recover, prove, record, escalate.
+
+    Composes `planner.run_campaign` — it does not re-solve anything. A step
+    that cannot be verified HALTS rather than advancing on an unproven
+    premise, and a step that leaves the reversible sandbox is ESCALATED rather
+    than performed. Both are successful outcomes. Epistemic status: prototype.
+    """
+    intents = [a.split("=", 1)[1] for a in args if a.startswith("--intent=")]
+    rest = [a for a in args if not a.startswith("--intent=")]
+    text, flags = _text_argv(rest, "solve", ("--json",))
+    if text is None:
+        print("       (optionally --intent=\"what the campaign is for\")")
+        return 2
+    payload = {"surface": text}
+    if intents:
+        payload["intent"] = intents[0]
+    return _tool_call("solve", payload, "--json" in flags)
 
 
 def cmd_engines(args):
@@ -562,7 +599,8 @@ COMMANDS = {
     "benchmark": cmd_benchmark, "demo": cmd_demo, "parity": cmd_parity,
     "plan": cmd_plan, "doctor": cmd_doctor, "clean": cmd_clean,
     "analyze": cmd_analyze, "attest": cmd_attest, "collapse": cmd_collapse,
-    "trace": cmd_trace, "engines": cmd_engines, "mcp": cmd_mcp,
+    "trace": cmd_trace, "solve": cmd_solve, "engines": cmd_engines,
+    "mcp": cmd_mcp,
 }
 
 

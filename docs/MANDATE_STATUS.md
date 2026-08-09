@@ -73,13 +73,18 @@ recovered `linear_recurrence_order2` with `residual_bits: 0.0`.
 **Tested client: Claude Code (this session), stdio transport.** Real
 invocations, not a mock:
 
-- `catalog` → 6 reviewed tools with authority, side-effect posture, and
+- `catalog` → 7 reviewed tools with authority, side-effect posture, and
   canonical implementation per tool; arbitrary module dispatch unavailable.
 - `certify` → on `"The sum of 2 and 2 is 4. The product of 6 and 7 is 41."`
   returned `VERIFIED` + `REFUTED` (expected 42), coverage 0.7963, with a
   tamper-evident attestation hash.
 
-Codex was **not** tested — it was not exercised in this environment.
+Codex was **not** tested. It is not installed on this machine (`codex:
+command not found`), so its configuration in
+[`MCP_CLIENTS.md`](MCP_CLIENTS.md) is written from the documented shape and
+labelled untested. A later check confirmed Claude Code 2.1.216 reports both
+`chiron` and `primus` Connected, and a direct stdio handshake returned
+`chiron.mcp/2` on protocol 2025-06-18.
 
 The loop closes across three interfaces: Apple's on-device model proposed the
 span `"The product of 6 and 7 is 41"`, grounding kept the document's verbatim
@@ -87,8 +92,13 @@ bytes, and the MCP `certify` tool refuted it.
 
 ## 8–9. CLI, service, providers
 
-CLI (`bin/chiron`) runs: `test`, `parity`, `build`, `verify`, `serve`,
-`benchmark`, `plan`, `dev`, `run`, `grow`. Local service runs and answers
+CLI (`bin/chiron`) runs the repository verbs — `test`, `parity`, `build`,
+`serve`, `benchmark`, `plan`, `dev`, `run`, `grow`, `doctor` — and a
+user-facing reading surface added on this branch: `analyze`, `verify`,
+`collapse`, `trace`, `attest`, `solve`, `engines`, `mcp`. The reading verbs
+route through `Chiron/mcp_server.py:_IMPL`, the same dispatch MCP clients use,
+so a terminal and an agent cannot disagree about what a tool does. `verify`
+stays a thin adapter over `primus certify`. Local service runs and answers
 `/v1/capabilities`, `/v1/collapse`, `/v1/certify` with bounded bodies and
 closed routes. Provider adapters (`Chiron/llm_providers.py`, `llm_certify.py`)
 are configuration-gated, 21 gates green; no live cloud provider call was made
@@ -102,7 +112,10 @@ compiles and constructs on machines without it and reports the real reason.
 
 The invariant is structural: `ProposedClaim` has no status, score, confidence,
 or correction field, and the `@Generable` schema gives the model no vocabulary
-for deciding anything, so a verdict is unrepresentable. A live run drove a real
+for deciding anything, so a verdict is unrepresentable. That last clause was
+aspirational when first written and is now true: `reason` was a free `String`
+rendered verbatim to the operator, and is now `ProposedCheckKind`, an enum
+closed over the ten gate kinds `certify` actually discharges. A live run drove a real
 fix — the model returned `"the product…"` where the document capitalizes
 `"The"`, and the span was rejected, losing a real checkable false claim to
 capitalization. Matching now folds ASCII case only (Unicode folding would
@@ -129,8 +142,16 @@ responses, and never sends a bearer on the capability read. MCP tools are a
 reviewed static allowlist with no arbitrary dispatch.
 
 [`SECURITY_MODEL.md`](SECURITY_MODEL.md) documents the model and threat model
-for §21, citing each control by the file that implements it. A **software bill
-of materials is still absent**; it is the remaining §21 item.
+for §21, citing each control by the file that implements it. The **software
+bill of materials now exists and is gated**: `ci/sbom.py` derives the
+dependency surface from declarations in the tree and `--check` runs in the
+battery. It found the error this section used to contain — the Python core is
+not pure standard library; Primus declares and imports `numpy`.
+
+An audit of this branch also corrected three understatements in the security
+model: the local service has rate limiting (`Limiter`, sliding one-minute
+window), keeps a per-request access log with a hashed body prefix, and closes
+eight routes rather than three.
 
 ## 15. Commits
 
@@ -170,7 +191,7 @@ session, not feasibility.
 
 | Item | § |
 |---|---|
-| Problem-solving mode: `solve` / `explore` / `compare` as distinct verbs with candidate generation, counterexample search, and ranking | 16 |
+| `explore` and `compare` as distinct verbs; multi-candidate ranking across engines | 16 |
 | Evidence graph and contradiction records as first-class objects | 14 |
 | Controlled web retrieval boundary | 17 |
 | PDF extraction, chunking, persistent index, retrieval | 13 |

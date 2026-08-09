@@ -330,6 +330,35 @@ TOOLS = [
                     "source_of_truth": "Chiron/trace.py"},
     ),
     _tool(
+        "solve",
+        (
+            "Run a goal-directed campaign over a numeric or string surface: "
+            "observe, recover a candidate rule, put it to the exact gate, "
+            "record what survived, and escalate anything irreversible instead "
+            "of doing it. Returns the full step trace and the campaign's "
+            "disposition. A step that cannot be verified HALTS the campaign "
+            "rather than advancing on an unproven premise, and ESCALATED means "
+            "the plan reached a step that leaves the reversible sandbox and "
+            "declined to take it — both are successful outcomes, not errors. "
+            "Epistemic status: prototype. Contract: chiron.solve/1."
+        ),
+        {
+            "type": "object",
+            "properties": {
+                "surface": {"description": "A sequence of integers, or a string containing them."},
+                "path": {"type": "string", "description": "Read the surface from a local file instead."},
+                "intent": {"type": "string", "description": "What the campaign is for."},
+                "budget": {"type": "integer", "minimum": 1, "maximum": 64,
+                           "description": "Maximum plan steps. Exhaustion is reported, never exceeded."},
+            },
+        },
+        contract="chiron.solve/1",
+        authority="composes reviewed engines only; performs no irreversible step",
+        side_effects="none; campaign state is local and discarded with the call",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_solve -> planner.run_campaign",
+                    "epistemic_status": "prototype"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -503,6 +532,47 @@ def _tool_trace(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _tool_solve(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Run a goal-directed campaign and return its full trace.
+
+    This composes rather than computes. `planner.run_campaign` already
+    implements the mandate's solving loop — observe, analyze, verify with the
+    gate arbitrating, remember, and escalate anything irreversible — and
+    `cross_examine` already manufactures reasonable doubt by searching for an
+    MDL-parity rival. Writing a second solver beside them would have produced
+    exactly the duplicate this repository keeps having to unpick.
+
+    The campaign's disposition is the planner's own, verbatim. Note what
+    ESCALATED means here: the plan reached a step that leaves the reversible
+    sandbox and refused to take it. That is a successful outcome, not a
+    failure, and it is never rewritten into one.
+    """
+    got = _surface_from(args)
+    surface = got["surface"]
+    intent = args.get("intent", "recover and prove the rule behind this surface")
+    if not isinstance(intent, str):
+        raise ToolError("intent must be a string")
+    budget = args.get("budget", 8)
+    if not isinstance(budget, int) or isinstance(budget, bool) or not 1 <= budget <= 64:
+        raise ToolError("budget must be an integer between 1 and 64")
+
+    from planner import Goal, run_campaign
+
+    result = run_campaign(Goal(intent, budget=budget), surface)
+    rec = dict(result) if isinstance(result, dict) else {"result": result}
+    rec["schema"] = "chiron.solve/1"
+    rec["intent"] = intent
+    rec["source"] = got["source"]
+    rec["epistemic_status"] = "prototype"
+    rec["note"] = (
+        "Composed from planner.run_campaign. A step that cannot be verified "
+        "HALTS the campaign rather than advancing on an unproven premise, and "
+        "an irreversible step is ESCALATED rather than performed. Neither is "
+        "an error."
+    )
+    return _wrap(rec)
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -545,6 +615,7 @@ _IMPL = {
     "collapse": _tool_collapse,
     "trace": _tool_trace,
     "catalog": _tool_catalog,
+    "solve": _tool_solve,
 }
 
 
