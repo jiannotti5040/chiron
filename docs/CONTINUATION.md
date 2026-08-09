@@ -61,7 +61,7 @@ These were run, and the stated result was seen. Nothing here is inferred.
 | `swift test` offline | the 4 live gates skip; they never pass with nothing listening |
 | `CHIRON_LIVE_MODEL=1 swift test` | on-device model ran; every surviving span was verbatim source text, including the false claim the engine refutes |
 | on-device model availability | `available` on this host |
-| `xcodebuild … ChironMobile … build` | **BUILD SUCCEEDED** — the first completed iOS build recorded here |
+| `xcodebuild … ChironMobile … build` | **BUILD SUCCEEDED** at this revision. Not a first: `APP_STORE_READINESS.md` already recorded a completed Simulator build from an earlier pass. |
 | `./make_app.sh` | built `App/build/Chiron.app`, ad-hoc signed |
 | `open build/Chiron.app` | launched and stayed running |
 | `curl /v1/capabilities`, `/v1/certify` | real `chiron.local_api/1` envelopes from Primus 0.7.2 |

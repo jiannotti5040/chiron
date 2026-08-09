@@ -10,7 +10,10 @@ What changed in this pass: the iOS target had been deleted, leaving
 `ChironMobile.xcodeproj` on disk with zero sources. It has been restored on
 the renamed `chiron.local_api/1` contract and **a full Simulator bundle build
 now completes** (`** BUILD SUCCEEDED **`, Xcode 27.0, iPhone 17 Pro, iOS 27.0)
-— the first completed iOS build recorded in this repository. The certify
+at the current revision. This is **not** a first: an earlier pass had already
+recorded a completed Simulator build, as this same document states below. The
+build had regressed to impossible when the target's sources were deleted, and
+now works again. The certify
 vertical slice has also been exercised end to end against a live local engine
 server through the same client the iOS app links.
 

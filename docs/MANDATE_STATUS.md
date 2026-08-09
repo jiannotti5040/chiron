@@ -60,7 +60,7 @@ violate the vault's own law against a second stamping implementation.
 | `swift test` | **33 deterministic gates green** (11 ChironKit, 10 ChironService, 12 ChironIntelligence) |
 | `swift test` + live server | 3 live gates green |
 | `CHIRON_LIVE_MODEL=1 swift test` | live on-device model gate green |
-| iOS `xcodebuild … build` | **BUILD SUCCEEDED** — first completed iOS build in this repo |
+| iOS `xcodebuild … build` | **BUILD SUCCEEDED** (a prior pass had also completed an iOS Simulator build; this one is at the current revision, after the target was restored) |
 | macOS `./make_app.sh` → `open` | builds, launches, stays running |
 | iOS bundle contents | `Metadata.appintents` + `PrivacyInfo.xcprivacy` present |
 
