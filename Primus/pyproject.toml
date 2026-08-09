@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "primus-intelligence"
-version = "0.7.2"
+version = "0.8.0"
 description = "Exact invariant recovery with held-out verification and refusal — collapse codified surfaces to their minimal generators, and certify the checkable claims in LLM/agent output."
 readme = "README.md"
 requires-python = ">=3.9"

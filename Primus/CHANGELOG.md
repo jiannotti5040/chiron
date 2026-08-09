@@ -2,6 +2,18 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.8.0
+
+- **Grounded claims.** `certify` accepts a `facts` table and checks claims
+  whose truth lives outside the sentence against it, exactly. Coverage on
+  operational prose measured 0.0% before and 91.8% after; a wrong figure comes
+  back REFUTED against the supplied value, and a subject nobody supplied still
+  REFUSES. A claim verifies only on an exact match against exactly one named
+  fact, compared as Fractions, so the zero-false-verification law is untouched.
+- `primus certify --facts <json|file>` on the CLI, applying to `--jsonl`
+  pipeline mode as well.
+- Agreeing digits with disagreeing units refuse rather than verify.
+
 ## 0.7.2 — 2026-08-08
 
 - **The versioned endpoint is now named for what it is: a local API.** Its
