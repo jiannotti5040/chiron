@@ -85,9 +85,20 @@ by earlier work on this branch.
 - Exact-or-refuse contract — `VERIFIED` / `REFUTED` / `REFUSED` preserved end
   to end; no interface restates a verdict or converts one to a score.
 - MCP server — stdio JSON-RPC with a reviewed allowlist (`analyze`, `attest`,
-  `certify`, `collapse`, `trace`, `catalog`); arbitrary module dispatch is
-  deliberately unavailable. 20/20 protocol gates.
-- CLI — `bin/chiron` with build, test, parity, verify, serve, benchmark, plan.
+  `certify`, `collapse`, `trace`, `solve`, `catalog`); arbitrary module
+  dispatch is deliberately unavailable. 16/16 transport gates. Verified by a
+  real client: Claude Code 2.1.216 reports `chiron` and `primus` Connected.
+- CLI — `bin/chiron`. Repository verbs (build, test, parity, serve, benchmark,
+  plan, doctor) plus a user-facing reading surface: `analyze`, `verify`,
+  `collapse`, `trace`, `attest`, `solve`, `engines`, `mcp`. The reading verbs
+  route through `Chiron/mcp_server.py:_IMPL`, the same dispatch MCP clients
+  use, so a terminal and an agent cannot disagree about a tool's behaviour.
+- Model providers — Apple on-device, OpenAI, and Anthropic, all returning
+  spans through one `GroundingFilter`. Credential and network authorization
+  are separate switches, both default-denied; `ProposerRouter` orders
+  privacy-first and `deterministicOnly` refuses every model.
+- Module catalog — `ModuleManifest` reads `Chiron/manifest.json`; reader only,
+  with a gate asserting it exposes no way to run anything.
 - Local service — versioned `/v1` HTTP contract, bounded bodies, closed
   routes, documented in `Primus/LOCAL_API.md`.
 - Provenance — source registration, spans, and metadata-only local records.
@@ -107,8 +118,10 @@ by earlier work on this branch.
 | Signing, notarization, archive | **absent** | Ad-hoc signing only. Requires an Apple Developer account — an external blocker, not an engineering one. |
 | macOS App Intents | **absent by decision** | The SwiftPM bundle has no `ExtractAppIntentsMetadata` phase, so a macOS intent would not register. Adding one needs an Xcode app target for macOS; the iOS intent is real and verified. |
 | Codex MCP client | **not observed** | Claude Code was observed invoking the tools. Codex was not tried. |
-| SBOM | **absent** | The dependency surface is small (no third-party Swift packages; Python stdlib), but that is an observation, not a generated bill of materials. |
-| Audit log | **absent** | No record of MCP or service invocations is kept. |
+| Audit log for MCP | **absent** | Neither MCP server records an invocation ledger. The `/v1` HTTP service does: `_access()` writes one line per request with a hashed body prefix. |
+| `explore` / `compare` | **absent** | `solve` exists and composes `planner.run_campaign`; the breadth half of §16 does not. |
+| Evidence graph | **absent** | Source records, attest spans, and certificates all exist; nothing joins them into a traversable graph with contradiction records. |
+| PDF extraction | **absent** | See `docs/FILE_SUPPORT.md` — plain text and strict UTF-8 only, stated as a matrix rather than implied. |
 
 ### Closed since this record was first written
 
@@ -117,6 +130,13 @@ by earlier work on this branch.
   observed. The model proposes spans and structurally cannot express a verdict.
 - **`docs/APP_STORE_READINESS.md`** — restored and re-dated to observed
   evidence.
+- **SBOM** — `ci/sbom.py` derives the dependency surface from declarations in
+  the tree and `--check` is a gate in the battery. It corrected the claim this
+  file used to make: the Python core is *not* pure standard library, because
+  Primus declares and imports `numpy`.
+- **Module catalog** — restored as a reader over the vault's own manifest.
+- **Hosted provider adapters** — OpenAI and Anthropic, twelve tests, none
+  touching the network.
 
 ## Known environment blockers
 
