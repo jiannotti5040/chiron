@@ -7,6 +7,7 @@ enum Screen: String, CaseIterable, Identifiable {
     case workspace = "Workspace"
     case attest = "Attest"
     case gates = "Gates"
+    case modules = "Modules"
 
     var id: String { rawValue }
 
@@ -15,6 +16,7 @@ enum Screen: String, CaseIterable, Identifiable {
         case .workspace: "rectangle.3.group"
         case .attest: "text.magnifyingglass"
         case .gates: "shield.checkerboard"
+        case .modules: "square.grid.3x3"
         }
     }
 
@@ -23,6 +25,7 @@ enum Screen: String, CaseIterable, Identifiable {
         case .workspace: "One source, one full-stack record, one exact certificate"
         case .attest: "Which input produced each word"
         case .gates: "Run the vault's own selftests"
+        case .modules: "Every module in the vault — read only"
         }
     }
 }
@@ -56,6 +59,7 @@ struct ContentView: View {
                 case .workspace: WorkspaceView(client: client)
                 case .attest: AttestView(client: client)
                 case .gates: GatesView(client: client)
+                case .modules: ModulesView(client: client)
                 }
             }
         } else {
