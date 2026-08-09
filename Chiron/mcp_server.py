@@ -864,6 +864,21 @@ def _tool_propose_experiment(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _ensure_primus() -> None:
+    """Make the seed importable from a source checkout as well as an install.
+
+    Every other tool that reaches Primus does this; the table tools did not,
+    so they worked under the gate battery (which sets PYTHONPATH) and failed
+    from a cold call. Same fallback, one place.
+    """
+    try:
+        import primus  # noqa: F401
+    except ImportError:
+        seed = os.path.join(os.path.dirname(_HERE), "Primus", "src")
+        if seed not in sys.path:
+            sys.path.insert(0, seed)
+
+
 def _relate_args(args: Dict[str, Any]):
     rows = args.get("rows")
     if not isinstance(rows, list) or not rows:
@@ -884,6 +899,7 @@ def _tool_relate(args: Dict[str, Any]) -> Dict[str, Any]:
     the solver never saw, in exact rational arithmetic. PARTIAL names the rows
     that break it — an anomaly finding, explicitly not a weaker verification.
     """
+    _ensure_primus()
     from primus.relate import relate, RelationError as _RE
     rows, target, inputs = _relate_args(args)
     try:
@@ -894,6 +910,7 @@ def _tool_relate(args: Dict[str, Any]) -> Dict[str, Any]:
 
 def _tool_solve_for(args: Dict[str, Any]) -> Dict[str, Any]:
     """Run a proven law backwards for one unknown input."""
+    _ensure_primus()
     from primus.relate import relate, RelationError as _RE
     from primus.invert import solve_for
     rows, target, inputs = _relate_args(args)
@@ -914,6 +931,7 @@ def _tool_solve_for(args: Dict[str, Any]) -> Dict[str, Any]:
 
 def _tool_discover_map(args: Dict[str, Any]) -> Dict[str, Any]:
     """Recover the exact per-column map carrying one table to another."""
+    _ensure_primus()
     from primus.relate import RelationError as _RE
     from primus.invert import discover_map
     source, destination = args.get("source"), args.get("destination")
