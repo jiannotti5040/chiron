@@ -12,6 +12,7 @@ from intent.
 | Source code | `FileInput.read` | Treated as text; no parsing of syntax |
 | JSON | `FileInput.read` | Read as text, not as structure |
 | Anything else declaring `public.data` | `FileInput.read` | Accepted only if it decodes as strict UTF-8 |
+| PDF (text layer) | `Chiron/pdf_text.py` | Uncompressed and FlateDecode streams. Refuses by name rather than returning doubtful text — see below |
 
 Accepted content types are declared at `App/Sources/ChironApp/FileInput.swift:175`:
 `.plainText`, `.text`, `.data`, `.sourceCode`, `.json`.
@@ -20,15 +21,37 @@ Accepted content types are declared at `App/Sources/ChironApp/FileInput.swift:17
 
 | Format | Status |
 |---|---|
-| PDF | **Not implemented.** No text extraction exists. A PDF fails as invalid UTF-8. |
 | Word, Pages, RTF | Not implemented |
 | Spreadsheets | Not implemented |
 | Images, audio, video | Not implemented, and out of scope — there is no OCR or transcription path |
 | Encrypted or password-protected files | Not implemented; fails as invalid UTF-8 |
 | Directories | Refused deliberately. `chiron verify` and `chiron analyze` accept one regular file; a directory is rejected rather than walked |
 
-PDF extraction is the single most likely next addition, and it is listed here
-as absent rather than described as partial.
+### PDF, and what it refuses
+
+`Chiron/pdf_text.py` reads the text layer of uncompressed and `FlateDecode`
+PDFs using only `zlib` — no third-party dependency, so the SBOM stays as small
+as it claims. It refuses by name rather than guessing:
+
+| Refusal | Meaning |
+|---|---|
+| `encrypted` | `/Encrypt` present; no decryption is attempted |
+| `unsupported-filter` | a stream filter other than FlateDecode |
+| `no-text-operators` | valid PDF, no text-showing operators — words may be images, or glyphs drawn directly. **There is no OCR.** |
+| `unreliable-encoding` | text came out, but its character statistics say the font uses a custom map |
+| `not-a-pdf`, `too-large`, `malformed` | as named |
+
+`unreliable-encoding` is the one worth understanding. A PDF using a subsetted
+font with a custom `/Differences` map decodes into prose that *looks* right
+with one letter systematically wrong — `st!rted` for "started". Both PDFs
+tested during development hit a refusal: one had no text operators at all, and
+one produced exactly that substitution. Returning it would have put wrong text
+carrying the shape of right text into a provenance record, and a citation
+would then point at words nobody wrote. Mapping those fonts needs the embedded
+font program, so the output is checked statistically and refused when it fails.
+
+Refusing readable-looking text is the correct trade here, and it is why the
+supported row above says "text layer" rather than "PDF".
 
 ## Bounds, and why they agree
 
