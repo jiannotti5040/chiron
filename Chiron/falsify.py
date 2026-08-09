@@ -360,8 +360,8 @@ def _selftest() -> int:
     _s.path.insert(0, os.path.join(os.path.dirname(_HERE), "Primus", "src"))
     from primus.certify import certify
 
-    facts = {"readiness": {"value": 74, "unit": "percent"}}
-    cert = certify("Readiness fell to 74%. Morale rose to 88%. "
+    facts = {"gross_margin": {"value": 74, "unit": "percent"}}
+    cert = certify("Gross margin reached 74%. Retention rose to 88%. "
                    "Revenue was 5 percent.", facts=facts)
     report = falsifiers_for_certificate(cert)
 
@@ -390,7 +390,7 @@ def _selftest() -> int:
          empty["proposed"] is None and "worse than proposing none" in empty["note"])
 
     unactionable = falsifiers_for_certificate({"claims": [
-        {"status": "REFUSED", "text": "morale improved",
+        {"status": "REFUSED", "text": "retention improved",
          "reason": "no exact checker supplied for this domain"}]})
     gate("a domain gap is reported as not actionable",
          unactionable["claims"][0]["missing_evidence"][0]["actionable"] is False)

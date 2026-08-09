@@ -8,7 +8,7 @@ import ChironService
 struct ContentView: View {
     // The endpoint is not a credential, so user-controlled endpoint selection
     // can persist normally. Tokens stay exclusively in Keychain.
-    @AppStorage("chiron.service.endpoint") private var endpointText = ""
+    @AppStorage("chiron.service.endpoint") private var endpointText = ServiceEndpoint.localDefault
     @State private var sourceText = "The sum of 2 and 2 is 4. The product of 3 and 4 is 11."
     @State private var result: JSONValue?
     @State private var requestID: String?

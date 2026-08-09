@@ -24,10 +24,10 @@ struct WorkbenchView: View {
     let makeClient: () throws -> LocalServiceClient
 
     @State private var text = """
-        Readiness fell to 74% after the March rotation. \
+        Revenue grew to 4.2 million in Q3. \
         The sum of 2 and 2 is 4. The product of 3 and 4 is 11.
         """
-    @State private var factsJSON = #"{"readiness": {"value": 74, "unit": "percent"}}"#
+    @State private var factsJSON = #"{"gross_margin": {"value": 74, "unit": "percent"}}"#
     @State private var useFacts = true
     @State private var operation: LocalServiceOperation = .certify
     @State private var record: LocalServiceRecord?

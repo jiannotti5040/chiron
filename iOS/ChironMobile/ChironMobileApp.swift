@@ -36,7 +36,7 @@ struct RootTabs: View {
 /// view so `@AppStorage` observes changes — a client captured once would keep
 /// talking to a stale endpoint after the operator changed it.
 private struct WorkbenchTab: View {
-    @AppStorage("chiron.service.endpoint") private var endpointText = ""
+    @AppStorage("chiron.service.endpoint") private var endpointText = ServiceEndpoint.localDefault
 
     var body: some View {
         WorkbenchView(makeClient: {

@@ -332,14 +332,14 @@ def _selftest() -> int:
              code == 200 and body["result"]["counts"]["verified"] == 1)
 
         code, body = post("/v1/certify", {
-            "text": "Readiness fell to 74%.",
-            "facts": {"readiness": {"value": 74, "unit": "percent"}}})
+            "text": "Gross margin reached 74%.",
+            "facts": {"gross_margin": {"value": 74, "unit": "percent"}}})
         gate("grounded facts reach the service",
              code == 200 and body["result"]["counts"]["verified"] == 1)
 
         code, body = post("/v1/certify", {
-            "text": "Readiness fell to 91%.",
-            "facts": {"readiness": {"value": 74, "unit": "percent"}}})
+            "text": "Gross margin reached 91%.",
+            "facts": {"gross_margin": {"value": 74, "unit": "percent"}}})
         gate("a wrong figure is REFUTED, and that is still a 200",
              code == 200 and body["result"]["counts"]["refuted"] == 1)
 
