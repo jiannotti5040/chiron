@@ -47,6 +47,7 @@ Daily verbs:
                                the cheapest next observation, or nothing
     chiron engines [query]     the reviewed static allowlist an agent may invoke
     chiron mcp                 serve the vault over stdio to Claude Code / Codex
+    chiron service [--port N]  serve all twelve operations over HTTP /v1/*
 
     chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
     chiron parity              prove spine and fold are ONE organism: identical gate
@@ -167,6 +168,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("full-surface HTTP service (real socket, closed routes)",
+         [PY, _script("service.py"), "--selftest"], None),
         ("falsifiers + experiment design (what would overturn this)",
          [PY, _script("falsify.py"), "selftest"], None),
         ("grounded claims (exact against supplied facts, or refuse)",
@@ -212,6 +215,16 @@ def cmd_test(args):
     print("\n[chiron] " + ("GATE BATTERY GREEN — all gates passed" if not failed
           else f"GATES FAILED: {', '.join(failed)}"))
     return 1 if failed else 0
+
+
+def cmd_service(args):
+    """Serve the whole vault over HTTP — all twelve operations, one dispatch.
+
+    Distinct from `chiron serve`, which starts the full cockpit of local web
+    services. This is the single programmatic surface an app or a script
+    talks to.
+    """
+    return _run([PY, _script("service.py")] + list(args))
 
 
 def cmd_serve(args):
@@ -752,6 +765,7 @@ COMMANDS = {
     "trace": cmd_trace, "solve": cmd_solve, "lineage": cmd_lineage,
     "explore": cmd_explore, "compare": cmd_compare,
     "falsify": cmd_falsify, "experiment": cmd_experiment,
+    "service": cmd_service,
     "engines": cmd_engines,
     "mcp": cmd_mcp,
 }

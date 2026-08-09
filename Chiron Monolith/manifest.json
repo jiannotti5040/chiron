@@ -1,15 +1,15 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T20:54:56Z",
+  "generated_utc": "2026-08-09T22:04:07Z",
   "mode": "static",
   "summary": {
-    "runnable_scripts": 90,
-    "with_selftest": 68,
-    "stdlib_only": 80,
-    "with_spdx_header": 90,
+    "runnable_scripts": 91,
+    "with_selftest": 69,
+    "stdlib_only": 81,
+    "with_spdx_header": 91,
     "emitting_artifacts": 5,
-    "internal_edges": 124
+    "internal_edges": 125
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -421,6 +421,10 @@
       [
         "semic_energy",
         "semic"
+      ],
+      [
+        "service",
+        "mcp_server"
       ],
       [
         "significance",
@@ -981,8 +985,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "bc97a5d7b53dea19",
-        "generated_utc": "2026-08-09T20:54:54Z",
+        "self_hash": "c6fe2287a88e58a8",
+        "generated_utc": "2026-08-09T22:03:39Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1282,8 +1286,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "461505a0971cb4be",
-        "generated_utc": "2026-08-09T20:54:54Z",
+        "self_hash": "0bed4abb9eb92bd0",
+        "generated_utc": "2026-08-09T22:03:40Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1904,6 +1908,7 @@
       ],
       "last_run": null,
       "imported_by": [
+        "service",
         "test_mcp_server"
       ]
     },
@@ -2209,8 +2214,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "fde10a904b3b1b4d",
-        "generated_utc": "2026-08-09T20:54:49Z",
+        "self_hash": "cca3889ccadac6b4",
+        "generated_utc": "2026-08-09T22:03:35Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2270,6 +2275,24 @@
       "imported_by": [
         "epistemic"
       ]
+    },
+    {
+      "script": "service",
+      "path": "service.py",
+      "purpose": "chiron.service \u2014 the whole vault over HTTP, on the one dispatch.",
+      "lines": 400,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "mcp_server"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
     },
     {
       "script": "significance",
@@ -2599,8 +2622,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "114c0168465090c5",
-        "generated_utc": "2026-08-09T20:54:44Z",
+        "self_hash": "b1bf0a0ea708c9de",
+        "generated_utc": "2026-08-09T22:03:29Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null
