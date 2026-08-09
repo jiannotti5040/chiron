@@ -399,3 +399,74 @@ private struct JSONValueParser {
         return true
     }
 }
+
+public extension JSONValue {
+    /// Typed reads of a decoded record.
+    ///
+    /// These were private to the service client, which meant any interface
+    /// wanting to read a record had to write its own copy — and a second
+    /// reader of the same bytes is a second chance to disagree about them.
+    /// They belong with the type.
+    ///
+    /// Every one returns nil rather than coercing. A number is not silently a
+    /// string and a missing key is not zero, because a record that reports
+    /// `refuted: 0` and one that omits the field mean different things.
+    var objectValue: [String: JSONValue]? {
+        guard case .object(let value) = self else { return nil }
+        return value
+    }
+
+    var arrayValue: [JSONValue]? {
+        guard case .array(let value) = self else { return nil }
+        return value
+    }
+
+    var stringValue: String? {
+        guard case .string(let value) = self else { return nil }
+        return value
+    }
+
+    var boolValue: Bool? {
+        guard case .bool(let value) = self else { return nil }
+        return value
+    }
+
+    /// Whole numbers only. A fractional value returns nil rather than
+    /// truncating: a count that arrived as 2.5 is a contract violation worth
+    /// seeing, not something to round.
+    /// Whole numbers only, read from the number's own lexical form.
+    ///
+    /// `JSONNumber` keeps `rawValue` precisely so a large integer is not
+    /// damaged by a decode it never asked for; going through Decimal here
+    /// would reintroduce exactly that. A fractional value returns nil rather
+    /// than truncating — a count that arrived as 2.5 is a contract violation
+    /// worth seeing, not something to round.
+    var intValue: Int? {
+        guard case .number(let number) = self else { return nil }
+        return Int(number.rawValue)
+    }
+
+    /// Lossy by nature and only for display. Never use this on a value that
+    /// will be compared or certified.
+    var doubleValue: Double? {
+        guard case .number(let number) = self else { return nil }
+        return Double(number.rawValue)
+    }
+
+    /// Parse a JSON string the operator typed. Returns nil on anything
+    /// malformed rather than throwing, because the caller's next move is to
+    /// leave the field out, not to crash.
+    static func decode(_ text: String) -> JSONValue? {
+        try? JSONValue.parse(Data(text.utf8))
+    }
+
+    /// Stable, human-readable rendering for display.
+    ///
+    /// Sorted keys so the same record reads the same way twice — an operator
+    /// comparing two runs should not have to discount key order.
+    static func encodePretty(_ value: JSONValue) throws -> String {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
+        return String(decoding: try encoder.encode(value), as: UTF8.self)
+    }
+}

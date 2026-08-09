@@ -9,18 +9,81 @@ import ChironContract
 /// The operations deliberately exposed by the compact `/v1` local-service
 /// boundary documented in `Primus/LOCAL_API.md`.
 /// There is no client fallback to a local process, dynamic module, or path.
+/// Every operation the service exposes.
+///
+/// This used to hold three. The service now dispatches through
+/// `Chiron/mcp_server.py:_IMPL`, so the same twelve operations an MCP client
+/// and the CLI reach are reachable from a device — which is what lets the app
+/// be more than a certify box.
 public enum LocalServiceOperation: String, Sendable, CaseIterable {
     case capabilities
     case collapse
     case certify
+    case analyze
+    case attest
+    case trace
+    case solve
+    case lineage
+    case explore
+    case compare
+    case falsifiers
+    case proposeExperiment = "propose_experiment"
+    case catalog
 
     fileprivate var path: String {
         switch self {
         case .capabilities: "v1/capabilities"
-        case .collapse: "v1/collapse"
-        case .certify: "v1/certify"
+        default: "v1/" + rawValue
         }
     }
+
+    /// What the operator is asking for, in their words rather than the
+    /// engine's. Used for titles and for explaining a disposition.
+    public var title: String {
+        switch self {
+        case .capabilities: "Capabilities"
+        case .collapse: "Collapse"
+        case .certify: "Certify"
+        case .analyze: "Analyze"
+        case .attest: "Attest"
+        case .trace: "Trace"
+        case .solve: "Solve"
+        case .lineage: "Lineage"
+        case .explore: "Explore"
+        case .compare: "Compare"
+        case .falsifiers: "What would refute this"
+        case .proposeExperiment: "What to check next"
+        case .catalog: "Engines"
+        }
+    }
+
+    public var summary: String {
+        switch self {
+        case .certify:
+            "Gate the checkable claims. Supply facts and claims whose truth lives outside the sentence become checkable too."
+        case .attest:
+            "Which supplied source produced each span. With no sources, every span REFUSES — that is the honest answer."
+        case .analyze: "Every applicable stage over one text."
+        case .collapse: "Recover the exact rule behind a sequence, or refuse."
+        case .trace: "Why a surface did or did not collapse. Never stamps."
+        case .solve: "A goal-directed campaign that halts on an unproven step and escalates an irreversible one."
+        case .lineage: "The evidence graph: what each claim stands on, and what stands on nothing."
+        case .explore: "What else would have fit. Rivals searched, not asserted."
+        case .compare: "Two surfaces on stated axes. No composite score."
+        case .falsifiers:
+            "The observation that would overturn this — and for a refusal, the specific evidence nobody supplied."
+        case .proposeExperiment:
+            "The cheapest next thing to go check, or nothing when nothing is actionable."
+        case .catalog: "The reviewed allowlist. Arbitrary dispatch is unavailable by design."
+        case .capabilities: "What this service exposes."
+        }
+    }
+
+    /// The operations an operator drives directly, in the order the product
+    /// presents them: check first, then account for it, then look further.
+    public static let workbench: [LocalServiceOperation] =
+        [.certify, .attest, .analyze, .lineage, .falsifiers, .proposeExperiment,
+         .solve, .explore, .collapse, .trace]
 }
 
 public struct LocalServiceEngine: Sendable, Equatable {
@@ -42,6 +105,26 @@ public struct LocalServiceResponse: Sendable, Equatable {
     public let statusCode: Int
     public let envelope: LocalServiceEnvelope
     public let result: JSONValue
+}
+
+/// Any operation's record, carried verbatim.
+///
+/// The schema travels inside `record` rather than being restated by a Swift
+/// type, so a contract cannot drift between the engine that defines it and
+/// the client that reads it.
+public struct LocalServiceRecord: Sendable, Equatable {
+    public let statusCode: Int
+    public let operation: LocalServiceOperation
+    public let envelope: LocalServiceEnvelope
+    public let record: JSONValue
+
+    public var schema: String? { record.objectValue?["schema"]?.stringValue }
+
+    /// Pretty-printed for display. The app shows the engine's own record; it
+    /// does not paraphrase a verdict into friendlier words.
+    public var prettyJSON: String {
+        (try? JSONValue.encodePretty(record)) ?? String(describing: record)
+    }
 }
 
 public struct LocalServiceCertification: Sendable, Equatable {
@@ -338,6 +421,24 @@ public struct LocalServiceClient: Sendable {
                               certificate: .object(certificate))
     }
 
+    /// Invoke any operation with an arbitrary argument object and return the
+    /// record verbatim.
+    ///
+    /// Deliberately untyped at this boundary. Each engine owns its record
+    /// shape and the schema travels inside it; inventing a Swift struct per
+    /// operation would put a second, drifting description of every contract
+    /// on this side of the wire. The view reads `schema` and renders what it
+    /// finds, and an unrecognised field is shown rather than dropped.
+    public func invoke(_ operation: LocalServiceOperation,
+                       arguments: [String: JSONValue]) async throws -> LocalServiceRecord {
+        let body = try encode(JSONValue.object(arguments))
+        let response = try await perform(operation: operation, body: body)
+        return LocalServiceRecord(statusCode: response.statusCode,
+                                  operation: operation,
+                                  envelope: response.envelope,
+                                  record: response.result)
+    }
+
     private func encode<T: Encodable>(_ value: T) throws -> Data {
         let data = try JSONEncoder().encode(value)
         guard data.count <= configuration.maximumRequestBytes else {
@@ -397,9 +498,12 @@ public struct LocalServiceClient: Sendable {
         guard (200...299).contains(response.statusCode) else {
             throw LocalServiceClientError.httpStatus(response.statusCode)
         }
-        if operation != .capabilities {
-            try validateEngineResult(parsed.result, operation: operation)
-        }
+        // The `{schema, tool, certificate}` wrapper is the seed server's shape
+        // for its two typed operations, and `certificate(in:)` enforces it on
+        // exactly those. Enforcing it here as well applied it to every
+        // operation, including the ten that return an engine record directly
+        // — which is why a certificate arriving as itself read as a contract
+        // violation. Validation belongs where the contract does.
         return clientResponse
     }
 
@@ -474,12 +578,17 @@ public struct LocalServiceClient: Sendable {
         guard let object = result.objectValue else {
             throw LocalServiceClientError.malformedEnvelope
         }
-        guard object["status"]?.stringValue == "REFUSED" else { return nil }
+        // Key off the schema, not off the presence of a `status` field.
+        //
+        // This used to treat *any* result carrying `status: "REFUSED"` as a
+        // transport-level refusal and then demand the engine schema, which
+        // made every record that legitimately carries a status unreadable —
+        // `solve` reports `ESCALATED`, and an engine record's own disposition
+        // is not the server refusing to answer. A refusal envelope is
+        // identified by being one, and everything else is a result.
         let schema = object["schema"]?.stringValue
-        guard schema == Self.engineSchema else {
-            throw LocalServiceClientError.engineSchemaMismatch(expected: Self.engineSchema,
-                                                            actual: schema)
-        }
+        guard schema == Self.engineSchema else { return nil }
+        guard object["status"]?.stringValue == "REFUSED" else { return nil }
         guard let error = object["error"]?.stringValue,
               let reason = object["reason"]?.stringValue
         else { throw LocalServiceClientError.malformedEnvelope }
@@ -546,19 +655,5 @@ public struct LocalServiceClient: Sendable {
     private struct CollapseArrayRequest: Encodable { let surface: [Int] }
 }
 
-private extension JSONValue {
-    var objectValue: [String: JSONValue]? {
-        guard case .object(let value) = self else { return nil }
-        return value
-    }
-
-    var arrayValue: [JSONValue]? {
-        guard case .array(let value) = self else { return nil }
-        return value
-    }
-
-    var stringValue: String? {
-        guard case .string(let value) = self else { return nil }
-        return value
-    }
-}
+// The accessors these call now live in ChironContract, so the app can read a
+// record with the same code the client does rather than a second copy.

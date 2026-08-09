@@ -56,7 +56,27 @@ _HERE = os.path.dirname(os.path.abspath(__file__))
 if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
-SCHEMA = "chiron.service/1"
+# The envelope contract, shared with primus.engine_server. This server exposes
+# more operations, but the wrapper around every result is the same one — so a
+# client written for either decodes both, and there is one envelope to reason
+# about rather than two. `server` below names which implementation answered.
+SCHEMA = "chiron.local_api/1"
+SERVER_ID = "chiron.service/1"
+
+
+def _primus_version() -> str:
+    try:
+        from primus import __version__
+        return __version__
+    except Exception:
+        seed = os.path.join(os.path.dirname(_HERE), "Primus", "src")
+        if seed not in sys.path:
+            sys.path.insert(0, seed)
+        try:
+            from primus import __version__
+            return __version__
+        except Exception:
+            return "unknown"
 MAX_BODY_BYTES = 512 * 1024
 DEFAULT_PORT = 8788
 
@@ -131,8 +151,21 @@ class Handler(BaseHTTPRequestHandler):
             pass
         self._access(code, body)
 
-    def _envelope(self, operation: str, result: Any) -> Dict[str, Any]:
-        return {"schema": SCHEMA, "operation": operation, "result": result}
+    def _envelope(self, operation: str, result: Any, body: bytes = b"") -> Dict[str, Any]:
+        """The same envelope shape `primus.engine_server` emits.
+
+        One contract, so a client written for either server decodes both. The
+        request id is derived from the body digest and the arrival time, which
+        makes it correlatable with the access log without carrying content.
+        """
+        request_id = hashlib.sha256(
+            body + repr(time.time()).encode()).hexdigest()[:32]
+        return {"schema": SCHEMA, "server": SERVER_ID,
+                "request_id": request_id,
+                "operation": operation,
+                "engine": {"primus_version": _primus_version(),
+                           "certificate_schema": "primus.certificate/2"},
+                "result": result}
 
     def _authorized(self) -> bool:
         if not self.bearer:
@@ -232,7 +265,7 @@ class Handler(BaseHTTPRequestHandler):
             record = json.loads(wrapped["content"][0]["text"])
         except Exception:
             record = wrapped
-        self._send(200, self._envelope(operation, record), body)
+        self._send(200, self._envelope(operation, record, body), body)
 
 
 def serve(port: int = DEFAULT_PORT, host: str = "127.0.0.1",
