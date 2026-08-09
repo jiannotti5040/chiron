@@ -134,22 +134,21 @@ by earlier work on this branch.
 
 ## The exact next autonomous action
 
-Items 1 and 3 of the previous list were already finished on this branch before
-that list was written — `ProposalPanel.swift` and `CertifyIntent.swift` both
-exist and both build. They have been removed rather than left to send the next
-agent after work that is done. What follows is what is actually open.
+This list is rewritten whenever an item closes, so it never sends the next
+agent after finished work. Two earlier items were already done when they were
+written (`ProposalPanel.swift`, `CertifyIntent.swift`); a third — restoring the
+module catalog — closed on 2026-08-09 as `ModuleManifest.swift` plus
+`ModulesView.swift`, reader-only, over the manifest `build_manifest.py`
+writes. What follows is what is actually open.
 
-1. **Restore the module catalog to the app.** `ModulesView.swift`,
-   `Catalog.swift`, and `CatalogTests.swift` were deleted during the workspace
-   consolidation and nothing replaced them: `ModuleCatalog`, `ModuleInfo`,
-   `FunctionInfo`, and `ModuleCallResult` exist nowhere on this branch. The
-   `certify` and `full_stack` capability survived into `WorkspaceView`, so that
-   part was a real consolidation — the catalog was simply lost. `chiron
-   engines` now covers this from the terminal, and the MCP `catalog` tool
-   covers it for agents, so the gap is the app only. Restore it as a *reader*:
-   arbitrary module dispatch is intentionally unavailable, so do not bring back
-   `run(_ fn: FunctionInfo)` along with it. The deleted files are recoverable
-   with `git show origin/main:App/Sources/ChironApp/ModulesView.swift`.
+1. **Build `explore` and `compare` (§16).** `solve` now exists and composes
+   `planner.run_campaign` through `_IMPL`, so the CLI, every MCP client, and
+   `engines` share it. What is still missing from §16 is breadth rather than
+   depth: `explore` should enumerate rival hypotheses without committing to
+   one, and `compare` should rank two artifacts or two candidate rules against
+   each other. `cross_examine` already hunts MDL-parity rivals and is the
+   obvious engine underneath both — again, compose it rather than write a
+   second search.
 
 2. **Unwedge CoreSimulator and close the iOS test gate:**
    `sudo pkill -9 -f CoreSimulator`, re-boot the device, then retry
