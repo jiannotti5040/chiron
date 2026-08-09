@@ -34,7 +34,10 @@ struct ContentView: View {
             }
             .navigationTitle("Chiron")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+                // `.topBarTrailing` does not exist on macOS; `.primaryAction`
+                // is the portable placement and lands in the same corner on
+                // both platforms.
+                ToolbarItem(placement: .primaryAction) {
                     Button("Connection", systemImage: "gearshape") {
                         showSettings = true
                     }
@@ -217,17 +220,25 @@ private struct ConnectionSettings: View {
             Form {
                 Section("Service endpoint") {
                     TextField("https://gateway.example service root", text: $endpointText)
-                        .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        // Autocapitalisation and keyboard type are iOS-only
+                        // affordances. A URL field wants both there and
+                        // neither exists on macOS, where the hardware keyboard
+                        // already gives the behaviour they ask for.
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
                         .keyboardType(.URL)
+                        #endif
                     Text("Enter the gateway base URL before `/v1`; the client adds the versioned route. Use HTTPS for a deployed service. The only permitted HTTP endpoints are exact loopback development addresses.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
                 Section("Gateway session") {
                     SecureField("Short-lived bearer token", text: $tokenDraft)
-                        .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        #if os(iOS)
+                        .textInputAutocapitalization(.never)
+                        #endif
                     HStack {
                         Button("Save in Keychain") { saveToken() }
                             .disabled(tokenDraft.isEmpty)
