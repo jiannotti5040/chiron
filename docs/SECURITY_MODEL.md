@@ -148,12 +148,21 @@ Stated plainly, because absence documented is worth more than absence implied.
   bounds a single server, not a fleet.
 - **No sandbox entitlement, hardened runtime, notarization, or distribution
   signing.** Bundles are ad-hoc signed and are rejected by Gatekeeper.
-- **No SBOM.** The Swift package has no third-party dependencies. The Python
-  core is *not* pure standard library: `Primus/pyproject.toml:27` declares
-  `dependencies = ["numpy>=1.22"]`, imported at module level in
-  `Primus/src/primus/engine.py:52`. The dependency surface is one runtime
-  third-party package plus the standard library — small, but not empty, and
-  still an observation rather than a generated bill of materials.
+- **SBOM: generated, and gated.** `ci/sbom.py` derives the dependency surface
+  from declarations in the tree — `Primus/pyproject.toml`, `Chiron/manifest.json`,
+  `App/Package.swift` — with no network lookup, so it runs offline and in CI.
+  Observed: **0** third-party Swift packages, **1** required Python package
+  (`numpy>=1.22`, imported at module level in `Primus/src/primus/engine.py:52`),
+  **2** optional (`gplearn>=0.4.2`, `scikit-learn>=1.3`, behind the
+  `conjecture` extra, which degrades to an honest `REFUSED` without them), and
+  **10** vault modules importing beyond the standard library.
+
+  `python3 ci/sbom.py --check` fails if any module imports a third-party
+  package that nothing declares or guards, and it is a gate in the battery.
+  That is the part that matters: this paragraph previously claimed the Python
+  core was pure standard library, which was false, and nothing would have
+  caught it. A declared range is reported as a range — pinning it here would
+  invent precision the repository does not record.
 - **No audit log of MCP invocations.** Neither `Chiron/mcp_server.py` nor the
   Primus MCP server records an invocation ledger. The `/v1` HTTP service does
   log: `_access()` (`engine_server.py:434-450`) emits one structured line per

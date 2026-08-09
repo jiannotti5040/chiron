@@ -149,6 +149,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("SBOM (every third-party import is declared or guarded)",
+         [PY, os.path.join(VAULT, "ci", "sbom.py"), "--check"], None),
         ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",
                           _script(os.path.join("grow-public", "parameters.json")),
                           "--dry-run", "--once"], None),
