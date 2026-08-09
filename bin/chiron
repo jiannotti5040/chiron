@@ -51,6 +51,7 @@ before it runs. The dozens of Python files are implementation details; this
 interface is the product.
 """
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -245,9 +246,19 @@ def _text_argv(args, verb, extra=()):
     flags = [a for a in args if a in extra]
     targets = [a for a in args if a not in extra]
     bad = [a for a in targets if a.startswith("-") and a != "-"]
+    # A bare sequence is the natural way to type one: `chiron collapse 1 1 2 3`
+    # should mean what `chiron plan 1 1 2 3` already means. Only numbers are
+    # joined — several words would be an ambiguous request, not a surface, and
+    # are still rejected.
+    if len(targets) > 1 and not bad and all(
+            re.fullmatch(r"-?\d+(\.\d+)?", t) for t in targets):
+        return " ".join(targets), flags
     if len(targets) != 1 or bad:
         print(f"usage: chiron {verb} <string-or-file|-> "
               + " ".join(f"[{f}]" for f in extra))
+        if len(targets) > 1:
+            print("       (a multi-word surface needs quoting; a bare list of "
+                  "numbers does not)")
         return None, None
     target = targets[0]
     if os.path.isdir(target):
