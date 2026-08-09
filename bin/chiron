@@ -158,6 +158,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("web boundary + prompt injection (closed by default; text stays data)",
+         [PY, _script("web_boundary.py"), "selftest"], None),
         ("explore/compare (rivals searched; no composite score)",
          [PY, _script("compare_explore.py"), "selftest"], None),
         ("evidence graph (lineage, contradictions, and what stands on nothing)",
