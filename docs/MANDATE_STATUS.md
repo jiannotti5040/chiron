@@ -174,22 +174,46 @@ session, not feasibility.
 | Evidence graph and contradiction records as first-class objects | 14 |
 | Controlled web retrieval boundary | 17 |
 | PDF extraction, chunking, persistent index, retrieval | 13 |
-| Software bill of materials (the security model itself is written) | 21 |
 | Prompt-injection and networking-policy test suites | 22 |
 | macOS App Intents (the SPM bundle has no metadata-extraction phase; iOS has it) | 19 |
 | Conversation UI, result history, onboarding | 12 |
 | Codex MCP client validation | 6 |
 
+### Closed since that list was written — 2026-08-09
+
+| Item | § | Evidence |
+|---|---|---|
+| OpenAI and Anthropic adapters with configuration boundaries | 9, 24 | `CloudProposers.swift`; 12 tests, none touching the network |
+| Intelligence router with a real policy | 9 | `ProposerRouter.RoutingPolicy` — `deterministicOnly`, `localOnly`, authorization, credentials, preferred |
+| Software bill of materials | 21 | `ci/sbom.py`, gated by `--check` in the battery |
+| Module catalog (the capability this branch had lost) | 12 | `ModuleManifest.swift` + `ModulesView.swift`, reader-only |
+| File capability matrix | 13 | `docs/FILE_SUPPORT.md` |
+| User-facing CLI verbs on the shared dispatch | 7 | `analyze`, `attest`, `collapse`, `trace`, `engines`, `mcp` |
+| Client-verified MCP | 6 | Claude Code 2.1.216 reports both servers Connected; stdio handshake exercised directly |
+
 ## The exact next autonomous action
 
-1. `sudo pkill -9 -f CoreSimulator`, re-boot the device, retry
-   `xcodebuild … test`. Record the retry result either way.
-2. Implement §16 `solve` as a Python engine composing existing modules
+1. **Implement §16 `solve`** as a Python engine composing existing modules
    (`conjecture`, `collapse`, `certify`, `cross_examine`), returning ranked
-   candidates with lineage — then expose it through CLI, MCP, and `/v1`
-   together, so it lands on every interface at once rather than one.
-3. Generate the §21 SBOM — the last item in an otherwise complete security
-   section, and the cheapest remaining work with real value.
+   candidates with lineage. Expose it through `_IMPL` first — the CLI, every
+   MCP client, and `engines` then pick it up together rather than one at a
+   time, which is the whole reason that dispatch exists. This is now the
+   largest single remaining item and the one that most changes what Chiron
+   *is*: it is the difference between a system that checks and a system that
+   solves under audit.
+2. **`sudo pkill -9 -f CoreSimulator`**, re-boot the device, retry
+   `xcodebuild … test`. Record the retry result either way. Note that
+   `xcodebuild … build` succeeds today — it is the *test* action that is
+   unobserved, and those are not the same claim.
+3. **Evidence graph (§14)** as a first-class object. The pieces exist —
+   `source_provenance`, `attest` spans, certificates — but nothing joins them
+   into a traversable graph with contradiction records, which is what turns a
+   pile of records into lineage.
+
+Two facts that will otherwise cost an hour each, both recorded in AGENTS.md:
+Swift builds need `--scratch-path` outside this iCloud-synced tree or codesign
+rejects the test bundles, and the gate battery is not safe to run concurrently
+with another vault job.
 
 Do not widen a gate, mute a test, or convert a refusal into a score to make any
 of this look finished.
