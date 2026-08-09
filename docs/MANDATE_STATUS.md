@@ -193,14 +193,29 @@ session, not feasibility.
 
 | Item | § |
 |---|---|
-| `explore` and `compare` as distinct verbs; multi-candidate ranking across engines | 16 |
-| Evidence graph and contradiction records as first-class objects | 14 |
-| Controlled web retrieval boundary | 17 |
-| PDF extraction, chunking, persistent index, retrieval | 13 |
-| Prompt-injection and networking-policy test suites | 22 |
+| Chunking, persistent index, and retrieval over ingested sources | 13 |
 | macOS App Intents (the SPM bundle has no metadata-extraction phase; iOS has it) | 19 |
-| Conversation UI, result history, onboarding | 12 |
+| Conversation UI, result history, onboarding, provider-configuration screen | 12 |
+| Streaming, tool-calling, context budgeting, and cost metadata in the provider layer | 9 |
+| iOS/macOS UI tests and performance tests | 22 |
+| Xcode external-agent (MCP) integration | 11 |
+| Signing, notarization, archive validation | 20 |
+| Live Foundry/AIP delivery | 18 |
 | Codex MCP client validation | 6 |
+
+The last four are **externally blocked**, not unfinished: they need an Apple
+signing identity, authorized Foundry credentials, and a Codex installation,
+none of which exist in this environment.
+
+### Closed 2026-08-09, second pass
+
+| Item | § | Evidence |
+|---|---|---|
+| Evidence graph and contradiction records | 14 | `Chiron/evidence_graph.py`, 15 gates; `lineage` tool + CLI verb |
+| `explore` and `compare` as distinct verbs | 16 | `Chiron/compare_explore.py`, 9 gates; both in `_IMPL` |
+| Controlled web retrieval boundary | 17 | `Chiron/web_boundary.py`, 19 gates, closed by default |
+| Prompt-injection and networking-policy tests | 22 | same module — override, exfiltration, and verdict-coercion signals reported without altering the text |
+| PDF text extraction | 13 | `Chiron/pdf_text.py`, 11 gates, stdlib-only, refuses by name |
 
 ### Closed since that list was written — 2026-08-09
 
