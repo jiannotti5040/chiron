@@ -428,8 +428,17 @@ def cmd_engines(args):
 
 
 def cmd_mcp(args):
-    """Serve the vault to Claude Code, Codex, and any MCP client over stdio."""
-    return _run([PY, _script("mcp_server.py")] + list(args))
+    """Serve the vault to Claude Code, Codex, and any MCP client over stdio.
+
+    This is the one verb that must not go through `_run`. Every other
+    delegation prints `[chiron] $ ...` to stdout first, which is a courtesy
+    for a human and a corruption for a client: stdio MCP requires that stdout
+    carry framed JSON-RPC and nothing else. The banner goes to stderr and the
+    process is replaced, so the server owns the stream outright.
+    """
+    argv = [PY, _script("mcp_server.py")] + list(args)
+    print("[chiron] $ " + " ".join(argv), file=sys.stderr, flush=True)
+    os.execv(PY, argv)
 
 
 def cmd_benchmark(args):
