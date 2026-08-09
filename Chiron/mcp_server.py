@@ -376,6 +376,44 @@ TOOLS = [
         provenance={"implementation": "Chiron/mcp_server.py:_tool_lineage -> evidence_graph.from_certificate"},
     ),
     _tool(
+        "explore",
+        (
+            "Recover a rule and then attack it: return the rival hypotheses "
+            "searched, whether any survived at MDL parity, and whether an "
+            "injunction blocks finality. Surviving cross-examination is "
+            "reported as surviving, never as uniqueness — the searched space "
+            "is the one the adversarial court admits, not all rules. "
+            "Contract: chiron.explore/1."
+        ),
+        dict(_SURFACE_OR_PATH),
+        contract="chiron.explore/1",
+        authority="composes the adversarial court; reaches no verdict of its own",
+        side_effects="none",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_explore -> compare_explore.explore"},
+    ),
+    _tool(
+        "compare",
+        (
+            "Put two surfaces side by side on stated axes — verified, model "
+            "class, parameter count, compression — and report which axes "
+            "differ. Deliberately produces no composite score: a single number "
+            "would hide which axis decided. `better_supported` is set only "
+            "when exactly one side verified. Contract: chiron.compare/1."
+        ),
+        {
+            "type": "object",
+            "properties": {
+                "left": {"description": "First surface: integers, or a string containing them."},
+                "right": {"description": "Second surface."},
+            },
+            "required": ["left", "right"],
+        },
+        contract="chiron.compare/1",
+        authority="reports stated axes only; produces no ranking score",
+        side_effects="none",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_compare -> compare_explore.compare"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -621,6 +659,37 @@ def _tool_lineage(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _tool_explore(args: Dict[str, Any]) -> Dict[str, Any]:
+    """What else would have fit: the rivals searched, and whether one survived.
+
+    Composes `cross_examine`, the adversarial court that already hunts a rival
+    generator describing the same evidence within a few bits. Surviving is
+    reported as surviving, never as uniqueness — the searched space is the one
+    cross_examine admits, not the space of all rules.
+    """
+    got = _surface_from(args)
+    import compare_explore
+    rec = compare_explore.explore(got["surface"])
+    rec["source"] = got["source"]
+    return _wrap(rec)
+
+
+def _tool_compare(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Two surfaces on stated axes, with no composite score.
+
+    A single number would hide which axis decided the answer, so there is
+    none. `better_supported` is set only where exactly one side verified;
+    two verified surfaces on different model classes are a difference, not a
+    ranking.
+    """
+    for key in ("left", "right"):
+        if args.get(key) is None:
+            raise ToolError("compare needs both `left` and `right`")
+    import compare_explore
+    rec = compare_explore.compare(args["left"], args["right"])
+    return _wrap(rec)
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -665,6 +734,8 @@ _IMPL = {
     "catalog": _tool_catalog,
     "solve": _tool_solve,
     "lineage": _tool_lineage,
+    "explore": _tool_explore,
+    "compare": _tool_compare,
 }
 
 

@@ -94,7 +94,7 @@ def main():
     # and never a silent expansion.
     gate("tools/list exposes only the reviewed static Chiron surface",
          tools == {"attest", "analyze", "certify", "collapse", "trace",
-                   "solve", "lineage", "catalog"})
+                   "solve", "lineage", "explore", "compare", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {
@@ -173,6 +173,19 @@ def main():
          and lin["edge_count"] > 0)
     gate("a refuted claim is contradicted and never also supported",
          contradicted and not (contradicted & supported))
+
+    from mcp_server import _tool_explore, _tool_compare
+    exp = _json.loads(_tool_explore({"surface": "1 1 2 3 5 8 13 21"})["content"][0]["text"])
+    gate("explore reports the rivals it searched and never claims uniqueness",
+         exp.get("schema") == "chiron.explore/1"
+         and exp.get("disposition", "").startswith(("SURVIVED", "BLOCKED", "NO CASE"))
+         and "not uniqueness" in exp.get("note", ""))
+    cmp_ = _json.loads(_tool_compare(
+        {"left": "1 2 4 8 16 32", "right": "1 1 2 3 5 8 13 21"})["content"][0]["text"])
+    gate("compare returns axes and no composite score",
+         cmp_.get("schema") == "chiron.compare/1"
+         and "score" not in cmp_ and "rank" not in cmp_
+         and cmp_.get("better_supported") is None)
 
     gate("the former generic call tool is refused at the stdio boundary",
          response.get(9, {}).get("error", {}).get("code") == -32602)
