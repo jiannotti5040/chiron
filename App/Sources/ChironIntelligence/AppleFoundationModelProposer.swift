@@ -67,7 +67,7 @@ public struct AppleFoundationModelProposer: ClaimProposer {
                 throw ProposerError.generationFailed
             }
             let proposals = response.content.spans.map {
-                (text: $0.quote, rationale: $0.reason)
+                (text: $0.quote, rationale: $0.kind.label)
             }
             // Everything the model said is now treated as untrusted text and
             // checked against the source before it can go any further.
@@ -104,6 +104,13 @@ public struct AppleFoundationModelProposer: ClaimProposer {
 /// Note what this schema cannot represent: there is no verdict, no
 /// confidence, and no correction field. The model is given no vocabulary for
 /// deciding anything.
+///
+/// That sentence used to be aspirational. `reason` was a free `String` whose
+/// only restraint was a `@Guide` sentence asking the model not to judge, and
+/// the panel rendered it verbatim beside the claim — so a verdict was one
+/// disobeyed instruction away from the operator's screen. A prompt is not a
+/// boundary. The field is now a closed enum: the model selects a symbol and
+/// the app supplies every word the operator reads.
 @available(macOS 26.0, iOS 26.0, visionOS 26.0, *)
 @Generable
 struct ProposedSpans {
@@ -117,8 +124,50 @@ struct ProposedSpan {
     @Guide(description: "The statement copied exactly from the document, with no changes.")
     var quote: String
 
-    @Guide(description: "Briefly, what kind of check applies. Never say whether it is true.")
-    var reason: String
+    @Guide(description: "Which kind of exact check this statement would need.")
+    var kind: ProposedCheckKind
+}
+
+/// The ten gate kinds `primus.certify` can actually discharge, plus an honest
+/// abstention. Taken from `add(m, "...")` in `Primus/src/primus/certify.py`
+/// rather than invented here, so the proposer cannot suggest a check the
+/// engine has no gate for.
+///
+/// A closed enum is the point. `VERIFIED`, `REFUTED`, and `REFUSED` belong to
+/// the engine; nothing the model can emit here is expressible as any of them.
+@available(macOS 26.0, iOS 26.0, visionOS 26.0, *)
+@Generable
+enum ProposedCheckKind {
+    case aggregate
+    case arithmetic
+    case binomial
+    case closedForm
+    case dateArithmetic
+    case modular
+    case percentage
+    case primality
+    case sequence
+    case sequenceContinuation
+    /// The model could not place the statement in any gate kind. Recorded as
+    /// such rather than guessed at.
+    case undetermined
+
+    /// The operator-facing wording. App-authored, never model-authored.
+    var label: String {
+        switch self {
+        case .aggregate: return "aggregate"
+        case .arithmetic: return "arithmetic"
+        case .binomial: return "binomial"
+        case .closedForm: return "closed form"
+        case .dateArithmetic: return "date arithmetic"
+        case .modular: return "modular"
+        case .percentage: return "percentage"
+        case .primality: return "primality"
+        case .sequence: return "sequence"
+        case .sequenceContinuation: return "sequence continuation"
+        case .undetermined: return "kind undetermined"
+        }
+    }
 }
 #endif
 

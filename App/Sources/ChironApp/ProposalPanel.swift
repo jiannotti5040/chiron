@@ -16,7 +16,11 @@ struct ProposalPanel: View {
     let client: VaultClient
     let sourceText: String
 
-    @State private var availability: ProposerAvailability = .frameworkUnavailable
+    /// Nil until `.task` has actually asked. Seeding this with a concrete case
+    /// made the panel assert a reason it had not checked — on a machine with
+    /// the framework present it read "built without the framework at all" for
+    /// the first frame. An unanswered question is now rendered as one.
+    @State private var availability: ProposerAvailability?
     @State private var proposals: ProposalResult?
     @State private var certified: [Int: CertifiedSpan] = [:]
     @State private var proposing = false
@@ -52,7 +56,7 @@ struct ProposalPanel: View {
             } label: {
                 Label(proposing ? "Reading…" : "Suggest claims", systemImage: "sparkles")
             }
-            .disabled(proposing || !availability.canRun
+            .disabled(proposing || availability?.canRun != true
                       || sourceText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             if proposing { ProgressView().controlSize(.small) }
             Spacer()
@@ -66,12 +70,12 @@ struct ProposalPanel: View {
     /// screen cannot soften or dramatize the reason a model is unavailable.
     private var availabilityRow: some View {
         Label {
-            Text(availability.explanation)
+            Text(availability?.explanation ?? "Checking whether an on-device model is available…")
         } icon: {
-            Image(systemName: availability.canRun ? "checkmark.seal" : "info.circle")
+            Image(systemName: availability?.canRun == true ? "checkmark.seal" : "info.circle")
         }
         .font(.caption)
-        .foregroundStyle(availability.canRun ? Color.secondary : Color.orange)
+        .foregroundStyle(availability?.canRun == true ? Color.secondary : Color.orange)
     }
 
     @ViewBuilder
@@ -148,6 +152,8 @@ struct ProposalPanel: View {
         switch reason {
         case .notPresentInSource:
             "not present in the source — the model wrote something the document does not say"
+        case .alreadyAttributed:
+            "already attributed — the document says this, but an earlier proposal claimed every occurrence"
         case .empty:
             "empty proposal"
         case .tooLong(let limit):

@@ -84,6 +84,12 @@ public struct RejectedProposal: Sendable, Equatable {
     public enum Reason: Sendable, Equatable {
         /// The model returned text that does not occur in the source at all.
         case notPresentInSource
+        /// The text *is* in the source, but every occurrence was already
+        /// claimed by an earlier proposal. Distinct from `notPresentInSource`
+        /// on purpose: reporting a duplicate as an invention is a false
+        /// accusation against the model, and a gate that invents errors is
+        /// worth no more than one that misses them.
+        case alreadyAttributed
         case empty
         case tooLong(limit: Int)
     }
@@ -149,9 +155,16 @@ public enum GroundingFilter {
             }
             guard let range = firstOccurrence(of: needle, in: sourceBytes,
                                               skipping: consumed) else {
-                // The model invented it, or corrected it, or otherwise wrote
-                // something the document does not say. Same failure either way.
-                rejected.append(.init(text: trimmed, reason: .notPresentInSource))
+                // Two different failures reach this branch. Either the
+                // document does not say this — the model invented it, or
+                // corrected it — or the document does say it and every
+                // occurrence is already spoken for. Only the first is the
+                // model's fault, so they are not reported as the same thing.
+                let stillAbsent = firstOccurrence(of: needle, in: sourceBytes,
+                                                  skipping: []) == nil
+                rejected.append(.init(text: trimmed,
+                                      reason: stillAbsent ? .notPresentInSource
+                                                          : .alreadyAttributed))
                 continue
             }
             consumed.append(range)

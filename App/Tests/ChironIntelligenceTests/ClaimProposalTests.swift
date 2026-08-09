@@ -97,7 +97,29 @@ final class GroundingFilterTests: XCTestCase {
             in: source)
 
         XCTAssertEqual(result.claims.count, 1)
-        XCTAssertEqual(result.rejected.first?.reason, .notPresentInSource)
+        // The de-duplication is the point of this test and still holds: one
+        // claim, not two. But the *reason* given for the discard used to be
+        // `.notPresentInSource` — the filter could not tell "the document
+        // never said this" apart from "the document said it once and it is
+        // already spoken for", and reported both as an invention. This
+        // assertion pinned that conflation in place.
+        XCTAssertEqual(result.rejected.first?.reason, .alreadyAttributed)
+    }
+
+    /// The two discard reasons must stay distinguishable: a sentence the
+    /// document genuinely does not contain is the model's error, a second
+    /// mention of a sentence it does contain is not.
+    func testAnAbsentProposalAndARepeatAreNotGivenTheSameReason() {
+        let result = GroundingFilter.ground(
+            proposals: [("The sum of 2 and 2 is 4", "first"),
+                        ("The sum of 2 and 2 is 4", "again"),
+                        ("The sum of 2 and 2 is 5", "invented")],
+            in: source)
+
+        XCTAssertEqual(result.claims.count, 1)
+        XCTAssertEqual(result.rejected.count, 2)
+        XCTAssertEqual(result.rejected.first?.reason, .alreadyAttributed)
+        XCTAssertEqual(result.rejected.last?.reason, .notPresentInSource)
     }
 
     func testWholeDocumentAndEmptyProposalsAreRefused() {
