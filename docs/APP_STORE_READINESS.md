@@ -1,10 +1,19 @@
 # App Store and release readiness
 
-**Decision (re-inspected 2026-08-08, second pass): not ready for App Store
-submission or public macOS distribution.** This checkout contains two
-development interfaces: a locally tested macOS SwiftUI front end for a
-separately installed Python vault, and a native iOS SwiftUI client for the
-narrow, versioned Primus `/v1` service contract.
+**Decision (re-inspected 2026-08-09, third pass): not ready for App Store
+submission or public macOS distribution.** The remaining blockers are now
+account-owned rather than engineering: signing identity, notarization, archive
+validation, and App Review. Icon, export compliance, privacy manifest, bundle
+identifiers, and versioning are done.
+
+This checkout contains two application interfaces, and the split is
+deliberate. `App/` builds `chiron-app`, a macOS-only operator workstation that
+spawns the local Python vault — module catalog, gate runner, proposal panel.
+`iOS/ChironMobile.xcodeproj` builds the shipping client, now **multiplatform**
+(iOS and macOS from one target), which reaches the vault over the versioned
+`/v1` HTTPS contract and carries the App Intents, Keychain, privacy manifest,
+and icon. The workstation is not a distribution candidate and is not intended
+to be; the shipping client is.
 
 What changed in this pass: the iOS target had been deleted, leaving
 `ChironMobile.xcodeproj` on disk with zero sources. It has been restored on
@@ -38,7 +47,7 @@ cannot be observed from source control.
 | Apple on-device model | **Implemented and tested; available on this host** | `ChironIntelligence` gates `SystemLanguageModel` behind `#if canImport(FoundationModels)` and `@available(macOS 26/iOS 26)`, reports availability honestly, and cannot express a verdict. 12 deterministic gates green; a live run was observed. Privacy-manifest and store-disclosure work for it is **not** done. |
 | Direct macOS distribution | **Not ready** | The inspected bundle is ad-hoc signed, has no Hardened Runtime evidence, is rejected by Gatekeeper, and has not been notarized. |
 | Mac App Store | **Not ready** | No App Sandbox entitlement, Apple distribution signing, archive/export pipeline, valid store versioning, privacy submission record, or review evidence exists. |
-| iOS App Store | **Not ready** | The development target has no release signing/provisioning/archive/privacy/review evidence; its authenticated service boundary is not deployed or exercised end to end; and its AppIcon asset set has no assigned 1024 px image. |
+| iOS App Store | **Not ready** | The development target has no release signing/provisioning/archive/privacy/review evidence, and its authenticated service boundary is not deployed or exercised end to end. The AppIcon asset set now carries an assigned 1024 px image and export compliance is declared, so those two are no longer blockers. |
 
 ## What is present and proven locally
 
