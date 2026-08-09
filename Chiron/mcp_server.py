@@ -428,6 +428,41 @@ TOOLS = [
         provenance={"implementation": "Chiron/mcp_server.py:_tool_compare -> compare_explore.compare"},
     ),
     _tool(
+        "falsifiers",
+        (
+            "What would overturn this. For a verified rule, the exact next "
+            "value it predicts — any other observation refutes it. For a "
+            "REFUSED claim, the specific evidence nobody supplied, which "
+            "turns a dead end into a task. A REFUTED claim gets neither, "
+            "because inventing a falsifier for it would be theatre. "
+            "Contract: chiron.falsifiers/1."
+        ),
+        {"type": "object", "properties": dict(
+            _TEXT_OR_PATH, surface={"description": "A sequence, if checking a rule rather than text."},
+            facts={"description": "Ground truth, as for certify."})},
+        contract="chiron.falsifiers/1",
+        authority="derives refuters from verdicts other engines reached; reaches none itself",
+        side_effects="none",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_falsifiers -> falsify"},
+    ),
+    _tool(
+        "propose_experiment",
+        (
+            "The cheapest single thing to go do next, ranked by an ordinal "
+            "cost class (lookup < single_observation < series) and never by "
+            "an invented likelihood of being informative. Returns nothing "
+            "when nothing is actionable, rather than proposing busywork. "
+            "Contract: chiron.falsifiers/1."
+        ),
+        {"type": "object", "properties": dict(
+            _TEXT_OR_PATH, surface={"description": "A sequence, if planning around a rule."},
+            facts={"description": "Ground truth, as for certify."})},
+        contract="chiron.falsifiers/1",
+        authority="ranks by stated cost class only; proposes no action it cannot state exactly",
+        side_effects="none",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_propose_experiment -> falsify"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -729,6 +764,44 @@ def _tool_compare(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _tool_falsifiers(args: Dict[str, Any]) -> Dict[str, Any]:
+    """What observation would overturn this, and what is missing to check it.
+
+    Answers the question the rest of the vault does not: not "is it
+    supported?" but "what would make it wrong, and what is the cheapest thing
+    to go get?" A REFUSED claim comes back naming the specific fact nobody
+    supplied, which turns a dead end into a task.
+    """
+    import falsify
+    if args.get("text") is not None or args.get("path") is not None:
+        got = _text_from(args)
+        try:
+            from primus.certify import certify
+        except ImportError:
+            seed = os.path.join(os.path.dirname(_HERE), "Primus", "src")
+            if seed not in sys.path:
+                sys.path.insert(0, seed)
+            from primus.certify import certify
+        cert = certify(got["text"], facts=args.get("facts"))
+        rec = falsify.falsifiers_for_certificate(cert)
+        rec["source"] = got["source"]
+        return _wrap(rec)
+    got = _surface_from(args)
+    rec = falsify.falsifiers_for_surface(got["surface"])
+    rec["source"] = got["source"]
+    return _wrap(rec)
+
+
+def _tool_propose_experiment(args: Dict[str, Any]) -> Dict[str, Any]:
+    """The cheapest next observation, ranked by cost class only."""
+    import falsify
+    report = _tool_falsifiers(args)
+    inner = json.loads(report["content"][0]["text"])
+    rec = falsify.propose_experiment(inner)
+    rec["from"] = inner.get("schema")
+    return _wrap(rec)
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -775,6 +848,8 @@ _IMPL = {
     "lineage": _tool_lineage,
     "explore": _tool_explore,
     "compare": _tool_compare,
+    "falsifiers": _tool_falsifiers,
+    "propose_experiment": _tool_propose_experiment,
 }
 
 

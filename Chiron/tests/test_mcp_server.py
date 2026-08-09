@@ -94,7 +94,8 @@ def main():
     # and never a silent expansion.
     gate("tools/list exposes only the reviewed static Chiron surface",
          tools == {"attest", "analyze", "certify", "collapse", "trace",
-                   "solve", "lineage", "explore", "compare", "catalog"})
+                   "solve", "lineage", "explore", "compare",
+                   "falsifiers", "propose_experiment", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {

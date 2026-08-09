@@ -40,6 +40,11 @@ Daily verbs:
                                what contradicts it, and what stands on nothing
     chiron explore <input>     what else would have fit; rivals searched
     chiron compare <a> <b>     two surfaces on stated axes; no composite score
+    chiron falsify <input> [--facts=...]
+                               what would overturn this; for a refusal, the
+                               specific evidence nobody supplied
+    chiron experiment <input> [--facts=...]
+                               the cheapest next observation, or nothing
     chiron engines [query]     the reviewed static allowlist an agent may invoke
     chiron mcp                 serve the vault over stdio to Claude Code / Codex
 
@@ -162,6 +167,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("falsifiers + experiment design (what would overturn this)",
+         [PY, _script("falsify.py"), "selftest"], None),
         ("grounded claims (exact against supplied facts, or refuse)",
          [PY, "-c",
           "import sys;sys.path.insert(0,'Primus/src');"
@@ -556,6 +563,28 @@ def cmd_compare(args):
                       bool(flags))
 
 
+def cmd_falsify(args):
+    """What would overturn this, and what evidence is missing to check it."""
+    facts, args = _facts_from(args)
+    text, flags = _text_argv(args, "falsify", ("--json",))
+    if text is None:
+        return 2
+    payload = {"text": text} if facts is not None else {"surface": text}
+    if facts is not None:
+        payload["facts"] = facts
+    return _tool_call("falsifiers", payload, "--json" in flags)
+
+
+def cmd_experiment(args):
+    """The cheapest next observation, or an honest nothing."""
+    facts, args = _facts_from(args)
+    text, flags = _text_argv(args, "experiment", ("--json",))
+    if text is None:
+        return 2
+    payload = {"text": text, "facts": facts} if facts is not None else {"surface": text}
+    return _tool_call("propose_experiment", payload, "--json" in flags)
+
+
 def cmd_engines(args):
     """The reviewed static allowlist — every operation an agent may invoke.
 
@@ -722,6 +751,7 @@ COMMANDS = {
     "analyze": cmd_analyze, "attest": cmd_attest, "collapse": cmd_collapse,
     "trace": cmd_trace, "solve": cmd_solve, "lineage": cmd_lineage,
     "explore": cmd_explore, "compare": cmd_compare,
+    "falsify": cmd_falsify, "experiment": cmd_experiment,
     "engines": cmd_engines,
     "mcp": cmd_mcp,
 }
