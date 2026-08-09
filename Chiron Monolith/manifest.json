@@ -1,7 +1,7 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T18:57:29Z",
+  "generated_utc": "2026-08-09T19:00:43Z",
   "mode": "static",
   "summary": {
     "runnable_scripts": 89,
@@ -9,7 +9,7 @@
     "stdlib_only": 79,
     "with_spdx_header": 89,
     "emitting_artifacts": 5,
-    "internal_edges": 122
+    "internal_edges": 123
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -269,6 +269,10 @@
       [
         "ingest_pdf",
         "chiron"
+      ],
+      [
+        "ingest_pdf",
+        "pdf_text"
       ],
       [
         "intake",
@@ -973,8 +977,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "fb78ee554b7ad5c3",
-        "generated_utc": "2026-08-09T18:57:27Z",
+        "self_hash": "d4101991f5f465a1",
+        "generated_utc": "2026-08-09T19:00:40Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1274,8 +1278,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "2dec896324dc12b6",
-        "generated_utc": "2026-08-09T18:57:27Z",
+        "self_hash": "82581df3742c362a",
+        "generated_utc": "2026-08-09T19:00:41Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1633,13 +1637,14 @@
       "script": "ingest_pdf",
       "path": "ingest_pdf.py",
       "purpose": "PDF source adapter (optional dependency) \u2014 extract text from a PDF and run Chiron's",
-      "lines": 75,
+      "lines": 118,
       "has_spdx_header": true,
       "has_selftest": false,
       "dependencies": [],
       "stdlib_only": true,
       "imports": [
-        "chiron"
+        "chiron",
+        "pdf_text"
       ],
       "artifact": null,
       "emits_artifact": false,
@@ -1964,7 +1969,9 @@
       "emits_artifact": false,
       "roles": [],
       "last_run": null,
-      "imported_by": []
+      "imported_by": [
+        "ingest_pdf"
+      ]
     },
     {
       "script": "pipeline",
@@ -2179,8 +2186,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "b07b7e8c1ad5d0bc",
-        "generated_utc": "2026-08-09T18:57:22Z",
+        "self_hash": "8d3a337cd5fe729c",
+        "generated_utc": "2026-08-09T19:00:36Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2569,8 +2576,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "8b3900ad8ed08e1d",
-        "generated_utc": "2026-08-09T18:57:16Z",
+        "self_hash": "b77acebfa8560ee8",
+        "generated_utc": "2026-08-09T19:00:31Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null
