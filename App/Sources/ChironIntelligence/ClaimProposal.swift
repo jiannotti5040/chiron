@@ -30,6 +30,11 @@ public enum ProposerAvailability: Sendable, Equatable {
     case modelNotReady
     /// The operator turned model assistance off. Deterministic paths remain.
     case disabledByOperator
+    /// A hosted provider is configured but leaving the device has not been
+    /// authorized. Holding a key is not consent to use it.
+    case networkNotAuthorized
+    /// Network use is authorized but no credential exists for this provider.
+    case credentialMissing(ProviderKind)
 
     public var canRun: Bool { self == .available }
 
@@ -51,6 +56,10 @@ public enum ProposerAvailability: Sendable, Equatable {
             "The on-device model is still downloading or preparing. Deterministic checking is unaffected."
         case .disabledByOperator:
             "Model assistance is turned off. Deterministic checking is unaffected."
+        case .networkNotAuthorized:
+            "Sending text to a hosted model is not authorized, so no request was made. Deterministic checking is unaffected."
+        case .credentialMissing(let provider):
+            "No \(provider.displayName) credential is configured, so no request was made. Deterministic checking is unaffected."
         }
     }
 }
@@ -112,6 +121,10 @@ public enum ProposerError: Error, Sendable, Equatable {
     case unavailable(ProposerAvailability)
     case inputTooLarge(limit: Int, actual: Int)
     case generationFailed
+    /// The provider answered with a non-2xx status. Surfaced as itself rather
+    /// than folded into `generationFailed`, because a 401 and a 429 call for
+    /// different operator action and neither is a modelling failure.
+    case providerRejected(status: Int)
 }
 
 /// Anything that can point at candidate spans. Deliberately tiny: a proposer

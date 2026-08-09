@@ -179,13 +179,84 @@ enum ProposedCheckKind {
 /// not depend on the outcome either way.
 public enum ProposerRouter {
     public static func proposer(modelAssistanceEnabled: Bool = true) -> any ClaimProposer {
-        guard modelAssistanceEnabled else {
+        route(policy: RoutingPolicy(modelAssistanceEnabled: modelAssistanceEnabled))
+    }
+
+    /// What the operator has allowed. Every field is a constraint, never a
+    /// preference the router may override to obtain a result.
+    public struct RoutingPolicy: Sendable {
+        public var modelAssistanceEnabled: Bool
+        /// Refuse every model, local or hosted. The deterministic engines are
+        /// the product; this mode asserts that and is not a degraded state.
+        public var deterministicOnly: Bool
+        /// Keep the text on this device. When true the router will not
+        /// consider a hosted provider even if one is fully configured.
+        public var localOnly: Bool
+        public var authorization: NetworkAuthorization
+        public var credentials: any ProviderCredentialStore
+        /// An explicit operator choice, honoured over the default order.
+        public var preferred: ProviderKind?
+
+        public init(modelAssistanceEnabled: Bool = true,
+                    deterministicOnly: Bool = false,
+                    localOnly: Bool = true,
+                    authorization: NetworkAuthorization = .denied,
+                    credentials: any ProviderCredentialStore = EnvironmentCredentialStore(),
+                    preferred: ProviderKind? = nil) {
+            self.modelAssistanceEnabled = modelAssistanceEnabled
+            self.deterministicOnly = deterministicOnly
+            self.localOnly = localOnly
+            self.authorization = authorization
+            self.credentials = credentials
+            self.preferred = preferred
+        }
+    }
+
+    /// Select a proposer, or a proposer that states honestly why none ran.
+    ///
+    /// The order is privacy-first and not negotiable by cost or quality: the
+    /// on-device model is tried before anything that would disclose the text,
+    /// because the cheapest disclosure is the one that does not happen. A
+    /// hosted provider is reached only when the operator has both authorized
+    /// the network and turned `localOnly` off.
+    ///
+    /// This function never returns a proposer that will silently do nothing.
+    /// When nothing can run it returns `UnavailableProposer` carrying the
+    /// specific reason, so the caller can say which door was closed.
+    public static func route(policy: RoutingPolicy) -> any ClaimProposer {
+        if policy.deterministicOnly || !policy.modelAssistanceEnabled {
             return UnavailableProposer(availability: .disabledByOperator)
         }
-        let apple = AppleFoundationModelProposer()
-        guard apple.availability.canRun else {
-            return UnavailableProposer(availability: apple.availability)
+
+        var candidates: [ProviderKind] = [.appleOnDevice]
+        if !policy.localOnly {
+            candidates += [.openAI, .anthropic]
         }
-        return apple
+        if let preferred = policy.preferred {
+            candidates.removeAll { $0 == preferred }
+            candidates.insert(preferred, at: 0)
+        }
+
+        var firstReason: ProposerAvailability?
+        for kind in candidates {
+            let proposer = build(kind, policy: policy)
+            if proposer.availability.canRun { return proposer }
+            if firstReason == nil { firstReason = proposer.availability }
+        }
+        // Report the first candidate's reason rather than the last: the
+        // operator cares why the *preferred* path was unavailable, not why a
+        // fallback they never asked for also was.
+        return UnavailableProposer(availability: firstReason ?? .frameworkUnavailable)
+    }
+
+    static func build(_ kind: ProviderKind, policy: RoutingPolicy) -> any ClaimProposer {
+        switch kind {
+        case .appleOnDevice:
+            return AppleFoundationModelProposer()
+        case .openAI, .anthropic:
+            return CloudClaimProposer(provider: kind,
+                                      credentials: policy.credentials,
+                                      authorization: policy.authorization)
+        }
     }
 }
