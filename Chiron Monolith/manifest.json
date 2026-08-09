@@ -1,7 +1,7 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T19:45:29Z",
+  "generated_utc": "2026-08-09T19:56:58Z",
   "mode": "static",
   "summary": {
     "runnable_scripts": 89,
@@ -977,8 +977,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "4c3906e86dc9f2c6",
-        "generated_utc": "2026-08-09T19:45:26Z",
+        "self_hash": "0f6246a7f74ba6e5",
+        "generated_utc": "2026-08-09T19:56:41Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1278,8 +1278,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "4afdbb0521e1eb18",
-        "generated_utc": "2026-08-09T19:45:27Z",
+        "self_hash": "8ea5197c066e7bff",
+        "generated_utc": "2026-08-09T19:56:42Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -2186,8 +2186,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "f087ee9596a1bdf0",
-        "generated_utc": "2026-08-09T19:45:22Z",
+        "self_hash": "4819f8ae15de0bfa",
+        "generated_utc": "2026-08-09T19:56:37Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2576,8 +2576,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "85ae7333a7994959",
-        "generated_utc": "2026-08-09T19:45:16Z",
+        "self_hash": "af7aa37537f68e6d",
+        "generated_utc": "2026-08-09T19:56:31Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null

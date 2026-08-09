@@ -97,11 +97,22 @@ public struct VaultClient: Sendable {
 
     // MARK: - Certify (primus.certificate/2)
 
-    public func certifyRaw(text: String) async throws -> Data {
+    /// Certify text, optionally against ground truth the caller supplies.
+    ///
+    /// `factsJSON` is the serialized fact table — an object of subject to
+    /// value, or a list of `{subject, value, unit}`. Without it, any claim
+    /// whose truth lives outside the sentence is REFUSED, which on real
+    /// operational prose is every claim. With it those claims become exactly
+    /// checkable against exactly one named fact.
+    public func certifyRaw(text: String, factsJSON: String? = nil) async throws -> Data {
         // '-' = stdin mode, so text that begins with a dash cannot be
         // mistaken for a flag.
+        var argv = ["-m", "primus.cli", "certify", "--json", "-"]
+        if let factsJSON, !factsJSON.isEmpty {
+            argv += ["--facts", factsJSON]
+        }
         let res = try await runner.run(
-            arguments: ["-m", "primus.cli", "certify", "--json", "-"],
+            arguments: argv,
             stdin: Data(text.utf8),
             currentDirectory: vaultRoot.appendingPathComponent("Primus"),
             extraEnvironment: ["PYTHONPATH": "src"])

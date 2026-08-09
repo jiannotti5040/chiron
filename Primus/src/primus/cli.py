@@ -7,6 +7,7 @@ primus.cli — the command-line front door.
     primus collapse "1 1 2 3 5 8 13 21"        recover + verify a generator
     primus collapse --json "3 1 4 1 5 9 2 6"   machine-readable (abstains here)
     primus certify "2+2=5 and 2 4 6 8 continues as 10"
+    primus certify --facts facts.json report.txt   check against ground truth
     echo "<model output>" | primus certify -   certify stdin (agent tool-call)
     primus conjecture "0 1 128 2187 16384 ..."  guess-and-prove: GP proposes,
                                                the exact gate stamps or refuses
@@ -42,8 +43,30 @@ def _cmd_collapse(args: argparse.Namespace) -> int:
     return 0 if inv.verified or not args.strict else 1
 
 
+def _load_facts(spec):
+    """Ground truth from a JSON literal or a file path, or None.
+
+    Without facts, any claim whose truth lives outside the sentence is
+    REFUSED — which on real operational prose is every claim. This is how a
+    caller supplies the table the engine has never seen.
+    """
+    if not spec:
+        return None
+    import os
+    if os.path.isfile(spec):
+        with open(spec, "r", encoding="utf-8") as handle:
+            return json.load(handle)
+    try:
+        return json.loads(spec)
+    except ValueError:
+        raise SystemExit("primus: --facts is neither a readable file nor valid "
+                         "JSON: %s" % spec[:60])
+
+
 def _cmd_certify(args: argparse.Namespace) -> int:
     from primus.certify import certify, render
+
+    facts = _load_facts(getattr(args, "facts", None))
 
     if args.jsonl:
         # Pipeline mode: one certificate per input line, hash-chained so the
@@ -56,7 +79,7 @@ def _cmd_certify(args: argparse.Namespace) -> int:
             line = line.rstrip("\n")
             if not line.strip():
                 continue
-            cert = certify(line)
+            cert = certify(line, facts=facts)
             cert["chain"] = {"prev_sha256": prev}
             prev = hashlib.sha256(
                 (prev + cert["attestation"]["sha256"]).encode()).hexdigest()
@@ -67,7 +90,7 @@ def _cmd_certify(args: argparse.Namespace) -> int:
                          separators=(",", ":")), file=sys.stderr)
         return 1 if (args.gate and refuted_lines) else 0
 
-    cert = certify(_read_text(args.text))
+    cert = certify(_read_text(args.text), facts=facts)
     if args.json:
         print(json.dumps(cert, indent=2, default=str))
     else:
@@ -152,6 +175,11 @@ def main(argv=None) -> int:
                                        "refuse to bless the rest")
     c.add_argument("text", help="text to certify; '-' for stdin")
     c.add_argument("--json", action="store_true", help="emit the full certificate")
+    c.add_argument("--facts", metavar="JSON|FILE",
+                   help="ground truth for claims whose subject lives outside "
+                        "the sentence: an object of subject -> value, or a "
+                        "list of {subject, value, unit}. Without it such "
+                        "claims are REFUSED.")
     c.add_argument("--gate", action="store_true",
                    help="exit 1 if any claim was REFUTED (agent gating)")
     c.add_argument("--jsonl", action="store_true",
