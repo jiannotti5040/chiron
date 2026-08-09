@@ -18,6 +18,7 @@ struct WorkspaceView: View {
     @State private var exportDocument = RawJSONDocument(data: Data())
     @State private var exportName = "chiron-record.json"
     @State private var exporting = false
+    @State private var facts: FactsSource.Loaded?
 
     static let sample = "The archive holds 4200 records and 1400 were revised "
         + "this quarter, so three in ten changed. Sequence: 1, 4, 9, 16, 25."
@@ -95,6 +96,7 @@ struct WorkspaceView: View {
                     onError: { errorText = $0 }
                 )
             FileLoadBar(label: "Choose a UTF-8 text file…", text: $text, onLoad: selectFile)
+            FactsPicker(facts: $facts)
             if let selectedFile {
                 HStack(spacing: 8) {
                     Text(selectedFile.name)
@@ -180,7 +182,8 @@ struct WorkspaceView: View {
             defer { running = false }
             do {
                 async let analysisTask: Data = client.fullStackRaw(text: input)
-                async let certificateTask: Data = client.certifyRaw(text: input)
+                async let certificateTask: Data = client.certifyRaw(
+                    text: input, factsJSON: facts?.json)
                 let sourceRaw: Data?
                 if let sourceFile {
                     sourceRaw = try await client.sourceRecordRaw(fileURL: sourceFile.url)
