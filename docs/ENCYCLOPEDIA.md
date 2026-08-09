@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](../notes/DICTIONARY.md) defines the vocabulary; the [SOP](../notes/SOP.md) says how to operate it all.
 
-**State at generation:** 85 runnable scripts · 63 carry selftest gates · 75 stdlib-only · 85 licensed · 118 internal import edges · generated 2026-08-09T15:26:17Z (static mode).
+**State at generation:** 89 runnable scripts · 67 carry selftest gates · 79 stdlib-only · 89 licensed · 123 internal import edges · generated 2026-08-09T19:06:52Z (static mode).
 
 ## Index by role
 
@@ -14,7 +14,7 @@ the [DICTIONARY](../notes/DICTIONARY.md) defines the vocabulary; the [SOP](../no
 - **Builders — they generate artifacts from sources of truth:** `build`, `build_encyclopedia`, `build_examples`, `build_manifest`
 - **Servers — the dashboard's live services:** `assistant_server`, `console_server`, `mcp_server`, `test_mcp_server`
 - **Test batteries:** `test_bin_cli`, `test_chiron`, `test_execution_policy`, `test_foundry_boundary`, `test_grow`, `test_local_cors`, `test_mcp_server`, `test_source_provenance`
-- **Most depended-upon (the spine's hubs):** `chiron` (48 dependents), `legal_corpus` (7 dependents), `govern` (6 dependents), `run_ledger` (6 dependents), `president_grow` (4 dependents)
+- **Most depended-upon (the spine's hubs):** `chiron` (48 dependents), `legal_corpus` (7 dependents), `govern` (6 dependents), `run_ledger` (6 dependents), `cross_examine` (4 dependents)
 
 ## The modules, A–Z
 
@@ -272,6 +272,13 @@ Chiron vs. conventional compression — an honest comparison, both directions.
 - **Facts:** selftest: no · deps: stdlib only · imports: `chiron`
 - **Path:** `Chiron/compare.py`
 
+### `compare_explore`
+
+compare_explore — the breadth half of the solving mode.
+
+- **Facts:** selftest: yes · deps: stdlib only · imports: `cross_examine` · imported by: `mcp_server`
+- **Path:** `Chiron/compare_explore.py`
+
 ### `conjecture`
 
 conjecture.py — guess-and-prove: a stochastic proposer behind the exact gate.
@@ -296,7 +303,7 @@ cross_examine.py — The Defense Attorney (Chiron Jurisprudence Suite).
 
 - **Conceptually:** a finding is only as strong as the hardest cross-examination it survives.
 
-- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `discernment`, `judgment`, `pipeline`
+- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `compare_explore`, `discernment`, `judgment`, `pipeline`
 - **Path:** `Chiron/cross_examine.py`
 
 ### `density_emotion` — The Decoherence Channel
@@ -347,6 +354,13 @@ epistemic.py — the abstract primitive the whole portfolio instantiates.
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `legal_corpus`, `semic`, `semic_energy`
 - **Path:** `Chiron/epistemic.py`
 
+### `evidence_graph`
+
+evidence_graph — join the records the vault already produces into lineage.
+
+- **Facts:** selftest: yes · deps: stdlib only · imports: `foundry_boundary` · imported by: `mcp_server`
+- **Path:** `Chiron/evidence_graph.py`
+
 ### `export_graph`
 
 Knowledge-graph export — turn recovered generators into a portable graph that
@@ -372,7 +386,7 @@ Formal soundness checks (property-based).
 
 Neutral external-ontology boundary for Chiron records.
 
-- **Facts:** selftest: yes · deps: stdlib only · imported by: `test_foundry_boundary`
+- **Facts:** selftest: yes · deps: stdlib only · imported by: `evidence_graph`, `test_foundry_boundary`
 - **Path:** `Chiron/foundry_boundary.py`
 
 ### `full_stack`
@@ -446,7 +460,7 @@ Infectatrum bridge — ambiguity measurement for Chiron.
 
 PDF source adapter (optional dependency) — extract text from a PDF and run Chiron's
 
-- **Facts:** selftest: no · deps: stdlib only · imports: `chiron`
+- **Facts:** selftest: no · deps: stdlib only · imports: `chiron`, `pdf_text`
 - **Path:** `Chiron/ingest_pdf.py`
 
 ### `intake` — The Front Door
@@ -551,7 +565,7 @@ llm_providers.py — one multi-provider LLM client with a fallback chain.
 
 chiron.mcp_server — the whole vault as tools an agent can call on itself.
 
-- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `full_stack`, `planner`, `trace` · imported by: `test_mcp_server`
+- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `compare_explore`, `evidence_graph`, `full_stack`, `planner`, `trace` · imported by: `test_mcp_server`
 - **Path:** `Chiron/mcp_server.py`
 
 ### `mine_code`
@@ -586,6 +600,13 @@ operator_calculus.py — the six epistemic operators over a Chiron finding.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`
 - **Path:** `Chiron/operator_calculus.py`
+
+### `pdf_text`
+
+pdf_text — extract text from a PDF, or refuse and say why.
+
+- **Facts:** selftest: yes · deps: stdlib only · imported by: `ingest_pdf`
+- **Path:** `Chiron/pdf_text.py`
 
 ### `pipeline`
 
@@ -838,3 +859,10 @@ Reproducibility harness — proves that the same input, on the same version, yie
 
 - **Facts:** selftest: no · deps: stdlib only · imports: `chiron`
 - **Path:** `Chiron/verify.py`
+
+### `web_boundary`
+
+web_boundary — the only way text from the network may enter the vault.
+
+- **Facts:** selftest: yes · deps: stdlib only
+- **Path:** `Chiron/web_boundary.py`

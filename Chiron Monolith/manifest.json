@@ -1,7 +1,7 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T19:00:43Z",
+  "generated_utc": "2026-08-09T19:06:52Z",
   "mode": "static",
   "summary": {
     "runnable_scripts": 89,
@@ -977,8 +977,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "d4101991f5f465a1",
-        "generated_utc": "2026-08-09T19:00:40Z",
+        "self_hash": "2bcf7d4f483bc04e",
+        "generated_utc": "2026-08-09T19:06:03Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1278,8 +1278,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "82581df3742c362a",
-        "generated_utc": "2026-08-09T19:00:41Z",
+        "self_hash": "c2dcb9bb09183fb6",
+        "generated_utc": "2026-08-09T19:05:51Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1861,7 +1861,7 @@
       "script": "mcp_server",
       "path": "mcp_server.py",
       "purpose": "chiron.mcp_server \u2014 the whole vault as tools an agent can call on itself.",
-      "lines": 969,
+      "lines": 988,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -2186,8 +2186,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "8d3a337cd5fe729c",
-        "generated_utc": "2026-08-09T19:00:36Z",
+        "self_hash": "ba7c21aeecf012d7",
+        "generated_utc": "2026-08-09T19:05:53Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2576,8 +2576,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "b77acebfa8560ee8",
-        "generated_utc": "2026-08-09T19:00:31Z",
+        "self_hash": "47d0fa6ddbc001b8",
+        "generated_utc": "2026-08-09T19:06:08Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null

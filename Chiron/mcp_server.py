@@ -405,8 +405,11 @@ TOOLS = [
             "properties": {
                 "left": {"description": "First surface: integers, or a string containing them."},
                 "right": {"description": "Second surface."},
+                "left_path": {"type": "string",
+                              "description": "Read the first surface from a local file instead of `left`."},
+                "right_path": {"type": "string",
+                               "description": "Read the second surface from a local file instead of `right`."},
             },
-            "required": ["left", "right"],
         },
         contract="chiron.compare/1",
         authority="reports stated axes only; produces no ranking score",
@@ -681,12 +684,28 @@ def _tool_compare(args: Dict[str, Any]) -> Dict[str, Any]:
     none. `better_supported` is set only where exactly one side verified;
     two verified surfaces on different model classes are a difference, not a
     ranking.
+
+    Each side takes a value or a path, like every other tool here. Files are
+    first-class in this server, and a comparison tool that could only take
+    inline values would be the one place a caller had to read a file itself.
     """
+    sides = {}
     for key in ("left", "right"):
-        if args.get(key) is None:
-            raise ToolError("compare needs both `left` and `right`")
+        path_key = key + "_path"
+        if args.get(key) is not None and args.get(path_key) is not None:
+            raise ToolError("pass %s or %s, not both" % (key, path_key))
+        if args.get(path_key) is not None:
+            sides[key] = _read_path(str(args[path_key]))["text"]
+        elif args.get(key) is not None:
+            sides[key] = args[key]
+        else:
+            raise ToolError("compare needs %s or %s" % (key, path_key))
     import compare_explore
-    rec = compare_explore.compare(args["left"], args["right"])
+    rec = compare_explore.compare(sides["left"], sides["right"])
+    rec["source"] = {
+        "left": "file" if args.get("left_path") else "argument",
+        "right": "file" if args.get("right_path") else "argument",
+    }
     return _wrap(rec)
 
 
