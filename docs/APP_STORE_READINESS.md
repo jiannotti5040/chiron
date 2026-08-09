@@ -232,6 +232,20 @@ make the external-installation contract explicit, reproducible, supportable,
 and legally reviewable. A build that succeeds only because the developer's
 checkout and interpreter are present is not a distributable product.
 
+## Closed 2026-08-09
+
+- **App icon.** `AppIcon.appiconset` held only a `Contents.json` with no image,
+  which fails submission outright. A 1024×1024 PNG is now generated from the
+  same `App/make_icon.py` the macOS bundle already used, so both products
+  carry one mark rather than two.
+- **Export compliance.** `INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO` is
+  declared in all four build configurations. The app uses HTTPS and Keychain
+  only — both exempt — and declaring it in build settings means the question
+  is answered at build time instead of by hand at every submission.
+- **Stale worktree.** A prunable git worktree registration pointing at a path
+  from before this repository moved. Pruned; its 21 MB of files were left in
+  place rather than deleted.
+
 ## Privacy, security, and legal work still required
 
 `iOS/ChironMobile/PrivacyInfo.xcprivacy` now exists and is tracked; it reaches
