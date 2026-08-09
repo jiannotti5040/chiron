@@ -196,6 +196,7 @@ session, not feasibility.
 | Chunking, persistent index, and retrieval over ingested sources | 13 |
 | macOS App Intents (the SPM bundle has no metadata-extraction phase; iOS has it) | 19 |
 | Conversation UI, result history, onboarding, provider-configuration screen | 12 |
+| A facts-picker in the app UI (the client carries `factsJSON`; no screen sets it yet) | 12 |
 | Streaming, tool-calling, context budgeting, and cost metadata in the provider layer | 9 |
 | iOS/macOS UI tests and performance tests | 22 |
 | Xcode external-agent (MCP) integration | 11 |
@@ -206,6 +207,30 @@ session, not feasibility.
 The last four are **externally blocked**, not unfinished: they need an Apple
 signing identity, authorized Foundry credentials, and a Codex installation,
 none of which exist in this environment.
+
+### The capability change that matters most — 2026-08-09
+
+Measured before: **0.0% coverage** on an operational paragraph and 0.0% on a
+financial one; 79.6% on self-contained arithmetic. Every claim kind checked a
+claim whose truth was internal to the sentence, so real prose refused
+entirely. A gate that refuses everything is honest and useless.
+
+`primus.grounded` lets the caller supply the facts and checks against them
+exactly — a lookup-and-compare is as exact as arithmetic, so the zero-false-
+verification law is untouched. Same operational paragraph afterwards:
+**91.8% coverage**, with a wrong figure REFUTED and an unsupplied subject
+still REFUSED.
+
+Exercised against a **live Foundry Ontology**: 9 `Unit` objects read over the
+REST API became a fact table, and a paragraph asserting personnel figures
+returned 2 VERIFIED, 1 REFUTED (650 against the Ontology's actual 601), and 1
+REFUSED for a unit the Ontology does not contain. The live transport lives in
+the platform-side repository; the vault keeps its non-delivering boundary so
+it stays useful without any platform.
+
+Reachable from every surface: `certify` MCP tool (`facts`/`facts_path`),
+`chiron verify --facts`, `primus certify --facts` in the published package,
+and `VaultClient.certifyRaw(text:factsJSON:)` in the app.
 
 ### Closed 2026-08-09, second pass
 

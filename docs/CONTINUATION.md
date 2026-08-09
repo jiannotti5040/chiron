@@ -161,7 +161,15 @@ module catalog — closed on 2026-08-09 as `ModuleManifest.swift` plus
 `ModulesView.swift`, reader-only, over the manifest `build_manifest.py`
 writes. What follows is what is actually open.
 
-1. **Build `explore` and `compare` (§16).** `solve` now exists and composes
+1. **Put a facts source in front of the user.** The engine, the CLI, the MCP
+   tool, and `VaultClient` all carry ground truth now, and coverage on
+   operational prose went 0.0% -> 91.8% because of it. What is missing is a
+   way for a person to choose a fact table without hand-writing JSON: a file
+   picker for a CSV or JSON, and — on the platform side — a control that reads
+   an Ontology object type into facts. This is the shortest path from "the
+   capability exists" to "the product has it".
+
+2. **Build `explore` and `compare` (§16).** `solve` now exists and composes
    `planner.run_campaign` through `_IMPL`, so the CLI, every MCP client, and
    `engines` share it. What is still missing from §16 is breadth rather than
    depth: `explore` should enumerate rival hypotheses without committing to
@@ -170,13 +178,13 @@ writes. What follows is what is actually open.
    obvious engine underneath both — again, compose it rather than write a
    second search.
 
-2. **Unwedge CoreSimulator and close the iOS test gate:**
+3. **Unwedge CoreSimulator and close the iOS test gate:**
    `sudo pkill -9 -f CoreSimulator`, re-boot the device, then retry
    `xcodebuild … test`. If it stalls again, record the retry rather than
    inferring a pass. `xcodebuild … build` succeeds today; it is the *test*
    action that is unobserved, and the two are not the same claim.
 
-3. **Decide the two-MCP-server question.** `Chiron/mcp_server.py` and
+4. **Decide the two-MCP-server question.** `Chiron/mcp_server.py` and
    `Primus/src/primus/mcp_server.py` both exist and both connect. That is
    defensible — `primus` is what the published package ships and must keep
    working standalone — but it is currently a coincidence rather than a
