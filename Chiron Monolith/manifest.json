@@ -1,15 +1,15 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-08T04:43:26Z",
-  "mode": "run",
+  "generated_utc": "2026-08-09T15:26:17Z",
+  "mode": "static",
   "summary": {
-    "runnable_scripts": 79,
-    "with_selftest": 60,
-    "stdlib_only": 69,
-    "with_spdx_header": 79,
+    "runnable_scripts": 85,
+    "with_selftest": 63,
+    "stdlib_only": 75,
+    "with_spdx_header": 85,
     "emitting_artifacts": 5,
-    "internal_edges": 110
+    "internal_edges": 118
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -37,10 +37,6 @@
       [
         "assistant_server",
         "chiron"
-      ],
-      [
-        "assistant_server",
-        "console_server"
       ],
       [
         "assistant_server",
@@ -327,6 +323,14 @@
         "full_stack"
       ],
       [
+        "mcp_server",
+        "planner"
+      ],
+      [
+        "mcp_server",
+        "trace"
+      ],
+      [
         "mine_code",
         "chiron"
       ],
@@ -427,6 +431,26 @@
         "chiron"
       ],
       [
+        "test_execution_policy",
+        "assistant_server"
+      ],
+      [
+        "test_execution_policy",
+        "console_server"
+      ],
+      [
+        "test_execution_policy",
+        "president_grow"
+      ],
+      [
+        "test_execution_policy",
+        "run_ledger"
+      ],
+      [
+        "test_foundry_boundary",
+        "foundry_boundary"
+      ],
+      [
         "test_grow",
         "chiron"
       ],
@@ -441,6 +465,14 @@
       [
         "test_local_cors",
         "console_server"
+      ],
+      [
+        "test_mcp_server",
+        "mcp_server"
+      ],
+      [
+        "test_source_provenance",
+        "source_provenance"
       ],
       [
         "trace",
@@ -479,12 +511,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 229.0,
-        "stdout_tail": "actionable_intelligence.py self-test: 11/11 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -512,12 +539,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 300.1,
-        "stdout_tail": "aesthetics.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "discernment"
       ]
@@ -542,14 +564,13 @@
       "script": "assistant_server",
       "path": "assistant_server.py",
       "purpose": "assistant_server.py \u2014 a natural-language assistant over the Chiron engine and the Congress.",
-      "lines": 397,
+      "lines": 443,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
       "imports": [
         "chiron",
-        "console_server",
         "heartbeat",
         "llm_providers",
         "president_grow",
@@ -562,6 +583,7 @@
       ],
       "last_run": null,
       "imported_by": [
+        "test_execution_policy",
         "test_local_cors"
       ]
     },
@@ -581,12 +603,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 210.3,
-        "stdout_tail": "  [PASS] indistinguishable candidates -> refuses to attribute\n------------------------------------------------------------\n  attest.py self-test: 9/9 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "mcp_server"
       ]
@@ -610,12 +627,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 266.8,
-        "stdout_tail": "axioms.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -635,12 +647,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 181.6,
-        "stdout_tail": "  [PASS] Burrows Delta attributes a strong majority of held-out passages\n  [PASS] attribution is deterministic (reproducible)\n  3/3 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -662,12 +669,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 181.2,
-        "stdout_tail": "  [PASS] zero false-verify on controls\n  [PASS] chiron law beats lzma on a long sequence\n  4/4 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -689,12 +691,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 27.9,
-        "stdout_tail": "  [PASS] domain scoping removes cross-domain provisions the baseline included\n  [PASS] recovered sets are non-empty exactly when not abstaining\n  4/4 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -714,12 +711,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 59.5,
-        "stdout_tail": "  [PASS] beats the Markov baseline on held-out\n  [PASS] abstains on contradictory traces\n  4/4 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -741,12 +733,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 45.3,
-        "stdout_tail": "  [PASS] all controls refused\n  [PASS] bag-of-words baseline conflates the invariants\n  5/5 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -779,12 +766,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 195.9,
-        "stdout_tail": "  [PASS] authorship benchmark\n\n  VERDICT: PASS \u2014 6/6 tasks green"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -806,12 +788,7 @@
       "roles": [
         "benchmark"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 161.0,
-        "stdout_tail": "  [PASS] chiron refuses the structureless control\n  [PASS] chiron never emits a confident wrong tail\n  6/6 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_suite"
       ]
@@ -857,12 +834,7 @@
       "roles": [
         "builder"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 83.7,
-        "stdout_tail": "build.py [chiron]: PASS (7 modules, 30156 lines, byte-identical=True)\n  build.py [semic]: PASS (34 modules, 1773 lines, byte-identical=True)\n  build.py self-test: PASS (2 targets)"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -880,12 +852,7 @@
       "roles": [
         "builder"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 28.5,
-        "stdout_tail": "[encyclopedia] 78 module entries -> ../docs/ENCYCLOPEDIA.md"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -933,12 +900,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 174.8,
-        "stdout_tail": "candor_bridge.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "discernment",
         "judgment"
@@ -967,12 +929,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 165.0,
-        "stdout_tail": "certify_finding.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "judgment"
       ]
@@ -1000,8 +957,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "47271586a61a1848",
-        "generated_utc": "2026-08-08T04:43:00Z",
+        "self_hash": "a8b5191b7886b446",
+        "generated_utc": "2026-08-09T15:23:33Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1010,12 +967,7 @@
       "roles": [
         "certifying"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 5054.7,
-        "stdout_tail": "\n  CHIRON core gates: 12/12 passed.\n  CHIRON GREEN \u2014 exact knowledge, honest wisdom, bounded agency, one file."
-      },
+      "last_run": null,
       "imported_by": [
         "actionable_intelligence",
         "aesthetics",
@@ -1141,12 +1093,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 200.0,
-        "stdout_tail": "  [PASS] report transmits abstention faithfully (no false verify)\n  [PASS] report flag == engine flag on both cases\nchiron_events selftest: 10/10 gates green"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1212,19 +1159,14 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 179.5,
-        "stdout_tail": "  [note] gplearn not installed \u2014 GP-path gates assert the degraded contract instead\n  [PASS] engine-refused target degrades to honest REFUSED\n  conjecture gates: 15/15 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
       "script": "console_server",
       "path": "console_server.py",
-      "purpose": "console_server.py \u2014 run any Chiron function, and reach every engine, from the dashboard.",
-      "lines": 304,
+      "purpose": "console_server.py \u2014 a read-only, allowlisted Chiron launcher for the dashboard.",
+      "lines": 411,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -1239,8 +1181,8 @@
       ],
       "last_run": null,
       "imported_by": [
-        "assistant_server",
         "stress_test",
+        "test_execution_policy",
         "test_local_cors"
       ]
     },
@@ -1265,12 +1207,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 184.9,
-        "stdout_tail": "cross_examine.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "discernment",
         "judgment",
@@ -1300,8 +1237,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "4e4acc9dca5de3a6",
-        "generated_utc": "2026-08-08T04:43:01Z",
+        "self_hash": "cd46056ca07de1df",
+        "generated_utc": "2026-08-09T15:23:05Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1310,12 +1247,7 @@
       "roles": [
         "certifying"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 260.4,
-        "stdout_tail": "density_emotion.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1345,12 +1277,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 291.3,
-        "stdout_tail": "discernment.py self-test: 9/9 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1395,12 +1322,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 179.0,
-        "stdout_tail": "epistemic self-test\n  13/13 checks"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1454,12 +1376,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 31.8,
-        "stdout_tail": "  hexameter_feet_ok(LSLSLSLSLSLS      ) -> False (want False)  OK\nbackend: pure-python fallback\nVERDICT: PASS"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1481,6 +1398,24 @@
       "imported_by": []
     },
     {
+      "script": "foundry_boundary",
+      "path": "foundry_boundary.py",
+      "purpose": "Neutral external-ontology boundary for Chiron records.",
+      "lines": 642,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "test_foundry_boundary"
+      ]
+    },
+    {
       "script": "full_stack",
       "path": "full_stack.py",
       "purpose": "full_stack.py \u2014 run the whole vault over one piece of text.",
@@ -1493,12 +1428,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 207.4,
-        "stdout_tail": "  [PASS] record is JSON-serialisable\n------------------------------------------------------------\n  full_stack.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "mcp_server"
       ]
@@ -1525,12 +1455,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 168.8,
-        "stdout_tail": "govern.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "actionable_intelligence",
         "certify_finding",
@@ -1591,12 +1516,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 345.8,
-        "stdout_tail": "  [PASS] state survives and advances across beats\n  [PASS] the body enumerates its own organs (modules + guides)\n  13/13 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "assistant_server",
         "stress_test"
@@ -1626,12 +1546,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 222.6,
-        "stdout_tail": "holographic.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1653,12 +1568,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "--selftest",
-        "exit_code": 0,
-        "runtime_ms": 215.7,
-        "stdout_tail": "infectatrum_bridge.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1700,12 +1610,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 186.3,
-        "stdout_tail": "intake.py self-test: 12/12 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "intake_salvage"
       ]
@@ -1731,12 +1636,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 165.1,
-        "stdout_tail": "format=text salvaged=False collapse_ready=False primary_series=None"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1765,12 +1665,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 323.6,
-        "stdout_tail": "judgment.py self-test: 12/12 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1788,12 +1683,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 47.7,
-        "stdout_tail": "jurisdiction.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1817,12 +1707,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 173.7,
-        "stdout_tail": "language.py self-test: 17/17 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "attest",
         "bench_authorship"
@@ -1847,12 +1732,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 50.7,
-        "stdout_tail": "legal_corpus.py self-test: 12/12 passed  (67 provisions)"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_legal",
         "certify_finding",
@@ -1885,12 +1765,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 170.4,
-        "stdout_tail": "  [PASS] states it is not a legal determination\n  [PASS] flags the unverifiable as neither confirmed nor denied\n  9/9 checks"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -1914,12 +1789,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 69.7,
-        "stdout_tail": "  [PASS] qwen via openrouter key\n  [PASS] cerebras-only environment reaches the default chain\n  12/12 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "assistant_server"
       ]
@@ -1928,27 +1798,26 @@
       "script": "mcp_server",
       "path": "mcp_server.py",
       "purpose": "chiron.mcp_server \u2014 the whole vault as tools an agent can call on itself.",
-      "lines": 645,
+      "lines": 849,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
       "imports": [
         "attest",
-        "full_stack"
+        "full_stack",
+        "planner",
+        "trace"
       ],
       "artifact": null,
       "emits_artifact": false,
       "roles": [
         "server"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 286.2,
-        "stdout_tail": "  [PASS] tools: every tool documents a file path\n\n  chiron-mcp gates: 17/17 passed."
-      },
-      "imported_by": []
+      "last_run": null,
+      "imported_by": [
+        "test_mcp_server"
+      ]
     },
     {
       "script": "mine_code",
@@ -1989,12 +1858,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 178.5,
-        "stdout_tail": "ontological.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "aesthetics",
         "discernment"
@@ -2023,12 +1887,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 188.9,
-        "stdout_tail": "operator_calculus.py self-test: 9/9 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2048,12 +1907,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 181.5,
-        "stdout_tail": "  [PASS] advisory stage cannot sink a verified chain\n  [PASS] unknown component fails safe (never a false verify)\npipeline selftest: 7/7 gates green"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2072,13 +1926,10 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 172.8,
-        "stdout_tail": "  [PASS] an invariant violation halts the campaign\n  [PASS] the gate refuses a 'verified' finding that can't regenerate the surface\n  11/11 checks"
-      },
-      "imported_by": []
+      "last_run": null,
+      "imported_by": [
+        "mcp_server"
+      ]
     },
     {
       "script": "president_grow",
@@ -2099,7 +1950,8 @@
       "imported_by": [
         "assistant_server",
         "grow_clean",
-        "llm_providers"
+        "llm_providers",
+        "test_execution_policy"
       ]
     },
     {
@@ -2179,12 +2031,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 256.2,
-        "stdout_tail": "projection_stack.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2208,12 +2055,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 190.7,
-        "stdout_tail": "provenance.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "attest"
       ]
@@ -2222,7 +2064,7 @@
       "script": "run_ledger",
       "path": "run_ledger.py",
       "purpose": "run_ledger.py \u2014 the vault's operational memory (HORIZON.md H1.2).",
-      "lines": 187,
+      "lines": 211,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -2231,18 +2073,14 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 38.4,
-        "stdout_tail": "  [PASS] recording never raises on a bad path\n  [PASS] read of a missing ledger is empty, not an error\n  9/9 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "assistant_server",
         "console_server",
         "heartbeat",
         "planner",
-        "stress_test"
+        "stress_test",
+        "test_execution_policy"
       ]
     },
     {
@@ -2265,8 +2103,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "8f819aa93036e11e",
-        "generated_utc": "2026-08-08T04:43:07Z",
+        "self_hash": "12b896c3b52e6838",
+        "generated_utc": "2026-08-09T15:23:06Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2275,12 +2113,7 @@
       "roles": [
         "certifying"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 707.3,
-        "stdout_tail": "  [PASS] G56 config defaults reproduce in-source constants\n\n  56/56 gates passing"
-      },
+      "last_run": null,
       "imported_by": [
         "bench_proverbs",
         "epistemic",
@@ -2303,12 +2136,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 67.9,
-        "stdout_tail": "semic_bridge.py self-test: 14/14 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2332,12 +2160,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 61.1,
-        "stdout_tail": "  [PASS] candidate probabilities are a descending distribution\n  [PASS] energy peak == exact collapse generator\n  8/8 checks"
-      },
+      "last_run": null,
       "imported_by": [
         "epistemic"
       ]
@@ -2365,13 +2188,26 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 217.7,
-        "stdout_tail": "significance.py self-test: 8/8 passed"
-      },
+      "last_run": null,
       "imported_by": []
+    },
+    {
+      "script": "source_provenance",
+      "path": "source_provenance.py",
+      "purpose": "Bounded, local-only source registration for UTF-8 text files.",
+      "lines": 287,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "test_source_provenance"
+      ]
     },
     {
       "script": "stare_decisis",
@@ -2395,19 +2231,14 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 175.0,
-        "stdout_tail": "stare_decisis.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {
       "script": "stress_test",
       "path": "stress_test.py",
       "purpose": "stress_test.py \u2014 try to break the vault; make every hole a permanent gate.",
-      "lines": 358,
+      "lines": 368,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -2421,12 +2252,25 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 15279.5,
-        "stdout_tail": "======================================================================\n  23/23 probes held \u2014 NO HOLES FOUND\n======================================================================"
-      },
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "test_bin_cli",
+      "path": "tests/test_bin_cli.py",
+      "purpose": "Contract gates for the public ``bin/chiron`` front door.",
+      "lines": 75,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2446,12 +2290,50 @@
       "roles": [
         "test"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 1050.4,
-        "stdout_tail": "ok - test_prose_is_general_not_a_false_law\nok - test_save_load_roundtrip_preserves_growth\nALL PASSED (9)"
-      },
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "test_execution_policy",
+      "path": "tests/test_execution_policy.py",
+      "purpose": "Regression gates for the model/console execution boundary.",
+      "lines": 82,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "assistant_server",
+        "console_server",
+        "president_grow",
+        "run_ledger"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "test_foundry_boundary",
+      "path": "tests/test_foundry_boundary.py",
+      "purpose": "Offline regression gates for the external-ontology / Foundry boundary.",
+      "lines": 103,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "foundry_boundary"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2500,24 +2382,41 @@
       "script": "test_mcp_server",
       "path": "tests/test_mcp_server.py",
       "purpose": "Chiron MCP transport contract against the real stdio server process.",
-      "lines": 119,
+      "lines": 175,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
-      "imports": [],
+      "imports": [
+        "mcp_server"
+      ],
       "artifact": null,
       "emits_artifact": false,
       "roles": [
         "server",
         "test"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 373.0,
-        "stdout_tail": "  [PASS] ping receives an empty result\n\n  11/11 Chiron MCP transport gates passed"
-      },
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "test_source_provenance",
+      "path": "tests/test_source_provenance.py",
+      "purpose": "Safety gates for bounded local-file provenance.",
+      "lines": 125,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "source_provenance"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
       "imported_by": []
     },
     {
@@ -2542,7 +2441,9 @@
       "emits_artifact": false,
       "roles": [],
       "last_run": null,
-      "imported_by": []
+      "imported_by": [
+        "mcp_server"
+      ]
     },
     {
       "script": "uma_bridge",
@@ -2567,12 +2468,7 @@
       "artifact": null,
       "emits_artifact": false,
       "roles": [],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 211.0,
-        "stdout_tail": "uma_bridge.py self-test: 10/10 passed"
-      },
+      "last_run": null,
       "imported_by": [
         "aesthetics",
         "discernment",
@@ -2597,8 +2493,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "c12d368322e8ba49",
-        "generated_utc": "2026-08-08T04:43:22Z",
+        "self_hash": "52dcabd7bef62b13",
+        "generated_utc": "2026-08-09T15:23:21Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null
@@ -2607,12 +2503,7 @@
       "roles": [
         "certifying"
       ],
-      "last_run": {
-        "command": "selftest",
-        "exit_code": 0,
-        "runtime_ms": 2137.9,
-        "stdout_tail": "  [PASS] dummy services are running\n  [PASS] Ctrl-C path stops them all\n  7/7 checks"
-      },
+      "last_run": null,
       "imported_by": []
     },
     {

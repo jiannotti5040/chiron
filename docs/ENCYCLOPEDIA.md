@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](../notes/DICTIONARY.md) defines the vocabulary; the [SOP](../notes/SOP.md) says how to operate it all.
 
-**State at generation:** 85 runnable scripts · 63 carry selftest gates · 75 stdlib-only · 85 licensed · 116 internal import edges · generated 2026-08-08T07:12:21Z (run mode).
+**State at generation:** 85 runnable scripts · 63 carry selftest gates · 75 stdlib-only · 85 licensed · 118 internal import edges · generated 2026-08-09T15:26:17Z (static mode).
 
 ## Index by role
 
@@ -29,7 +29,6 @@ actionable_intelligence.py — turn a recovered law into a decision-ready brief.
 - **Conceptually:** intelligence that is not just true but usable — and cleared by governance before it is offered.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `govern`
-- **Last gate run:** green in 174.4 ms
 - **Path:** `Chiron/actionable_intelligence.py`
 
 ### `aesthetics` — Mathematical Beauty
@@ -43,7 +42,6 @@ aesthetics.py — mathematical beauty as a measured, multi-signal quantity.
 - **Conceptually:** elegance made measurable — simple, symmetric, resonant structure scores high.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`, `ontological`, `uma_bridge` · imported by: `discernment`
-- **Last gate run:** green in 271.0 ms
 - **Path:** `Chiron/aesthetics.py`
 
 ### `apply_license_headers`
@@ -65,7 +63,6 @@ assistant_server.py — a natural-language assistant over the Chiron engine and 
 attest.py — provenance of generated language: know the inputs, not the output.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `language`, `provenance` · imported by: `mcp_server`
-- **Last gate run:** green in 186.4 ms
 - **Path:** `Chiron/attest.py`
 
 ### `axioms` — The HCT Axioms
@@ -79,7 +76,6 @@ axioms.py — the axiomatic layer, executed not asserted (HCT A1-A12 / T1-T8).
 - **Conceptually:** the theory is not just stated — it is run, so its claims are testable.
 
 - **Facts:** selftest: yes · deps: stdlib only
-- **Last gate run:** green in 237.8 ms
 - **Path:** `Chiron/axioms.py`
 
 ### `bench_authorship`
@@ -87,7 +83,6 @@ axioms.py — the axiomatic layer, executed not asserted (HCT A1-A12 / T1-T8).
 bench_authorship.py — authorship attribution with Burrows's Delta (an established method).
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imports: `language` · imported by: `bench_suite`
-- **Last gate run:** green in 159.6 ms
 - **Path:** `Chiron/bench_authorship.py`
 
 ### `bench_compression`
@@ -95,7 +90,6 @@ bench_authorship.py — authorship attribution with Burrows's Delta (an establis
 bench_compression.py — Chiron vs general-purpose compressors on a labeled sequence corpus.
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `bench_suite`
-- **Last gate run:** green in 159.7 ms
 - **Path:** `Chiron/bench_compression.py`
 
 ### `bench_legal`
@@ -103,7 +97,6 @@ bench_compression.py — Chiron vs general-purpose compressors on a labeled sequ
 bench_legal.py — fact-pattern -> applicable-provision recovery via the real legal_corpus layer.
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imports: `legal_corpus` · imported by: `bench_suite`
-- **Last gate run:** green in 27.8 ms
 - **Path:** `Chiron/bench_legal.py`
 
 ### `bench_protocol`
@@ -111,7 +104,6 @@ bench_legal.py — fact-pattern -> applicable-provision recovery via the real le
 bench_protocol.py — exact finite-state-machine recovery from observed traces (new domain).
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imported by: `bench_suite`
-- **Last gate run:** green in 27.0 ms
 - **Path:** `Chiron/bench_protocol.py`
 
 ### `bench_proverbs`
@@ -119,7 +111,6 @@ bench_protocol.py — exact finite-state-machine recovery from observed traces (
 bench_proverbs.py — semic on a multi-proverb corpus, against a surface (bag-of-words) baseline.
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imports: `semic` · imported by: `bench_suite`
-- **Last gate run:** green in 40.3 ms
 - **Path:** `Chiron/bench_proverbs.py`
 
 ### `bench_suite` — The Six Tasks
@@ -133,7 +124,6 @@ bench_suite.py — the external-benchmark suite: one architecture across six ind
 - **Conceptually:** one discipline, many fields — each beating or matching a known method, refusing where refusal is right.
 
 - **Facts:** roles: benchmark · selftest: yes · deps: stdlib only · imports: `bench_authorship`, `bench_compression`, `bench_legal`, `bench_protocol`, `bench_proverbs`, `bench_symreg`
-- **Last gate run:** green in 181.8 ms
 - **Path:** `Chiron/bench_suite.py`
 
 ### `bench_symreg`
@@ -141,7 +131,6 @@ bench_suite.py — the external-benchmark suite: one architecture across six ind
 bench_symreg.py — symbolic recovery vs polynomial regression (an established baseline).
 
 - **Facts:** roles: benchmark · selftest: yes · deps: numpy · imports: `chiron` · imported by: `bench_suite`
-- **Last gate run:** green in 150.3 ms
 - **Path:** `Chiron/bench_symreg.py`
 
 ### `benchmark` — The Proof
@@ -162,7 +151,6 @@ Chiron benchmark — a reproducible, offline measurement of what the engine can
 build.py — lossless split / recompile of the single-file engines (chiron AND semic).
 
 - **Facts:** roles: builder · selftest: yes · deps: stdlib only
-- **Last gate run:** green in 79.6 ms
 - **Path:** `Chiron/build.py`
 
 ### `build_encyclopedia`
@@ -170,7 +158,6 @@ build.py — lossless split / recompile of the single-file engines (chiron AND s
 build_encyclopedia — project ../docs/ENCYCLOPEDIA.md from manifest.json +
 
 - **Facts:** roles: builder · selftest: yes · deps: stdlib only
-- **Last gate run:** green in 25.7 ms
 - **Path:** `Chiron/build_encyclopedia.py`
 
 ### `build_examples`
@@ -204,7 +191,6 @@ candor_bridge.py — explanation before assertion (D-1, discernment).
 - **Conceptually:** respect the reader — say what is known plainly and flag what is not.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `discernment`, `judgment`
-- **Last gate run:** green in 164.8 ms
 - **Path:** `Chiron/candor_bridge.py`
 
 ### `certify_finding` — The Certificate
@@ -218,7 +204,6 @@ certify_finding.py — a court-deployable certificate over a Chiron finding (B-3
 - **Conceptually:** turn a recovered fact into a court-ready, replayable record — an input a human decision can stand on, never the decision itself.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `govern`, `legal_corpus` · imported by: `judgment`
-- **Last gate run:** green in 159.9 ms
 - **Path:** `Chiron/certify_finding.py`
 
 ### `chiron` — The Invariant Engine
@@ -234,7 +219,6 @@ CHIRON — The Invariant Engine.
 - **Facts:** roles: certifying · selftest: yes · deps: numpy, scipy · imports: `chiron_artifact` · imported by: `actionable_intelligence`, `aesthetics`, `assistant_server`, `bench_compression`, `bench_symreg`, `benchmark`, `build_examples`, `candor_bridge`, `certify_finding`, `chiron_ciphers`, `chiron_events`, `chiron_grow`, `compare`, `conjecture`, `cross_examine`, `density_emotion`, `discernment`, `discover`, `epistemic`, `export_graph`, `formal_check`, `govern`, `grow_clean`, `holographic`, `ingest_pdf`, `intake`, `judgment`, `language`, `llm_certify`, `mine_code`, `ontological`, `operator_calculus`, `pipeline`, `planner`, `president_grow`, `primus_atlas`, `primus_verses`, `profile`, `projection_stack`, `provenance`, `significance`, `stare_decisis`, `stress_test`, `test_chiron`, `test_grow`, `trace`, `uma_bridge`, `verify`
 - **Last certificate found:** All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.
 - **What would falsify it:** Any core gate failing — a false-verify, a missed escalation, or exec-of-string in the core path — would break the claim.
-- **Last gate run:** green in 4631.7 ms
 - **Path:** `Chiron/chiron.py`
 
 ### `chiron_artifact` — The Memorial
@@ -268,7 +252,6 @@ chiron_artifact — one emit path for every runnable script in the vault.
 chiron_events — a minimal, deterministic event bus so vault modules can be
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`
-- **Last gate run:** green in 158.1 ms
 - **Path:** `Chiron/chiron_events.py`
 
 ### `chiron_grow`
@@ -294,7 +277,6 @@ Chiron vs. conventional compression — an honest comparison, both directions.
 conjecture.py — guess-and-prove: a stochastic proposer behind the exact gate.
 
 - **Facts:** selftest: yes · deps: numpy, sklearn · imports: `chiron`
-- **Last gate run:** green in 156.9 ms
 - **Path:** `Chiron/conjecture.py`
 
 ### `console_server`
@@ -315,7 +297,6 @@ cross_examine.py — The Defense Attorney (Chiron Jurisprudence Suite).
 - **Conceptually:** a finding is only as strong as the hardest cross-examination it survives.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `discernment`, `judgment`, `pipeline`
-- **Last gate run:** green in 160.1 ms
 - **Path:** `Chiron/cross_examine.py`
 
 ### `density_emotion` — The Decoherence Channel
@@ -331,7 +312,6 @@ density_emotion.py — competing hypotheses as a decohering quantum mixture.
 - **Facts:** roles: certifying · selftest: yes · deps: numpy · imports: `chiron`, `chiron_artifact`
 - **Last certificate found:** Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.
 - **What would falsify it:** A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim.
-- **Last gate run:** green in 225.6 ms
 - **Path:** `Chiron/density_emotion.py`
 
 ### `discernment` — Independent Witnesses
@@ -345,7 +325,6 @@ discernment.py — confidence from convergence, not authority.
 - **Conceptually:** belief earned by corroboration — multiple paths to the same answer, not one loud one.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `aesthetics`, `candor_bridge`, `chiron`, `cross_examine`, `govern`, `ontological`, `uma_bridge`
-- **Last gate run:** green in 253.3 ms
 - **Path:** `Chiron/discernment.py`
 
 ### `discover`
@@ -366,7 +345,6 @@ epistemic.py — the abstract primitive the whole portfolio instantiates.
 - **Conceptually:** the repository is not many projects — it is one contract instantiated across integers, meaning, law, and probability.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `legal_corpus`, `semic`, `semic_energy`
-- **Last gate run:** green in 171.4 ms
 - **Path:** `Chiron/epistemic.py`
 
 ### `export_graph`
@@ -381,7 +359,6 @@ Knowledge-graph export — turn recovered generators into a portable graph that
 Optional native hot-path loader, with an exact pure-Python fallback.
 
 - **Facts:** selftest: yes · deps: stdlib only
-- **Last gate run:** green in 27.5 ms
 - **Path:** `Chiron/fastops.py`
 
 ### `formal_check`
@@ -396,7 +373,6 @@ Formal soundness checks (property-based).
 Neutral external-ontology boundary for Chiron records.
 
 - **Facts:** selftest: yes · deps: stdlib only · imported by: `test_foundry_boundary`
-- **Last gate run:** green in 43.8 ms
 - **Path:** `Chiron/foundry_boundary.py`
 
 ### `full_stack`
@@ -404,7 +380,6 @@ Neutral external-ontology boundary for Chiron records.
 full_stack.py — run the whole vault over one piece of text.
 
 - **Facts:** selftest: yes · deps: stdlib only · imported by: `mcp_server`
-- **Last gate run:** green in 188.2 ms
 - **Path:** `Chiron/full_stack.py`
 
 ### `govern` — The Governance Gate
@@ -418,7 +393,6 @@ govern.py — the governance gate, against hardcoded law (B-4, hardened).
 - **Conceptually:** a standard of care for persuasive machines — a claim is allowed only if it clears the bar, otherwise a person decides.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `legal_corpus` · imported by: `actionable_intelligence`, `certify_finding`, `discernment`, `judgment`, `llm_certify`, `pipeline`
-- **Last gate run:** green in 158.4 ms
 - **Path:** `Chiron/govern.py`
 
 ### `grow_clean`
@@ -440,7 +414,6 @@ grow_control.py — start / stop / point the continuous grower, from the dashboa
 heartbeat.py — the vault's pulse: all of it at once, always (HORIZON.md H1→H2 bridge).
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `run_ledger` · imported by: `assistant_server`, `stress_test`
-- **Last gate run:** green in 312.5 ms
 - **Path:** `Chiron/heartbeat.py`
 
 ### `holographic` — Boundary Recovery
@@ -454,7 +427,6 @@ holographic.py — distributed redundancy: recover the whole from a fragment (O-
 - **Conceptually:** the rule is often legible from a fragment — the boundary already encodes the bulk.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`, `legal_corpus`
-- **Last gate run:** green in 199.3 ms
 - **Path:** `Chiron/holographic.py`
 
 ### `infectatrum_bridge` — The Ambiguity Spectrum
@@ -468,7 +440,6 @@ Infectatrum bridge — ambiguity measurement for Chiron.
 - **Conceptually:** quantify ambiguity and information loss — know exactly how much a surface under-determines its meaning.
 
 - **Facts:** selftest: yes · deps: stdlib only
-- **Last gate run:** green in 183.3 ms
 - **Path:** `Chiron/infectatrum_bridge.py`
 
 ### `ingest_pdf`
@@ -489,7 +460,6 @@ intake.py — the general front door.
 - **Conceptually:** anything codified can enter — once it is a surface, the same law applies.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `intake_salvage`
-- **Last gate run:** green in 155.5 ms
 - **Path:** `Chiron/intake.py`
 
 ### `intake_salvage` — The Salvage Door
@@ -503,7 +473,6 @@ intake_salvage.py — fault-tolerant ingestion (Review 2: input rigidity).
 - **Conceptually:** uncooperative material still gets read — the best available structure survives.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `intake`
-- **Last gate run:** green in 157.6 ms
 - **Path:** `Chiron/intake_salvage.py`
 
 ### `judgment` — Earned Finality
@@ -517,7 +486,6 @@ judgment.py — The Chief Justice & the Principle of Earned Finality (Chiron Jur
 - **Conceptually:** closure is earned, not assumed — a decision stands only after it has withstood challenge.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `candor_bridge`, `certify_finding`, `chiron`, `cross_examine`, `govern`, `uma_bridge`
-- **Last gate run:** green in 482.7 ms
 - **Path:** `Chiron/judgment.py`
 
 ### `jurisdiction`
@@ -525,7 +493,6 @@ judgment.py — The Chief Justice & the Principle of Earned Finality (Chiron Jur
 jurisdiction.py — the boundary geometry of the admissible, per domain (A-2, hardened).
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `legal_corpus`
-- **Last gate run:** green in 137.0 ms
 - **Path:** `Chiron/jurisdiction.py`
 
 ### `language` — Offline Language
@@ -539,7 +506,6 @@ language.py — natural language and prose, fully offline, no external API.
 - **Conceptually:** the engine can read and weigh natural language without depending on any external model.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `attest`, `bench_authorship`
-- **Last gate run:** green in 287.9 ms
 - **Path:** `Chiron/language.py`
 
 ### `legal_corpus` — The Codified Law
@@ -553,7 +519,6 @@ legal_corpus.py — the hardcoded body of law, regulation, and order.
 - **Conceptually:** the explicit law the governance layer reasons over — stated in full, not implied.
 
 - **Facts:** selftest: yes · deps: stdlib only · imported by: `bench_legal`, `certify_finding`, `epistemic`, `govern`, `holographic`, `jurisdiction`, `stare_decisis`
-- **Last gate run:** green in 107.6 ms
 - **Path:** `Chiron/legal_corpus.py`
 
 ### `llm_certify` — The Accountability Wrapper
@@ -567,7 +532,6 @@ llm_certify.py — an accountability certificate over an LLM's output.
 - **Conceptually:** the model proposes, the engine disposes — certify what is checkable, and never call free text 'correct.'
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `govern`
-- **Last gate run:** green in 209.0 ms
 - **Path:** `Chiron/llm_certify.py`
 
 ### `llm_providers` — The Proposer Chain
@@ -581,15 +545,13 @@ llm_providers.py — one multi-provider LLM client with a fallback chain.
 - **Conceptually:** many possible proposers, one exact verifier — the proposer can be anyone; the source of truth is never the model.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `president_grow` · imported by: `assistant_server`
-- **Last gate run:** green in 123.4 ms
 - **Path:** `Chiron/llm_providers.py`
 
 ### `mcp_server`
 
 chiron.mcp_server — the whole vault as tools an agent can call on itself.
 
-- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `full_stack`, `trace`
-- **Last gate run:** green in 243.2 ms
+- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `full_stack`, `planner`, `trace` · imported by: `test_mcp_server`
 - **Path:** `Chiron/mcp_server.py`
 
 ### `mine_code`
@@ -610,7 +572,6 @@ ontological.py — value and coherence as measured quantities.
 - **Conceptually:** ask not only what a structure is, but how well its parts cohere.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `aesthetics`, `discernment`
-- **Last gate run:** green in 168.5 ms
 - **Path:** `Chiron/ontological.py`
 
 ### `operator_calculus` — The Six Operators
@@ -624,7 +585,6 @@ operator_calculus.py — the six epistemic operators over a Chiron finding.
 - **Conceptually:** a vocabulary for the kinds of not-knowing, so each can be handled on its own terms.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`
-- **Last gate run:** green in 192.2 ms
 - **Path:** `Chiron/operator_calculus.py`
 
 ### `pipeline`
@@ -632,15 +592,13 @@ operator_calculus.py — the six epistemic operators over a Chiron finding.
 pipeline — compose the vault's engines into whatever validation-and-check
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `cross_examine`, `govern`
-- **Last gate run:** green in 181.1 ms
 - **Path:** `Chiron/pipeline.py`
 
 ### `planner`
 
 planner.py — the first slice of Horizon Two: engines compose toward a goal, and the
 
-- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `run_ledger`
-- **Last gate run:** green in 171.2 ms
+- **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `run_ledger` · imported by: `mcp_server`
 - **Path:** `Chiron/planner.py`
 
 ### `president_grow`
@@ -682,7 +640,6 @@ projection_stack.py — project a finding through the P -> C -> E -> S substrate
 - **Conceptually:** a result can change form without losing what it is — identity persists under projection.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`
-- **Last gate run:** green in 263.4 ms
 - **Path:** `Chiron/projection_stack.py`
 
 ### `provenance` — Conserved History
@@ -696,7 +653,6 @@ provenance.py — provenance conservation and blame (HCT A3 / T3).
 - **Conceptually:** nothing is unsourced — history is a conserved quantity you can audit back to its origin.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron` · imported by: `attest`
-- **Last gate run:** green in 185.4 ms
 - **Path:** `Chiron/provenance.py`
 
 ### `run_ledger`
@@ -704,7 +660,6 @@ provenance.py — provenance conservation and blame (HCT A3 / T3).
 run_ledger.py — the vault's operational memory (HORIZON.md H1.2).
 
 - **Facts:** selftest: yes · deps: stdlib only · imported by: `assistant_server`, `console_server`, `heartbeat`, `planner`, `stress_test`, `test_execution_policy`
-- **Last gate run:** green in 39.8 ms
 - **Path:** `Chiron/run_ledger.py`
 
 ### `semic` — The Semantic Invariant Calculus
@@ -720,7 +675,6 @@ SEMIC  —  Semantic Invariant Calculus (deterministic core)
 - **Facts:** roles: certifying · selftest: yes · deps: stdlib only · imports: `chiron_artifact` · imported by: `bench_proverbs`, `epistemic`, `semic_bridge`, `semic_energy`
 - **Last certificate found:** All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.
 - **What would falsify it:** A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim.
-- **Last gate run:** green in 694.8 ms
 - **Path:** `Chiron/semic.py`
 
 ### `semic_bridge`
@@ -728,7 +682,6 @@ SEMIC  —  Semantic Invariant Calculus (deterministic core)
 semic_bridge.py — the Semantic Invariant Calculus, wired into Chiron.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `semic`
-- **Last gate run:** green in 62.7 ms
 - **Path:** `Chiron/semic_bridge.py`
 
 ### `semic_energy` — The Energy Stack
@@ -742,7 +695,6 @@ semic_energy.py — the three-level epistemic stack over semic.
 - **Conceptually:** stay exact wherever possible; only when exact recovery refuses do you explore approximations, always labelled uncertified.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `semic` · imported by: `epistemic`
-- **Last gate run:** green in 63.8 ms
 - **Path:** `Chiron/semic_energy.py`
 
 ### `significance` — Curvature as Significance
@@ -756,7 +708,6 @@ significance.py — where meaning concentrates: curvature as significance.
 - **Conceptually:** significance is geometric — it is where the structure bends most sharply.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron`
-- **Last gate run:** green in 214.6 ms
 - **Path:** `Chiron/significance.py`
 
 ### `source_provenance`
@@ -764,7 +715,6 @@ significance.py — where meaning concentrates: curvature as significance.
 Bounded, local-only source registration for UTF-8 text files.
 
 - **Facts:** selftest: yes · deps: stdlib only · imported by: `test_source_provenance`
-- **Last gate run:** green in 52.6 ms
 - **Path:** `Chiron/source_provenance.py`
 
 ### `stare_decisis` — The Precedent Ledger
@@ -778,7 +728,6 @@ stare_decisis.py — let the decision stand, on a hardcoded body of doctrine (A-
 - **Conceptually:** consistency over time — like cases decided alike, and any break made visible.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `legal_corpus`
-- **Last gate run:** green in 178.0 ms
 - **Path:** `Chiron/stare_decisis.py`
 
 ### `stress_test`
@@ -786,7 +735,6 @@ stare_decisis.py — let the decision stand, on a hardcoded body of doctrine (A-
 stress_test.py — try to break the vault; make every hole a permanent gate.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `chiron`, `console_server`, `heartbeat`, `run_ledger`
-- **Last gate run:** green in 15355.9 ms
 - **Path:** `Chiron/stress_test.py`
 
 ### `test_bin_cli`
@@ -801,7 +749,6 @@ Contract gates for the public ``bin/chiron`` front door.
 Engine tests — collapse/verify, subject organization, save/load round-trip.
 
 - **Facts:** roles: test · selftest: yes · deps: stdlib only · imports: `chiron`
-- **Last gate run:** green in 926.3 ms
 - **Path:** `Chiron/tests/test_chiron.py`
 
 ### `test_execution_policy`
@@ -809,7 +756,6 @@ Engine tests — collapse/verify, subject organization, save/load round-trip.
 Regression gates for the model/console execution boundary.
 
 - **Facts:** roles: test · selftest: yes · deps: stdlib only · imports: `assistant_server`, `console_server`, `president_grow`, `run_ledger`
-- **Last gate run:** green in 101.5 ms
 - **Path:** `Chiron/tests/test_execution_policy.py`
 
 ### `test_foundry_boundary`
@@ -837,8 +783,7 @@ Real-HTTP regression gates for the assistant and console CORS boundary.
 
 Chiron MCP transport contract against the real stdio server process.
 
-- **Facts:** roles: server, test · selftest: yes · deps: stdlib only
-- **Last gate run:** green in 252.7 ms
+- **Facts:** roles: server, test · selftest: yes · deps: stdlib only · imports: `mcp_server`
 - **Path:** `Chiron/tests/test_mcp_server.py`
 
 ### `test_source_provenance`
@@ -872,7 +817,6 @@ uma_bridge.py — robustness of recovered structure under the RSLS dynamics.
 - **Conceptually:** a real invariant should be stable under the physics, not an artifact of a quiet input.
 
 - **Facts:** selftest: yes · deps: numpy · imports: `chiron` · imported by: `aesthetics`, `discernment`, `judgment`
-- **Last gate run:** green in 219.8 ms
 - **Path:** `Chiron/uma_bridge.py`
 
 ### `vault` — The One-Command Launcher
@@ -886,7 +830,6 @@ vault.py — one command to run the whole thing.
 - **Conceptually:** the whole system, reachable from a single door.
 
 - **Facts:** roles: certifying · selftest: yes · deps: stdlib only
-- **Last gate run:** green in 2152.6 ms
 - **Path:** `Chiron/vault.py`
 
 ### `verify`
