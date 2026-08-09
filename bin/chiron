@@ -19,6 +19,18 @@ Daily verbs:
                                assistant :8769, grow :8767, President :8766); one Ctrl-C
     chiron grow [--live]       knowledge grower     (dry-run by default; --live mutates Congress)
     chiron verify <input>      ingest one string/file and certify it exactly
+
+  Reading verbs — each takes a string, a file path, or `-` for stdin:
+
+    chiron analyze <input>     every applicable stage over one text (the wide read)
+    chiron verify <input>      the exact certificate: what can actually be proven
+    chiron collapse <input>    the canonical Primus invariant, or an honest refusal
+    chiron attest <input> --input=<file> [--input=...]
+                               which supplied source produced each span;
+                               with no --input the answer is REFUSED, by design
+    chiron engines [query]     the reviewed static allowlist an agent may invoke
+    chiron mcp                 serve the vault over stdio to Claude Code / Codex
+
     chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
     chiron parity              prove spine and fold are ONE organism: identical gate
                                outcomes through both incarnations, or it fails
@@ -218,6 +230,208 @@ def cmd_verify(args):
     return _primus_cli(["certify", target] + flags)
 
 
+def _text_argv(args, verb, extra=()):
+    """Resolve one text-or-file-or-stdin target the way `verify` already does.
+
+    Every reading verb takes its input the same way, so a shell script does not
+    have to remember which one wanted a flag and which one wanted a path.
+    """
+    flags = [a for a in args if a in extra]
+    targets = [a for a in args if a not in extra]
+    bad = [a for a in targets if a.startswith("-") and a != "-"]
+    if len(targets) != 1 or bad:
+        print(f"usage: chiron {verb} <string-or-file|-> "
+              + " ".join(f"[{f}]" for f in extra))
+        return None, None
+    target = targets[0]
+    if os.path.isdir(target):
+        print(f"[chiron] {verb} accepts one regular file, not a directory")
+        return None, None
+    if target == "-":
+        return sys.stdin.read(), flags
+    if os.path.isfile(target):
+        try:
+            with open(target, "r", encoding="utf-8", errors="replace") as fh:
+                return fh.read(), flags
+        except OSError as exc:
+            print(f"[chiron] could not read selected file: {exc}")
+            return None, None
+    return target, flags
+
+
+def _tool_call(name, arguments, as_json):
+    """Invoke a vault tool through the *same* dispatch the MCP server uses.
+
+    `Chiron/mcp_server.py:_IMPL` is the one place a tool name becomes a call.
+    Routing the CLI through it is the whole point: a terminal, an agent, and
+    the app then cannot disagree about what a tool does, because there is only
+    one implementation and one contract to disagree about.
+    """
+    import json
+    sys.path.insert(0, CHIRON)
+    try:
+        import mcp_server
+    except Exception as exc:
+        print(f"[chiron] could not load the vault tool table: {exc}")
+        return 1
+    impl = mcp_server._IMPL.get(name)
+    if impl is None:
+        print(f"[chiron] no such tool: {name}")
+        return 2
+    try:
+        payload = impl(arguments)
+    except mcp_server.ToolError as exc:
+        print(f"[chiron] {name}: {exc}")
+        return 2
+    # _wrap puts the record in MCP content envelopes; unwrap to the record.
+    record = payload
+    if isinstance(payload, dict) and "content" in payload:
+        try:
+            record = json.loads(payload["content"][0]["text"])
+        except Exception:
+            record = payload
+    print(json.dumps(record, indent=2 if as_json else None)
+          if as_json else _render(name, record))
+    # A refusal is a result, not a failure: it exits 0. Only a malformed
+    # request or a broken engine is a non-zero exit.
+    return 0
+
+
+def _render(name, record):
+    """A short human line per tool; --json is the machine contract."""
+    import json
+    if not isinstance(record, dict):
+        return str(record)
+    if name == "attest":
+        spans = record.get("spans") or []
+        counts = {}
+        for span in spans:
+            counts[span.get("verdict")] = counts.get(span.get("verdict"), 0) + 1
+        head = " · ".join(f"{v} {k}" for k, v in sorted(counts.items()))
+        lines = [f"[chiron] attest · {len(spans)} span(s) · "
+                 f"{head or 'nothing to attribute'}"]
+        for span in spans:
+            # Two independent facts, never collapsed into one. `origin` is
+            # where the words came from; `verdict` is whether the claim could
+            # be checked. A span can be perfectly attributed and still REFUSED
+            # because no exact checker covers its domain — reporting that as
+            # "unattributed" would be false.
+            origin = span.get("origin")
+            novel = [t["text"] for t in (span.get("tokens") or [])
+                     if t.get("novel")]
+            where = (f"traces to {origin}"
+                     + (f" (cosine {span['origin_cosine']:.2f})"
+                        if isinstance(span.get("origin_cosine"), float) else "")
+                     if origin else "traces to nothing supplied")
+            lines.append(f"  [{span.get('verdict')}] "
+                         f"{str(span.get('text', ''))[:66]}")
+            lines.append(f"      {where}")
+            if span.get("reason"):
+                lines.append(f"      verdict because: {span['reason']}")
+            if novel:
+                lines.append(f"      novel words ({len(novel)}): "
+                             + ", ".join(novel[:12]))
+        return "\n".join(lines)
+    if name in ("collapse", "trace"):
+        return json.dumps({k: record.get(k) for k in
+                           ("schema", "verified", "engine_verdict",
+                            "model_class", "explanation") if k in record},
+                          indent=2)
+    return json.dumps(record, indent=2)
+
+
+def cmd_analyze(args):
+    """Every applicable stage of the vault over one text — the full reading.
+
+    This is the wide, interpretive pass. It is not a certificate: `analyze`
+    tells you what the stack observed, `verify` tells you what it could prove.
+    """
+    text, flags = _text_argv(args, "analyze", ("--json",))
+    if text is None:
+        return 2
+    return _run([PY, _script("full_stack.py")]
+                + (["--json"] if "--json" in flags else []) + [text])
+
+
+def cmd_attest(args):
+    """Word-level provenance: which supplied input produced each span.
+
+    Requires the candidate inputs. With none, every span is REFUSED — that is
+    the honest answer, not a failure, because attribution here is always
+    relative to sources the caller supplies. This verb will not pretend
+    otherwise, and it reports no probability that text is machine-written.
+    """
+    inputs = [a.split("=", 1)[1] for a in args if a.startswith("--input=")]
+    rest = [a for a in args if not a.startswith("--input=")]
+    text, flags = _text_argv(rest, "attest", ("--json",))
+    if text is None:
+        print("       (repeat --input=<file> for each candidate source)")
+        return 2
+    if not inputs:
+        print("[chiron] attest with no --input: every span will be REFUSED. "
+              "Pass --input=<file> for each document the text was written "
+              "from. Continuing, so the refusal is visible rather than "
+              "assumed.")
+    return _tool_call("attest", {"output": text, "input_paths": inputs},
+                      "--json" in flags)
+
+
+def cmd_collapse(args):
+    """The canonical Primus invariant result for a sequence or string."""
+    text, flags = _text_argv(args, "collapse", ("--json",))
+    if text is None:
+        return 2
+    return _tool_call("collapse", {"surface": text}, "--json" in flags)
+
+
+def cmd_trace(args):
+    """The diagnostic explanation — why a surface did or did not collapse.
+
+    Deliberately non-stamping: `trace` explains, `verify` certifies. A trace
+    never turns into a certificate.
+    """
+    text, flags = _text_argv(args, "trace", ("--json",))
+    if text is None:
+        return 2
+    return _tool_call("trace", {"surface": text}, "--json" in flags)
+
+
+def cmd_engines(args):
+    """The reviewed static allowlist — every operation an agent may invoke.
+
+    Reads the same `TOOLS` table the MCP server serves, so the CLI and the
+    agent surface can never disagree about what exists. Arbitrary module
+    dispatch is intentionally absent here as well.
+    """
+    import json
+    sys.path.insert(0, CHIRON)
+    try:
+        import mcp_server
+    except Exception as exc:
+        print(f"[chiron] could not load the tool table: {exc}")
+        return 1
+    query = next((a for a in args if not a.startswith("-")), None)
+    catalog = mcp_server._catalog(query)
+    if "--json" in args:
+        print(json.dumps(catalog, indent=2))
+        return 0
+    tools = catalog["tools"]
+    print(f"[chiron] {len(tools)} tool(s) · schema {catalog['schema']} · "
+          f"reviewed static allowlist")
+    for tool in tools:
+        meta = tool["metadata"]
+        print(f"\n  {tool['name']}  [{meta['authority']}]")
+        print(f"    {tool['description']}")
+        print(f"    contract {meta['contract']} · side effects "
+              f"{meta['side_effects']}")
+    return 0
+
+
+def cmd_mcp(args):
+    """Serve the vault to Claude Code, Codex, and any MCP client over stdio."""
+    return _run([PY, _script("mcp_server.py")] + list(args))
+
+
 def cmd_benchmark(args):
     script = "bench_suite.py" if "--suite" in args else "benchmark.py"
     return _run([PY, _script(script)])
@@ -336,6 +550,8 @@ COMMANDS = {
     "serve": cmd_serve, "grow": cmd_grow, "verify": cmd_verify,
     "benchmark": cmd_benchmark, "demo": cmd_demo, "parity": cmd_parity,
     "plan": cmd_plan, "doctor": cmd_doctor, "clean": cmd_clean,
+    "analyze": cmd_analyze, "attest": cmd_attest, "collapse": cmd_collapse,
+    "trace": cmd_trace, "engines": cmd_engines, "mcp": cmd_mcp,
 }
 
 
