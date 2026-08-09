@@ -134,14 +134,22 @@ of materials is still absent**; it is the remaining §21 item.
 
 ## 15. Commits
 
-Fourteen, on `codex/macos-recovery-20260808`, oldest first:
+Eighteen, now carried on `chiron/mandate-20260809`, oldest first:
 
-`bc199e8` consolidation · `60d76ce` iOS restoration · `ac6e17a` continuation
-record · `2b3a2c0` on-device model · `58afc31` readiness record · `33d832c`
-record update · `4c50ee2` fresh certificates · `098ca37` gitignore ·
-`13d6f53` proposal panel · `27462c0` App Intents · `2b17c04` privacy manifest ·
-`ae20fc6` security model · `02f8103` intent/manifest follow-up ·
-`bccc02f` this report.
+`e39194a` consolidation · `90c1b70` iOS restoration · `da2a7ac` continuation
+record · `d7579da` on-device model · `3bd23d4` readiness record · `cc149d4`
+record update · `db9bc85` fresh certificates · `126d196` gitignore ·
+`b2c0817` proposal panel · `d71c0d9` App Intents · `e9cde57` privacy posture ·
+`7fffbbf` security model · `3904e19` intent/manifest follow-up ·
+`b693b0c` this report · `4a4d7d0` commit-list correction · `704a825` README ·
+`d2515af` handoff prompt · `eacd590` first-claim correction.
+
+An earlier revision of this section listed fourteen pre-rewrite hashes
+(`bc199e8`, `60d76ce`, …). Those objects are real but no longer reachable from
+any branch: a `git filter-branch` trailer strip rewrote every commit on this
+branch after that list was written, changing all eighteen hashes. The hashes
+above are the current, reachable ones. Verify with
+`git log --format='%h %s' origin/main..HEAD --reverse`.
 
 ## 16. Genuine external blockers
 

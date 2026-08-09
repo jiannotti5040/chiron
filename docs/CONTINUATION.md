@@ -14,8 +14,8 @@ battery. Nothing below overrides them.
 | Fact | Value |
 |---|---|
 | Repository | `~/Desktop/Intellectual/Jacob-s-Portfolio-Vault` |
-| Working branch | `codex/macos-recovery-20260808` |
-| Commits this session | `bc199e8` consolidation → `60d76ce` iOS restoration → `ac6e17a` this record → `2b3a2c0` on-device model → `58afc31` readiness record |
+| Working branch | `chiron/mandate-20260809` (carries the 18 commits first made on `codex/macos-recovery-20260808`) |
+| Commits this session | `e39194a` consolidation → `90c1b70` iOS restoration → `da2a7ac` this record → `d7579da` on-device model → `3bd23d4` readiness record |
 | Baseline | Python 54/54 green, Swift 33 deterministic gates green, iOS builds, macOS app runs |
 
 ## Restart in one minute

@@ -52,8 +52,12 @@ not as a privileged suggestion.
 ### Local `/v1` service (`Primus/src/primus/engine_server.py`)
 
 - Binds `127.0.0.1` by default.
-- **Closed route set** — `GET /v1/capabilities`, `POST /v1/collapse`,
-  `POST /v1/certify`. No path arguments, dynamic tool names, file operations,
+- **Closed route set** — eight entries, fixed at import in the `ROUTES` dict
+  (`engine_server.py:311-320`); anything not a key 404s at `:521-524`, with no
+  catch-all and no prefix match. The versioned surface is `GET
+  /v1/capabilities`, `POST /v1/collapse`, `POST /v1/certify`; the unversioned
+  legacy surface is `GET /`, `GET /health`, `POST /collapse`, `POST /certify`,
+  `POST /conjecture`. No path arguments, dynamic tool names, file operations,
   or server-side action routes.
 - **Bounded bodies** at 128 KiB at the HTTP door, before parsing.
 - **Strict body validation**: each POST permits exactly its one field; unknown
@@ -136,14 +140,26 @@ Stated plainly, because absence documented is worth more than absence implied.
 - **No remote MCP transport, and therefore no remote MCP authentication.**
 - **No production identity system.** The static bearer has no rotation,
   revocation, scoping, expiry, issuer/audience validation, or audit trail.
-- **No TLS termination, rate limiting, or abuse controls** in the local
-  server. A public deployment needs a gateway outside this process.
+- **No TLS termination** in the local server. A public deployment needs a
+  gateway outside this process. Rate limiting is *not* absent: `class Limiter`
+  (`engine_server.py:139-163`) enforces a thread-safe sliding one-minute window
+  per key and globally, wired as the handler default `Limiter(30, 240)` at
+  `:349` and enforced at `:654-659`. It is in-process and per-instance, so it
+  bounds a single server, not a fleet.
 - **No sandbox entitlement, hardened runtime, notarization, or distribution
   signing.** Bundles are ad-hoc signed and are rejected by Gatekeeper.
-- **No SBOM.** The Swift package has no third-party dependencies and the
-  Python core relies on the standard library, so the dependency surface is
-  small — but that is an observation, not a generated bill of materials.
-- **No audit log** of MCP or service invocations.
+- **No SBOM.** The Swift package has no third-party dependencies. The Python
+  core is *not* pure standard library: `Primus/pyproject.toml:27` declares
+  `dependencies = ["numpy>=1.22"]`, imported at module level in
+  `Primus/src/primus/engine.py:52`. The dependency surface is one runtime
+  third-party package plus the standard library — small, but not empty, and
+  still an observation rather than a generated bill of materials.
+- **No audit log of MCP invocations.** Neither `Chiron/mcp_server.py` nor the
+  Primus MCP server records an invocation ledger. The `/v1` HTTP service does
+  log: `_access()` (`engine_server.py:434-450`) emits one structured line per
+  request carrying `ip`, `method`, `path`, `status`, `in_bytes`, and a 16-hex
+  `in_sha256` prefix of the request body — enough to correlate a request
+  without retaining its content.
 
 ## Reporting
 

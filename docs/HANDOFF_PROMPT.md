@@ -8,7 +8,7 @@ You are taking over an in-progress engineering mandate on my repository. Read
 before you write.
 
 **Repo:** `~/Desktop/Intellectual/Jacob-s-Portfolio-Vault`
-**Branch:** `codex/macos-recovery-20260808` (16 commits ahead of `main`)
+**Branch:** `chiron/mandate-20260809` (18 commits ahead of `origin/main`)
 
 ## Read these first, in this order
 

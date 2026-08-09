@@ -234,8 +234,11 @@ checkout and interpreter are present is not a distributable product.
 
 ## Privacy, security, and legal work still required
 
-No `PrivacyInfo.xcprivacy` file or App Store Connect privacy submission record
-was found. The macOS app sends selected user text to a local Python process.
+`iOS/ChironMobile/PrivacyInfo.xcprivacy` now exists and is tracked; it reaches
+the target through the `PBXFileSystemSynchronizedRootGroup` that owns the
+`ChironMobile` folder, so it ships without an explicit build-phase entry. No
+App Store Connect privacy submission record exists yet — that step needs the
+account owner. The macOS app sends selected user text to a local Python process.
 The iOS client can send user-entered/imported text and a runtime bearer token
 to a user-configured HTTPS gateway using `URLSession`; its endpoint preference
 and endpoint-scoped Keychain token behavior are part of the release data flow. Before
