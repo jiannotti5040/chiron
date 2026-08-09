@@ -2,38 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!--
-	  Chiron collects nothing. The app sends only text the user supplies, only
-	  to a service endpoint the user configures, and it stores no analytics,
-	  identifiers, or telemetry of any kind. This manifest says so in Apple's
-	  vocabulary; if that ever stops being true, this file is wrong and must
-	  change in the same commit as the behaviour.
-	-->
-	<key>NSPrivacyTracking</key>
-	<false/>
-
-	<key>NSPrivacyTrackingDomains</key>
-	<array/>
-
-	<!-- No data types are collected, so this array is intentionally empty. -->
-	<key>NSPrivacyCollectedDataTypes</key>
-	<array/>
-
-	<key>NSPrivacyAccessedAPITypes</key>
-	<array>
-		<dict>
-			<!--
-			  UserDefaults holds one value: the service endpoint the user typed.
-			  It is not a credential — bearer tokens live in Keychain, scoped to
-			  the exact endpoint. CA92.1: read and write only this app's own data.
-			-->
-			<key>NSPrivacyAccessedAPIType</key>
-			<string>NSPrivacyAccessedAPICategoryUserDefaults</string>
-			<key>NSPrivacyAccessedAPITypeReasons</key>
-			<array>
-				<string>CA92.1</string>
-			</array>
-		</dict>
-	</array>
+    <!--
+      Chiron collects nothing. Text is sent only to the service endpoint the
+      user configures, on a request the user initiates. There is no analytics
+      SDK, no advertising identifier, no third-party collection, and no
+      background transmission.
+    -->
+    <key>NSPrivacyTracking</key>
+    <false/>
+    <key>NSPrivacyTrackingDomains</key>
+    <array/>
+    <key>NSPrivacyCollectedDataTypes</key>
+    <array/>
+    <key>NSPrivacyAccessedAPITypes</key>
+    <array>
+        <dict>
+            <!-- The service endpoint the user chose, and nothing else. -->
+            <key>NSPrivacyAccessedAPIType</key>
+            <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <key>NSPrivacyAccessedAPITypeReasons</key>
+            <array>
+                <string>CA92.1</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>
