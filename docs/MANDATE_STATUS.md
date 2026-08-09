@@ -126,15 +126,22 @@ bytes forward. A changed digit still fails to match.
 No secrets are committed. The client refuses plaintext HTTP to anything but
 literal `127.0.0.1`/`::1`, refuses redirects, bounds requests and streamed
 responses, and never sends a bearer on the capability read. MCP tools are a
-reviewed static allowlist with no arbitrary dispatch. A **threat model
-document and SBOM remain unwritten** (§21).
+reviewed static allowlist with no arbitrary dispatch.
+
+[`SECURITY_MODEL.md`](SECURITY_MODEL.md) documents the model and threat model
+for §21, citing each control by the file that implements it. A **software bill
+of materials is still absent**; it is the remaining §21 item.
 
 ## 15. Commits
 
-Nine, on `codex/macos-recovery-20260808`: `bc199e8` consolidation → `60d76ce`
-iOS restoration → `ac6e17a` continuation record → `2b3a2c0` on-device model →
-`58afc31` readiness record → `33d832c` record update → certificates/gitignore →
-proposal panel → `02f8103` App Intents + privacy manifest.
+Fourteen, on `codex/macos-recovery-20260808`, oldest first:
+
+`bc199e8` consolidation · `60d76ce` iOS restoration · `ac6e17a` continuation
+record · `2b3a2c0` on-device model · `58afc31` readiness record · `33d832c`
+record update · `4c50ee2` fresh certificates · `098ca37` gitignore ·
+`13d6f53` proposal panel · `27462c0` App Intents · `2b17c04` privacy manifest ·
+`ae20fc6` security model · `02f8103` intent/manifest follow-up ·
+`bccc02f` this report.
 
 ## 16. Genuine external blockers
 
@@ -159,7 +166,7 @@ session, not feasibility.
 | Evidence graph and contradiction records as first-class objects | 14 |
 | Controlled web retrieval boundary | 17 |
 | PDF extraction, chunking, persistent index, retrieval | 13 |
-| Threat model document and SBOM | 21 |
+| Software bill of materials (the security model itself is written) | 21 |
 | Prompt-injection and networking-policy test suites | 22 |
 | macOS App Intents (the SPM bundle has no metadata-extraction phase; iOS has it) | 19 |
 | Conversation UI, result history, onboarding | 12 |
@@ -173,8 +180,8 @@ session, not feasibility.
    (`conjecture`, `collapse`, `certify`, `cross_examine`), returning ranked
    candidates with lineage — then expose it through CLI, MCP, and `/v1`
    together, so it lands on every interface at once rather than one.
-3. Write the §21 threat model; it is the cheapest remaining item with real
-   value.
+3. Generate the §21 SBOM — the last item in an otherwise complete security
+   section, and the cheapest remaining work with real value.
 
 Do not widen a gate, mute a test, or convert a refusal into a score to make any
 of this look finished.

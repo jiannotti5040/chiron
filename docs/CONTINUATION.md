@@ -65,6 +65,11 @@ These were run, and the stated result was seen. Nothing here is inferred.
 | `./make_app.sh` | built `App/build/Chiron.app`, ad-hoc signed |
 | `open build/Chiron.app` | launched and stayed running |
 | `curl /v1/capabilities`, `/v1/certify` | real `chiron.local_api/1` envelopes from Primus 0.7.2 |
+| **MCP invoked by a real client** | Claude Code called `chiron.catalog` (6 reviewed tools returned) and `chiron.certify`, which refuted "product of 6 and 7 is 41" with `expected: 42` |
+| App Intent registration | `Metadata.appintents/extract.actionsdata` in the built bundle contains `CertifyTextIntent` and the Siri phrase |
+| Privacy manifest | `PrivacyInfo.xcprivacy` present inside the built `ChironMobile.app` |
+| macOS proposal panel | `swift build` clean; rebuilt bundle launches and stays running |
+| iOS `xcodebuild test`, retried | **still stalls** — zero bytes of output after restarting CoreSimulatorService and re-booting the device |
 
 ## Mandate coverage
 
@@ -98,12 +103,12 @@ by earlier work on this branch.
 
 | Gap | Status | Why it matters |
 |---|---|---|
-| App Intents / Siri / Shortcuts | **absent** — no `AppIntent` or `AppShortcut` type exists | Mandate item 19. The natural first intent is "certify selected text", since that path is already proven. |
-| iOS test runner | **blocked** | `xcodebuild test` stalls without output on this host; `simctl install` hangs. CoreSimulator appears wedged. No completed iOS test result exists. |
-| MCP client validation | **not observed** | `.mcp.json` registers both servers, but no Claude Code / Codex client was observed invoking a tool this session. |
-| On-device model in the UI | **adapter only** | `ChironIntelligence` is implemented and tested but no app screen calls it yet. Wiring it into the macOS workspace is the natural next feature. |
-| Privacy manifest for model use | **absent** | Required before any store submission that ships the on-device path. |
-| Signing, notarization, archive | **absent** | Ad-hoc signing only. No distribution evidence of any kind. |
+| iOS test runner | **blocked, reproducible** | `xcodebuild test` produced zero bytes twice, including after killing `CoreSimulatorService` and re-booting the device. `build` succeeds on the same host and destination, so this is an environment fault, not a source defect. No completed iOS test result exists. |
+| Signing, notarization, archive | **absent** | Ad-hoc signing only. Requires an Apple Developer account — an external blocker, not an engineering one. |
+| macOS App Intents | **absent by decision** | The SwiftPM bundle has no `ExtractAppIntentsMetadata` phase, so a macOS intent would not register. Adding one needs an Xcode app target for macOS; the iOS intent is real and verified. |
+| Codex MCP client | **not observed** | Claude Code was observed invoking the tools. Codex was not tried. |
+| SBOM | **absent** | The dependency surface is small (no third-party Swift packages; Python stdlib), but that is an observation, not a generated bill of materials. |
+| Audit log | **absent** | No record of MCP or service invocations is kept. |
 
 ### Closed since this record was first written
 
