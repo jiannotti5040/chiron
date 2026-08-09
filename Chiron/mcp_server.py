@@ -281,6 +281,12 @@ TOOLS = [
     _tool(
         "certify",
         (
+            "Supply `facts` (an object of subject -> value, or a list of "
+            "{subject, value, unit}) to make claims about the world checkable: "
+            "without them, a statement like 'readiness fell to 74%' is REFUSED "
+            "because the fact lives in a table this engine has never seen, and "
+            "on real operational prose that is every claim. With them it is "
+            "checked exactly against exactly one named fact. "
             "Certify the exactly checkable claims in text or a file. Each claim "
             "returns VERIFIED, REFUTED, or REFUSED; the free-text remainder is "
             "reported as unverifiable and is never blessed. Gate on "
@@ -288,7 +294,12 @@ TOOLS = [
             "nothing checkable was refuted, not that the text is true. "
             "Contract: primus.certificate/2."
         ),
-        {"type": "object", "properties": dict(_TEXT_OR_PATH)},
+        {"type": "object", "properties": dict(
+            _TEXT_OR_PATH,
+            facts={"description": "Ground truth: an object of subject -> value, "
+                                  "or a list of {subject, value, unit} objects."},
+            facts_path={"type": "string",
+                        "description": "Read `facts` from a local JSON file instead."})},
         contract="primus.certificate/2",
         authority=("inline text or one caller-named local file bounded by "
                    "MAX_FILE_BYTES"),
@@ -492,6 +503,15 @@ def _tool_analyze(args: Dict[str, Any]) -> Dict[str, Any]:
 
 def _tool_certify(args: Dict[str, Any]) -> Dict[str, Any]:
     got = _text_from(args)
+    facts = args.get("facts")
+    if facts is not None and not isinstance(facts, (dict, list)):
+        raise ToolError("facts must be an object of subject -> value, or a "
+                        "list of {subject, value, unit} objects")
+    if args.get("facts_path") is not None:
+        if facts is not None:
+            raise ToolError("pass facts or facts_path, not both")
+        import json as _json
+        facts = _json.loads(_read_path(str(args["facts_path"]))["text"])
     # The seed engine's certify is the source of truth for the certificate;
     # Chiron does not carry a second copy of it.
     try:
@@ -501,7 +521,7 @@ def _tool_certify(args: Dict[str, Any]) -> Dict[str, Any]:
         if seed not in sys.path:
             sys.path.insert(0, seed)
         from primus.certify import certify
-    rec = certify(got["text"])
+    rec = certify(got["text"], facts=facts)
     rec["source"] = got["source"]
     return _wrap(rec)
 

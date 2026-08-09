@@ -23,7 +23,11 @@ Daily verbs:
   Reading verbs — each takes a string, a file path, or `-` for stdin:
 
     chiron analyze <input>     every applicable stage over one text (the wide read)
-    chiron verify <input>      the exact certificate: what can actually be proven
+    chiron verify <input> [--facts=<json|file>]
+                               the exact certificate. Without --facts, a claim
+                               whose truth lives outside the sentence REFUSES;
+                               with them it is checked against exactly one
+                               named fact, or refuses by name
     chiron collapse <input>    the canonical Primus invariant, or an honest refusal
     chiron attest <input> --input=<file> [--input=...]
                                which supplied source produced each span;
@@ -158,6 +162,10 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("grounded claims (exact against supplied facts, or refuse)",
+         [PY, "-c",
+          "import sys;sys.path.insert(0,'Primus/src');"
+          "from primus.grounded import _selftest;sys.exit(_selftest())"], None),
         ("PDF text layer (extracts, or refuses by name)",
          [PY, _script("pdf_text.py"), "selftest"], None),
         ("web boundary + prompt injection (closed by default; text stays data)",
@@ -216,6 +224,19 @@ def cmd_grow(args):
     return _run(argv + passthrough)
 
 
+def _facts_from(args):
+    """Load --facts=<json-or-file> for the grounded claim kind."""
+    import json
+    specs = [a.split("=", 1)[1] for a in args if a.startswith("--facts=")]
+    if not specs:
+        return None, [a for a in args if not a.startswith("--facts=")]
+    spec = specs[0]
+    if os.path.isfile(spec):
+        with open(spec, "r", encoding="utf-8") as fh:
+            return json.load(fh), [a for a in args if not a.startswith("--facts=")]
+    return json.loads(spec), [a for a in args if not a.startswith("--facts=")]
+
+
 def cmd_verify(args):
     """Certify exactly one supplied text value, file, or stdin stream.
 
@@ -223,6 +244,16 @@ def cmd_verify(args):
     ingestion workflow is valuable, but it is not an exact claim certificate
     and must never be substituted for one.
     """
+    facts, args = _facts_from(args)
+    if facts is not None:
+        # The packaged primus CLI has no --facts; the grounded kind is reached
+        # through the shared dispatch so every interface gets the same code.
+        text, gflags = _text_argv([a for a in args if a not in ("--gate",)],
+                                  "verify", ("--json",))
+        if text is None:
+            return 2
+        return _tool_call("certify", {"text": text, "facts": facts},
+                          "--json" in gflags)
     flags = [arg for arg in args if arg in ("--json", "--gate")]
     targets = [arg for arg in args if arg not in ("--json", "--gate")]
     bad = [arg for arg in targets if arg.startswith("-") and arg != "-"]
@@ -366,6 +397,21 @@ def _render(name, record):
         import compare_explore
         return (compare_explore.render_explore(record) if name == "explore"
                 else compare_explore.render_compare(record))
+    if name == "certify":
+        c = record.get("counts", {})
+        lines = [f"[chiron] certify · coverage {record.get('coverage', 0):.1%} · "
+                 f"{c.get('verified',0)} verified · {c.get('refuted',0)} refuted · "
+                 f"{c.get('refused',0)} refused"]
+        g = record.get("grounding")
+        if g:
+            lines.append(f"  grounded against {g['facts_supplied']} supplied fact(s)")
+            for bad in g.get("facts_rejected") or []:
+                lines.append(f"    rejected fact: {bad}")
+        for cl in record.get("claims") or []:
+            lines.append(f"  [{cl['status']}] {str(cl.get('text',''))[:56]}")
+            if cl.get("reason"):
+                lines.append(f"      {str(cl['reason'])[:70]}")
+        return "\n".join(lines)
     if name == "lineage":
         lines = [f"[chiron] lineage · {record.get('schema')} · "
                  f"{len(record.get('records') or [])} records · "

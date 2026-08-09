@@ -458,13 +458,22 @@ def _extract_claims(text: str) -> Tuple[List[Dict[str, Any]], List[Tuple[int, in
     return claims, consumed, capped
 
 
-def certify(text: str, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+def certify(text: str, meta: Optional[Dict[str, Any]] = None,
+            facts: Any = None) -> Dict[str, Any]:
     """Certify the checkable claims in *text*; refuse to bless the rest.
 
     Returns a certificate dict (schema ``primus.certificate/2``; contract in
     SCHEMA.md). Agent gating: pass iff ``counts["refuted"] == 0`` — and read
     ``coverage`` before trusting the pass, because a passing gate means only
     that nothing checkable was refuted, never that the output is true.
+
+    ``facts`` optionally supplies ground truth — a mapping of subject to value,
+    or a sequence of ``{subject, value, unit}`` objects. Without it, every
+    claim whose truth lives outside the sentence is REFUSED, which on real
+    operational prose is all of them. With it, those claims become exactly
+    checkable: see :mod:`primus.grounded`. Supplying facts never weakens the
+    gate — a grounded claim verifies only on an exact match against exactly
+    one supplied fact.
     """
     from primus import __version__
 
@@ -473,6 +482,27 @@ def certify(text: str, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     body_text = text[:MAX_TEXT_CHARS]
 
     claims, consumed, capped = _extract_claims(body_text)
+
+    # Grounded claims are checked after the self-contained kinds and only over
+    # text they did not already consume, so a sentence is never counted twice
+    # and an arithmetic claim keeps precedence over a lookup.
+    grounded_report = None
+    if facts is not None:
+        from primus.grounded import check_text as _check_grounded
+        stripped_for_grounding = body_text
+        for c in reversed(claims):
+            gs, ge = c["span"]
+            stripped_for_grounding = (stripped_for_grounding[:gs]
+                                      + " " * (ge - gs)
+                                      + stripped_for_grounding[ge:])
+        grounded_report = _check_grounded(stripped_for_grounding, facts)
+        for entry in grounded_report["claims"]:
+            if len(claims) >= MAX_CLAIMS:
+                capped = True
+                break
+            claims.append(entry)
+            consumed.append(tuple(entry["span"]))
+        claims.sort(key=lambda c: c["span"][0])
     counts = {
         "checkable": len(claims),
         "verified": sum(c["status"] == "VERIFIED" for c in claims),
@@ -510,6 +540,14 @@ def certify(text: str, meta: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         "unverifiable_remainder": unverifiable,
         "verdict": verdict,
     }
+    if grounded_report is not None:
+        cert["grounding"] = {
+            "schema": grounded_report["schema"],
+            "facts_supplied": grounded_report["facts_supplied"],
+            "facts_rejected": grounded_report["facts_rejected"],
+            "counts": grounded_report["counts"],
+            "note": grounded_report["note"],
+        }
     if meta:
         cert["meta"] = meta
     body = json.dumps(cert, sort_keys=True, separators=(",", ":"), default=str)
