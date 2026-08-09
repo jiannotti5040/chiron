@@ -11,9 +11,11 @@ Companion records: [`CONTINUATION.md`](CONTINUATION.md) for how to resume,
 
 ## 1–3. Inspected, implemented, architecture
 
-Five repositories exist under `~/Desktop/Intellectual`. `Jacob-s-Portfolio-Vault`
-is the canonical one; `chiron`, `chiron-launch`, `Acciaio`, and
-`operational-readiness-gate` are separate concerns and were left alone.
+Several repositories exist alongside this one on the author's machine.
+`Jacob-s-Portfolio-Vault` is the canonical one; the others are separate
+concerns with their own licences and privacy posture, and were left alone.
+They are not named here: this repository is public, and a public record should
+not enumerate private ones.
 
 The inherited state was a working tree with 52 uncommitted changes on
 `codex/macos-recovery-20260808` and **nothing committed**. The Python core was

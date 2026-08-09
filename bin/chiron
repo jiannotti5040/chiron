@@ -32,6 +32,8 @@ Daily verbs:
                                goal-directed campaign: recover, prove, record;
                                HALTs on an unproven step, ESCALATEs an
                                irreversible one — both are results (prototype)
+    chiron lineage <input>     the evidence graph: what each claim stands on,
+                               what contradicts it, and what stands on nothing
     chiron engines [query]     the reviewed static allowlist an agent may invoke
     chiron mcp                 serve the vault over stdio to Claude Code / Codex
 
@@ -154,6 +156,8 @@ def cmd_test(args):
          [PY, _script(os.path.join("tests", "test_foundry_boundary.py"))], None),
         ("license claims (current surfaces match Apache-2.0)",
          [PY, os.path.join(VAULT, "ci", "check_license_claims.py")], None),
+        ("evidence graph (lineage, contradictions, and what stands on nothing)",
+         [PY, _script("evidence_graph.py"), "selftest"], None),
         ("SBOM (every third-party import is declared or guarded)",
          [PY, os.path.join(VAULT, "ci", "sbom.py"), "--check"], None),
         ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",
@@ -349,6 +353,18 @@ def _render(name, record):
                 lines.append(f"      novel words ({len(novel)}): "
                              + ", ".join(novel[:12]))
         return "\n".join(lines)
+    if name == "lineage":
+        lines = [f"[chiron] lineage · {record.get('schema')} · "
+                 f"{len(record.get('records') or [])} records · "
+                 f"{record.get('edge_count')} edges"]
+        counts = record.get("counts") or {}
+        lines.append("  " + " · ".join(f"{v} {k}" for k, v in sorted(counts.items())))
+        for c in (record.get("contradictions") or []):
+            lines.append(f"  CONTRADICTED  {str(c.get('claim'))[:60]}")
+        for u in (record.get("unsupported") or []):
+            lines.append(f"  stands on nothing [{u.get('verdict') or '—'}]  "
+                         f"{str(u.get('claim'))[:56]}")
+        return "\n".join(lines)
     if name == "solve":
         lines = [f"[chiron] solve · {record.get('status')} · "
                  f"{record.get('steps_used')} step(s) · "
@@ -444,6 +460,21 @@ def cmd_solve(args):
     if intents:
         payload["intent"] = intents[0]
     return _tool_call("solve", payload, "--json" in flags)
+
+
+def cmd_lineage(args):
+    """The evidence graph behind a text: what each claim stands on.
+
+    Same run as `verify`, different question. `verify` answers what came out;
+    `lineage` answers what it is standing on and what contradicts it. A claim
+    nothing supports — including every REFUSED one — is listed rather than
+    buried, because that is the part of a result that is not holding anything
+    up.
+    """
+    text, flags = _text_argv(args, "lineage", ("--json",))
+    if text is None:
+        return 2
+    return _tool_call("lineage", {"text": text}, "--json" in flags)
 
 
 def cmd_engines(args):
@@ -610,7 +641,8 @@ COMMANDS = {
     "benchmark": cmd_benchmark, "demo": cmd_demo, "parity": cmd_parity,
     "plan": cmd_plan, "doctor": cmd_doctor, "clean": cmd_clean,
     "analyze": cmd_analyze, "attest": cmd_attest, "collapse": cmd_collapse,
-    "trace": cmd_trace, "solve": cmd_solve, "engines": cmd_engines,
+    "trace": cmd_trace, "solve": cmd_solve, "lineage": cmd_lineage,
+    "engines": cmd_engines,
     "mcp": cmd_mcp,
 }
 

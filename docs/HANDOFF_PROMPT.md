@@ -53,8 +53,9 @@ change**, so it lands on every interface at once instead of one.
 ## Rules I am not flexible on
 
 - **No `Co-Authored-By` trailers.** Do not add yourself to commit messages.
-- **Do not touch** `~/Desktop/Intellectual/operational-readiness-gate`. It is a
-  separate project and it is finished.
+- **Stay inside this repository.** Sibling directories on this machine are
+  separate, finished projects with their own licences and their own privacy
+  posture. Do not read from, write to, or vendor code between them.
 - Never widen a tolerance, mute a gate, or convert a refusal into a score to
   get green. A failing gate is information.
 - Never hand-edit `Chiron Monolith/chiron_monolith.py`; regenerate it.

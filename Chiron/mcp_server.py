@@ -359,6 +359,23 @@ TOOLS = [
                     "epistemic_status": "prototype"},
     ),
     _tool(
+        "lineage",
+        (
+            "Return the evidence graph behind a text rather than its verdicts: "
+            "which source each claim derives from, what supports or contradicts "
+            "it, and which claims stand on nothing. Composed over the same "
+            "certificate `certify` produces. A REFUSED claim appears under "
+            "`unsupported` and carries no supporting edge — refusal means no "
+            "exact checker applied, which is not weak support. Contract: "
+            "chiron.evidence_graph/1."
+        ),
+        {"type": "object", "properties": dict(_TEXT_OR_PATH)},
+        contract="chiron.evidence_graph/1",
+        authority="joins records other engines produced; reaches no verdict of its own",
+        side_effects="none; the graph is built in memory and returned",
+        provenance={"implementation": "Chiron/mcp_server.py:_tool_lineage -> evidence_graph.from_certificate"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -573,6 +590,37 @@ def _tool_solve(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _tool_lineage(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Certify a text, then return the evidence graph rather than the verdicts.
+
+    Same run, different question. `certify` answers "what came out"; `lineage`
+    answers "what is it standing on, and what contradicts it". It composes
+    `evidence_graph.from_certificate` over the certificate the canonical gate
+    already produced and asserts nothing of its own.
+
+    A REFUSED claim appears under `unsupported` with no supporting edge. That
+    is the honest placement: refusal means no exact checker applied, which is
+    not weak support.
+    """
+    got = _text_from(args)
+    import evidence_graph
+    # Same bootstrap _tool_certify uses; the seed engine's certify is the one
+    # source of truth for a certificate and Chiron carries no second copy.
+    try:
+        from primus.certify import certify
+    except ImportError:
+        seed = os.path.join(os.path.dirname(_HERE), "Primus", "src")
+        if seed not in sys.path:
+            sys.path.insert(0, seed)
+        from primus.certify import certify
+    certificate = certify(got["text"])
+    graph = evidence_graph.from_certificate(
+        certificate, source={"source_id": "input", **got["source"]})
+    rec = graph.as_dict()
+    rec["source"] = got["source"]
+    return _wrap(rec)
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -616,6 +664,7 @@ _IMPL = {
     "trace": _tool_trace,
     "catalog": _tool_catalog,
     "solve": _tool_solve,
+    "lineage": _tool_lineage,
 }
 
 

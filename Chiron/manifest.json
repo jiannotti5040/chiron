@@ -1,15 +1,15 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T15:26:17Z",
+  "generated_utc": "2026-08-09T18:30:04Z",
   "mode": "static",
   "summary": {
-    "runnable_scripts": 85,
-    "with_selftest": 63,
-    "stdlib_only": 75,
-    "with_spdx_header": 85,
+    "runnable_scripts": 86,
+    "with_selftest": 64,
+    "stdlib_only": 76,
+    "with_spdx_header": 86,
     "emitting_artifacts": 5,
-    "internal_edges": 118
+    "internal_edges": 120
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -219,6 +219,10 @@
         "semic_energy"
       ],
       [
+        "evidence_graph",
+        "foundry_boundary"
+      ],
+      [
         "export_graph",
         "chiron"
       ],
@@ -317,6 +321,10 @@
       [
         "mcp_server",
         "attest"
+      ],
+      [
+        "mcp_server",
+        "evidence_graph"
       ],
       [
         "mcp_server",
@@ -957,8 +965,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "a8b5191b7886b446",
-        "generated_utc": "2026-08-09T15:23:33Z",
+        "self_hash": "33aaff17e3e097a7",
+        "generated_utc": "2026-08-09T15:31:55Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1237,8 +1245,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "cd46056ca07de1df",
-        "generated_utc": "2026-08-09T15:23:05Z",
+        "self_hash": "5a37bdab7af7f4d4",
+        "generated_utc": "2026-08-09T15:31:56Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1324,6 +1332,26 @@
       "roles": [],
       "last_run": null,
       "imported_by": []
+    },
+    {
+      "script": "evidence_graph",
+      "path": "evidence_graph.py",
+      "purpose": "evidence_graph \u2014 join the records the vault already produces into lineage.",
+      "lines": 482,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "foundry_boundary"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "mcp_server"
+      ]
     },
     {
       "script": "build_examples",
@@ -1412,6 +1440,7 @@
       "roles": [],
       "last_run": null,
       "imported_by": [
+        "evidence_graph",
         "test_foundry_boundary"
       ]
     },
@@ -1798,13 +1827,14 @@
       "script": "mcp_server",
       "path": "mcp_server.py",
       "purpose": "chiron.mcp_server \u2014 the whole vault as tools an agent can call on itself.",
-      "lines": 849,
+      "lines": 898,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
       "stdlib_only": true,
       "imports": [
         "attest",
+        "evidence_graph",
         "full_stack",
         "planner",
         "trace"
@@ -2103,8 +2133,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "12b896c3b52e6838",
-        "generated_utc": "2026-08-09T15:23:06Z",
+        "self_hash": "735432a81d1d12e2",
+        "generated_utc": "2026-08-09T15:31:51Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2382,7 +2412,7 @@
       "script": "test_mcp_server",
       "path": "tests/test_mcp_server.py",
       "purpose": "Chiron MCP transport contract against the real stdio server process.",
-      "lines": 175,
+      "lines": 190,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -2493,8 +2523,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "52dcabd7bef62b13",
-        "generated_utc": "2026-08-09T15:23:21Z",
+        "self_hash": "9a4416f789747618",
+        "generated_utc": "2026-08-09T15:31:46Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null

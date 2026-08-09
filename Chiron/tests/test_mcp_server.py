@@ -94,7 +94,7 @@ def main():
     # and never a silent expansion.
     gate("tools/list exposes only the reviewed static Chiron surface",
          tools == {"attest", "analyze", "certify", "collapse", "trace",
-                   "solve", "catalog"})
+                   "solve", "lineage", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {
@@ -158,6 +158,21 @@ def main():
          and all("escalated" in str(s.get("verdict", "")).lower() for s in irreversible))
     gate("solve reports its epistemic status rather than implying completeness",
          solved.get("epistemic_status") == "prototype")
+
+    from mcp_server import _tool_lineage
+    lin = _json.loads(_tool_lineage(
+        {"text": "The sum of 2 and 2 is 4. The product of 6 and 7 is 41."}
+    )["content"][0]["text"])
+    contradicted = {c["claim_id"] for c in lin.get("contradictions", [])}
+    supported = {r["id"] for r in lin["records"]
+                 if r["kind"] == "Claim"
+                 and any(l["relationship"] == "supports" for l in r["links"])}
+    gate("lineage joins a certificate into a graph with typed edges",
+         lin.get("schema") == "chiron.evidence_graph/1"
+         and lin["counts"].get("Claim", 0) >= 2
+         and lin["edge_count"] > 0)
+    gate("a refuted claim is contradicted and never also supported",
+         contradicted and not (contradicted & supported))
 
     gate("the former generic call tool is refused at the stdio boundary",
          response.get(9, {}).get("error", {}).get("code") == -32602)
