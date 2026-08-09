@@ -134,19 +134,35 @@ by earlier work on this branch.
 
 ## The exact next autonomous action
 
-1. **Wire `ChironIntelligence` into the macOS workspace.** The adapter is
-   tested but unreached by any UI. Add a "suggest claims" affordance to
-   `WorkspaceView` that calls `ProposerRouter.proposer()`, shows the
-   availability explanation verbatim when it cannot run, and sends surviving
-   spans to the existing certify path. Show rejected proposals too — a
-   discarded hallucination is information the operator should see. Do not let
-   a proposal render as a verdict anywhere in the view.
+Items 1 and 3 of the previous list were already finished on this branch before
+that list was written — `ProposalPanel.swift` and `CertifyIntent.swift` both
+exist and both build. They have been removed rather than left to send the next
+agent after work that is done. What follows is what is actually open.
+
+1. **Restore the module catalog to the app.** `ModulesView.swift`,
+   `Catalog.swift`, and `CatalogTests.swift` were deleted during the workspace
+   consolidation and nothing replaced them: `ModuleCatalog`, `ModuleInfo`,
+   `FunctionInfo`, and `ModuleCallResult` exist nowhere on this branch. The
+   `certify` and `full_stack` capability survived into `WorkspaceView`, so that
+   part was a real consolidation — the catalog was simply lost. `chiron
+   engines` now covers this from the terminal, and the MCP `catalog` tool
+   covers it for agents, so the gap is the app only. Restore it as a *reader*:
+   arbitrary module dispatch is intentionally unavailable, so do not bring back
+   `run(_ fn: FunctionInfo)` along with it. The deleted files are recoverable
+   with `git show origin/main:App/Sources/ChironApp/ModulesView.swift`.
+
 2. **Unwedge CoreSimulator and close the iOS test gate:**
    `sudo pkill -9 -f CoreSimulator`, re-boot the device, then retry
    `xcodebuild … test`. If it stalls again, record the retry rather than
-   inferring a pass.
-3. **Then App Intents** — "certify selected text" first, since that path is
-   already proven end to end.
+   inferring a pass. `xcodebuild … build` succeeds today; it is the *test*
+   action that is unobserved, and the two are not the same claim.
+
+3. **Decide the two-MCP-server question.** `Chiron/mcp_server.py` and
+   `Primus/src/primus/mcp_server.py` both exist and both connect. That is
+   defensible — `primus` is what the published package ships and must keep
+   working standalone — but it is currently a coincidence rather than a
+   decision, and `claude mcp list` reports `chiron` registered in two scopes
+   with different endpoints. See `docs/MCP_CLIENTS.md`.
 
 Do not widen a gate, mute a test, or convert a refusal into a score to make
 any of this look finished.
