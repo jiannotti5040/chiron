@@ -95,7 +95,8 @@ def main():
     gate("tools/list exposes only the reviewed static Chiron surface",
          tools == {"attest", "analyze", "certify", "collapse", "trace",
                    "solve", "lineage", "explore", "compare",
-                   "falsifiers", "propose_experiment", "catalog"})
+                   "falsifiers", "propose_experiment",
+                   "relate", "solve_for", "discover_map", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {
@@ -187,6 +188,21 @@ def main():
          cmp_.get("schema") == "chiron.compare/1"
          and "score" not in cmp_ and "rank" not in cmp_
          and cmp_.get("better_supported") is None)
+
+    # The engine applied to a table rather than a sequence: the law must be
+    # recovered AND the anomalous row named, or this is not the capability it
+    # claims to be.
+    from mcp_server import _tool_relate
+    ledger = [{"units": 3 + i, "price": 25, "ship": 10 + (i % 3),
+               "total": 25 * (3 + i) + 10 + (i % 3) + (50 if i == 9 else 0)}
+              for i in range(14)]
+    rel = _json.loads(_tool_relate(
+        {"rows": ledger, "target": "total",
+         "inputs": ["units", "price", "ship"]})["content"][0]["text"])
+    gate("relate recovers an exact law across columns",
+         rel["schema"] == "primus.relation/1" and rel.get("law"))
+    gate("relate localises the anomalous row instead of absorbing it",
+         rel["status"] == "PARTIAL" and 9 in (rel.get("anomalous_rows") or []))
 
     gate("the former generic call tool is refused at the stdio boundary",
          response.get(9, {}).get("error", {}).get("code") == -32602)

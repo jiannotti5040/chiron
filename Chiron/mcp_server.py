@@ -463,6 +463,68 @@ TOOLS = [
         provenance={"implementation": "Chiron/mcp_server.py:_tool_propose_experiment -> falsify"},
     ),
     _tool(
+        "relate",
+        (
+            "Recover an exact law across COLUMNS of a table — y = f(x1..xk) — "
+            "solved in exact rational arithmetic and confirmed on rows the "
+            "solver never saw. This is the engine applied to real data rather "
+            "than to one sequence. VERIFIED means every held-out row matched "
+            "exactly; there is no tolerance and no residual. PARTIAL names the "
+            "exact rows that break an otherwise-holding law, which is anomaly "
+            "localisation and is explicitly NOT a weaker verification. "
+            "Contract: primus.relation/1."
+        ),
+        {"type": "object",
+         "properties": {"rows": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+                        "target": {"type": "string"},
+                        "inputs": {"type": "array", "items": {"type": "string"}}},
+         "required": ["rows", "target"]},
+        contract="primus.relation/1",
+        authority="exact rational solve with held-out proof; never approximates",
+        side_effects="none",
+        provenance={"implementation": "primus/relate.py:relate"},
+    ),
+    _tool(
+        "solve_for",
+        (
+            "Run a recovered law backwards: given a target value and all but "
+            "one input, solve exactly for the missing one. Offered ONLY for a "
+            "law that VERIFIED — inverting an unproven rule would turn it into "
+            "a confident number. Irrational roots are REFUSED rather than "
+            "rounded. Contract: primus.inverse/1."
+        ),
+        {"type": "object",
+         "properties": {"rows": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+                        "target": {"type": "string"},
+                        "inputs": {"type": "array", "items": {"type": "string"}},
+                        "unknown": {"type": "string"},
+                        "known": {"type": "object"},
+                        "target_value": {"description": "Desired value of the target."}},
+         "required": ["rows", "target", "unknown", "target_value"]},
+        contract="primus.inverse/1",
+        authority="inverts only VERIFIED laws; refuses irrational roots",
+        side_effects="none",
+        provenance={"implementation": "primus/invert.py:solve_for"},
+    ),
+    _tool(
+        "discover_map",
+        (
+            "Recover the exact per-column map carrying one table to another — "
+            "which column became which, under what law. Each mapping carries "
+            "its own held-out proof. A column with no exact law is reported as "
+            "unmapped rather than paired with its closest fit. "
+            "Contract: primus.transformation/1."
+        ),
+        {"type": "object",
+         "properties": {"source": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+                        "destination": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."}},
+         "required": ["source", "destination"]},
+        contract="primus.transformation/1",
+        authority="per-column exact laws only; never pairs by best guess",
+        side_effects="none",
+        provenance={"implementation": "primus/invert.py:discover_map"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -802,6 +864,67 @@ def _tool_propose_experiment(args: Dict[str, Any]) -> Dict[str, Any]:
     return _wrap(rec)
 
 
+def _relate_args(args: Dict[str, Any]):
+    rows = args.get("rows")
+    if not isinstance(rows, list) or not rows:
+        raise ToolError("rows must be a non-empty list of objects")
+    target = args.get("target")
+    if not isinstance(target, str):
+        raise ToolError("target must be a column name")
+    inputs = args.get("inputs")
+    if inputs is not None and not isinstance(inputs, list):
+        raise ToolError("inputs must be a list of column names")
+    return rows, target, inputs
+
+
+def _tool_relate(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Recover an exact law across columns, proven on held-out rows.
+
+    The disposition is the result. VERIFIED means the law held on every row
+    the solver never saw, in exact rational arithmetic. PARTIAL names the rows
+    that break it — an anomaly finding, explicitly not a weaker verification.
+    """
+    from primus.relate import relate, RelationError as _RE
+    rows, target, inputs = _relate_args(args)
+    try:
+        return _wrap(relate(rows, target, inputs))
+    except _RE as exc:
+        raise ToolError(str(exc))
+
+
+def _tool_solve_for(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Run a proven law backwards for one unknown input."""
+    from primus.relate import relate, RelationError as _RE
+    from primus.invert import solve_for
+    rows, target, inputs = _relate_args(args)
+    unknown = args.get("unknown")
+    if not isinstance(unknown, str):
+        raise ToolError("unknown must be an input column name")
+    if "target_value" not in args:
+        raise ToolError("target_value is required")
+    try:
+        law = relate(rows, target, inputs)
+        rec = solve_for(law, args.get("known") or {}, unknown,
+                        args["target_value"])
+    except _RE as exc:
+        raise ToolError(str(exc))
+    rec["law_status"] = law.get("status")
+    return _wrap(rec)
+
+
+def _tool_discover_map(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Recover the exact per-column map carrying one table to another."""
+    from primus.relate import RelationError as _RE
+    from primus.invert import discover_map
+    source, destination = args.get("source"), args.get("destination")
+    if not isinstance(source, list) or not isinstance(destination, list):
+        raise ToolError("source and destination must be lists of objects")
+    try:
+        return _wrap(discover_map(source, destination))
+    except _RE as exc:
+        raise ToolError(str(exc))
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -850,6 +973,9 @@ _IMPL = {
     "compare": _tool_compare,
     "falsifiers": _tool_falsifiers,
     "propose_experiment": _tool_propose_experiment,
+    "relate": _tool_relate,
+    "solve_for": _tool_solve_for,
+    "discover_map": _tool_discover_map,
 }
 
 
