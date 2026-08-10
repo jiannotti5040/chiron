@@ -55,7 +55,7 @@ Every `/v1` response has this outer envelope:
   "request_id": "0123456789abcdef0123456789abcdef",
   "operation": "collapse",
   "engine": {
-    "primus_version": "0.7.2",
+    "primus_version": "0.9.0",
     "certificate_schema": "primus.certificate/2"
   },
   "result": {}
@@ -101,7 +101,7 @@ envelope for the `/v1` namespace. The nested `result` is the ordinary
   "request_id": "0123456789abcdef0123456789abcdef",
   "operation": "certify",
   "engine": {
-    "primus_version": "0.7.2",
+    "primus_version": "0.9.0",
     "certificate_schema": "primus.certificate/2"
   },
   "result": {

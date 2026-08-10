@@ -1,30 +1,36 @@
-# Agent instructions — Chiron / Primus vault
+# Agent instructions
 
-Read [`notes/SOP.md`](notes/SOP.md) before changing the vault. It is the
-operating manual; this file is the short gate summary.
+Read [`notes/SOP.md`](notes/SOP.md) before changing the vault; it is the
+operating manual. This file is the short version plus the environment facts
+that are not discoverable from the code.
 
-## Architecture and boundaries
+## Project invariants
 
-The Python vault is canonical. The macOS app is a local SwiftUI operator
-surface that invokes the vault through a local process; it must not become a
-second stamping implementation. Preserve the canonical claim vocabulary:
-`VERIFIED`, `REFUTED`, and `REFUSED`.
-
-Do not claim a cloud provider, public service, Foundry/AIP delivery, signing,
-notarization, or distribution integration without its own observed evidence.
-`docs/RECONSTRUCTION.md` is the current local-boundary record;
-`docs/RESEARCH_MAP.md` separates executable evidence from bounded research and
-theory.
-
-## The inviolable law
+These are the project's rules. Do not weaken them.
 
 **Zero false verifications.** A change that makes any engine stamp what it
-cannot exactly prove is wrong. Refusal is a feature. When recall and honesty
-conflict, choose honesty.
+cannot exactly prove is wrong, even if every benchmark improves. Refusal is a
+result. When recall and honesty conflict, choose honesty. A false refutation
+is the same class of error as a false verification.
 
-## Before claiming a change works
+**Exact arithmetic on the stamping path.** Fractions and exact integer
+equality. Float predictions beyond 2^53 are refused, not trusted.
 
-Run the relevant gates. For a broad change from the repository root:
+**The canonical vocabulary is `VERIFIED`, `REFUTED`, `REFUSED`, `PARTIAL`.**
+Do not introduce a parallel synonym set.
+
+**Edit sources of truth only.** `Primus/src/primus/engine.py` and `Chiron/*.py`
+are canonical. Never hand-edit `Chiron Monolith/chiron_monolith.py`; regenerate
+it. CI fails on a stale fold by design.
+
+**Do not build a parallel verifier, dashboard, or copy of an existing engine.**
+Grow outward through users, external validation, and exactness.
+
+**Label epistemic status plainly** — implemented-and-tested, prototype,
+bounded evidence, or theory. Overclaiming is a defect in code, docs, and
+commit messages.
+
+## Gates
 
 ```bash
 python3 bin/chiron test --full
@@ -32,53 +38,62 @@ python3 bin/chiron parity
 cd App && swift test --scratch-path /tmp/chiron-build
 ```
 
-**Run them one at a time.** The full battery regenerates
-`Chiron/artifacts/*/latest.json` while other gates read them, so racing it
-against a Swift build or the Primus gates produces failures that do not
-reproduce. `unit: chiron` and `CLI contract` failing together, while both pass
-individually, is that race and not a regression.
-
-**The `--scratch-path` is load-bearing, not a preference.** This checkout lives
-under an iCloud-synced Desktop, and the file provider stamps
-`com.apple.FinderInfo` onto the `.xctest` bundles faster than it can be
-stripped. `codesign` then rejects them — "resource fork, Finder information, or
-similar detritus not allowed" — and `swift test` fails with `error: fatalError`
-that looks like a code fault and is not. Build outside the synced tree. The
-same applies to `swift build` when it produces signed products.
-
-A failing gate is information: find the root cause. Never widen a tolerance or
+A failing gate is information. Find the root cause; never widen a tolerance or
 mute a gate to obtain green.
 
-## Hard rules
+After a module change:
 
-- Exact arithmetic only on the stamping path: use fractions and exact integer
-  equality; float predictions beyond 2^53 are refused, not trusted.
-- Edit sources of truth only. Never hand-edit
-  `Chiron Monolith/chiron_monolith.py`; regenerate it after a Chiron change:
-  `cd "Chiron Monolith" && python3 build_monolith.py`, then run its self-test.
-- After a module-set or gate change, run
-  `python3 Chiron/build_manifest.py --run && python3 Chiron/build_encyclopedia.py`.
-- Seed/Chiron divergence must be recorded in `Primus/drift_check.py`'s
-  `SEED_AHEAD_LEDGER`, with a dated reason, or the build fails by design.
-- Do not build a parallel verifier, dashboard, or copy of an existing engine.
-  Grow outward through users, external validation, and exactness.
-- **One dispatch.** `Chiron/mcp_server.py:_IMPL` is the single place a tool name
-  becomes a call. `bin/chiron`'s reading verbs (`analyze`, `attest`, `collapse`,
-  `trace`) and every MCP client go through it, and `engines` reads the same
-  `TOOLS` table the server advertises. Adding a surface means routing it there,
-  never reimplementing the operation beside it.
-- `chiron mcp` must never print to stdout. Stdio MCP requires stdout to carry
-  framed JSON-RPC and nothing else; the `[chiron] $ …` banner every other verb
-  prints goes to stderr for this one, and the process is replaced with `execv`.
-- Model output is a proposal, never an authority. Anything a model emits into a
-  typed schema must be a closed symbol the app can render, not free text the UI
-  displays verbatim — a `@Guide` sentence asking a model not to judge is not a
-  boundary. `ProposedCheckKind` is the pattern.
-- Attribution and checkability are independent. A span may trace to a source
-  with cosine 1.00 and still be `REFUSED` because no exact checker covers its
-  domain. Never render such a span as unattributed, and never report any
-  probability that text is machine-written.
-- Never `git add -A` at the vault root: `Jacob Dylan Iannotti/` is deliberately
-  untracked and contains an embedded Git repository.
-- Label work plainly as implemented-and-tested, prototype, bounded evidence,
-  or theory. Overclaiming is a defect in code, docs, and commit messages.
+```bash
+python3 Chiron/build_manifest.py
+cd "Chiron Monolith" && python3 build_monolith.py && python3 chiron_monolith.py --selftest
+```
+
+Seed/Chiron divergence must be recorded in `Primus/drift_check.py`'s
+`SEED_AHEAD_LEDGER` with a dated reason, or the build fails by design.
+
+## Environment facts
+
+Verifiable properties of this checkout and machine, recorded because each one
+otherwise presents as a code defect.
+
+- **Run the gates one at a time.** The full battery regenerates
+  `Chiron/artifacts/*/latest.json` while other gates read them. Racing it
+  against a Swift build produces failures that do not reproduce; `unit: chiron`
+  and `CLI contract` failing together while both pass individually is that
+  race.
+- **Swift builds need `--scratch-path` outside this tree.** The checkout is
+  under an iCloud-synced Desktop and the file provider stamps
+  `com.apple.FinderInfo` onto `.xctest` bundles. `codesign` rejects them and
+  `swift test` fails with `error: fatalError`, which looks like a code fault.
+- **`chiron mcp` must not write to stdout.** Stdio MCP requires stdout to carry
+  framed JSON-RPC only. Its banner goes to stderr and the process is replaced
+  with `execv`.
+- **One dispatch.** `Chiron/mcp_server.py:_IMPL` is the single place a tool
+  name becomes a call; the CLI, the HTTP service, and every MCP client route
+  through it. Add a surface by routing it there, not by reimplementing the
+  operation beside it.
+- **Never `git add -A` at the vault root.** `Jacob Dylan Iannotti/` is
+  deliberately untracked and contains an embedded Git repository.
+- **`Chiron/chiron_memory.json` is never committed.** A grown Congress carries
+  CC BY-SA prose, one-way incompatible with Apache-2.0.
+
+## Proposed conventions — not yet owner-ratified
+
+Introduced by an agent during development. They are consistent with the
+invariants above and are followed in current code, but they were not owner
+decisions. Treat them as proposals: follow them for consistency, and raise
+them rather than assuming they are settled.
+
+- *Model output is a proposal, never an authority.* Anything a model emits into
+  a typed schema is a closed symbol the application renders, not free text
+  displayed verbatim. `ProposedCheckKind` is the current implementation.
+- *Attribution and checkability are independent.* A span may trace to a source
+  exactly and still be `REFUSED` because no exact checker covers its domain.
+  Such a span is not rendered as unattributed.
+
+## Documentation standard
+
+Repository documentation describes the software. It does not narrate the
+sessions that produced it, address the reader in the first person, or record
+what a previous agent got wrong. Status belongs in [`STATUS.md`](STATUS.md)
+and [`docs/STATE.json`](docs/STATE.json), regenerated by `python3 ci/state.py`.
