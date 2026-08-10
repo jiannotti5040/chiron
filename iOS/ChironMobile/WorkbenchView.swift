@@ -3,6 +3,7 @@
 import SwiftUI
 import ChironContract
 import ChironService
+import UniformTypeIdentifiers
 
 /// The workbench: one document, every operation the vault can perform on it.
 ///
@@ -29,10 +30,32 @@ struct WorkbenchView: View {
         """
     @State private var factsJSON = #"{"gross_margin": {"value": 74, "unit": "percent"}}"#
     @State private var useFacts = true
-    @State private var operation: LocalServiceOperation = .certify
+    /// A worked example, not filler. This ledger carries an exact pricing law
+    /// and one row that breaks it, so the first thing anyone sees the engine
+    /// do is find a rule nobody told it about and point at the bad row.
+    @State private var tableJSON = """
+        [{"units":3,"price":25,"ship":10,"total":85},
+         {"units":4,"price":25,"ship":11,"total":111},
+         {"units":5,"price":25,"ship":12,"total":137},
+         {"units":6,"price":25,"ship":10,"total":160},
+         {"units":7,"price":25,"ship":11,"total":186},
+         {"units":8,"price":25,"ship":12,"total":212},
+         {"units":9,"price":25,"ship":10,"total":235},
+         {"units":10,"price":25,"ship":11,"total":261},
+         {"units":11,"price":25,"ship":12,"total":287},
+         {"units":12,"price":25,"ship":10,"total":360},
+         {"units":13,"price":25,"ship":11,"total":336},
+         {"units":14,"price":25,"ship":12,"total":362}]
+        """
+    @State private var targetColumn = "total"
+    @State private var inputColumns = "units, price, ship"
+    @State private var unknownColumn = "units"
+    @State private var targetValue = "337"
+    @State private var operation: LocalServiceOperation = .ingest
     @State private var record: LocalServiceRecord?
     @State private var failure: String?
     @State private var running = false
+    @State private var importing = false
 
     var body: some View {
         NavigationStack {
@@ -40,7 +63,7 @@ struct WorkbenchView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     thesis
                     operationPicker
-                    documentField
+                    if operation.takesTable { tableFields } else { documentField }
                     if operation.usesFacts { factsField }
                     runRow
                     if let failure {
@@ -57,6 +80,25 @@ struct WorkbenchView: View {
                 .padding()
             }
             .navigationTitle("Chiron")
+            // Security-scoped, user-selected, and read through the same
+            // bounded, strict-UTF-8 reader the certify screen uses. Nothing is
+            // uploaded: the file becomes text in this field and goes only
+            // where the operator then sends it.
+            .fileImporter(isPresented: $importing,
+                          allowedContentTypes: [.plainText, .text, .data,
+                                                .commaSeparatedText, .json],
+                          allowsMultipleSelection: false) { outcome in
+                switch outcome {
+                case .success(let urls):
+                    guard let url = urls.first else { return }
+                    let scoped = url.startAccessingSecurityScopedResource()
+                    defer { if scoped { url.stopAccessingSecurityScopedResource() } }
+                    do { text = try ServiceTextInput.read(from: url) }
+                    catch { failure = String(describing: error) }
+                case .failure(let error):
+                    failure = String(describing: error)
+                }
+            }
         }
     }
 
@@ -111,11 +153,59 @@ struct WorkbenchView: View {
 
     private var documentField: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Document").font(.subheadline.weight(.medium))
+            HStack {
+                Text(operation == .ingest ? "Anything — text, CSV, or JSON records"
+                                          : "Document")
+                    .font(.subheadline.weight(.medium))
+                Spacer()
+                Button {
+                    importing = true
+                } label: {
+                    Label("Import…", systemImage: "doc.badge.plus").font(.caption)
+                }
+                .buttonStyle(.plain)
+            }
             TextEditor(text: $text)
                 .font(.system(.callout, design: .monospaced))
                 .frame(minHeight: 110)
                 .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
+        }
+    }
+
+    private var tableFields: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Table — rows as JSON objects")
+                .font(.subheadline.weight(.medium))
+            TextEditor(text: $tableJSON)
+                .font(.system(.caption2, design: .monospaced))
+                .frame(minHeight: 140)
+                .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary))
+            HStack(spacing: 8) {
+                labelled("target", $targetColumn)
+                labelled("inputs", $inputColumns)
+            }
+            if operation == .solveFor {
+                HStack(spacing: 8) {
+                    labelled("solve for", $unknownColumn)
+                    labelled("target value", $targetValue)
+                }
+            }
+            Text("""
+                The law is solved on the first few rows and then has to hold on \
+                every row it never saw. Change one total and watch it move from \
+                VERIFIED to PARTIAL with that row named.
+                """)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func labelled(_ title: String, _ binding: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title).font(.caption2).foregroundStyle(.secondary)
+            TextField(title, text: binding)
+                .textFieldStyle(.roundedBorder)
+                .font(.system(.caption, design: .monospaced))
         }
     }
 
@@ -160,6 +250,9 @@ struct WorkbenchView: View {
     @ViewBuilder
     private func resultSection(_ record: LocalServiceRecord) -> some View {
         VStack(alignment: .leading, spacing: 10) {
+            if let status = record.record.objectValue?["status"]?.stringValue {
+                statusBadge(status)
+            }
             if let counts = record.dispositionCounts {
                 dispositionRow(counts)
             }
@@ -168,6 +261,16 @@ struct WorkbenchView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            if !record.nextSteps.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("What you can do with this")
+                        .font(.caption.weight(.semibold))
+                    ForEach(record.nextSteps, id: \.operation) { step in
+                        nextStepRow(step)
+                    }
+                }
+                .padding(.top, 2)
             }
             DisclosureGroup("The record, as the engine returned it") {
                 Text(record.prettyJSON)
@@ -195,6 +298,56 @@ struct WorkbenchView: View {
         }
     }
 
+    /// A next step the engine said is meaningful for *this* invariant. One it
+    /// refused to offer is shown too, greyed, with the reason — an operation
+    /// that must not run is more informative than a hidden one.
+    @ViewBuilder
+    private func nextStepRow(_ step: LocalServiceRecord.NextStep) -> some View {
+        if step.available, let op = LocalServiceOperation(rawValue: step.operation) {
+            Button {
+                operation = op
+                record = nil
+                failure = nil
+            } label: {
+                HStack(alignment: .top, spacing: 6) {
+                    Image(systemName: "arrow.right.circle.fill").font(.caption)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(op.title).font(.caption.weight(.medium))
+                        Text(step.why).font(.caption2).foregroundStyle(.secondary)
+                            .multilineTextAlignment(.leading)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+        } else {
+            HStack(alignment: .top, spacing: 6) {
+                Image(systemName: "nosign").font(.caption).foregroundStyle(.orange)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(step.operation).font(.caption.weight(.medium))
+                        .foregroundStyle(.secondary)
+                    Text(step.why).font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    /// The engine's word, verbatim. PARTIAL gets its own colour because it is
+    /// its own disposition — not a softened VERIFIED.
+    private func statusBadge(_ status: String) -> some View {
+        let tint: Color = switch status {
+        case "VERIFIED": .green
+        case "REFUTED": .red
+        case "PARTIAL": .orange
+        default: .secondary
+        }
+        return Text(status)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10).padding(.vertical, 5)
+            .background(tint.opacity(0.18), in: Capsule())
+            .foregroundStyle(tint)
+    }
+
     private func badge(_ label: String, _ count: Int, _ tint: Color) -> some View {
         HStack(spacing: 4) {
             Text("\(count)").font(.caption.monospacedDigit().weight(.semibold))
@@ -212,12 +365,45 @@ struct WorkbenchView: View {
         let op = operation
         let document = text
         let facts = useFacts ? factsJSON : nil
+        let table = tableJSON
+        let target = targetColumn.trimmingCharacters(in: .whitespaces)
+        let inputs = inputColumns.split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+        let unknown = unknownColumn.trimmingCharacters(in: .whitespaces)
+        let wanted = targetValue.trimmingCharacters(in: .whitespaces)
         Task {
             defer { running = false }
             do {
+                var arguments = op.arguments(document: document, facts: facts)
+                if op.takesTable {
+                    guard let rows = JSONValue.decode(table),
+                          rows.arrayValue != nil else {
+                        failure = "The table must be a JSON array of row objects."
+                        return
+                    }
+                    if op == .discoverMap {
+                        // Until the workbench carries two tables, a single
+                        // table is mapped against itself: every column maps to
+                        // itself by the identity law. Honest, and it shows the
+                        // shape of the answer without pretending to compare
+                        // two things the screen never asked for.
+                        arguments = ["source": rows, "destination": rows]
+                    } else {
+                        arguments = ["rows": rows, "target": .string(target)]
+                        if !inputs.isEmpty {
+                            arguments["inputs"] = .array(inputs.map { .string($0) })
+                        }
+                        if op == .solveFor {
+                            arguments["unknown"] = .string(unknown)
+                            arguments["target_value"] =
+                                JSONValue.decode(wanted) ?? .string(wanted)
+                            arguments["known"] = .object([:])
+                        }
+                    }
+                }
                 let client = try makeClient()
-                record = try await client.invoke(op, arguments: op.arguments(
-                    document: document, facts: facts))
+                record = try await client.invoke(op, arguments: arguments)
             } catch {
                 failure = String(describing: error)
             }
@@ -250,6 +436,26 @@ private extension LocalServiceOperation {
             args["facts"] = parsed
         }
         return args
+    }
+}
+
+extension LocalServiceRecord {
+    struct NextStep: Sendable {
+        let operation: String
+        let why: String
+        /// False when the engine deliberately declined to offer it.
+        let available: Bool
+    }
+
+    /// The operations the engine said are meaningful for this result.
+    var nextSteps: [NextStep] {
+        (record.objectValue?["next"]?.arrayValue ?? []).compactMap { entry in
+            guard let object = entry.objectValue,
+                  let operation = object["operation"]?.stringValue,
+                  let why = object["why"]?.stringValue else { return nil }
+            let available = !(object["arguments"]?.isNull ?? true)
+            return NextStep(operation: operation, why: why, available: available)
+        }
     }
 }
 
@@ -289,12 +495,28 @@ private extension LocalServiceRecord {
             lines.append(String(format: "coverage %.1f%% of the input was checkable",
                                 coverage * 100))
         }
-        if let status = object["status"]?.stringValue {
-            lines.append("campaign status: \(status)")
-        }
+        // The status already has its own badge; repeating it as a sentence
+        // only added noise, and "campaign status" was borrowed wording from
+        // solve that made no sense for a relation.
+
         if let missing = object["counts"]?.objectValue?["actionable_now"]?.intValue,
            missing > 0 {
             lines.append("\(missing) refusal(s) can be resolved by supplying named evidence")
+        }
+        if let law = object["law"]?.stringValue {
+            lines.insert("law: " + law, at: 0)
+        }
+        if let anomalies = object["anomalous_rows"]?.arrayValue, !anomalies.isEmpty {
+            lines.append("rows inconsistent with that law: "
+                         + anomalies.compactMap { $0.intValue.map(String.init) }
+                             .joined(separator: ", "))
+        }
+        if let held = object["held_out_rows"]?.intValue {
+            lines.append("confirmed on \(held) row(s) the solver never saw")
+        }
+        if let solutions = object["solutions"]?.arrayValue, !solutions.isEmpty {
+            lines.append("solution: "
+                         + solutions.compactMap { $0.stringValue }.joined(separator: ", "))
         }
         if let note = object["note"]?.stringValue { lines.append(note) }
         return lines

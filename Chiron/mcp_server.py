@@ -525,6 +525,31 @@ TOOLS = [
         provenance={"implementation": "primus/invert.py:discover_map"},
     ),
     _tool(
+        "ingest",
+        (
+            "START HERE. Give it any text or file and it works out what "
+            "mathematical structure is actually present — a table, a sequence, "
+            "or claims in prose — certifies that structure with the engine "
+            "that can prove it, and returns the recovered law together with "
+            "what you can now do with it. Detection is structural, never "
+            "statistical: numbers mentioned in a sentence are not treated as a "
+            "series. Every result carries `next`, the operations meaningful "
+            "for that specific invariant with arguments already filled in; an "
+            "operation that must not be offered says why. "
+            "Contract: chiron.ingest/1."
+        ),
+        {"type": "object",
+         "properties": dict(_TEXT_OR_PATH,
+                            target={"type": "string",
+                                    "description": "For a table, the column to "
+                                                   "explain. Defaults to the last "
+                                                   "numeric column."})},
+        contract="chiron.ingest/1",
+        authority="routes to reviewed engines only; certifies nothing itself",
+        side_effects="none; reads one caller-named local file at most",
+        provenance={"implementation": "Chiron/ingest.py:ingest"},
+    ),
+    _tool(
         "catalog",
         (
             "List the reviewed static Chiron MCP capability allowlist and each "
@@ -943,6 +968,27 @@ def _tool_discover_map(args: Dict[str, Any]) -> Dict[str, Any]:
         raise ToolError(str(exc))
 
 
+def _tool_ingest(args: Dict[str, Any]) -> Dict[str, Any]:
+    """Hand it anything; get back the certified law underneath, and what to do next.
+
+    Every other tool asks the caller to already know what they have. This works
+    it out — table, sequence, or prose — routes it to the engine that can
+    certify that structure, and returns the invariant together with the
+    operations that are meaningful for it, arguments filled in. An operation
+    that would not work is not offered, and one that must not be offered (like
+    inverting an unproven law) says why.
+    """
+    import ingest as _ingest
+    got = _text_from(args, key="text", path_key="path")
+    target = args.get("target")
+    if target is not None and not isinstance(target, str):
+        raise ToolError("target must be a column name")
+    try:
+        return _wrap(_ingest.ingest(got["text"], target))
+    except ValueError as exc:
+        raise ToolError(str(exc))
+
+
 def _catalog(filter_: Optional[str] = None) -> Dict[str, Any]:
     """Return the static tool allowlist without importing arbitrary modules."""
     if filter_ is not None and not isinstance(filter_, str):
@@ -994,6 +1040,7 @@ _IMPL = {
     "relate": _tool_relate,
     "solve_for": _tool_solve_for,
     "discover_map": _tool_discover_map,
+    "ingest": _tool_ingest,
 }
 
 

@@ -456,6 +456,12 @@ public extension JSONValue {
     /// Parse a JSON string the operator typed. Returns nil on anything
     /// malformed rather than throwing, because the caller's next move is to
     /// leave the field out, not to crash.
+    /// Whether this value is JSON `null`. Distinct from "absent": an engine
+    /// that returns `null` for an operation's arguments is deliberately saying
+    /// the operation must not be offered, which is different from not
+    /// mentioning it.
+    var isNull: Bool { if case .null = self { return true }; return false }
+
     static func decode(_ text: String) -> JSONValue? {
         try? JSONValue.parse(Data(text.utf8))
     }

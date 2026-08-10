@@ -28,6 +28,10 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
     case compare
     case falsifiers
     case proposeExperiment = "propose_experiment"
+    case ingest
+    case relate
+    case solveFor = "solve_for"
+    case discoverMap = "discover_map"
     case catalog
 
     fileprivate var path: String {
@@ -53,6 +57,10 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
         case .compare: "Compare"
         case .falsifiers: "What would refute this"
         case .proposeExperiment: "What to check next"
+        case .ingest: "Certify this"
+        case .relate: "Find the law"
+        case .solveFor: "Solve for a value"
+        case .discoverMap: "Map two tables"
         case .catalog: "Engines"
         }
     }
@@ -74,6 +82,14 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
             "The observation that would overturn this — and for a refusal, the specific evidence nobody supplied."
         case .proposeExperiment:
             "The cheapest next thing to go check, or nothing when nothing is actionable."
+        case .ingest:
+            "Give it anything. It works out what structure is there, certifies it with the engine that can prove it, and tells you what you can do with the result."
+        case .relate:
+            "Recover an exact law across columns of a table, confirmed on rows the solver never saw. Names the exact rows that break it."
+        case .solveFor:
+            "Run a proven law backwards to get a missing value. Only offered for a law that VERIFIED."
+        case .discoverMap:
+            "Recover the exact per-column map carrying one table to another. A column with no law is left unmapped."
         case .catalog: "The reviewed allowlist. Arbitrary dispatch is unavailable by design."
         case .capabilities: "What this service exposes."
         }
@@ -82,8 +98,15 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
     /// The operations an operator drives directly, in the order the product
     /// presents them: check first, then account for it, then look further.
     public static let workbench: [LocalServiceOperation] =
-        [.certify, .attest, .analyze, .lineage, .falsifiers, .proposeExperiment,
-         .solve, .explore, .collapse, .trace]
+        [.ingest, .relate, .solveFor, .discoverMap, .certify, .attest, .analyze,
+         .lineage, .falsifiers, .proposeExperiment, .solve, .explore,
+         .collapse, .trace]
+
+    /// Operations whose subject is a table rather than a document. They take
+    /// rows and column names, so the workbench shows a different editor.
+    public var takesTable: Bool {
+        self == .relate || self == .solveFor || self == .discoverMap
+    }
 }
 
 public struct LocalServiceEngine: Sendable, Equatable {
@@ -183,6 +206,8 @@ public enum LocalServiceClientError: Error, Sendable, Equatable {
     case refusal(LocalServiceRefusal)
     case decodeFailed
     case malformedEnvelope
+    /// The service refused the request and said why. Carried verbatim.
+    case serviceRejected(message: String)
     case schemaMismatch(expected: String, actual: String?)
     case operationMismatch(expected: LocalServiceOperation, actual: String?)
     case engineSchemaMismatch(expected: String, actual: String?)
@@ -544,6 +569,14 @@ public struct LocalServiceClient: Sendable {
         let root: JSONValue
         do { root = try JSONValue.parse(data) }
         catch { throw LocalServiceClientError.decodeFailed }
+        // A service error body carries `error` and no envelope fields. Falling
+        // through to the envelope guards turns the server's explanation into
+        // "malformedEnvelope", which is true and useless — it hides the one
+        // sentence that says what was actually wrong with the request.
+        if let object = root.objectValue, object["request_id"] == nil,
+           let message = object["error"]?.stringValue {
+            throw LocalServiceClientError.serviceRejected(message: message)
+        }
         guard let object = root.objectValue,
               let schema = object["schema"]?.stringValue,
               let requestID = object["request_id"]?.stringValue,

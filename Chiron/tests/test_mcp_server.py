@@ -96,7 +96,7 @@ def main():
          tools == {"attest", "analyze", "certify", "collapse", "trace",
                    "solve", "lineage", "explore", "compare",
                    "falsifiers", "propose_experiment",
-                   "relate", "solve_for", "discover_map", "catalog"})
+                   "relate", "solve_for", "discover_map", "ingest", "catalog"})
     gate("tools/list makes schema, authority, side effects, and provenance explicit",
          all(
              tool.get("annotations") == {
@@ -203,6 +203,17 @@ def main():
          rel["schema"] == "primus.relation/1" and rel.get("law"))
     gate("relate localises the anomalous row instead of absorbing it",
          rel["status"] == "PARTIAL" and 9 in (rel.get("anomalous_rows") or []))
+
+    from mcp_server import _tool_ingest
+    ing = _json.loads(_tool_ingest({"text": "1 1 2 3 5 8 13 21 34"})["content"][0]["text"])
+    gate("ingest detects a sequence and certifies it without being told",
+         ing["detected"] == "sequence" and ing["status"] == "VERIFIED")
+    gate("ingest offers next steps for the invariant it recovered",
+         any(n["operation"] == "falsifiers" for n in ing["next"]))
+    prose = _json.loads(_tool_ingest(
+        {"text": "Three of the 27 members voted against on 14 March."})["content"][0]["text"])
+    gate("ingest does not mistake numbers in a sentence for a series",
+         prose["detected"] == "prose")
 
     gate("the former generic call tool is refused at the stdio boundary",
          response.get(9, {}).get("error", {}).get("code") == -32602)

@@ -1,15 +1,15 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-09T23:39:35Z",
+  "generated_utc": "2026-08-10T02:03:51Z",
   "mode": "static",
   "summary": {
-    "runnable_scripts": 91,
-    "with_selftest": 69,
-    "stdlib_only": 81,
-    "with_spdx_header": 91,
+    "runnable_scripts": 92,
+    "with_selftest": 70,
+    "stdlib_only": 82,
+    "with_spdx_header": 92,
     "emitting_artifacts": 5,
-    "internal_edges": 125
+    "internal_edges": 126
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -345,6 +345,10 @@
       [
         "mcp_server",
         "full_stack"
+      ],
+      [
+        "mcp_server",
+        "ingest"
       ],
       [
         "mcp_server",
@@ -985,8 +989,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "58c7011b185bbae6",
-        "generated_utc": "2026-08-09T23:39:33Z",
+        "self_hash": "f7c00540b289c820",
+        "generated_utc": "2026-08-10T01:53:49Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1286,8 +1290,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "b5b5102e6b048898",
-        "generated_utc": "2026-08-09T23:39:34Z",
+        "self_hash": "533b688223f1ab81",
+        "generated_utc": "2026-08-10T01:53:50Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1660,6 +1664,24 @@
       "imported_by": []
     },
     {
+      "script": "ingest",
+      "path": "ingest.py",
+      "purpose": "ingest \u2014 hand it anything, get back the certified law underneath it.",
+      "lines": 383,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": [
+        "mcp_server"
+      ]
+    },
+    {
       "script": "ingest_pdf",
       "path": "ingest_pdf.py",
       "purpose": "PDF source adapter (optional dependency) \u2014 extract text from a PDF and run Chiron's",
@@ -1887,7 +1909,7 @@
       "script": "mcp_server",
       "path": "mcp_server.py",
       "purpose": "chiron.mcp_server \u2014 the whole vault as tools an agent can call on itself.",
-      "lines": 1209,
+      "lines": 1274,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -1898,6 +1920,7 @@
         "evidence_graph",
         "falsify",
         "full_stack",
+        "ingest",
         "planner",
         "trace"
       ],
@@ -2214,8 +2237,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "6d4018dbca415115",
-        "generated_utc": "2026-08-09T23:39:29Z",
+        "self_hash": "3f5e8ab005007301",
+        "generated_utc": "2026-08-10T01:53:45Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2511,7 +2534,7 @@
       "script": "test_mcp_server",
       "path": "tests/test_mcp_server.py",
       "purpose": "Chiron MCP transport contract against the real stdio server process.",
-      "lines": 220,
+      "lines": 231,
       "has_spdx_header": true,
       "has_selftest": true,
       "dependencies": [],
@@ -2622,8 +2645,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "6a04743f7b7805b7",
-        "generated_utc": "2026-08-09T23:39:22Z",
+        "self_hash": "707f9cfd6bcd2a18",
+        "generated_utc": "2026-08-10T01:53:39Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null
