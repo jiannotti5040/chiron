@@ -1,48 +1,105 @@
 # Chiron
 
-Chiron is a local workspace for exact checks, bounded analysis, and auditable
-records. One Python core does the checking; every other surface — macOS app,
-iOS app, CLI, MCP server, local HTTP service — is an interface onto that same
-core and contains no second verifier.
+Chiron recovers the exact law underneath your data, proves it on evidence it
+was never shown, and refuses when no such law exists.
 
-Its core does not try to turn every input into an answer. For the claim
-families it implements, it returns one of three dispositions:
+That last clause is the product. Most systems that find patterns will always
+find one. This one is built so that it cannot report a rule it has not proven,
+and a refusal is a result rather than a failure.
 
-- **VERIFIED** — a defined exact check succeeded, with the supporting record.
-- **REFUTED** — a defined exact check failed.
-- **REFUSED** — the input is outside the checker's warranted scope.
+```
+$ chiron ingest ledger.csv
 
-That vocabulary is deliberately narrow. A certificate is not a general truth
-judgment, a probability that prose was machine-written, legal advice, or a
-replacement for review.
+PARTIAL   total = 25*units + ship
+          confirmed on 10 rows the solver never saw
+          rows inconsistent with that law: 9
+```
 
-## Use it locally
+Nobody told it there was a pricing rule, which columns mattered, or that one
+row was wrong. It recovered the rule from the data, held out ten rows to test
+it against, and named the row that breaks it.
 
-The core runs with Python. The native interface is a local macOS SwiftUI app;
-it invokes the same Python entry points and contains no second verifier.
+## Four dispositions, and what they cost
+
+| | Meaning |
+|---|---|
+| **VERIFIED** | An exact check succeeded, or a recovered law held on every held-out case. No tolerance, no residual — rational arithmetic and `==`. |
+| **REFUTED** | An exact check failed, or the law failed on evidence it had not seen. |
+| **REFUSED** | Outside the warranted scope. Nothing is stamped in either direction. |
+| **PARTIAL** | A law holds on all but a few cases, and those cases are named. Explicitly **not** a weaker VERIFIED — it is a finding about the data. |
+
+The cost of that discipline is real and worth stating: measured data with
+rounding usually REFUSES, because the honest answer to "is there an exact law
+here" is usually no. A system that answered anyway would be easier to demo and
+worth less.
+
+## Try it in one minute
+
+```bash
+python3 -m pip install primus-intelligence
+
+python3 - <<'EOF'
+from primus.relate import relate
+rows = [{"units": 3+i, "ship": 10+(i%3),
+         "total": 25*(3+i) + 10+(i%3) + (50 if i == 9 else 0)} for i in range(14)]
+print(relate(rows, "total", ["units", "ship"]))
+EOF
+```
+
+Or from a checkout, with every surface available:
 
 ```bash
 git clone https://github.com/jiannotti5040/chiron.git
 cd chiron
-python3 -m pip install ./Primus
 
-primus collapse "1 1 2 3 5 8 13 21 34 55"
-printf '%s\n' '17 * 3 = 51 and 2^10 = 1025' | primus certify - --gate
+python3 bin/chiron ingest "1 1 2 3 5 8 13 21"     # recover a generator
+python3 bin/chiron ingest data.csv                # recover a law across columns
+python3 bin/chiron falsify 1 1 2 3 5 8 13 21      # what would overturn it
+python3 bin/chiron engines                        # everything it can be asked
 ```
 
-For the macOS interface (macOS 14+, Swift 6, a local Python installation):
+## What it does
 
-```bash
-cd App
-swift run chiron-app
-swift test --scratch-path /tmp/chiron-build
-./make_app.sh
-```
+**Recovers laws.** Given a sequence, it recovers the generator under minimum
+description length and proves it on held-out terms. Given a table, it recovers
+an exact relation across columns and proves it on held-out rows.
 
-The app locates a checkout by walking up from its working directory. A
-double-clickable bundle records the checkout used to build it; set
-`CHIRON_VAULT` to choose another checkout and `CHIRON_PYTHON` to choose a
-specific interpreter. See [the macOS operator guide](App/README.md).
+**Localises anomalies.** A law that holds on all but a few rows names those
+rows. That is how a pricing error, a transcription slip, or a fabricated line
+surfaces — as the case inconsistent with the rule governing everything else.
+
+**Runs backwards.** A law that VERIFIED can be inverted to recover a missing
+value exactly. A law that did not verify cannot, because inverting an unproven
+rule would launder it into a confident number.
+
+**Says what would refute it.** Every result carries the observation that would
+overturn it. A refusal carries the specific evidence that would resolve it,
+which turns a dead end into a task.
+
+**Attributes text.** `attest` reports which supplied source produced each span
+of a document. It is not a detector and reports no probability that text is
+machine-written; that measurement does not exist.
+
+## The same core, every way in
+
+Every surface below reaches one Python engine through one dispatch table
+(`Chiron/mcp_server.py:_IMPL`). A verdict is produced in exactly one place, so
+a terminal, an agent, and the app cannot disagree about what a tool does.
+
+| Surface | Entry point | Status |
+|---|---|---|
+| CLI | `python3 bin/chiron …` | `ingest`, `relate`, `falsify`, `experiment`, `attest`, `verify`, `solve`, `explore`, `compare`, `engines`, `service`, `mcp` |
+| MCP (stdio) | `Chiron/mcp_server.py` | 16 reviewed tools, no arbitrary dispatch. Verified live from Claude Code. |
+| Local HTTP | `python3 Chiron/service.py` | All 16 operations over `/v1`, closed routes, bounded bodies |
+| macOS app | `./run-chiron.command` | Builds, launches, runs |
+| iOS app | `iOS/ChironMobile.xcodeproj` | Builds and runs in Simulator; same target as macOS |
+
+Apple's on-device model is wired in as a **proposer only**: it points at spans
+of your text and structurally cannot express a verdict, because the type it
+returns has no status field. Anything it writes that is not verbatim in your
+source is discarded before it reaches the engine. OpenAI and Anthropic adapters
+work the same way, and require a credential *and* separate network
+authorization — holding a key is not consent to use it.
 
 ## What is here
 
@@ -65,7 +122,7 @@ in exactly one place.
 | Surface | Entry point | Status |
 |---|---|---|
 | CLI | `python3 bin/chiron …` | Runs. `test`, `parity`, `verify`, `serve`, `benchmark`, `plan`. |
-| MCP (stdio) | `Chiron/mcp_server.py` | Runs. Six reviewed tools; no arbitrary module dispatch. Invoked live from Claude Code. |
+| MCP (stdio) | `Chiron/mcp_server.py` | Runs. Sixteen reviewed tools; no arbitrary module dispatch. Invoked live from Claude Code. |
 | Local HTTP | `python3 -m primus.engine_server` | Runs. Versioned `/v1`, bounded bodies, closed routes. See [LOCAL_API.md](Primus/LOCAL_API.md). |
 | macOS app | `cd App && ./make_app.sh` | Builds, launches, runs. |
 | iOS app | `iOS/ChironMobile.xcodeproj` | Builds for the Simulator. No completed test-runner result — see below. |
@@ -85,13 +142,14 @@ deliver to an ontology or make a live Foundry claim.
 Stated here rather than buried, because the reading order below promises
 evidence before narrative:
 
-- `solve`, `explore`, and `compare` do not exist as distinct verbs yet. The
-  engine verifies and refuses; it does not yet generate and rank candidates.
 - No evidence graph or contradiction record as first-class objects.
-- No web retrieval, PDF extraction, or persistent corpus index.
+- No web retrieval or persistent corpus index. PDF reads the text layer only
+  and refuses by name when it cannot — see [FILE_SUPPORT.md](docs/FILE_SUPPORT.md).
 - No signing, notarization, or App Store submission of any kind.
+- The Foundry/AIP material is an unconfigured typed boundary. It does not
+  deliver to an ontology or make a live Foundry claim.
 - The iOS test runner stalls on the development host; that is an environment
-  fault, and no iOS test result is claimed.
+  fault, and no iOS *test* result is claimed. The app itself builds and runs.
 
 [docs/MANDATE_STATUS.md](docs/MANDATE_STATUS.md) tracks all of this against
 observed evidence.

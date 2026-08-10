@@ -80,13 +80,13 @@ now also governs ingestion, attribution, comparison, and graph construction.
 
 | Item | State |
 |---|---|
-| PyPI 0.8.0 | **built and verified from a clean venv, not uploaded** — no token on this machine |
+| ~~PyPI~~ | **published: 0.9.0 live**, verified by installing from PyPI |
 | `chiron-app` (SwiftPM macOS workstation) | still exists beside `ChironMobile`; retiring it is a deletion, not done without approval |
 | Conversation UI, result history, onboarding | absent |
 | Web retrieval boundary (§17) | absent |
 | Chunking, persistent index, retrieval | absent |
-| App icon | `AppIcon.appiconset` has no image — App Store blocker |
-| Export compliance key | `ITSAppUsesNonExemptEncryption` not declared |
+| ~~App icon~~ | generated and compiling into `Assets.car` |
+| ~~Export compliance~~ | `ITSAppUsesNonExemptEncryption = NO` declared |
 | Signing / notarization / archive | absent; needs an Apple account |
 | Codex MCP client | not installed on this machine; config written, unverified |
 | Foundry function publish | needs a token from a browser session |

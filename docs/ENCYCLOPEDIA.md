@@ -5,7 +5,7 @@ Regenerate: `python3 Chiron/build_manifest.py --run && python3 Chiron/build_ency
 The [manifest](../Chiron/manifest.json) is the machine truth this page projects;
 the [DICTIONARY](../notes/DICTIONARY.md) defines the vocabulary; the [SOP](../notes/SOP.md) says how to operate it all.
 
-**State at generation:** 89 runnable scripts · 67 carry selftest gates · 79 stdlib-only · 89 licensed · 123 internal import edges · generated 2026-08-09T19:56:58Z (static mode).
+**State at generation:** 92 runnable scripts · 70 carry selftest gates · 82 stdlib-only · 92 licensed · 126 internal import edges · generated 2026-08-10T02:23:12Z (static mode).
 
 ## Index by role
 
@@ -368,6 +368,13 @@ Knowledge-graph export — turn recovered generators into a portable graph that
 - **Facts:** selftest: no · deps: stdlib only · imports: `chiron`
 - **Path:** `Chiron/export_graph.py`
 
+### `falsify`
+
+falsify — what would have to be true for this to be wrong.
+
+- **Facts:** selftest: yes · deps: stdlib only · imported by: `mcp_server`
+- **Path:** `Chiron/falsify.py`
+
 ### `fastops`
 
 Optional native hot-path loader, with an exact pure-Python fallback.
@@ -455,6 +462,13 @@ Infectatrum bridge — ambiguity measurement for Chiron.
 
 - **Facts:** selftest: yes · deps: stdlib only
 - **Path:** `Chiron/infectatrum_bridge.py`
+
+### `ingest`
+
+ingest — hand it anything, get back the certified law underneath it.
+
+- **Facts:** selftest: yes · deps: stdlib only · imported by: `mcp_server`
+- **Path:** `Chiron/ingest.py`
 
 ### `ingest_pdf`
 
@@ -565,7 +579,7 @@ llm_providers.py — one multi-provider LLM client with a fallback chain.
 
 chiron.mcp_server — the whole vault as tools an agent can call on itself.
 
-- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `compare_explore`, `evidence_graph`, `full_stack`, `planner`, `trace` · imported by: `test_mcp_server`
+- **Facts:** roles: server · selftest: yes · deps: stdlib only · imports: `attest`, `compare_explore`, `evidence_graph`, `falsify`, `full_stack`, `ingest`, `planner`, `trace` · imported by: `service`, `test_mcp_server`
 - **Path:** `Chiron/mcp_server.py`
 
 ### `mine_code`
@@ -717,6 +731,13 @@ semic_energy.py — the three-level epistemic stack over semic.
 
 - **Facts:** selftest: yes · deps: stdlib only · imports: `semic` · imported by: `epistemic`
 - **Path:** `Chiron/semic_energy.py`
+
+### `service`
+
+chiron.service — the whole vault over HTTP, on the one dispatch.
+
+- **Facts:** selftest: yes · deps: stdlib only · imports: `mcp_server`
+- **Path:** `Chiron/service.py`
 
 ### `significance` — Curvature as Significance
 

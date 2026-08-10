@@ -475,10 +475,13 @@ TOOLS = [
             "Contract: primus.relation/1."
         ),
         {"type": "object",
-         "properties": {"rows": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+         "properties": {"rows": {"type": "array", "items": {"type": "object"},
+                                 "description": "Rows as objects with named columns."},
+                        "path": {"type": "string",
+                                 "description": "A CSV/TSV or JSON-records file to read instead of `rows`."},
                         "target": {"type": "string"},
                         "inputs": {"type": "array", "items": {"type": "string"}}},
-         "required": ["rows", "target"]},
+         "required": ["target"]},
         contract="primus.relation/1",
         authority="exact rational solve with held-out proof; never approximates",
         side_effects="none",
@@ -495,6 +498,7 @@ TOOLS = [
         ),
         {"type": "object",
          "properties": {"rows": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+                        "path": {"type": "string", "description": "A CSV/TSV or JSON-records file to read instead of `rows`."},
                         "target": {"type": "string"},
                         "inputs": {"type": "array", "items": {"type": "string"}},
                         "unknown": {"type": "string"},
@@ -517,7 +521,9 @@ TOOLS = [
         ),
         {"type": "object",
          "properties": {"source": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
-                        "destination": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."}},
+                        "destination": {"type": "array", "items": {"type": "object"}, "description": "Rows as objects with named columns."},
+                        "source_path": {"type": "string", "description": "A CSV/TSV or JSON-records file to read instead of `source`."},
+                        "destination_path": {"type": "string", "description": "A CSV/TSV or JSON-records file to read instead of `destination`."}},
          "required": ["source", "destination"]},
         contract="primus.transformation/1",
         authority="per-column exact laws only; never pairs by best guess",
@@ -904,10 +910,35 @@ def _ensure_primus() -> None:
             sys.path.insert(0, seed)
 
 
-def _relate_args(args: Dict[str, Any]):
-    rows = args.get("rows")
+def _rows_from(args: Dict[str, Any], key: str = "rows",
+               path_key: str = "path") -> List[Dict[str, Any]]:
+    """Rows inline, or a CSV/JSON file read the same way `ingest` reads one.
+
+    Files are first-class in this server and the table tools were the one
+    exception — a gate caught that, correctly, because the module docstring
+    promises otherwise. Parsing goes through ingest's detectors so a CSV means
+    the same thing to every tool that accepts one.
+    """
+    if args.get(key) is not None and args.get(path_key) is not None:
+        raise ToolError("pass %s or %s, not both" % (key, path_key))
+    if args.get(path_key) is not None:
+        record = _read_path(str(args[path_key]))
+        import ingest as _ingest
+        rows = (_ingest._try_json_records(record["text"])
+                or _ingest._try_delimited(record["text"]))
+        if not rows:
+            raise ToolError("%s holds no table this engine can read: it needs "
+                            "CSV/TSV or JSON records with at least five rows "
+                            "and two fully numeric columns" % record["name"])
+        return rows
+    rows = args.get(key)
     if not isinstance(rows, list) or not rows:
         raise ToolError("rows must be a non-empty list of objects")
+    return rows
+
+
+def _relate_args(args: Dict[str, Any]):
+    rows = _rows_from(args)
     target = args.get("target")
     if not isinstance(target, str):
         raise ToolError("target must be a column name")
@@ -959,9 +990,8 @@ def _tool_discover_map(args: Dict[str, Any]) -> Dict[str, Any]:
     _ensure_primus()
     from primus.relate import RelationError as _RE
     from primus.invert import discover_map
-    source, destination = args.get("source"), args.get("destination")
-    if not isinstance(source, list) or not isinstance(destination, list):
-        raise ToolError("source and destination must be lists of objects")
+    source = _rows_from(args, "source", "source_path")
+    destination = _rows_from(args, "destination", "destination_path")
     try:
         return _wrap(discover_map(source, destination))
     except _RE as exc:
