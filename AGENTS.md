@@ -61,8 +61,8 @@ otherwise presents as a code defect.
   against a Swift build produces failures that do not reproduce; `unit: chiron`
   and `CLI contract` failing together while both pass individually is that
   race.
-- **Swift builds need `--scratch-path` outside this tree.** The checkout is
-  under an iCloud-synced Desktop and the file provider stamps
+- **Swift builds need `--scratch-path` outside a cloud-synced tree.** On a
+  checkout under iCloud Drive (the maintainer's setup), the file provider stamps
   `com.apple.FinderInfo` onto `.xctest` bundles. `codesign` rejects them and
   `swift test` fails with `error: fatalError`, which looks like a code fault.
 - **`chiron mcp` must not write to stdout.** Stdio MCP requires stdout to carry
@@ -72,8 +72,8 @@ otherwise presents as a code defect.
   name becomes a call; the CLI, the HTTP service, and every MCP client route
   through it. Add a surface by routing it there, not by reimplementing the
   operation beside it.
-- **Never `git add -A` at the vault root.** `Jacob Dylan Iannotti/` is
-  deliberately untracked and contains an embedded Git repository.
+- **Never `git add -A` at the vault root.** Untracked working directories at
+  the root may contain embedded Git repositories; stage explicit paths.
 - **`Chiron/chiron_memory.json` is never committed.** A grown Congress carries
   CC BY-SA prose, one-way incompatible with Apache-2.0.
 

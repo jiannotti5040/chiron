@@ -3,7 +3,7 @@
 Plain checklist. Every "done" here was run and observed; nothing is marked
 done because the code looks like it should work.
 
-Last verified: 2026-08-09, at `chiron/mandate-20260809`.
+Generated state is in `docs/STATE.json`; regenerate with `python3 ci/state.py`.
 
 ## How to run it
 
@@ -64,7 +64,7 @@ python3 bin/chiron engines
 | 17 | No secrets committed | scanned |
 | 18 | Pushed to GitHub | branch `chiron/mandate-20260809`; `main` untouched |
 
-## Developed this session — capability that did not exist
+## Recently added capability
 
 | Thing | What it does |
 |---|---|
@@ -73,8 +73,8 @@ python3 bin/chiron engines
 | `service.py` | The whole vault over HTTP, so a device can reach more than certify |
 | `pdf_text.py` | Text layer only, with named refusals — `unreliable-encoding` refuses text that decodes plausibly but wrong |
 
-The through-line: **exact-or-refuse was only at the verification layer.** It
-now also governs ingestion, attribution, comparison, and graph construction.
+Exact-or-refuse governs ingestion, attribution, comparison, and graph
+construction, not only the verification layer.
 
 ## Not done
 
@@ -92,9 +92,8 @@ now also governs ingestion, attribution, comparison, and graph construction.
 | Foundry function publish | needs a token from a browser session |
 | UI tests, prompt-injection tests, performance tests | absent |
 
-## Blocked on something only you can supply
+## Requires account credentials
 
-1. **PyPI token** — the wheel is built and tested; upload is one command.
-2. **Apple signing identity** — for notarization and archive.
-3. **Codex install** — to verify that config rather than assert it.
-4. **Foundry `PALANTIR_TOKEN`** — for live Ontology reads.
+- Apple signing identity — notarization and archive validation.
+- Foundry API token — live Ontology reads.
+- Codex installation — to verify its MCP configuration rather than assert it.
