@@ -2,6 +2,25 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.9.0
+
+- **Exact laws across columns.** `primus.relate` recovers `y = f(x1..xk)` over
+  a bounded class, solves the coefficients in exact rational arithmetic, and
+  requires the law to hold on rows the solver never saw. No tolerance, no
+  residual threshold, no float on the deciding path. Search is smallest-first,
+  so MDL now applies to a table the way it already applied to a sequence.
+- **`PARTIAL`, a new disposition.** A law that holds on every held-out row but
+  a few reports the law, the exact rows that break it, and a statement that
+  PARTIAL is not VERIFIED. Those rows are a finding about the data, not a
+  weakened claim about the law.
+- **Inverse solving.** `primus.invert.solve_for` runs a recovered law backwards
+  for one unknown. Offered only for a law that VERIFIED — inverting an unproven
+  rule would launder it into a confident number. Irrational roots are REFUSED
+  rather than rounded.
+- **Transformation discovery.** `primus.invert.discover_map` recovers the exact
+  per-column map carrying one table to another. A column with no exact law is
+  reported unmapped rather than paired by closest fit.
+
 ## 0.8.0
 
 - **Grounded claims.** `certify` accepts a `facts` table and checks claims
