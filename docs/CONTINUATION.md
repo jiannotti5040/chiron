@@ -64,7 +64,7 @@ These were run, and the stated result was seen. Nothing here is inferred.
 | `xcodebuild … ChironMobile … build` | **BUILD SUCCEEDED** at this revision. Not a first: `APP_STORE_READINESS.md` already recorded a completed Simulator build from an earlier pass. |
 | `./make_app.sh` | built `App/build/Chiron.app`, ad-hoc signed |
 | `open build/Chiron.app` | launched and stayed running |
-| `curl /v1/capabilities`, `/v1/certify` | real `chiron.local_api/1` envelopes from Primus 0.7.2 |
+| `curl /v1/capabilities`, `/v1/certify` | real `chiron.local_api/1` envelopes from Primus 0.9.0 |
 | **MCP invoked by a real client** | Claude Code called `chiron.catalog` (6 reviewed tools returned) and `chiron.certify`, which refuted "product of 6 and 7 is 41" with `expected: 42` |
 | App Intent registration | `Metadata.appintents/extract.actionsdata` in the built bundle contains `CertifyTextIntent` and the Siri phrase |
 | Privacy manifest | `PrivacyInfo.xcprivacy` present inside the built `ChironMobile.app` |
