@@ -1,12 +1,12 @@
 # Using the vault from a coding agent
 
-Chiron speaks MCP over stdio. Any compliant client can call the same six tools
+Chiron speaks MCP over stdio. Any compliant client can call the same 16 tools
 the CLI calls, because both go through `Chiron/mcp_server.py:_IMPL`.
 
 ## What is actually exposed
 
 `initialize` reports `chiron.mcp/2`, protocol `2025-06-18`. `tools/list`
-returns six tools, and nothing else is reachable — there is no arbitrary
+returns 16 tools, and nothing else is reachable — there is no arbitrary
 module dispatch, by design.
 
 | Tool | Contract | Use it for |

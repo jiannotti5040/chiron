@@ -18,7 +18,10 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEXT_SUFFIXES = {".md", ".py", ".json", ".txt", ".swift", ".sh", ".yml", ".toml"}
-EXCLUDED_PREFIXES = ("Chiron/artifacts/", "studies/")
+# Records that *quote* license claims rather than making them. An audit that
+# reports "this file contradicts that one" would otherwise be read as the
+# contradiction it is reporting.
+EXCLUDED_PREFIXES = ("Chiron/artifacts/", "studies/", "docs/inventory/")
 FORBIDDEN = (
     re.compile(r"commercial\s+use\s+is\s+reserved\s+to\s+(?:the\s+)?owner", re.I),
     re.compile(r"free\s+for\s+any\s+noncommercial\s+use", re.I),

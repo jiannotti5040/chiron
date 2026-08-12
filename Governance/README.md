@@ -1,6 +1,6 @@
 # Governance
 
-**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../LICENSE)).**
+**Author: Jacob Iannotti. These works are prose and are licensed under CC BY 4.0 — see [LICENSE.md](LICENSE.md) and the repository [LICENSES.md](../LICENSES.md). Code elsewhere in this repository is Apache-2.0.**
 
 The governance frameworks that bound how an automated system is allowed to reason
 and recommend. They are specifications, not runtime code: the certification

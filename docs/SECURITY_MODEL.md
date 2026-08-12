@@ -36,13 +36,14 @@ not as a privileged suggestion.
 
 ### MCP (`Chiron/mcp_server.py`)
 
-- **Static reviewed allowlist.** Six tools — `attest`, `analyze`, `certify`,
-  `collapse`, `trace`, `catalog`. Arbitrary vault module or function dispatch
-  is intentionally unavailable, so a caller cannot reach an unreviewed code
-  path by naming it. `catalog` reports this posture in its own output.
+- **Static reviewed allowlist.** 16 tools:
+  `attest`, `analyze`, `certify`, `collapse`, `trace`, `solve`,
+  `lineage`, `explore`, `compare`, `falsifiers`, `propose_experiment`, `relate`,
+  `solve_for`, `discover_map`, `ingest`, `catalog`.
+  Arbitrary module dispatch is unavailable.
 - **Declared authority per tool.** Each tool carries `authority`,
   `side_effects`, and a `provenance` pointer to its canonical implementation.
-  All six are `readOnlyHint: true`, `destructiveHint: false`,
+  All 16 are `readOnlyHint: true`, `destructiveHint: false`,
   `openWorldHint: false`.
 - **Local stdio transport.** It is a subprocess tool, not a network listener,
   and there is no remote MCP transport to authenticate.
