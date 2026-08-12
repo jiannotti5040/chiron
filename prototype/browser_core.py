@@ -10,7 +10,7 @@ What this file is, stated plainly (honest scope, the GATES.md way):
     docs/playground/. It exists because the architecture prototype in this
     folder (primus_prototype.py) deliberately contains NO sequence engine —
     its certifier refuses everything by design — and the full engine's
-    source does not ship in this repository.
+    source is not bundled into the browser build.
   * It carries the SAME CONTRACT as the full engine: exact arithmetic
     only (integers and Fractions, no floats anywhere on the stamping path),
     a stamp only when the recovered rule predicts held-out terms EXACTLY
