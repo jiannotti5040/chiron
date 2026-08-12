@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Jacob Iannotti
 """
-answer_challenge.py — answer a buyer's eval challenge (the vault half of
-the public repo's eval/challenge.py protocol).
+answer_challenge.py — answer an evaluation challenge issued under the
+eval/challenge.py protocol.
 
 A buyer sends challenge.json containing ONLY the first 12 terms of
 sequences THEY chose. This tool runs the seed engine on exactly those 12

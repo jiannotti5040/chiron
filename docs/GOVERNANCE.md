@@ -42,11 +42,16 @@ answer today is: *"Can we prove this AI system behaved within defined boundaries
 and explain the behavior after the fact?"* Chiron is built so the answer is a
 certificate, not a promise.
 
-## What a license holder can and cannot change
+## What this project reviews, and what the licence permits
 
-License holders can read, run, modify, and extend the full engine. But changes
-to the **certified core** — the verification and refusal path — are owner-
-reviewed before they become part of the shared, certified line. This is
-deliberate: the value everyone in the ecosystem is buying is that the `verified`
-stamp still means what it says. You are free to build; the honesty property is
-held in trust for the whole circle.
+Apache-2.0 grants the right to use, modify, distribute, and commercially
+exploit this code, including forks that change the verification path. Nothing
+here restricts that, and this document does not attempt to.
+
+What is reviewed is what enters *this* repository. Changes to the verification
+and refusal path are reviewed before merging here, because a `VERIFIED` stamp
+is only worth anything if it has one meaning across the line of work that
+carries this project's name and certificates.
+
+A fork is free to change the stamping rules. It is then making its own claim,
+under its own name, and the certificates it issues are its own.

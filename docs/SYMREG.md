@@ -5,7 +5,7 @@
 This page ships the **outputs** of the licensed battery's symbolic-regression
 comparison, the same way [`../eval/`](../eval/) ships the engine's frozen OEIS
 predictions: the benchmark scripts (`bench_pysr.py`,
-`bench_symreg_external.py`) and the engine run with the licensed vault, but
+`bench_symreg_external.py`) and the engine run from this repository, but
 zero-false is a property of outputs, and outputs can be published with their
 provenance. Every number below has been produced by at least two real runs on
 their listed dates — including a fresh reproduction on 2026-07-21 under newer

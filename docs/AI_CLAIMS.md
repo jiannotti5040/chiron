@@ -20,7 +20,7 @@ engine's arithmetic checked, what it reproduced independently, and — the
 part that matters — **what it refused to certify.**
 
 Everything here is an *output*. No engine source appears on this page; the
-gates named are reproducible by any license holder with the commands given.
+gates named are reproducible from a checkout with the commands given.
 
 ---
 
@@ -152,7 +152,7 @@ method, and an explicit line around what was *not* established.
 
 ## Reproduce
 
-Both modules ship in the licensed vault's UMA suite:
+Both modules are in the UMA suite in this repository:
 
 ```
 cd uma_build_v4
