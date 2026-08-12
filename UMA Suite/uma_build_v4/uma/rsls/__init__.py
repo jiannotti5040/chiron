@@ -68,6 +68,9 @@ from uma.rsls.stage6 import (
     off_diagonal_stress, equilibrium_beta_phi,
     beta_phi_causal_step, run_stage6, stage6_lyapunov,
 )
+from uma.rsls.lyapunov import (
+    LyapunovReport, lyapunov_report,
+)
 
 from uma.rsls.ligo_lisa import (
     RingdownParams, RingdownAnalysis,
@@ -114,6 +117,7 @@ __all__ = [
     "Stage6Config", "Stage6Result",
     "off_diagonal_stress", "equilibrium_beta_phi",
     "beta_phi_causal_step", "run_stage6", "stage6_lyapunov",
+    "LyapunovReport", "lyapunov_report",
     # LIGO/LISA waveform interface
     "RingdownParams", "RingdownAnalysis",
     "generate_kerr_ringdown", "generate_rsls_echo_train",

@@ -71,21 +71,32 @@ def main():
           f"{'PASS' if 0.05 <= res_on.beta_phi_drift_fraction <= 2.0 else 'FAIL'}")
     print(f"  (iv)  Uncoupled control: zero drift:               "
           f"{'PASS' if res_off.beta_phi_drift_fraction < 1e-10 else 'FAIL'}")
-    print(f"  (v)   Coupled Lyapunov positive (>= 0.3):          "
-          f"{'PASS' if res_on.lyapunov_max > 0.3 else 'FAIL'}")
+    rep = res_on.lyapunov
+    print(f"  (v)   Coupled Lyapunov measurable at all:          "
+          f"{'PASS' if rep is not None and rep.converged else 'REFUSED'}")
     print()
     print(f"  Coupled drift:        {res_on.beta_phi_drift_fraction:.4f}")
     print(f"  Uncoupled drift:      {res_off.beta_phi_drift_fraction:.4e}")
-    print(f"  Coupled Lyapunov:     {res_on.lyapunov_max:+.4f}")
-    print(f"  Uncoupled Lyapunov:   {res_off.lyapunov_max:+.4f}")
+    if rep is not None and not rep.converged:
+        print(f"  Coupled Lyapunov:     refused -- {rep.reason}")
+        print(f"    (raw statistic {rep.value:+.4f} over {rep.n_blocks} blocks; "
+              f"{rep.contracting_fraction:.0%} of them contract)")
+    else:
+        print(f"  Coupled Lyapunov:     {res_on.lyapunov_max:+.4f}")
     print()
-    print("These verdicts collectively constitute the Stage-6 architectural")
-    print("closure: the shift vector is the structural driver of chaos AND")
-    print("the metric responds causally to matter, without breaking the")
-    print("cone-aperture invariance. The Pages-file's closing question is")
-    print("answered: yes, the first shift-vector-driven collapse on the PG")
-    print("background runs, holds, and amplifies the structural Anosov")
-    print("signature it was supposed to generate.")
+    print("Verdicts (i)-(iv) constitute the Stage-6 architectural closure: the")
+    print("metric responds causally to matter without breaking cone-aperture")
+    print("invariance, and the uncoupled control confirms the response is real.")
+    print()
+    print("Verdict (v) is NOT part of that closure and is no longer claimed.")
+    print("This example asserted a positive coupled Lyapunov exponent until")
+    print("2026-08-11. The twin-trajectory statistic behind it is not an")
+    print("exponent -- it fails convergence, perturbation-size independence,")
+    print("and single-event dominance, and the solution is unbounded past")
+    print("~8k steps. Whether the shift vector drives genuine chaos on this")
+    print("background is an OPEN question: answering it needs a bounded")
+    print("long-time integration and a tangent-space method, not this")
+    print("finite-difference twin. See uma/rsls/stage6.py for the numbers.")
 
 
 if __name__ == "__main__":

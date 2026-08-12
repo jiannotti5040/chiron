@@ -2,12 +2,15 @@
 # Copyright 2026 Jacob Iannotti
 """tests/test_stage6.py -- self-consistent Stage 6 closure tests."""
 from __future__ import annotations
+import math
+
 import numpy as np
 import pytest
 
 from uma.rsls.stage6 import (
     Stage6Config, run_stage6, equilibrium_beta_phi,
     beta_phi_causal_step, off_diagonal_stress,
+    stage6_lyapunov, _lyapunov_report,
 )
 
 
@@ -101,14 +104,106 @@ class TestStage6Closure:
         assert max(coupled.M_max_history) > 0.9 * coupled.cfg.memory.M_max
 
 
+class TestLyapunovReportControls:
+    """The refusal has to discriminate, or it proves nothing.
+
+    These are the positive controls for `_lyapunov_report`: systems whose
+    exponent is known independently. If the checks cannot accept Lorenz and
+    recover +0.906, then Stage 6's refusal below is just a broken gate saying
+    no to everything.
+    """
+
+    DT = 0.005
+    RENORM = 25
+    D0 = 1e-8
+
+    def _twin_blocks(self, f, s0, n_steps, burn=2000):
+        def rk4(s):
+            k1 = f(s); k2 = f(s + 0.5 * self.DT * k1)
+            k3 = f(s + 0.5 * self.DT * k2); k4 = f(s + self.DT * k3)
+            return s + self.DT / 6.0 * (k1 + 2 * k2 + 2 * k3 + k4)
+
+        s1 = np.array(s0, dtype=float)
+        for _ in range(burn):
+            s1 = rk4(s1)
+        s2 = s1.copy(); s2[0] += self.D0
+        logs, times, done = [], [], 0
+        while done < n_steps:
+            k = min(self.RENORM, n_steps - done)
+            for _ in range(k):
+                s1 = rk4(s1); s2 = rk4(s2)
+            done += k
+            sep = s2 - s1; sn = np.linalg.norm(sep)
+            if sn > 1e-30:
+                logs.append(float(np.log(sn / self.D0)))
+                times.append(k * self.DT)
+                s2 = s1 + sep / sn * self.D0
+        return np.array(logs), np.array(times)
+
+    def test_accepts_lorenz_and_recovers_the_known_exponent(self):
+        def lorenz(s):
+            x, y, z = s
+            return np.array([10.0 * (y - x), x * (28.0 - z) - y, x * y - (8.0 / 3.0) * z])
+
+        logs, times = self._twin_blocks(lorenz, [1.0, 1.0, 1.0], 30000)
+        rep = _lyapunov_report(logs, times, bounded=True)
+        assert rep.converged, f"refused a known-chaotic system: {rep.reason}"
+        assert abs(rep.value - 0.906) < 0.05, rep.value   # literature lambda_max
+
+    def test_accepts_a_contracting_system_at_its_exact_rate(self):
+        logs, times = self._twin_blocks(lambda s: -0.5 * s, [1.0, 1.0, 1.0], 30000)
+        rep = _lyapunov_report(logs, times, bounded=True)
+        assert rep.converged, rep.reason
+        assert abs(rep.value - (-0.5)) < 1e-3, rep.value
+
+    def test_refuses_a_single_transient_spike(self):
+        spiky = np.full(72, 1e-4); spiky[40] = 4.47
+        rep = _lyapunov_report(spiky, np.full(72, 0.125), bounded=True)
+        assert not rep.converged
+        assert "transient" in rep.reason
+
+    def test_refuses_when_the_trajectory_left_the_physical_range(self):
+        logs, times = self._twin_blocks(lambda s: -0.5 * s, [1.0, 1.0, 1.0], 30000)
+        rep = _lyapunov_report(logs, times, bounded=False)
+        assert not rep.converged
+        assert "instability" in rep.reason
+
+
 @pytest.mark.slow
 class TestStage6Lyapunov:
-    """Full coupled Lyapunov computation (slow)."""
+    """Full coupled Lyapunov computation (slow).
 
-    def test_positive_lyapunov(self):
+    This asserted `lyapunov_max > 0.5` until 2026-08-11, on the claim that
+    Stage-5 chaos survives geometric back-reaction. The statistic it read is
+    not an exponent: it does not converge (-0.013, +3.16, +8.95, +39.12 at
+    n_steps 2k/4k/8k/16k), it changes sign with the perturbation size, one
+    block of 72 carries most of the sum while the median block contracts, and
+    past ~8k steps the solution itself is unbounded. Two genuine estimator
+    bugs were fixed (J was never renormalised; partial blocks were credited a
+    full block of time) and neither rescued it.
+
+    So the gate now asserts the honest outcome -- the estimator refuses --
+    and the controls above prove the refusal is discriminating rather than
+    blanket. Whether the coupled system is chaotic is open, not settled.
+    """
+
+    def test_lyapunov_is_refused_not_reported(self):
         cfg = Stage6Config(N=100, n_steps=2000, Omega_0=1.5,
                             enable_self_consistency=True)
         res = run_stage6(cfg, compute_lyapunov=True, verbose=False)
-        # Strong positive: under coupling, chaos amplifies (perturbations
-        # propagate through metric AND matter)
-        assert res.lyapunov_max > 0.5
+        assert res.lyapunov is not None
+        assert not res.lyapunov.converged, (
+            "the estimator now claims convergence -- if that is real, the "
+            "withdrawn chaos claim can be revisited; check the controls first")
+        assert math.isnan(res.lyapunov_max), (
+            "lyapunov_max must stay NaN while the estimate is refused, so no "
+            "caller can read an unconverged statistic as a result")
+        assert res.lyapunov.reason
+
+    def test_the_refusal_reason_is_the_documented_one(self):
+        rep = stage6_lyapunov(Stage6Config(N=100, n_steps=2000, Omega_0=1.5,
+                                            enable_self_consistency=True))
+        assert rep.top_block_share > 0.25, rep.top_block_share
+        assert "transient" in rep.reason
+        # the median block contracts -- there is no sustained divergence here
+        assert rep.contracting_fraction > 0.5, rep.contracting_fraction

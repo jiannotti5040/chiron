@@ -1,0 +1,11 @@
+# Optional backend for the rank-two capsule. NOT a dependency of `uma` --
+# nothing under uma/ imports these, and the test suite does not need them.
+#
+# Both carry copyleft terms (PARI is GPL-2.0-or-later, FLINT/Arb and cysignals
+# are LGPL-3.0). They are runtime dependencies installed into a local venv,
+# never vendored into this Apache-2.0 repository. See README.md § Licensing.
+#
+#   python3.12 -m venv venv
+#   venv/bin/python -m pip install -r requirements.txt
+python-flint==0.9.0
+cypari2==2.2.4

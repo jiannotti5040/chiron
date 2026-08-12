@@ -46,6 +46,7 @@ from uma.rsls.memory import (
 )
 from uma.rsls.cattaneo import cattaneo_step, cattaneo_cfl
 from uma.rsls.hll import hll_flux, transport_cfl
+from uma.rsls.lyapunov import BLOWUP as LYAP_BLOWUP, LyapunovReport, lyapunov_report
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +107,8 @@ class FrameDraggingResult:
     cone_compression_history: List[np.ndarray] # eta(R) over snapshots
     M_max_history: List[float]                # max M over time
 
-    # Lyapunov estimate (from twin-trajectory)
+    # Lyapunov estimate (from twin-trajectory). NaN unless the estimator's
+    # validity checks passed; `lyapunov` carries the raw value and the reason.
     lyapunov_max: float
 
     # Falsification verdicts
@@ -116,8 +118,10 @@ class FrameDraggingResult:
     cone_compression_below_unity_fraction: float
     converged: bool
 
+    lyapunov: Optional[LyapunovReport] = None
+
     def summary(self) -> dict:
-        return {
+        out = {
             "N":                              self.cfg.N,
             "n_steps":                        self.cfg.n_steps,
             "beta_phi_enabled":               self.cfg.enable_drag,
@@ -130,6 +134,9 @@ class FrameDraggingResult:
             "lyapunov_max":                   round(self.lyapunov_max, 6),
             "converged":                      self.converged,
         }
+        if self.lyapunov is not None:
+            out.update(self.lyapunov.summary())
+        return out
 
 
 # ---------------------------------------------------------------------------
@@ -296,13 +303,27 @@ def cylindrical_hll_step(D: np.ndarray, S_R: np.ndarray, S_phi: np.ndarray,
 # Lyapunov estimate via twin-trajectory
 # ---------------------------------------------------------------------------
 
-def lyapunov_kernel(cfg: FrameDraggingConfig) -> float:
-    """
-    Estimate the maximum Lyapunov exponent by running TWO copies of
-    the kernel side-by-side, one perturbed by perturb_delta at cell
-    perturb_cell. Renormalise periodically and accumulate log(growth).
+def lyapunov_kernel(cfg: FrameDraggingConfig) -> "LyapunovReport":
+    """Twin-trajectory separation statistic, with the checks that decide
+    whether it is an exponent.
 
-    Returns lambda_max.
+    Two copies of the kernel run side by side, one perturbed by perturb_delta
+    at perturb_cell; the separation is renormalised periodically and the
+    log-growth accumulated.
+
+    This returned a bare float until 2026-08-11, and `lambda_max > 0.3` was
+    read as the structural chaos signature. It is not one: the statistic does
+    not converge, it changes sign with the perturbation size (+0.34, +5.50,
+    -0.024, -0.021 at delta = 1e-6 ... 1e-12), and ONE renormalisation block
+    of 72 -- a single growth of x87 -- carries 82% of the sum while the median
+    block contracts. The 0.3 threshold was passed by that one event.
+
+    Two real bugs are fixed here: J is part of the dynamical state (it is
+    evolved and feeds back into M) and is now renormalised with everything
+    else rather than left wherever it drifted; and a partial final block is
+    credited only the time it actually ran. Neither rescues convergence, so
+    the result is a LyapunovReport that refuses. See uma/rsls/lyapunov.py and
+    studies/rsls_lyapunov/ for the evidence.
     """
     mcfg = cfg.memory
     R_faces = np.linspace(cfg.R_in, cfg.R_out, cfg.N + 1)
@@ -358,28 +379,33 @@ def lyapunov_kernel(cfg: FrameDraggingConfig) -> float:
         M2 = clip_M(M2, mcfg)
         J2 = cattaneo_step(J2, M2, dR, dt, mcfg)
 
-    # Renormalize after burn-in
-    def state_stack(D, S_R, S_phi, M):
-        return np.concatenate([D, S_R, S_phi, M])
+    # Renormalize after burn-in. J is part of the state: it is evolved above
+    # and feeds back into M, so leaving it out rescales only part of the
+    # perturbation and leaves the flux separation wherever it drifted.
+    N = cfg.N
 
-    s_main = state_stack(D, S_R, S_phi, M)
-    s_twin = state_stack(D2, S_R2, S_phi2, M2)
+    def state_stack(D, S_R, S_phi, M, J):
+        return np.concatenate([D, S_R, S_phi, M, J])
+
+    def unstack(s):
+        return (np.maximum(s[:N], 1e-6), s[N:2*N], s[2*N:3*N],
+                clip_M(s[3*N:4*N], mcfg), s[4*N:5*N])
+
+    s_main = state_stack(D, S_R, S_phi, M, J)
+    s_twin = state_stack(D2, S_R2, S_phi2, M2, J2)
     sep = s_twin - s_main
     sep_norm = np.linalg.norm(sep)
     if sep_norm > 0:
-        sep = sep / sep_norm * delta0
-        s_twin = s_main + sep
-        # Push back into the field arrays
-        D2 = s_twin[:cfg.N]
-        S_R2 = s_twin[cfg.N:2*cfg.N]
-        S_phi2 = s_twin[2*cfg.N:3*cfg.N]
-        M2 = s_twin[3*cfg.N:]
-        D2 = np.maximum(D2, 1e-6)
+        D2, S_R2, S_phi2, M2, J2 = unstack(s_main + sep / sep_norm * delta0)
 
     # Measurement
+    logs: list = []
+    times: list = []
+    bounded = True
     n_measure = cfg.n_steps - n_burn
     step_count = 0
     while step_count < n_measure:
+        in_block = 0
         for _ in range(cfg.lyap_renorm_every):
             if step_count >= n_measure:
                 break
@@ -399,28 +425,27 @@ def lyapunov_kernel(cfg: FrameDraggingConfig) -> float:
             M2 = clip_M(M2, mcfg)
             J2 = cattaneo_step(J2, M2, dR, dt, mcfg)
             step_count += 1
+            in_block += 1
+        # A reference trajectory that has left the physical range is measuring
+        # its own numerical instability. dt here is fixed at its t=0 value,
+        # which violates CFL by ~550x once the velocities grow -- see
+        # studies/rsls_lyapunov/. This flag catches the consequence.
+        if not np.all(np.isfinite(S_R)) or np.abs(S_R).max() > LYAP_BLOWUP \
+                or not np.all(np.isfinite(D)) or np.abs(D).max() > LYAP_BLOWUP:
+            bounded = False
+            break
         # Renormalize
-        s_main = state_stack(D, S_R, S_phi, M)
-        s_twin = state_stack(D2, S_R2, S_phi2, M2)
+        s_main = state_stack(D, S_R, S_phi, M, J)
+        s_twin = state_stack(D2, S_R2, S_phi2, M2, J2)
         sep = s_twin - s_main
         sep_norm = np.linalg.norm(sep)
-        if sep_norm > 1e-30:
-            growth = sep_norm / delta0
-            if growth > 0:
-                log_sum += np.log(growth)
-                total_time += cfg.lyap_renorm_every * dt
-                n_renorm += 1
-            # Renormalize twin back
-            sep = sep / sep_norm * delta0
-            s_twin = s_main + sep
-            D2 = np.maximum(s_twin[:cfg.N], 1e-6)
-            S_R2 = s_twin[cfg.N:2*cfg.N]
-            S_phi2 = s_twin[2*cfg.N:3*cfg.N]
-            M2 = clip_M(s_twin[3*cfg.N:], mcfg)
+        if sep_norm > 1e-30 and in_block:
+            logs.append(float(np.log(sep_norm / delta0)))
+            times.append(in_block * dt)      # only the time that actually ran
+            n_renorm += 1
+            D2, S_R2, S_phi2, M2, J2 = unstack(s_main + sep / sep_norm * delta0)
 
-    if total_time <= 0:
-        return float("nan")
-    return log_sum / total_time
+    return lyapunov_report(np.array(logs), np.array(times), bounded)
 
 
 # ---------------------------------------------------------------------------
@@ -547,9 +572,14 @@ def run_frame_dragging(cfg: Optional[FrameDraggingConfig] = None,
     # expect a positive value
     if verbose:
         print(f"[FrameDrag] Computing Lyapunov exponent via twin trajectory...")
-    lam = lyapunov_kernel(cfg)
+    lyap = lyapunov_kernel(cfg)
+    lam = lyap.value if lyap.converged else float("nan")
     if verbose:
-        print(f"[FrameDrag] lambda_max = {lam:.6f}")
+        if lyap.converged:
+            print(f"[FrameDrag] lambda_max = {lam:.6f}")
+        else:
+            print(f"[FrameDrag] lambda_max REFUSED -- {lyap.reason}")
+            print(f"[FrameDrag]   (raw statistic {lyap.value:+.6f})")
 
     converged = bool(np.all(np.isfinite(M))) and (max(M_max_history) > 0.3 * mcfg.M_max)
 
@@ -561,6 +591,7 @@ def run_frame_dragging(cfg: Optional[FrameDraggingConfig] = None,
         cone_compression_history=eta_history,
         M_max_history=M_max_history,
         lyapunov_max=lam,
+        lyapunov=lyap,
         cone_aperture_strictly_positive=cone_strictly_positive,
         cone_aperture_min_margin=min_margin,
         cone_aperture_saturation_margin=sat_margin,

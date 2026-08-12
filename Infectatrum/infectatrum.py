@@ -1781,7 +1781,9 @@ def run_tests() -> int:
 
     # --- corpus-wide analysis (runs the live atlas if present) ---
     import glob as _glob
-    _cdir = "/mnt/user-data/outputs/corpus"
+    # The atlas ships beside this module; the previous default was an
+    # agent sandbox path that exists on no machine.
+    _cdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "corpus")
     if _glob.glob(os.path.join(_cdir, "plate_0*.json")):
         crep = run_corpus(_cdir)
         check("run_corpus processes the atlas", crep["n_plates"] >= 1)
@@ -1882,7 +1884,8 @@ def run_corpus(corpus_dir: str) -> Dict[str, Any]:
 
 
 def cmd_corpus(args) -> int:
-    rep = run_corpus(args.dir or "/mnt/user-data/outputs/corpus")
+    rep = run_corpus(args.dir or os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "corpus"))
     # print compact table + a few signature comparisons
     print(f"ATLAS: {rep['n_plates']} plates  | languages: {', '.join(rep['languages_in_corpus'])}")
     print("plate    |Σ|  H(R)   p_adv  nodes")

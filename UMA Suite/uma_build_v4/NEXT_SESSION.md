@@ -4,6 +4,64 @@ How to pick this build up cleanly in a future session.
 
 ---
 
+## CURRENT STATUS — 2026-08-11 (read this first)
+
+`PYTHONPATH=. python3.12 -m pytest tests -q` → **197 passed, 1 skipped, 0 failed.**
+(The "70/70" further down is from v4's first session and is long stale.)
+Use Python 3.12: `/opt/homebrew/opt/python@3.12/bin/python3.12`. The default
+`python3` on this machine is 3.14 without pytest.
+
+**Three claims were withdrawn and one capability was added.**
+
+Withdrawn — each was asserted by a passing test that measured an artifact:
+
+1. **Stage 6 positive Lyapunov** ("chaos survives geometric back-reaction").
+2. **Stage 5 positive Lyapunov** and the ">0.3 drag/no-drag differential".
+   Both statistics fail convergence, perturbation-size independence, and
+   single-event dominance; one block of 72 carried 82% of the Stage-5 sum
+   while the median block contracted. Three estimator bugs were fixed and
+   none rescued it. `uma/rsls/lyapunov.py` now REFUSES, and the refusal is
+   validated against Lorenz (+0.9032 vs literature +0.906) and a pure decay
+   (−0.5000 exactly) so it is discriminating, not blanket.
+   The one surviving measurement: **drag OFF converges to λ = −0.037448**,
+   i.e. measurably not chaotic. With drag it is unresolved.
+3. **`docs/BSD_REPORT.md`'s originality claims** — "every published Sha_an is
+   a rounded float quotient" and "first procedure capable of returning no".
+   Refuted by demonstration, not citation: `studies/exact_rank0_sha/` computes
+   the report's own rank-0 battery in exact rationals from modular symbols
+   (11.a2→1, 15.a1→1, 37.b1→1, 571.b1→4), no float anywhere. Corrections are
+   inline in the report with dated notes.
+
+Added — `studies/rank2_389a1/`, the rank-2 vertical slice the audit called for:
+analytic rank proved exactly 2, **Mordell–Weil saturation proved per curve**
+(Silverman C → exhaustive enumeration → μ → Hermite index bound →
+`ellisdivisible` sieve), then a falsification sweep. The radius-14 box ran to
+completion overnight: 10,092 candidates examined, **103 curves certified
+end-to-end, conductors 389-11467, ZERO refutations**. See `RESULTS.md`; re-run
+`summarize_results.py` after any further sweep to regenerate it.
+
+Caveat stated in RESULTS.md and repeated here because it matters: every one of
+the 103 answers is 1, so the sweep does not exercise the non-trivial-Sha path.
+A bug forcing the quotient to 1 would produce exactly that table. Certifying a
+rank-2 curve with Sha > 1 is the strongest missing test.
+It caught a real unsaturated basis in the wild: PARI's descent points for
+389.a1 span an index-3 sublattice (Reg 9× too big, quotient 1/9) and the
+certificate refused rather than reporting it.
+
+**Two kernel defects found and deliberately NOT fixed** (they change every
+Stage-5/6 number, so they are your call, not a diagnostic's) —
+`studies/rsls_lyapunov/`:
+
+- `dt` is computed once from the initial state and violates CFL by ~550× once
+  velocities grow; the solution is non-finite by step ~12951.
+- With `dt` adaptive the density instead collapses to a finite-time vacuum
+  (min D → 1e-6, v → 4e5) and the clock stalls at t ≈ 3.34. A density floor
+  D ≥ 0.1 reaches t = 11 cleanly.
+
+**Nothing is committed.** All of the above is in the working tree.
+
+---
+
 ## Where things stand right now (v4)
 
 - The package compiles end-to-end. Two top-level demonstrations work:

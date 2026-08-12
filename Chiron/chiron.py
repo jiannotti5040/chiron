@@ -15945,7 +15945,10 @@ def infectatrum_run_tests() -> int:
 
     # --- corpus-wide analysis (runs the live atlas if present) ---
     import glob as _glob
-    _cdir = "/mnt/user-data/outputs/corpus"
+    # The atlas ships in the repository; the previous default was an
+    # agent sandbox path that exists on no machine.
+    _cdir = os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "Infectatrum", "corpus")
     if _glob.glob(os.path.join(_cdir, "plate_0*.json")):
         crep = run_corpus(_cdir)
         check("run_corpus processes the atlas", crep["n_plates"] >= 1)
@@ -16046,7 +16049,8 @@ def run_corpus(corpus_dir: str) -> Dict[str, Any]:
 
 
 def cmd_corpus(args) -> int:
-    rep = run_corpus(args.dir or "/mnt/user-data/outputs/corpus")
+    rep = run_corpus(args.dir or os.path.join(os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))), "Infectatrum", "corpus"))
     # print compact table + a few signature comparisons
     print(f"ATLAS: {rep['n_plates']} plates  | languages: {', '.join(rep['languages_in_corpus'])}")
     print("plate    |Σ|  H(R)   p_adv  nodes")
@@ -28205,11 +28209,19 @@ def _collapse_numeric_float(seq) -> Invariant:
         d = s[1] - s[0]
         if all(abs((s[i + 1] - s[i]) - d) < eps for i in range(n - 1)):
             a0 = s[0]
+            # verified stays False: this branch matched within eps, and the
+            # stamp means exact equality. A tolerance fit that carried
+            # verified=True let any consumer gating on that field read a
+            # float approximation as a proof. exact=False alone did not stop
+            # them -- the two fields disagreed, and the permissive one won.
             inv = Invariant("numeric", "arithmetic", {"a0": a0, "d": d},
-                            {"family": "polynomial", "degree": 1, "verified": True},
+                            {"family": "polynomial", "degree": 1, "verified": False,
+                             "tolerance_fit": True, "eps": eps},
                             _dl_int(int(a0)) + _dl_int(int(d)) + 3, surface_bits,
                             [], False, True, 1.0, 0.0, "", _predict=lambda m: [a0 + i * d for i in range(m)])
-            inv.explanation = "Float-mode arithmetic fit (non-integer input; tolerance-based)."
+            inv.explanation = ("Float-mode arithmetic fit (non-integer input; "
+                               f"tolerance-based, eps={eps:g}). CONSISTENT with the "
+                               "data, not verified: only an exact surface can be.")
             return inv
     return Invariant("numeric", "incompressible", {"values": s}, {"family": "none"},
                      surface_bits, surface_bits, list(s), False, False, 0.0, 0.0,

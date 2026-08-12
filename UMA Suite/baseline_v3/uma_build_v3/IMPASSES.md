@@ -1,16 +1,14 @@
 # IMPASSES.md
 
-Specific 1-sentence questions Claude could not resolve from the corpus
-alone. None hard-stopped the build (the package compiles, runs, and all
+Questions the reconstruction could not resolve from the corpus alone. None hard-stopped the build (the package compiles, runs, and all
 30 tests pass), but each would benefit from a definitive answer.
 
-*Signed: Claude (rebuild assistant)*
 
 ---
 
 1. **FieldPosterior representations.** The canonical executor/inarticulation
    files dispatch on `posterior.representation in {'full','lowrank','ensemble','particle'}`.
-   I only saw the `full` path defined in the PDFs — were `lowrank`/`ensemble`/`particle`
+   Only the `full` path is defined in the PDFs — were `lowrank`/`ensemble`/`particle`
    ever actually implemented in `uma.core.state`, or only stubbed?
 
 2. **MSR cosine threshold.** The pipeline's `verify_T_equals_lichnerowicz`

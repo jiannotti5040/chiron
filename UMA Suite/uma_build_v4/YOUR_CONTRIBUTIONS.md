@@ -1,9 +1,8 @@
 # YOUR_CONTRIBUTIONS.md
 
-Things in this build that are not direct reconstructions from the PDF
-corpus. Listed so they can be audited or removed if they don't fit.
+Parts of this build that are not direct reconstructions from the PDF
+corpus, listed so they can be audited or removed.
 
-*Signed: Claude (rebuild assistant)*
 
 ---
 

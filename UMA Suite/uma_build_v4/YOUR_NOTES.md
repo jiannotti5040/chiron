@@ -1,12 +1,11 @@
 # YOUR_NOTES.md
 
-Technical reservations about the rebuild, kept separate from the user's
+Technical reservations about the rebuild, kept separate from the source
 documents. None of this is editorial commentary on the framework
 itself — these are mechanical notes on what changed during the
 reconstruction and where the build deviates from what's strictly in
 the corpus.
 
-*Signed: Claude (rebuild assistant)*
 
 ---
 
@@ -36,7 +35,7 @@ in several places strips leading whitespace from the first line of the
 next page. This destroyed Python indentation across page boundaries
 in roughly every fifth method.
 
-I wrote `clean_pdf_text.py` to normalize this:
+The rebuild wrote `clean_pdf_text.py` to normalize this:
 it detects orphaned `def` / `class` continuations and re-indents them
 based on the surrounding context. Every module under `Uma_clean/*.txt`
 is the post-repair output. The repair is documented inline in
