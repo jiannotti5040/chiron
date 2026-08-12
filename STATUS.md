@@ -27,7 +27,7 @@ xcodebuild -project iOS/ChironMobile.xcodeproj -scheme ChironMobile \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
   -derivedDataPath /tmp/chiron-ios build
 xcrun simctl install booted /tmp/chiron-ios/Build/Products/Debug-iphonesimulator/ChironMobile.app
-xcrun simctl launch booted com.jacobiannotti.ChironMobile
+xcrun simctl launch booted com.jacobiannotti.chiron.mobile
 ```
 
 Same endpoint setup. The simulator shares the host's loopback, so
@@ -50,7 +50,7 @@ python3 bin/chiron engines
 | 3 | End-to-end certify from the app | 2 VERIFIED · 1 REFUTED · 0 REFUSED, coverage 62.7% |
 | 4 | Grounded claims work | `Readiness fell to 74%` VERIFIED against a supplied fact |
 | 5 | One multiplatform target | `ChironMobile` builds for iOS **and** macOS |
-| 6 | Full service surface | `Chiron/service.py`, 12 operations, 15/15 self-test on a real socket |
+| 6 | Full service surface | `Chiron/service.py`, every operation in the dispatch, 15/15 self-test on a real socket |
 | 7 | One dispatch | app, CLI, and MCP all route through `mcp_server.py:_IMPL` |
 | 8 | MCP server | 20/20 transport gates; Claude Code reports Connected |
 | 9 | CLI | 18 verbs, all exercised |
@@ -62,7 +62,7 @@ python3 bin/chiron engines
 | 15 | SBOM | `ci/sbom.py --check`, gated in the battery |
 | 16 | PDF text extraction | `Chiron/pdf_text.py`, refuses by name rather than guessing |
 | 17 | No secrets committed | scanned |
-| 18 | Pushed to GitHub | branch `chiron/mandate-20260809`; `main` untouched |
+| 18 | Pushed to GitHub | `main` and `chiron/mandate-20260809` in sync; CI green |
 
 ## Recently added capability
 
@@ -88,7 +88,7 @@ construction, not only the verification layer.
 | ~~App icon~~ | generated and compiling into `Assets.car` |
 | ~~Export compliance~~ | `ITSAppUsesNonExemptEncryption = NO` declared |
 | Signing / notarization / archive | absent; needs an Apple account |
-| Codex MCP client | not installed on this machine; config written, unverified |
+| Codex MCP client | not installed in the development environment; config written, unverified |
 | Foundry function publish | needs a token from a browser session |
 | UI tests, prompt-injection tests, performance tests | absent |
 

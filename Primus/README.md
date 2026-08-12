@@ -32,7 +32,7 @@ inv.explanation     # what was recovered, why it is believed
 and every checkable claim comes back **VERIFIED**, **REFUTED**, or
 **REFUSED**; the free-text remainder is reported as unverifiable, never
 blessed. Checkable kinds (schema `primus.certificate/2`, contract in
-`SCHEMA.md`, shipped in the licensed vault): exact arithmetic incl. powers, percentages,
+[`SCHEMA.md`](https://github.com/jiannotti5040/chiron/blob/main/Primus/SCHEMA.md)): exact arithmetic incl. powers, percentages,
 primality, binomials, gcd/lcm, modular and date arithmetic, sums/averages,
 sequence continuations, and integer runs. Gate an agent on `refuted == 0`,
 then read `coverage` before trusting the pass — a passing gate means
@@ -108,7 +108,7 @@ the narrower versioned contract is `GET /v1/capabilities`, `POST
 `primus.engine_server/1` output so it does not create another engine or
 certificate format.
 
-Read [LOCAL_API.md](LOCAL_API.md) before building a client. This is an
+Read [LOCAL_API.md](https://github.com/jiannotti5040/chiron/blob/main/Primus/LOCAL_API.md) before building a client. This is an
 implemented-and-tested local wire contract, **not** a public endpoint, cloud
 integration, or production authentication service. The optional
 `CHIRON_API_TOKEN` is a fixed local/development bearer, not something to
@@ -120,7 +120,7 @@ local routes over real HTTP.
 ## The code
 
 **`src/primus/engine.py`** — *the seed, and the single source of truth*
-(~1,250 lines). The novel part by itself, easy to read and audit in one
+(~1,700 lines). The novel part by itself, easy to read and audit in one
 sitting: `collapse`, `same_generator`, `cast`, `transcode`, the twin spaces.
 `invariant_engine.py` at this folder's root is a compatibility shim so every
 historical entry point still works.
@@ -129,6 +129,25 @@ historical entry point still works.
 (arithmetic, percentages, sequence continuations, integer runs), exact
 checking through the engine, four-way honesty (verified / refuted / refused /
 unverifiable), SHA-256 attestation.
+
+**`src/primus/relate.py`** — exact laws across the columns of a table.
+Coefficients are solved in rational arithmetic and the law must then hold on
+rows the solver never saw. `PARTIAL` names the rows that break an otherwise
+exact law, which is anomaly localisation rather than a weaker verification.
+
+**`src/primus/invert.py`** — runs a `VERIFIED` law backwards to recover a
+missing value, and recovers the exact per-column map between two tables. A law
+that did not verify is not inverted; irrational roots are refused rather than
+rounded.
+
+**`src/primus/grounded.py`** — claims whose truth lives outside the sentence,
+checked against a caller-supplied fact table. A subject nobody supplied is
+`REFUSED` by name rather than guessed at.
+
+**`src/primus/conjecture.py`** — candidate generation behind the exact gate.
+
+**`src/primus/mcp_server.py`**, **`src/primus/engine_server.py`** — the stdio
+MCP surface and the versioned local HTTP service.
 
 **`src/primus/cli.py`** — the `primus` command.
 
@@ -140,7 +159,7 @@ unverifiable), SHA-256 attestation.
 
 ## The proof
 
-**`test_invariant_engine.py`** — the stress tests (48/48). Run it to confirm
+**`test_invariant_engine.py`** — the stress tests (60/60). Run it to confirm
 everything works on your machine.
 
 ```bash
@@ -166,7 +185,7 @@ PySR is installed).
 **`test_certify_fuzz.py`** — adversarial gates: hostile input must crash
 nothing, respect every work bound, and never flip a planted verdict. The
 fuzzer has already earned its keep twice (a sequence-flood DoS and a
-quadratic scan cost, both found and fixed — see `CHANGELOG.md`, shipped in the licensed vault).
+quadratic scan cost, both found and fixed — see [`CHANGELOG.md`](https://github.com/jiannotti5040/chiron/blob/main/Primus/CHANGELOG.md)).
 
 **`test_mcp_server.py`** — the MCP protocol handshake against the live
 subprocess.
