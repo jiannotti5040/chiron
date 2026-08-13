@@ -193,3 +193,66 @@ sections above this one predate tonight's finding.
 See `bench_symreg_external.py` (gplearn, runnable offline once installed)
 and `bench_pysr.py` (PySR harness; runs wherever PySR/Julia is installed).
 Results recorded in [SYMREG_RESULTS.md](SYMREG_RESULTS.md) when run.
+
+## 2026-08-11 — two false-verification classes, found by external audit
+
+Neither of these was caught by the internal battery, and both were live in the
+shipped tree. An independent audit of `UMA Suite/uma_build_v4/docs/BSD_REPORT.md`
+surfaced the first and pointed at the second; the second was confirmed
+reachable here. Both are now gated.
+
+| Defect | What it stamped | Root cause | Gate added |
+|---|---|---|---|
+| **Primality witness/bound desync** | `certify("318665857834031151167461 is prime")` → **VERIFIED**, on a composite | twelve Miller–Rabin witnesses (2…37) paired with the *thirteen*-witness bound 3.317e24. The Sorenson–Webster ψ₁₂ counterexample `399165290221 × 798330580441` sits **below** the range the gate claimed to decide | bound now **derived** from the witness list via a machine-checked ψ table, so the pair cannot desync; 5 gates in `certify._selftest`, incl. one asserting every tabulated ψₖ really does fool its own k bases |
+| **Tolerance fit read as proof** | `collapse([1.0 + 1e-9*n])` → `"VERIFIED generator 'constant' … EXACTLY predicts all 6 held-out terms … That is proof it captured the law"`, for a strictly *increasing* sequence | the repunit fix demanded exact equality on **integer** surfaces and left real ones on a `1e-6·(|a|+1)` tolerance. Chiron's float fallback independently carried `"verified": True` after a tolerance fit | `verified = (hits == h) and int_surface`; real surfaces fall through to the candidate wording with hits still reported. 5 gates in `test_invariant_engine.py`; Chiron's fallback now emits `verified: False, tolerance_fit: True` |
+
+The first is the sharper lesson: the arithmetic was correct, the witness loop
+was correct, and every existing primality gate passed. What was wrong was a
+*constant written twice*. Deriving it was the fix; adding base 41 alone would
+have left the same defect class one edit away.
+
+Negative controls, because a gate that cannot fail proves nothing:
+reintroducing the original witness/bound pair fails exactly three of the new
+gates, and the drifting-float sequence is stamped again if `and int_surface`
+is removed.
+
+Neither defect had reached a stored certificate: all 571 artifacts under
+`Chiron/artifacts/` were scanned and none carries a primality claim, so no
+quarantine was required.
+
+Battery after both fixes, unchanged where it should be:
+`primus selftest` GREEN · certify **40/40** (was 35) · engine stress **60/60**
+(was 55) · fuzz 16/16 · MCP 11/11 · drift 42/42 GREEN · `oeis_live` n=29,
+**20 verified, 0 false confidence** (identical to before — no recall lost) ·
+Chiron 12/12 · monolith 61/61 through the fold.
+
+### Addendum, same day — a false REFUTATION, found by dogfooding
+
+Found by running `certify` on my own working notes, which is what the Chiron
+skill says to do and what had not been done. Two of my claims came back
+REFUTED. One was genuine sloppiness on my part (a rounded product written as
+an exact equality). The other was the gate inventing an error:
+
+| Input | Extracted as | Stamped | Truth |
+|---|---|---|---|
+| `2 * 3 / 6 = 1` | `3 / 6 = 1` | REFUTED | **true** |
+| `1 + 2 + 3 = 6` | `2 + 3 = 6` | REFUTED | **true** |
+| `10 * 4 / 8 = 5` | `4 / 8 = 5` | REFUTED | **true** |
+| `3825123056546413051 = 149491 * 747451 * 34233211` | drops the third factor | REFUTED | **true** |
+
+`_RE_ARITH` matches a binary `a op b = c` and its lookbehind rejects only a
+preceding *digit*, not a preceding *operator* — so any chained expression had
+a fragment lifted out and judged. The kernel evaluates one binary operation
+and cannot know the precedence of the rest, so chains are now **REFUSED**
+rather than decided on a fragment (`_chain_fragment`).
+
+This matters as much as the false VERIFIED above: per the project's own rule,
+a gate that invents errors is worth no more than one that misses them, and
+this one would refute correct arithmetic in any prose that chains operations.
+
+5 gates added; plain binary arithmetic, the reversed form, the product form,
+and negative operands are all regression-guarded. Certify **45/45** (was 40).
+
+Note: the `mcp__primus__certify` MCP tool still shows the old behaviour — it
+runs the published 0.9.0 package in a separate process, not `src/`. It will
+pick the fix up at the next release.

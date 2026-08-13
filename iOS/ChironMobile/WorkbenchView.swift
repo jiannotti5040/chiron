@@ -24,9 +24,14 @@ struct WorkbenchView: View {
     /// Keychain-bound token.
     let makeClient: () throws -> LocalServiceClient
 
+    /// A quarter-close summary with one wrong figure in it. Two claims check
+    /// out and the third does not: 3 percent of 1,240 is 37.2, not 38. That is
+    /// the kind of rounding a reader skims past, which is the point of opening
+    /// with it rather than with arithmetic nobody would get wrong.
     @State private var text = """
-        Revenue grew to 4.2 million in Q3. \
-        The sum of 2 and 2 is 4. The product of 3 and 4 is 11.
+        Q3 close. The product of 1,240 and 25 is 31,000 in product revenue. \
+        The sum of 31,000 and 2,180 is 33,180 invoiced. \
+        Returns ran at 3 percent of 1,240, or 38 units.
         """
     @State private var factsJSON = #"{"gross_margin": {"value": 74, "unit": "percent"}}"#
     @State private var useFacts = true

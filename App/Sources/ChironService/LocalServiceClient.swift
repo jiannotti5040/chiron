@@ -45,22 +45,24 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
     /// engine's. Used for titles and for explaining a disposition.
     public var title: String {
         switch self {
+        // One voice: each title names what the operator gets back, not what
+        // the engine is called internally.
         case .capabilities: "Capabilities"
-        case .collapse: "Collapse"
-        case .certify: "Certify"
-        case .analyze: "Analyze"
-        case .attest: "Attest"
-        case .trace: "Trace"
-        case .solve: "Solve"
-        case .lineage: "Lineage"
-        case .explore: "Explore"
-        case .compare: "Compare"
-        case .falsifiers: "What would refute this"
+        case .ingest: "Check anything"
+        case .certify: "Check the numbers"
+        case .relate: "Find the rule"
+        case .solveFor: "Fill in a missing number"
+        case .discoverMap: "Match two tables"
+        case .attest: "Trace to sources"
+        case .analyze: "Full analysis"
+        case .lineage: "Evidence trail"
+        case .falsifiers: "What would disprove it"
         case .proposeExperiment: "What to check next"
-        case .ingest: "Certify this"
-        case .relate: "Find the law"
-        case .solveFor: "Solve for a value"
-        case .discoverMap: "Map two tables"
+        case .solve: "Work it through"
+        case .explore: "Rival explanations"
+        case .collapse: "Recover the rule"
+        case .trace: "Why this rule"
+        case .compare: "Compare two"
         case .catalog: "Engines"
         }
     }
@@ -68,7 +70,7 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
     public var summary: String {
         switch self {
         case .certify:
-            "Gate the checkable claims. Supply facts and claims whose truth lives outside the sentence become checkable too."
+            "Checks every number it can prove and refuses the rest. Supply facts and claims whose truth lives outside the sentence become checkable too."
         case .attest:
             "Which supplied source produced each span. With no sources, every span REFUSES — that is the honest answer."
         case .analyze: "Every applicable stage over one text."
@@ -87,7 +89,7 @@ public enum LocalServiceOperation: String, Sendable, CaseIterable {
         case .relate:
             "Recover an exact law across columns of a table, confirmed on rows the solver never saw. Names the exact rows that break it."
         case .solveFor:
-            "Run a proven law backwards to get a missing value. Only offered for a law that VERIFIED."
+            "Recovers a value your table is missing, by running a rule it already proved backwards. Offered only for a rule that VERIFIED."
         case .discoverMap:
             "Recover the exact per-column map carrying one table to another. A column with no law is left unmapped."
         case .catalog: "The reviewed allowlist. Arbitrary dispatch is unavailable by design."

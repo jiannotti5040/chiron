@@ -73,6 +73,44 @@ def sweep(lo, hi):
     return total, extracted, false_verify, true_refute
 
 
+def chain_sweep(lo, hi):
+    """The same invariant over CHAINED expressions.
+
+    The binary regex matches `a op b = c` and its lookbehind rejects only a
+    preceding digit, not a preceding operator — so `2 * 3 / 6 = 1` had the
+    fragment `3 / 6 = 1` lifted out and stamped REFUTED, on a true statement.
+    A false REFUTED is the same class of error as a false VERIFIED: a gate
+    that invents errors is worth no more than one that misses them.
+
+    Chains are refused now, so this checks both that no true chain is refuted
+    and that no false chain is verified. Prose-embedded and parenthesised
+    forms are included because that is where the fragment lifting happened.
+    """
+    false_verify, true_refute = [], []
+    total = 0
+    for a in range(lo, hi + 1):
+        for b in range(lo, hi + 1):
+            for c in range(lo, hi + 1):
+                forms = [
+                    (f"{a} + {b} * {c} = {a + b * c}", a + b * c),
+                    (f"{a} * {b} + {c} = {a * b + c}", a * b + c),
+                    (f"{a} * {b} * {c} = {a * b * c}", a * b * c),
+                    (f"{a} - {b} + {c} = {a - b + c}", a - b + c),
+                    (f"({a} + {b}) * {c} = {(a + b) * c}", (a + b) * c),
+                    (f"we get {a} * {b} * {c} = {a * b * c} here", a * b * c),
+                ]
+                for text, truth in forms:
+                    total += 2
+                    for cl in certify(text).get("claims", []):
+                        if cl.get("status") == "REFUTED":
+                            true_refute.append(text)
+                    wrong = text.replace(f"= {truth}", f"= {truth + 1}")
+                    for cl in certify(wrong).get("claims", []):
+                        if cl.get("status") == "VERIFIED":
+                            false_verify.append(wrong)
+    return total, false_verify, true_refute
+
+
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     lo, hi = (-15, 15) if "--wide" in argv else (-10, 10)
@@ -87,7 +125,20 @@ def main(argv=None):
         print("  FIRST FALSE STAMPS:", false_verify[:5])
     if true_refute:
         print("  FIRST TRUE REFUTES:", true_refute[:5])
-    print("  RESULT:", "PASS — invariant held across the entire grid" if ok
+
+    clo, chi = (-4, 4) if "--wide" in argv else (-3, 3)
+    print(f"\nchained-expression sweep — grid [{clo},{chi}]³, 6 forms, true & wrong")
+    ctotal, cfalse, ctrue = chain_sweep(clo, chi)
+    print(f"  claims presented : {ctotal}")
+    print(f"  false VERIFIED   : {len(cfalse)}   (must be 0)")
+    print(f"  true  REFUTED    : {len(ctrue)}   (must be 0 — the fragment bug)")
+    if cfalse:
+        print("  FIRST FALSE STAMPS:", cfalse[:5])
+    if ctrue:
+        print("  FIRST TRUE REFUTES:", ctrue[:5])
+    ok = ok and not cfalse and not ctrue
+
+    print("\n  RESULT:", "PASS — invariant held across both grids" if ok
           else "FAIL — the invariant was violated")
     return 0 if ok else 1
 

@@ -917,7 +917,17 @@ def _holdout_verify(arr: np.ndarray, precision: float, model_class: str,
     # verification is about PREDICTIVE POWER, not label stability: a rule
     # recovered from the prefix that exactly predicts the unseen tail is
     # verified regardless of what family name it carries.
-    verified = (hits == h)
+    #
+    # But only an EXACT surface can be verified at all. The repunit lesson
+    # above closed the tolerance hole for integers and left it open for reals:
+    # a(n) = 1 + 1e-9*n is strictly increasing, yet every held-out term sits
+    # inside tol = 1e-6*(|a|+1) of a CONSTANT rule, so the tail matched 6/6 and
+    # the stamp read "VERIFIED ... EXACTLY predicts ... that is proof it
+    # captured the law" for a law the data refutes. Agreement within a
+    # tolerance is not equality, and the stamp means equality. Real-valued
+    # surfaces therefore fall through to the candidate wording, which still
+    # reports hits/h -- the finding is kept, the claim is not overstated.
+    verified = (hits == h) and int_surface
     return (verified, hits, h, evidence)
 
 

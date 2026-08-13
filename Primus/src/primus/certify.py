@@ -67,7 +67,11 @@ MAX_POW_EXP = 64            # exponent bound for a^b claims
 MAX_POW_BASE_DIGITS = 9     # base bound for a^b claims
 MAX_SEQ_TERMS = 256         # longer runs are REFUSED, not collapsed (DoS bound)
 
-_NUM = r"-?\d+(?:\.\d+)?"
+# Grouped form FIRST so the alternation prefers "1,240" whole. Reversing these
+# would match "1" and leave ",240", which is how a thousands separator becomes
+# a false claim rather than an unread one. A group is exactly three digits and
+# must not be followed by another digit.
+_NUM = r"(?:-?\d{1,3}(?:,\d{3})+(?!\d)(?:\.\d+)?|-?\d+(?:\.\d+)?)"
 _SEQ = r"-?\d+(?:\s*[, ]\s*-?\d+){2,}"          # 3+ integers
 _MONTH = (r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|"
           r"Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|"
@@ -140,13 +144,22 @@ _ARITH_RADIUS = 2 * (MAX_INT_DIGITS + 32)
 
 # ------------------------------------------------------------------ helpers
 def _frac(s: str) -> Fraction:
+    """Exact value of a matched numeral, thousands separators removed.
+
+    A separator is stripped only after the pattern has already decided the
+    token is one grouped number, so "1,240" arrives here whole and "3, 4"
+    never does. Stripping commas before that decision would silently turn a
+    list into a single value.
+    """
+    s = s.replace(",", "")
     if len(s.lstrip("-").split(".")[0]) > MAX_INT_DIGITS:
         raise OverflowError("integer exceeds exact-arithmetic bounds")
     return Fraction(s)
 
 
 def _ints(s: str) -> List[int]:
-    return [int(x) for x in re.findall(r"-?\d+", s)]
+    return [int(x.replace(",", "")) for x in re.findall(_NUM, s)
+            if "." not in x]
 
 
 def _nums(s: str) -> List[Fraction]:
@@ -163,8 +176,33 @@ def _parse_date(s: str) -> Optional[datetime]:
     return None
 
 
-_MR_WITNESSES = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37)
-_MR_DETERMINISTIC_BOUND = 3_317_044_064_679_887_385_961_981
+# psi_k is the smallest composite that is a strong pseudoprime to all of the
+# first k prime bases, so deterministic Miller-Rabin over those k bases is
+# correct for every n < psi_k and WRONG at psi_k itself. Jaeschke (1993) for
+# k <= 8, Sorenson-Webster (arXiv:1509.00864) for k = 9..13.
+#
+# The bound is derived from the witness list rather than written beside it:
+# a hand-written pair desynchronised once already and stamped the composite
+# psi_12 = 399165290221 * 798330580441 as VERIFIED prime. Deriving it makes
+# that class of defect unrepresentable -- shortening _MR_WITNESSES now lowers
+# the bound automatically instead of silently over-claiming.
+_MR_PSI = {
+    1: 2_047,
+    2: 1_373_653,
+    3: 25_326_001,
+    4: 3_215_031_751,
+    5: 2_152_302_898_747,
+    6: 3_474_749_660_383,
+    7: 341_550_071_728_321,
+    8: 341_550_071_728_321,
+    9: 3_825_123_056_546_413_051,
+    10: 3_825_123_056_546_413_051,
+    11: 3_825_123_056_546_413_051,
+    12: 318_665_857_834_031_151_167_461,
+    13: 3_317_044_064_679_887_385_961_981,
+}
+_MR_WITNESSES = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41)
+_MR_DETERMINISTIC_BOUND = _MR_PSI[len(_MR_WITNESSES)]
 
 
 def _is_prime(n: int) -> Optional[bool]:
@@ -370,14 +408,61 @@ def _claims_number_theory(text, add):
         add(m, "primality", _status(ok), {"n_is_prime": p})
 
 
+_CHAIN_OPS = "+-*/x×^"
+
+
+def _chain_fragment(text: str, start: int, end: int) -> bool:
+    """Is this match only PART of a longer arithmetic expression?
+
+    `_RE_ARITH` matches a binary `a op b = c`, and its lookbehind rejects only
+    a preceding digit -- not a preceding operator. So in `2 * 3 / 6 = 1` it
+    matched the fragment `3 / 6 = 1` and stamped REFUTED on a true statement,
+    and `1 + 2 + 3 = 6` failed the same way. A false REFUTED is the same class
+    of error as a false VERIFIED: a gate that invents errors is worth no more
+    than one that misses them.
+
+    A fragment is detected by an adjacent operator that itself has a number on
+    its far side -- the signature of a chain. Such matches are refused, not
+    judged, because the kernel evaluates one binary operation and cannot know
+    the precedence of the rest.
+    """
+    i = start - 1
+    while i >= 0 and text[i] == " ":
+        i -= 1
+    if i >= 0 and text[i] in _CHAIN_OPS:
+        j = i - 1
+        while j >= 0 and text[j] == " ":
+            j -= 1
+        if j >= 0 and text[j].isdigit():
+            return True
+    k = end
+    while k < len(text) and text[k] == " ":
+        k += 1
+    if k < len(text) and text[k] in _CHAIN_OPS:
+        n = k + 1
+        while n < len(text) and text[n] == " ":
+            n += 1
+        if n < len(text) and (text[n].isdigit() or
+                              (text[n] == "-" and n + 1 < len(text)
+                               and text[n + 1].isdigit())):
+            return True
+    return False
+
+
 def _claims_arith(text, add):
     for m in _find(_RE_ARITH, text, _R_EQ, _ARITH_RADIUS):
+        if _chain_fragment(text, m.start(), m.end()):
+            add(m, "arithmetic", _status(None), {})   # REFUSED, not judged
+            continue
         try:
             ok = _check_arith(m.group(1), m.group(2), m.group(3), m.group(4))
         except OverflowError:
             ok = None
         add(m, "arithmetic", _status(ok), {})
     for m in _find(_RE_ARITH_REV, text, _R_EQ, _ARITH_RADIUS):
+        if _chain_fragment(text, m.start(), m.end()):
+            add(m, "arithmetic", _status(None), {})
+            continue
         try:
             ok = _check_arith(m.group(2), m.group(3), m.group(4), m.group(1))
         except OverflowError:
@@ -622,6 +707,59 @@ def _selftest() -> int:
     gate("primality: 91 is composite verified", counts("91 is composite")["verified"] == 1)
     gate("primality beyond MR bound refused",
          counts(str(10**30 + 57) + " is prime")["refused"] == 1)
+
+    # The witness/bound pair itself. Written as two independent literals they
+    # desynchronised: twelve witnesses carried the thirteen-witness bound, and
+    # the gate stamped psi_12 = 399165290221 * 798330580441 VERIFIED prime --
+    # a false verification, the one thing this project may never do. These
+    # gates check the pairing, not just that one composite.
+    def fools(n: int, k: int) -> bool:
+        """Is n a strong probable prime to each of the first k witnesses?"""
+        d, r = n - 1, 0
+        while d % 2 == 0:
+            d //= 2
+            r += 1
+        for a in _MR_WITNESSES[:k]:
+            x = pow(a, d, n)
+            if x == 1 or x == n - 1:
+                continue
+            for _ in range(r - 1):
+                x = x * x % n
+                if x == n - 1:
+                    break
+            else:
+                return False
+        return True
+
+    gate("primality: the twelve-base strong pseudoprime is refuted",
+         counts("318665857834031151167461 is prime")["refuted"] == 1)
+    gate("MR bound is the psi value for its own witness count",
+         _MR_DETERMINISTIC_BOUND == _MR_PSI[len(_MR_WITNESSES)])
+    gate("MR witnesses are the first k primes, in order",
+         _MR_WITNESSES
+         == (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41)[:len(_MR_WITNESSES)])
+    gate("each tabulated psi_k really does fool its own k bases",
+         all(fools(_MR_PSI[k], k) for k in _MR_PSI))
+    gate("no tabulated pseudoprime below the bound is stamped prime",
+         all(_is_prime(p) is False for p in set(_MR_PSI.values())
+             if p < _MR_DETERMINISTIC_BOUND))
+
+    # A false REFUTED is the same class of error as a false VERIFIED. The
+    # binary-arithmetic regex used to match a FRAGMENT of a longer chain --
+    # `2 * 3 / 6 = 1` was read as `3 / 6 = 1` and refuted, though it is true.
+    # Chains are refused now, since the kernel evaluates one binary operation
+    # and cannot know the precedence of the rest.
+    gate("true chained arithmetic is not refuted (2*3/6=1)",
+         counts("2 * 3 / 6 = 1")["refuted"] == 0)
+    gate("true chained addition is not refuted (1+2+3=6)",
+         counts("1 + 2 + 3 = 6")["refuted"] == 0)
+    gate("chained arithmetic is refused, not judged on a fragment",
+         counts("2 * 3 / 6 = 1")["refused"] == 1)
+    gate("a FALSE chain is not verified either",
+         counts("2 * 3 / 6 = 9")["verified"] == 0)
+    gate("plain binary arithmetic still decided (regression guard)",
+         counts("2+2=4")["verified"] == 1 and counts("2+2=5")["refuted"] == 1
+         and counts("-3 * 4 = -12")["verified"] == 1)
     gate("binomial verified (10 choose 3 is 120)", counts("10 choose 3 is 120")["verified"] == 1)
     gate("binomial refuted (C(10,3) = 130)", counts("C(10,3) = 130")["refuted"] == 1)
     gate("gcd verified", counts("gcd(12, 18) = 6")["verified"] == 1)

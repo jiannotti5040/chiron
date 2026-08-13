@@ -271,5 +271,24 @@ check("Fibonacci-10 still stamps (h>=p spares order-2)",
 check("Tribonacci-12 still stamps (h=3 >= p=3 — evidence rule is calibrated, not blanket)",
       E.collapse([0, 1, 1, 2, 4, 7, 13, 24, 44, 81, 149, 274]).structure.get("verified") is True)
 
+# ── a tolerance is not an equality (the float twin of the repunit lesson) ──
+# The repunit fix demanded exact equality on INTEGER surfaces and left real
+# ones on a 1e-6*(|a|+1) tolerance. a(n) = 1 + 1e-9*n is strictly increasing,
+# so 'constant' is the wrong law for it — yet every held-out term sat inside
+# that tolerance, the tail matched 6/6, and the engine printed "VERIFIED ...
+# EXACTLY predicts ... that is proof it captured the law". Only an exact
+# surface can be verified; a real one is a candidate with hits reported.
+drift = E.collapse([1.0 + 1e-9 * n for n in range(24)])
+check("drifting float sequence is NOT stamped (constant is the wrong law for it)",
+      not drift.structure.get("verified"))
+check("...and the finding survives as a candidate, not a silent drop",
+      drift.model_class == "constant" and "not yet verified" in drift.explanation)
+check("coarser drift also refused (the hole was the tolerance, not one epsilon)",
+      not E.collapse([1.0 + 1e-8 * n for n in range(24)]).structure.get("verified"))
+check("genuine non-integer law is still refused rather than overclaimed",
+      not E.collapse([0.5 * n + 1e-9 * n * n for n in range(24)]).structure.get("verified"))
+check("integer surfaces keep their exact stamp (the fix is scoped to reals)",
+      E.collapse([n * n for n in range(20)]).structure.get("verified") is True)
+
 print(f"\n  {P}/{P+F} stress tests passed.")
 exit(0 if F == 0 else 1)
