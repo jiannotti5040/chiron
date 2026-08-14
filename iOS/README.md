@@ -12,19 +12,21 @@ link the macOS-only `ChironKit` adapter and therefore cannot launch Python,
 discover or read a vault path, invoke a dynamic module, or recompute a
 certificate on device.
 
-The current user interface exposes one vertical slice:
+The interface has two screens. **Certify** sends user-entered or imported
+UTF-8 text to `POST /v1/certify` and shows the certificate exactly as
+returned, including exact JSON number tokens and with no second on-device
+verdict. Oversized imports are refused rather than silently truncated.
 
-- user-entered or user-imported UTF-8 text (at most 100,000 bytes) is sent to
-  `POST /v1/certify`;
-- oversized imports are refused rather than silently truncated; and
-- the returned certificate is displayed as returned, including exact JSON
-  number tokens, without a second on-device verdict.
+**Workbench** reaches the rest of the service. `ChironService` exposes every
+operation the dispatch defines — 16 of them, including `ingest`, `relate`,
+`solve_for`, `discover_map`, `attest`, `falsifiers` and
+`propose_experiment` — and the workbench drives them against either a document
+or a table. A result carries the engine's own record; the screen counts and
+renders, and never restates a verdict in softer words.
 
-`ChironService` also defines fixed `capabilities` and `collapse` operations,
-but the current iOS UI intentionally does not expose them. It bounds requests
-and streamed responses, validates the `/v1` response envelope, and has no
-local-process fallback. The server contract is documented in
-[`../Primus/LOCAL_API.md`](../Primus/LOCAL_API.md).
+The client bounds requests and streamed responses, validates the `/v1`
+envelope, and has no local-process fallback. The server contract is documented
+in [`../Primus/LOCAL_API.md`](../Primus/LOCAL_API.md).
 
 ## Endpoint and credentials
 
@@ -46,29 +48,35 @@ refresh behavior, rotation/revocation system, TLS termination, or production
 service credential in this repository. The Primus server's optional static
 `CHIRON_API_TOKEN` is a local development control, not mobile authorization.
 
-## Build evidence and current limitation
-
-The following iOS Simulator build completed successfully earlier in this
-reconstruction:
+## Building and running
 
 ```bash
-xcodebuild -project iOS/ChironMobile.xcodeproj \
-  -scheme ChironMobile \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=27.0' \
-  -derivedDataPath /tmp/chiron-ios-mobile-build \
-  CODE_SIGNING_ALLOWED=NO build
+xcodebuild -project iOS/ChironMobile.xcodeproj -scheme ChironMobile \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+  -derivedDataPath /tmp/chiron-ios build
+
+xcrun simctl install booted /tmp/chiron-ios/Build/Products/Debug-iphonesimulator/ChironMobile.app
+xcrun simctl launch booted com.jacobiannotti.chiron.mobile
 ```
 
-Choose an installed simulator name if that exact one is unavailable. A repeat
-after final local hardening stalled in Xcode's build service before compiler
-output, and the project’s `xcodebuild test` invocation also has not produced a
-completed result because the runner stalled. The current shared and iOS source
-files do typecheck directly against the installed arm64 iOS Simulator SDK, but
-that is not a bundle build. There is consequently no claim of a current-
-revision iOS build, iOS test pass, app launch, device test, or end-to-end
-gateway test. Resolve those local Xcode gates before using this target as
-release evidence.
+Substitute an installed simulator name if that one is unavailable. The same
+target builds for macOS with `-destination 'platform=macOS'`.
 
-For the full release gap — signing, provisioning, privacy, service operation,
-archive/export, device testing, and App Review — see
-[`../docs/APP_STORE_READINESS.md`](../docs/APP_STORE_READINESS.md).
+The app needs the service running:
+
+```bash
+python3 Chiron/service.py --port 8765
+```
+
+The simulator shares the host's loopback, so the default endpoint
+`http://127.0.0.1:8765` reaches a service running on the same Mac. A deployed
+gateway must be HTTPS; loopback is the only plaintext address the endpoint
+policy admits.
+
+**`xcodebuild test` has not produced a completed result on the development
+host.** The runner stalls before emitting output, including after restarting
+CoreSimulatorService and re-booting the device, while `build` succeeds on the
+same host and destination. No iOS test pass is claimed. Device testing and
+any signed distribution require an Apple Developer account and are likewise
+unclaimed.
+
