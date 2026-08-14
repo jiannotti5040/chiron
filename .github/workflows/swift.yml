@@ -48,13 +48,21 @@ jobs:
           python-version: '3.12'
 
       - name: Install the vault's Python dependency
-        run: python3 -m pip install --quiet ./Primus
+        run: |
+          python3 -m pip install --quiet ./Primus
+          echo "CHIRON_PYTHON=$(which python3)" >> "$GITHUB_ENV"
 
       - name: Build
         working-directory: App
         run: swift build --scratch-path "$RUNNER_TEMP/chiron-build"
 
-      # The live gates skip without a listening service, which is their
+      # CHIRON_PYTHON is set above because PythonRunner searches
+      # /opt/homebrew/bin and /usr/local/bin *before* PATH. On a runner that
+      # finds a Homebrew interpreter without numpy, so the live gates failed
+      # on the dependency rather than on anything they test. The variable is
+      # the mechanism the runner documents for exactly this.
+      #
+      # The live service gates still skip without a listener, which is their
       # documented behaviour: they never pass with nothing to talk to.
       - name: Test
         working-directory: App
