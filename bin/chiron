@@ -52,7 +52,7 @@ Daily verbs:
                                the cheapest next observation, or nothing
     chiron engines [query]     the reviewed static allowlist an agent may invoke
     chiron mcp                 serve the vault over stdio to Claude Code / Codex
-    chiron service [--port N]  serve all twelve operations over HTTP /v1/*
+    chiron service [--port N]  serve every operation over HTTP /v1/*
 
     chiron benchmark [--suite] proving run (--suite: six-task cross-domain suite)
     chiron parity              prove spine and fold are ONE organism: identical gate
@@ -156,7 +156,7 @@ def cmd_test(args):
     full = "--full" in args
     gates = [
         ("spine selftest (embedded suite)", [PY, _script("chiron.py"), "selftest"], None),
-        ("primus stress tests (48 gates)", [PY, "test_invariant_engine.py"], PRIMUS),
+        ("primus stress tests", [PY, "test_invariant_engine.py"], PRIMUS),
         ("twin cross-lock (corpus <-> exact <-> engine)", [PY, "test_twins_exact.py"], PRIMUS),
         ("unit: chiron", [PY, _script(os.path.join("tests", "test_chiron.py"))], None),
         ("CLI contract (canonical exact verify)",
@@ -196,6 +196,8 @@ def cmd_test(args):
          [PY, _script("compare_explore.py"), "selftest"], None),
         ("evidence graph (lineage, contradictions, and what stands on nothing)",
          [PY, _script("evidence_graph.py"), "selftest"], None),
+        ("certificate contract (SCHEMA.md documents every emitted claim kind)",
+         [PY, os.path.join(VAULT, "ci", "check_schema_kinds.py")], None),
         ("SBOM (every third-party import is declared or guarded)",
          [PY, os.path.join(VAULT, "ci", "sbom.py"), "--check"], None),
         ("grow dry-run", [PY, _script("chiron_grow.py"), "--params",

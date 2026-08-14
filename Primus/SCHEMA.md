@@ -30,10 +30,24 @@ extractor; this one differs only in admitting it. Before trusting a pass:
 
 ## Claim kinds (v2)
 
-`arithmetic` (`a op b = c` and `c = a op b`; ops `+ - * / x × ^ **`, powers
-bounded), `percentage`, `primality` (deterministic Miller–Rabin below
+`arithmetic` — `a op b = c` and `c = a op b`, with the operator written
+either symbolically (`+ - * / x × ^ **`, powers bounded) or in words (`plus`,
+`minus`, `less`, `times`, `multiplied by`, `divided by`), and the equality as
+`=`, `is`, `equals`, `totals`, `comes to` or `leaves`. Also the unit-price
+form `N units at P each is T`, which is read as a product. A match that is
+only part of a longer chain is REFUSED rather than judged, in either notation:
+the kernel evaluates one binary operation and cannot know the precedence of
+the rest.
+
+Numerals may carry thousands separators (`1,240`, `12,345,678`). A group is
+exactly three digits and must not be followed by another digit, so `1,24` is
+not read as grouped, and a separator is stripped only after the pattern has
+decided the token is one number — `sum of 3, 4 and 5` remains three values.
+
+`percentage` (`P percent of B is V`, and the appositive `P percent of B, or
+V`), `primality` (deterministic Miller–Rabin below
 3.3×10²⁴; refused above), `binomial` (`C(n,k)`, `n choose k`, n ≤ 100000),
-`gcd` / `lcm`, `modular` (`a mod m = c`, `a ≡ c (mod m)`),
+`modular` (`a mod m = c`, `a ≡ c (mod m)`),
 `date_arithmetic` (`N days after/before DATE is DATE`, `days between A and
 B is N`; unambiguous formats only, no year → refused), `aggregate`
 (sum/total/average/mean/product of a listed number set, exact rationals; a
