@@ -1,0 +1,77 @@
+name: Swift
+
+# Roughly 7,300 lines of Swift shipped with no CI at all: every existing
+# workflow runs on ubuntu-latest against a Python matrix, so a change that
+# broke the macOS or iOS target could only be caught by someone building it by
+# hand. This builds and tests the shared package and both app destinations.
+#
+# The scratch path is deliberate and load-bearing. On a checkout inside a
+# cloud-synced directory the file provider stamps com.apple.FinderInfo onto
+# .xctest bundles and codesign rejects them; building outside the tree avoids
+# a failure that looks like a code fault. It costs nothing on a clean runner.
+
+on:
+  push:
+    paths:
+      - 'App/**'
+      - 'iOS/**'
+      - '.github/workflows/swift.yml'
+  pull_request:
+    paths:
+      - 'App/**'
+      - 'iOS/**'
+      - '.github/workflows/swift.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: swift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Shared package
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: swift --version && xcodebuild -version
+
+      - name: Build
+        working-directory: App
+        run: swift build --scratch-path "$RUNNER_TEMP/chiron-build"
+
+      # The live gates skip without a listening service, which is their
+      # documented behaviour: they never pass with nothing to talk to.
+      - name: Test
+        working-directory: App
+        run: swift test --scratch-path "$RUNNER_TEMP/chiron-build"
+
+  apps:
+    name: ${{ matrix.name }}
+    runs-on: macos-15
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: macOS app
+            destination: 'platform=macOS'
+          - name: iOS app
+            destination: 'generic/platform=iOS Simulator'
+    steps:
+      - uses: actions/checkout@v4
+
+      # Signing is unavailable on a runner and is not what this proves. The
+      # gap it leaves — notarization and archive validation — is recorded in
+      # docs/APP_STORE_READINESS.md rather than pretended away here.
+      - name: Build ${{ matrix.name }}
+        run: |
+          xcodebuild -project iOS/ChironMobile.xcodeproj \
+            -scheme ChironMobile \
+            -destination '${{ matrix.destination }}' \
+            -configuration Debug \
+            -derivedDataPath "$RUNNER_TEMP/dd" \
+            CODE_SIGNING_ALLOWED=NO \
+            build
