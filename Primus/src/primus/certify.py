@@ -83,8 +83,29 @@ _RE_ARITH = re.compile(
     rf"(?<!\d)(?<!\d\.)({_NUM})\s*(\*\*|[+\-*/x×^])\s*({_NUM})\s*(?:=|equals)\s*({_NUM})(?!\.?\d)")
 _RE_ARITH_REV = re.compile(
     rf"(?<!\d)(?<!\d\.)({_NUM})\s*=\s*({_NUM})\s*(\*\*|[+\-*/x×^])\s*({_NUM})(?!\.?\d)")
+# "3 percent of 1,240 is 38" and the appositive "…, or 38 units" that reports
+# use just as often. `or` is admitted only directly after the base number, so
+# it cannot reach across a clause and pair unrelated figures.
 _RE_PERCENT = re.compile(
-    rf"({_NUM})\s*(?:%|percent)\s+of\s+({_NUM})\s*(?:=|is|equals)\s*({_NUM})", re.I)
+    rf"({_NUM})\s*(?:%|percent)\s+of\s+({_NUM})\s*(?:=|is|equals|,?\s*or)\s*({_NUM})", re.I)
+# Operators as words. Business and report prose writes "plus" and "at 25 each"
+# far more often than "+" and "*", and until these existed the extractor could
+# only read text that already looked like arithmetic homework.
+_W_OP = r"(?:plus|minus|less|times|multiplied\s+by|divided\s+by)"
+_RE_ARITH_WORDS = re.compile(
+    rf"(?<!\d)({_NUM})\s+({_W_OP})\s+({_NUM})\s+(?:is|are|equals|=|totals?|comes?\s+to|leaves?)\s+({_NUM})(?!\.?\d)",
+    re.I)
+# "1,240 units at 25 dollars each is 31,000". The unit words between the
+# numbers are skipped but bounded, so this cannot span a sentence.
+_RE_AT_EACH = re.compile(
+    rf"(?<!\d)({_NUM})\s+(?:[A-Za-z%$£€]+\s+){{0,3}}at\s+({_NUM})\s*(?:[A-Za-z%$£€]+\s+){{0,3}}(?:each|apiece|per\s+\w+)\s+(?:is|are|equals|=|totals?|comes?\s+to)\s+({_NUM})(?!\.?\d)",
+    re.I)
+
+# A word operator immediately after a match, with a number beyond it, is the
+# same chain signature `_CHAIN_OPS` catches for symbols.
+_RE_CHAIN_WORD_AFTER = re.compile(rf"\s*{_W_OP}\s+{_NUM}", re.I)
+_RE_CHAIN_WORD_BEFORE = re.compile(rf"{_NUM}\s+{_W_OP}\s*$", re.I)
+
 _RE_CONTINUATION = re.compile(
     rf"({_SEQ})\s*(?:,)?\s*(?:continues?\s+as|followed\s+by|"
     rf"next\s+(?:terms?|numbers?|values?)\s+(?:is|are)|then\s+comes?)\s*[:]?\s*({_SEQ}|-?\d+)", re.I)
@@ -446,6 +467,15 @@ def _chain_fragment(text: str, start: int, end: int) -> bool:
                               (text[n] == "-" and n + 1 < len(text)
                                and text[n + 1].isdigit())):
             return True
+
+    # The same signature written in words. Without this, "2 plus 2 is 4 plus 1
+    # is 5" stamped VERIFIED on a fragment while "2 + 2 = 4 + 1 = 5" correctly
+    # refused — the guard existed but only recognised symbols, so adding word
+    # operators to the extractor quietly opened a hole underneath it.
+    if _RE_CHAIN_WORD_AFTER.match(text, end):
+        return True
+    if _RE_CHAIN_WORD_BEFORE.search(text, 0, start):
+        return True
     return False
 
 
@@ -468,6 +498,26 @@ def _claims_arith(text, add):
         except OverflowError:
             ok = None
         add(m, "arithmetic", _status(ok), {})
+    _WORD_OPS = {"plus": "+", "minus": "-", "less": "-", "times": "*",
+                 "multiplied by": "*", "divided by": "/"}
+    for m in _find(_RE_ARITH_WORDS, text, r"plus|minus|less|times|multiplied|divided", _ARITH_RADIUS):
+        if _chain_fragment(text, m.start(), m.end()):
+            add(m, "arithmetic", _status(None), {})
+            continue
+        word = re.sub(r"\s+", " ", m.group(2).strip().lower())
+        try:
+            ok = _check_arith(m.group(1), _WORD_OPS[word], m.group(3), m.group(4))
+        except (OverflowError, KeyError):
+            ok = None
+        add(m, "arithmetic", _status(ok), {})
+
+    for m in _find(_RE_AT_EACH, text, r"\beach\b|\bapiece\b|\bper\b", _ARITH_RADIUS):
+        try:
+            ok = _check_arith(m.group(1), "*", m.group(2), m.group(3))
+        except OverflowError:
+            ok = None
+        add(m, "arithmetic", _status(ok), {})
+
     for m in _find(_RE_PERCENT, text, r"%|percent", 300):
         try:
             ok = (_frac(m.group(1)) / 100) * _frac(m.group(2)) == _frac(m.group(3))

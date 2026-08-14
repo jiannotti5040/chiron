@@ -29,8 +29,8 @@ struct WorkbenchView: View {
     /// the kind of rounding a reader skims past, which is the point of opening
     /// with it rather than with arithmetic nobody would get wrong.
     @State private var text = """
-        Q3 close. The product of 1,240 and 25 is 31,000 in product revenue. \
-        The sum of 31,000 and 2,180 is 33,180 invoiced. \
+        Q3 close. We shipped 1,240 units at 25 dollars each is 31,000 in \
+        product revenue. 31,000 plus 2,180 is 33,180 invoiced. \
         Returns ran at 3 percent of 1,240, or 38 units.
         """
     @State private var factsJSON = #"{"gross_margin": {"value": 74, "unit": "percent"}}"#
