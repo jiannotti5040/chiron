@@ -17,10 +17,9 @@ It is **not**:
 
 - **not** Jacob's Portfolio Vault, and **not** the shipping `Primus` / `Chiron`
   engine;
-- **not** an integration of your ~16,000 lines (`cert_engine.py`,
-  `infectatrum.py`, the 60 UMA/RSLS modules, `corpus_all.json`) — **none of
-  that source was present in this session's filesystem**, so nothing here
-  pretends to wrap it;
+- **not** an integration of the full engine (`cert_engine.py`,
+  `infectatrum.py`, the UMA/RSLS modules, `corpus_all.json`) — this prototype
+  was written without access to that source and does not wrap it;
 - **not** something that emits a `verified` stamp. Where the real cognitive
   engine would sit, this prototype **abstains**.
 
@@ -152,12 +151,11 @@ replace when the real source is mounted:
 | `PrimusEnvelopeStub.omega_status` | UMA/RSLS pipeline (`pipeline.py`, `rsls_uma_integrated.py`, …) | abstains on Ω |
 | `PrimusEnvelopeStub.spot_invariant` | generalized origin-signature engine | **already real** (exact signatures) |
 
-## To make this real (next increment, when you're ready)
+## Turning this into the real thing
 
-The single blocker is that the source wasn't in this session. To do the
-integration the master spec actually calls for — and that your own
-`primus-vault-workflow` discipline governs — **mount Jacob's Portfolio Vault**
-(grant the folder). Then the honest order is:
+This prototype was written without access to the engine source, which is the
+single reason it stubs rather than integrates. With the vault available, the
+order that keeps the guarantee intact is:
 
 1. Stand up the real gate battery first (`primus selftest`, `test_invariant_engine.py`,
    `oeis_live.py`, `drift_check.py`) as the baseline oracle — green before any change.
@@ -166,6 +164,6 @@ integration the master spec actually calls for — and that your own
 3. Keep this prototype's exact twins test as an external check the real Primus
    invariant-spotter must also pass.
 
-That grows the vault **outward** (users, external validation, exactness) rather
-than bolting on a parallel inward organism — which is the failure mode the last
-build hit, and the one your own discipline warns against.
+That grows the vault outward — users, external validation, exactness — rather
+than adding a second inward organism beside the engine, which is the failure
+mode the project's own rules exist to prevent.
