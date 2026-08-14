@@ -72,6 +72,37 @@ Data with rounding or measurement error normally returns `REFUSED`. The
 hypothesis classes are deliberately small: a class large enough to fit
 arbitrary data cannot support a proof.
 
+## Reading a document
+
+`certify` extracts the claims in a text that can be checked exactly, and
+refuses the rest. It reads figures the way reports write them — thousands
+separators, operators in words, unit prices, appositive percentages:
+
+```python
+from primus.certify import certify
+
+report = ("Q3 close. We shipped 1,240 units at 25 dollars each is 31,000 in "
+          "product revenue. 31,000 plus 2,180 is 33,180 invoiced. "
+          "Returns ran at 3 percent of 1,240, or 38 units.")
+
+for claim in certify(report)["claims"]:
+    print(claim["status"], claim["text"])
+```
+
+```
+VERIFIED 1,240 units at 25 dollars each is 31,000
+VERIFIED 31,000 plus 2,180 is 33,180
+REFUTED  3 percent of 1,240, or 38
+```
+
+Three percent of 1,240 is 37.2. The free text around the claims is reported as
+unverifiable rather than blessed, and `coverage` says how much of the document
+was checkable at all.
+
+A claim that is only part of a longer chain is `REFUSED` rather than judged,
+because the kernel evaluates one binary operation and cannot know the
+precedence of the rest.
+
 ## Capabilities
 
 | Module | Function |
