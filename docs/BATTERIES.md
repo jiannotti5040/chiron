@@ -49,7 +49,7 @@ supported inputs you choose.
 | Chiron core gates | the organism's hard laws | **12/12** |
 | Reproducibility harness | same input, same version ⇒ byte-identical results | digest-stable |
 | Monolith standalone smoke | the certified core from ONE file, no vault beside it (semic 56/56, JDICert 280/280 inside) | **5/5** |
-| Monolith full folded sweep | every selftest-bearing module, through the fold | **52/52** |
+| Monolith full folded sweep | every selftest-bearing module, through the fold | **61/61** |
 | Invariant-operation stress probes | recovery/refusal/cipher/structure (build of 2026-07-16) | **23/23** |
 | Pipeline composer | chain/team/swarm compose; unknown component fails safe | **7/7** |
 | Documented-command smoke | every command in the manual runs as written | **9/9** |

@@ -196,6 +196,8 @@ def cmd_test(args):
          [PY, _script("compare_explore.py"), "selftest"], None),
         ("evidence graph (lineage, contradictions, and what stands on nothing)",
          [PY, _script("evidence_graph.py"), "selftest"], None),
+        ("documented counts match the fold",
+         [PY, os.path.join(VAULT, "ci", "check_counts.py")], None),
         ("certificate contract (SCHEMA.md documents every emitted claim kind)",
          [PY, os.path.join(VAULT, "ci", "check_schema_kinds.py")], None),
         ("SBOM (every third-party import is declared or guarded)",
