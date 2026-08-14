@@ -38,6 +38,18 @@ jobs:
       - name: Show toolchain
         run: swift --version && xcodebuild -version
 
+      # The live tests spawn the Python vault. They do not skip here, because
+      # the vault IS present on a checkout — only its dependency was missing,
+      # so they failed on `No module named numpy` instead. Installing the
+      # package makes those gates exercise the Swift-to-Python boundary, which
+      # is the part no other workflow covers.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the vault's Python dependency
+        run: python3 -m pip install --quiet ./Primus
+
       - name: Build
         working-directory: App
         run: swift build --scratch-path "$RUNNER_TEMP/chiron-build"
