@@ -36,7 +36,7 @@ Same endpoint setup. The simulator shares the host's loopback, so
 **Terminal only, no app:**
 
 ```bash
-python3 bin/chiron verify "The sum of 2 and 2 is 4." 
+python3 bin/chiron verify "1,240 units at 25 dollars each is 31,000."
 python3 bin/chiron falsify 1 1 2 3 5 8 13 21
 python3 bin/chiron engines
 ```

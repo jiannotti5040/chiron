@@ -7,7 +7,9 @@ export const meta = {
   ],
 }
 
-const REPO = '/Users/jacobiannotti/Desktop/Intellectual/Jacob-s-Portfolio-Vault'
+// Resolved at run time; an absolute path here would be this machine's
+// layout baked into a tracked file.
+const REPO = process.env.CHIRON_REPO || process.cwd()
 
 const RULES = `
 Repository: ${REPO}

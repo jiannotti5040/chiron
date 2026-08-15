@@ -79,6 +79,9 @@ jobs:
           python Chiron/tests/test_local_cors.py
       - name: Chiron MCP transport (real stdio JSON-RPC)
         run: python Chiron/tests/test_mcp_server.py
+      - name: Publishable — no credentials, no machine-specific paths
+        run: python3 ci/check_publishable.py
+
       - name: Current license claims match Apache-2.0
         run: python ci/check_license_claims.py
       - name: Drift detector — seed vs monolith must not contradict

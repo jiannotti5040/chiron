@@ -96,7 +96,7 @@ directory is not the vault:
 ```toml
 [mcp_servers.chiron]
 command = "python3"
-args = ["/Users/jacobiannotti/Desktop/Intellectual/Jacob-s-Portfolio-Vault/Chiron/mcp_server.py"]
+args = ["<repo>/Chiron/mcp_server.py"]
 ```
 
 ## Any other client

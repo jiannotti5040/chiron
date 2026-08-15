@@ -19,7 +19,7 @@ enum Entry {
 /// decode the record — is provable from a terminal and from CI:
 ///
 ///     swift run chiron-app run --json "text …"
-///     swift run chiron-app certify "The sum of 2 and 2 is 4."
+///     swift run chiron-app certify "31,000 plus 2,180 is 33,180."
 enum Headless {
     static func main(_ args: [String]) async -> Int32 {
         guard let client = VaultClient.discover() else {
