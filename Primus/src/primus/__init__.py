@@ -11,7 +11,7 @@ Two operations, one discipline:
     inv.explanation       # what was recovered, why it is believed
 
     from primus import certify
-    cert = certify("The sequence 2 4 6 8 continues as 10, 12. Also 2+2=5.")
+    cert = certify("1,240 units at 25 dollars each for a total of 31,000.")
     cert["verdict"]       # verified/refuted/refused counts — never a blanket blessing
 
 ``collapse`` recovers the minimal generator beneath a codified surface

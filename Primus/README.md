@@ -40,8 +40,12 @@ then read `coverage` before trusting the pass — a passing gate means
 
 ```python
 from primus import certify
-cert = certify("2+2=5. The sequence 2 4 6 8 continues as 10, 12.")
+cert = certify(
+    "We shipped 1,240 units at 25 dollars each for a total of 31,000, "
+    "and headcount grew from 84 to 96, an increase of 14."
+)
 cert["counts"]      # {'checkable': 2, 'verified': 1, 'refuted': 1, 'refused': 0}
+cert["claims"][1]   # the increase is 12, not 14 — REFUTED, with the span
 ```
 
 The second line exits 1 on any refuted claim — pipe your model's output in
@@ -49,7 +53,7 @@ place of the example text:
 
 ```bash
 primus collapse "1 1 2 3 5 8 13 21"
-echo "17*3 = 51 and 2+2 = 5" | primus certify - --json --gate
+echo "310 of 1,240 renewed, or 25 percent" | primus certify - --json --gate
 primus selftest
 ```
 

@@ -18,7 +18,10 @@ and refuses to certify the rest:
                   stamped.
 
 Checkable claim kinds (schema primus.certificate/2): integer/rational
-arithmetic including powers (``a op b = c``, ``c = a op b``), percentages,
+arithmetic including powers (``a op b = c``, ``c = a op b``) and the forms
+report prose actually uses (``1,240 units at 25 each, totalling 31,000``),
+percentages including a share written as one (``310 of 1,240, or 25
+percent``), stated differences (``from 84 to 96, an increase of 12``),
 primality/compositeness, binomial coefficients, gcd/lcm, modular arithmetic,
 date arithmetic (days after/before, days between), sums/totals/averages of
 listed numbers, integer-sequence continuations, closed-form formulas
@@ -44,7 +47,7 @@ Usage::
     cert = certify(model_output_text)
     cert["verdict"]; cert["coverage"]
 
-    $ echo "2+2=5 and gcd(12,18)=6" | primus certify -
+    $ echo "3,150 hours at 240 each, totalling 756,000" | primus certify -
 """
 from __future__ import annotations
 
@@ -92,14 +95,51 @@ _RE_PERCENT = re.compile(
 # far more often than "+" and "*", and until these existed the extractor could
 # only read text that already looked like arithmetic homework.
 _W_OP = r"(?:plus|minus|less|times|multiplied\s+by|divided\s+by)"
+
+# The connectives that introduce a total. `for` is admitted only as part of an
+# explicit totalling phrase: bare "for" reads a duration as a product, so
+# "1,240 units at 25 dollars each for 3 months" would refute a true sentence
+# against the number 3. A gate that invents errors is worth no more than one
+# that misses them, so the ambiguous form is simply not matched.
+_TOTALS = (r"(?:is|are|equals|=|total(?:s|l?ing)?|comes?\s+to|"
+           r"for\s+a\s+(?:combined\s+)?total\s+of)")
+
+# The bounded word skip before the connective is the same device `_RE_AT_EACH`
+# uses: "18,400 plus 4,600 of contractor cost comes to 23,000" names what the
+# second figure is before it states the total, and without the skip the whole
+# sentence read as nothing. Three words is short enough that the match cannot
+# cross into a neighbouring clause and pair unrelated numbers.
 _RE_ARITH_WORDS = re.compile(
-    rf"(?<!\d)({_NUM})\s+({_W_OP})\s+({_NUM})\s+(?:is|are|equals|=|totals?|comes?\s+to|leaves?)\s+({_NUM})(?!\.?\d)",
+    rf"(?<!\d)({_NUM})\s+({_W_OP})\s+({_NUM})\s*,?\s*(?:[A-Za-z%$£€]+\s+){{0,3}}"
+    rf"(?:{_TOTALS}|leaves?)\s+({_NUM})(?!\.?\d)",
     re.I)
 # "1,240 units at 25 dollars each is 31,000". The unit words between the
 # numbers are skipped but bounded, so this cannot span a sentence.
 _RE_AT_EACH = re.compile(
-    rf"(?<!\d)({_NUM})\s+(?:[A-Za-z%$£€]+\s+){{0,3}}at\s+({_NUM})\s*(?:[A-Za-z%$£€]+\s+){{0,3}}(?:each|apiece|per\s+\w+)\s+(?:is|are|equals|=|totals?|comes?\s+to)\s+({_NUM})(?!\.?\d)",
+    rf"(?<!\d)({_NUM})\s+(?:[A-Za-z%$£€]+\s+){{0,3}}at\s+({_NUM})\s*(?:[A-Za-z%$£€]+\s+){{0,3}}(?:each|apiece|per\s+\w+)\s*,?\s*{_TOTALS}\s+({_NUM})(?!\.?\d)",
     re.I)
+
+# "headcount grew from 84 to 96, an increase of 12" — the two endpoints and
+# the delta all sit inside the match, so the claim is closed and exactly
+# checkable. A stated direction that contradicts the endpoints is a real
+# refutation: "from 84 to 96, a decrease of 12" is false as written.
+#
+# The trailing lookahead is load-bearing. "an increase of 14 percent" is a
+# rate, not a difference, and checking it as a difference would refute a
+# correct sentence.
+_UP = r"(?:increase|rise|gain|growth)"
+_DOWN = r"(?:decrease|drop|loss|decline|reduction)"
+_RE_DELTA = re.compile(
+    rf"(?<!\d)(?:from\s+)?({_NUM})\s+to\s+({_NUM})\s*,?\s*"
+    rf"(?:an?\s+|for\s+an?\s+)?({_UP}|{_DOWN})\s+of\s+({_NUM})"
+    rf"(?!\.?\d)(?!\s*(?:%|percent|per\s*cent|pct|percentage))", re.I)
+
+# "310 of 1,240, or 25 percent" — a share written as a percentage. Reports
+# round these constantly, which is why the checker below distinguishes an
+# exact share from a correctly rounded one instead of refuting both.
+_RE_SHARE = re.compile(
+    rf"(?<!\d)({_NUM})\s+(?:out\s+)?of\s+({_NUM})\s*,?\s*"
+    rf"(?:or|=|is|which\s+is|which\s+comes?\s+to)\s+({_NUM})\s*(?:%|percent|per\s*cent)", re.I)
 
 # A word operator immediately after a match, with a number beyond it, is the
 # same chain signature `_CHAIN_OPS` catches for symbols.
@@ -278,6 +318,40 @@ def _check_arith(a: str, op: str, b: str, c: str) -> Optional[bool]:
 
 def _status(ok: Optional[bool]) -> str:
     return "REFUSED" if ok is None else ("VERIFIED" if ok else "REFUTED")
+
+
+def _exact_or_rounded(exact: Fraction, stated: str) -> Optional[bool]:
+    """Compare an exact value against a figure a human wrote down.
+
+    Percentages in real documents are rounded — "310 of 1,240, or 25 percent"
+    is exact, but "1 of 3, or 33 percent" is not, and refuting the second
+    would be the gate inventing an error. Rounding is a reporting convention,
+    not a falsehood, and this engine does not certify conventions.
+
+    So three outcomes rather than two:
+
+        True   the figure is exactly right
+        None   it is not exact, but it IS the correct rounding of the exact
+               value at the precision written, so no exact proof exists
+               either way and the claim is REFUSED
+        False  it is not even a correct rounding — a real refutation
+
+    Precision is taken from how the figure was written: "33" is judged to the
+    unit, "33.3" to a tenth. Both round-half-up and round-half-even are
+    accepted, because the document does not say which was used.
+    """
+    value = _frac(stated)
+    if exact == value:
+        return True
+    digits = len(stated.split(".")[1]) if "." in stated else 0
+    scale = Fraction(10) ** digits
+    # Admissible roundings are the two neighbours at this precision, and only
+    # when the true value is within half a step of what was written.
+    floor_step = (exact * scale).__floor__()
+    neighbours = {Fraction(floor_step) / scale, Fraction(floor_step + 1) / scale}
+    if value in neighbours and abs(exact - value) * scale * 2 <= 1:
+        return None
+    return False
 
 
 # ----------------------------------------------------------- claim checkers
@@ -518,12 +592,37 @@ def _claims_arith(text, add):
             ok = None
         add(m, "arithmetic", _status(ok), {})
 
+    # "3 percent of 1,240 is 37.2" is exact; "…is 37" is the same figure
+    # rounded. Before `_exact_or_rounded` the second was REFUTED, which made
+    # the gate hostile to ordinary reporting prose for no gain in rigour.
     for m in _find(_RE_PERCENT, text, r"%|percent", 300):
         try:
-            ok = (_frac(m.group(1)) / 100) * _frac(m.group(2)) == _frac(m.group(3))
+            exact = (_frac(m.group(1)) / 100) * _frac(m.group(2))
+            ok = _exact_or_rounded(exact, m.group(3))
         except OverflowError:
             ok = None
         add(m, "percentage", _status(ok), {})
+
+    # A share stated as a percentage — the same arithmetic read the other way
+    # round, and the form a report actually uses.
+    for m in _find(_RE_SHARE, text, r"%|percent|per\s*cent", 300):
+        try:
+            whole = _frac(m.group(2))
+            ok = None if whole == 0 else _exact_or_rounded(
+                _frac(m.group(1)) / whole * 100, m.group(3))
+        except OverflowError:
+            ok = None
+        add(m, "percentage", _status(ok), {})
+
+    for m in _find(_RE_DELTA, text, r"increase|rise|gain|growth|decrease|drop|loss|decline|reduction",
+                   _ARITH_RADIUS):
+        try:
+            start, end_, stated = _frac(m.group(1)), _frac(m.group(2)), _frac(m.group(4))
+            rising = re.match(_UP, m.group(3), re.I) is not None
+            ok = (end_ - start == stated) if rising else (start - end_ == stated)
+        except OverflowError:
+            ok = None
+        add(m, "difference", _status(ok), {})
 
 
 def _claims_runs(text, add):
@@ -743,6 +842,49 @@ def _selftest() -> int:
     gate("reversed arithmetic (91 = 7 x 13) verified", counts("91 = 7 x 13")["verified"] == 1)
     gate("power claim verified (2^10 = 1024)", counts("2^10 = 1024")["verified"] == 1)
     gate("percentage verified", counts("50% of 80 is 40")["verified"] == 1)
+
+    # Report prose. Each form below appeared in ordinary business writing and
+    # read as nothing at all before it was added; the traps beside them are
+    # the sentences an over-eager pattern would refute while they are true.
+    gate("unit price totalled with an explicit totalling phrase",
+         counts("1,240 units at 25 dollars each for a total of 31,000")["verified"] == 1)
+    gate("wrong total refuted",
+         counts("1,240 units at 25 dollars each for a total of 32,000")["refuted"] == 1)
+    gate("'totalling' read as a total",
+         counts("3,150 hours at 240 dollars each, totalling 756,000")["verified"] == 1)
+    gate("a duration after 'for' is NOT read as a total",
+         counts("1,240 units at 25 dollars each for 3 months")["checkable"] == 0)
+
+    gate("named figure between the operand and the total is skipped",
+         counts("18,400 plus 4,600 of contractor cost comes to 23,000")["verified"] == 1)
+    gate("the chain guard survives the bounded skip",
+         counts("2 plus 2 is 4 plus 1 is 5")["refused"] >= 1)
+
+    gate("stated difference verified",
+         counts("headcount grew from 84 to 96, an increase of 12")["verified"] == 1)
+    gate("wrong difference refuted",
+         counts("headcount grew from 84 to 96, an increase of 14")["refuted"] == 1)
+    gate("decrease verified",
+         counts("revenue fell from 96 to 84, a decrease of 12")["verified"] == 1)
+    gate("direction contradicting the endpoints refuted",
+         counts("headcount grew from 84 to 96, a decrease of 12")["refuted"] == 1)
+    gate("a percentage change is NOT checked as a difference",
+         counts("headcount grew from 84 to 96, an increase of 14 percent")["checkable"] == 0)
+
+    gate("exact share verified", counts("310 of 1,240, or 25 percent")["verified"] == 1)
+    gate("wrong share refuted", counts("310 of 1,240, or 30 percent")["refuted"] == 1)
+    # Rounding is a reporting convention. Refuting it would be the gate
+    # inventing an error, which costs exactly as much as missing one.
+    gate("correctly rounded share refused, not refuted",
+         counts("1 of 3, or 33 percent")["refused"] == 1)
+    gate("rounded share to one decimal refused",
+         counts("2 of 3, or 66.7 percent")["refused"] == 1)
+    gate("a share that is not even a correct rounding is refuted",
+         counts("1 of 3, or 40 percent")["refuted"] == 1)
+    gate("rounded percentage-of refused, not refuted",
+         counts("3 percent of 1,240 is 37")["refused"] == 1)
+    gate("exact percentage-of still verified",
+         counts("3 percent of 1,240 is 37.2")["verified"] == 1)
     gate("product verified (product of 3 and 4 is 12)",
          counts("the product of 3 and 4 is 12")["verified"] == 1)
     gate("product refuted (product of 3 and 4 is 11)",

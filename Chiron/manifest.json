@@ -1,15 +1,15 @@
 {
   "system": "CHIRON",
   "owner": "Jacob Iannotti",
-  "generated_utc": "2026-08-14T00:29:35Z",
+  "generated_utc": "2026-08-15T19:44:28Z",
   "mode": "static",
   "summary": {
-    "runnable_scripts": 92,
-    "with_selftest": 70,
-    "stdlib_only": 82,
-    "with_spdx_header": 92,
+    "runnable_scripts": 96,
+    "with_selftest": 72,
+    "stdlib_only": 86,
+    "with_spdx_header": 96,
     "emitting_artifacts": 5,
-    "internal_edges": 126
+    "internal_edges": 134
   },
   "graph": {
     "note": "internal import edges [importer, imported], AST-derived",
@@ -431,6 +431,10 @@
         "mcp_server"
       ],
       [
+        "service 2",
+        "mcp_server"
+      ],
+      [
         "significance",
         "chiron"
       ],
@@ -479,6 +483,22 @@
         "run_ledger"
       ],
       [
+        "test_execution_policy 2",
+        "assistant_server"
+      ],
+      [
+        "test_execution_policy 2",
+        "console_server"
+      ],
+      [
+        "test_execution_policy 2",
+        "president_grow"
+      ],
+      [
+        "test_execution_policy 2",
+        "run_ledger"
+      ],
+      [
         "test_foundry_boundary",
         "foundry_boundary"
       ],
@@ -499,11 +519,23 @@
         "console_server"
       ],
       [
+        "test_local_cors 2",
+        "assistant_server"
+      ],
+      [
+        "test_local_cors 2",
+        "console_server"
+      ],
+      [
         "test_mcp_server",
         "mcp_server"
       ],
       [
         "test_source_provenance",
+        "source_provenance"
+      ],
+      [
+        "test_source_provenance 2",
         "source_provenance"
       ],
       [
@@ -616,7 +648,9 @@
       "last_run": null,
       "imported_by": [
         "test_execution_policy",
-        "test_local_cors"
+        "test_execution_policy 2",
+        "test_local_cors",
+        "test_local_cors 2"
       ]
     },
     {
@@ -989,8 +1023,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "9c6f72b382c8d838",
-        "generated_utc": "2026-08-14T00:28:33Z",
+        "self_hash": "16459b182d5a4988",
+        "generated_utc": "2026-08-15T19:43:51Z",
         "confidence": "high",
         "what_was_discovered": "All 12 Chiron core gates pass: exact collapse recovers and verifies generators on held-out terms, refuses the incompressible, and the president escalates unsafe actions by construction.",
         "what_would_falsify": "Any core gate failing \u2014 a false-verify, a missed escalation, or exec-of-string in the core path \u2014 would break the claim."
@@ -1235,7 +1269,9 @@
       "imported_by": [
         "stress_test",
         "test_execution_policy",
-        "test_local_cors"
+        "test_execution_policy 2",
+        "test_local_cors",
+        "test_local_cors 2"
       ]
     },
     {
@@ -1290,8 +1326,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "6f55639d7f72b07d",
-        "generated_utc": "2026-08-14T00:28:21Z",
+        "self_hash": "e01009db21e6c1ad",
+        "generated_utc": "2026-08-15T19:43:51Z",
         "confidence": "high",
         "what_was_discovered": "Competing hypotheses decohere under a Lindblad channel; von Neumann entropy rises as the superposition collapses toward a commitment, validated across the self-test.",
         "what_would_falsify": "A run where the channel is NOT CPTP-valid at some step, or where identical input yields a different decoherence rate / entropy trail, would break the claim."
@@ -1932,6 +1968,7 @@
       "last_run": null,
       "imported_by": [
         "service",
+        "service 2",
         "test_mcp_server"
       ]
     },
@@ -2085,7 +2122,8 @@
         "assistant_server",
         "grow_clean",
         "llm_providers",
-        "test_execution_policy"
+        "test_execution_policy",
+        "test_execution_policy 2"
       ]
     },
     {
@@ -2214,7 +2252,8 @@
         "heartbeat",
         "planner",
         "stress_test",
-        "test_execution_policy"
+        "test_execution_policy",
+        "test_execution_policy 2"
       ]
     },
     {
@@ -2237,8 +2276,8 @@
       },
       "artifact": {
         "verified": true,
-        "self_hash": "0450c2db922751ea",
-        "generated_utc": "2026-08-14T00:28:23Z",
+        "self_hash": "5f6827c0da019089",
+        "generated_utc": "2026-08-15T19:43:47Z",
         "confidence": "high",
         "what_was_discovered": "All 56 SEMIC gates pass: the deterministic MDL collapse coincides with the zero-temperature limit of the Gibbs sampler, meaning families verify and cross-pools are refused with no false-verify.",
         "what_would_falsify": "A single gate failing (a cross-pool family the collapse marks verified, or argmin diverging from the T->0 Gibbs limit) would break the claim."
@@ -2300,6 +2339,24 @@
       ]
     },
     {
+      "script": "service 2",
+      "path": "service 2.py",
+      "purpose": "chiron.service \u2014 the whole vault over HTTP, on the one dispatch.",
+      "lines": 433,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "mcp_server"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
       "script": "service",
       "path": "service.py",
       "purpose": "chiron.service \u2014 the whole vault over HTTP, on the one dispatch.",
@@ -2358,7 +2415,8 @@
       "roles": [],
       "last_run": null,
       "imported_by": [
-        "test_source_provenance"
+        "test_source_provenance",
+        "test_source_provenance 2"
       ]
     },
     {
@@ -2446,6 +2504,29 @@
       "imported_by": []
     },
     {
+      "script": "test_execution_policy 2",
+      "path": "tests/test_execution_policy 2.py",
+      "purpose": "Regression gates for the model/console execution boundary.",
+      "lines": 82,
+      "has_spdx_header": true,
+      "has_selftest": true,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "assistant_server",
+        "console_server",
+        "president_grow",
+        "run_ledger"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
       "script": "test_execution_policy",
       "path": "tests/test_execution_policy.py",
       "purpose": "Regression gates for the model/console execution boundary.",
@@ -2510,6 +2591,27 @@
       "imported_by": []
     },
     {
+      "script": "test_local_cors 2",
+      "path": "tests/test_local_cors 2.py",
+      "purpose": "Real-HTTP regression gates for the assistant and console CORS boundary.",
+      "lines": 127,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "assistant_server",
+        "console_server"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
       "script": "test_local_cors",
       "path": "tests/test_local_cors.py",
       "purpose": "Real-HTTP regression gates for the assistant and console CORS boundary.",
@@ -2546,6 +2648,26 @@
       "emits_artifact": false,
       "roles": [
         "server",
+        "test"
+      ],
+      "last_run": null,
+      "imported_by": []
+    },
+    {
+      "script": "test_source_provenance 2",
+      "path": "tests/test_source_provenance 2.py",
+      "purpose": "Safety gates for bounded local-file provenance.",
+      "lines": 125,
+      "has_spdx_header": true,
+      "has_selftest": false,
+      "dependencies": [],
+      "stdlib_only": true,
+      "imports": [
+        "source_provenance"
+      ],
+      "artifact": null,
+      "emits_artifact": false,
+      "roles": [
         "test"
       ],
       "last_run": null,
@@ -2645,8 +2767,8 @@
       },
       "artifact": {
         "verified": null,
-        "self_hash": "e064ba5205d8c42c",
-        "generated_utc": "2026-08-14T00:28:38Z",
+        "self_hash": "0c75e9b9ed6365f7",
+        "generated_utc": "2026-08-15T19:43:41Z",
         "confidence": null,
         "what_was_discovered": null,
         "what_would_falsify": null

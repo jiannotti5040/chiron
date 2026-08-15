@@ -84,7 +84,7 @@ FEATURED = {
         ("govern", ["selftest"], "SoCPM / LexGuard gate", None),
         ("govern", ["demo"], "governance demo", None),
         ("certify_finding", ["selftest"], "Daubert / attestation certificate", None),
-        ("llm_certify", [], "certify an LLM output — audit + verify its claims", "obviously 2 4 8 16 32 64 continues, and 2+2=5"),
+        ("llm_certify", [], "certify an LLM output — audit + verify its claims", "obviously 2 4 8 16 32 64 continues, and 310 of 1,240 renewed, or 30 percent"),
         ("llm_certify", ["selftest"], "LLM-wrapper self-test", None),
         ("legal_corpus", ["selftest"], "67-provision corpus", None),
         ("judgment", ["selftest"], "Chief Justice / earned finality", None),

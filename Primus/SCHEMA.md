@@ -44,8 +44,13 @@ exactly three digits and must not be followed by another digit, so `1,24` is
 not read as grouped, and a separator is stripped only after the pattern has
 decided the token is one number — `sum of 3, 4 and 5` remains three values.
 
-`percentage` (`P percent of B is V`, and the appositive `P percent of B, or
-V`), `primality` (deterministic Miller–Rabin below
+`percentage` (`P percent of B is V`, the appositive `P percent of B, or V`,
+and the share form `A of B, or P percent`), `difference` (`from A to B, an
+increase of D` / `a decrease of D`; the endpoints and the delta all lie
+inside the match, so the claim is closed. A stated direction that
+contradicts the endpoints is a genuine refutation. A *percentage* change is
+a rate, not a difference, and is not extracted at all),
+`primality` (deterministic Miller–Rabin below
 3.3×10²⁴; refused above), `binomial` (`C(n,k)`, `n choose k`, n ≤ 100000),
 `modular` (`a mod m = c`, `a ≡ c (mod m)`),
 `date_arithmetic` (`N days after/before DATE is DATE`, `days between A and
@@ -63,6 +68,16 @@ refutation; parse failures and bound violations are refusals. This is the
 claim shape `primus.conjecture` emits, so guess-and-prove output
 round-trips through the gate), `sequence` (bare integer runs, structural
 recovery or refusal).
+
+**Rounded percentages refuse rather than refute.** A percentage that is not
+exact, but *is* the correct rounding of the exact value at the precision
+written, is REFUSED: `1 of 3, or 33 percent` has no exact proof either way,
+because the document does not state its rounding convention. Precision comes
+from the figure as written (`33` to the unit, `66.7` to a tenth), and both
+round-half-up and round-half-even are accepted. A figure that is not even a
+correct rounding — `1 of 3, or 40 percent` — is REFUTED normally. Rounding is
+a reporting convention, not a falsehood, and a gate that refutes conventions
+invents errors; that costs exactly as much as missing them.
 
 **Deliberately not judged:** approximations (`sqrt(2) = 1.414` is neither
 verified nor refuted — it is not extracted; the gate refuses to grade
