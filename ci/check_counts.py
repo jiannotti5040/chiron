@@ -101,6 +101,29 @@ def main(argv=None) -> int:
         if fix:
             open(path, "w", encoding="utf-8").write("".join(out))
 
+    # The two manifests must agree. The fold copies Chiron/manifest.json next
+    # to the artifact, so when `chiron build` folded before regenerating it the
+    # artifact shipped the previous build's manifest -- 96 modules beside a
+    # source tree of 92 -- and rebuilding could not converge, because each run
+    # copied what the run before it wrote. `bin/chiron` now builds the manifest
+    # first; this fails if that order is ever reversed again. It is not a
+    # documentation check, so `--fix` cannot paper over it.
+    source_manifest = os.path.join(ROOT, "Chiron", "manifest.json")
+    folded_manifest = os.path.join(MONO_DIR, "manifest.json")
+    if os.path.isfile(source_manifest) and os.path.isfile(folded_manifest):
+        try:
+            a = len(json.load(open(source_manifest, encoding="utf-8"))["scripts"])
+            b = len(json.load(open(folded_manifest, encoding="utf-8"))["scripts"])
+        except Exception:
+            a = b = None
+        if a is not None and a != b:
+            print("counts: FAIL — the artifact ships a stale manifest "
+                  "(source describes %d modules, the fold beside it %d)." % (a, b))
+            print("  Run `python3 bin/chiron build`. If one build does not "
+                  "converge, the manifest is being written after the fold "
+                  "copies it.")
+            return 1
+
     embedded = observed_embedded()
     if embedded:
         for rel in EMBED_DOCS:

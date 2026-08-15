@@ -136,14 +136,24 @@ def cmd_run(args):
 
 
 def cmd_build(args):
+    """Manifest first, then fold.
+
+    The fold copies Chiron/manifest.json next to the artifact so that folder
+    is self-contained. Folding first therefore shipped the PREVIOUS build's
+    manifest: after four files were removed from the tree the artifact still
+    described 96 modules while the source described 92, and the discrepancy
+    survived a full rebuild because each run copied the file the run before
+    it had written. Building the manifest first makes one `chiron build`
+    converge, which is what "the artifact is fresh" has to mean.
+    """
     full = "--full" in args
-    rc = _run([PY, os.path.join(MONO_DIR, "build_monolith.py")], cwd=MONO_DIR)
-    if rc:
-        return rc
     manifest = [PY, _script("build_manifest.py")]
     if full:
         manifest.append("--run")
     rc = _run(manifest)
+    if rc:
+        return rc
+    rc = _run([PY, os.path.join(MONO_DIR, "build_monolith.py")], cwd=MONO_DIR)
     if rc:
         return rc
     print("[chiron] build complete: artifact + manifest are fresh")
@@ -196,6 +206,8 @@ def cmd_test(args):
          [PY, _script("compare_explore.py"), "selftest"], None),
         ("evidence graph (lineage, contradictions, and what stands on nothing)",
          [PY, _script("evidence_graph.py"), "selftest"], None),
+        ("no iCloud conflicted copies committed",
+         [PY, os.path.join(VAULT, "ci", "check_duplicates.py")], None),
         ("publishable (no credentials, no machine-specific paths)",
          [PY, os.path.join(VAULT, "ci", "check_publishable.py")], None),
         ("UMA provenance manifest (every difference accounted for)",

@@ -2,6 +2,31 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
+## 0.10.0
+
+- **The extractor reads report prose.** Until now it could read text that
+  already looked like arithmetic homework; a paragraph of ordinary business
+  writing states the same facts in forms it saw as nothing, and silence is
+  not refusal — it is the gate never being asked. Three closed, exactly
+  checkable forms were added: totalling phrases (`1,240 units at 25 dollars
+  each for a total of 31,000`, `…, totalling 756,000`, `18,400 plus 4,600 of
+  contractor cost comes to 23,000`), stated differences (`from 84 to 96, an
+  increase of 12`, a new `difference` claim kind), and a share written as a
+  percentage (`310 of 1,240, or 25 percent`).
+- **Rounded percentages are REFUSED, not REFUTED.** `1 of 3, or 33 percent`
+  is not exact and is not a lie — the document never states its rounding
+  convention, so no exact proof exists either way. Precision is read from the
+  figure as written; both round-half-up and round-half-even are accepted; a
+  figure that is not even a correct rounding is still REFUTED. This also
+  corrects the existing `P percent of B is V` check, which refuted
+  `3 percent of 1,240 is 37`.
+- **Guards against inventing errors.** Bare `for` is not admitted as a
+  totalling word, because `…at 25 dollars each for 3 months` would read the
+  duration as the product; a percentage change is not extracted as a
+  difference, because it is a rate. Each guard is a gate. certify's own
+  suite goes 45 → 63 checks, and the property sweep still presents 4,116
+  claims with zero false verifications and zero false refutations.
+
 ## 0.9.0
 
 - **Exact laws across columns.** `primus.relate` recovers `y = f(x1..xk)` over
