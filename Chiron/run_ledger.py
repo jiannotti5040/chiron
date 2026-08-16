@@ -83,7 +83,7 @@ def redact_argv(argv):
 
 
 def record(engine, argv=None, ok=None, verdict="", seconds=None,
-           certificate=None, source="console", path=None, redact=False):
+           certificate=None, source="console", path=None, redact=True):
     """Append one record. Returns the record, or None if recording failed.
     Never raises — the witness must not break the act it witnesses."""
     path = path or LEDGER
@@ -155,9 +155,12 @@ def _selftest():
 
     with tempfile.TemporaryDirectory() as td:
         lp = os.path.join(td, "ledger.jsonl")
+        # redact=False is explicit here because the property under test is
+        # replay fidelity, not redaction: this argv is written by the test.
         r1 = record("chiron", ["collapse", "1 1 2 3 5 8"], ok=True,
                     verdict="VERIFIED linear_recurrence", seconds=0.42,
-                    certificate="artifacts/chiron/latest.json", path=lp)
+                    certificate="artifacts/chiron/latest.json", path=lp,
+                    redact=False)
         ok("record returns the appended record", isinstance(r1, dict) and r1["engine"] == "chiron")
         ok("incarnation is named and sane", r1["incarnation"] in ("spine", "fold"))
         r2 = record("semic", ["selftest"], ok=True, verdict="56/56", path=lp)
@@ -174,6 +177,12 @@ def _selftest():
         ok("torn line is skipped, not fatal", len(read(10, path=lp)) == 2)
         r3 = record("chiron", None, ok=False, verdict="exit 1", path=lp)
         ok("failures are first-class records", r3 is not None and read(1, path=lp)[0]["ok"] is False)
+        # The default must be the safe one. A caller that forwards user text
+        # and forgets the flag is the realistic failure, so redaction is what
+        # happens when nobody chose.
+        r5 = record("cli", ["never-copy-this-either"], ok=True, path=lp)
+        ok("redaction is the DEFAULT, not an opt-in",
+           "never-copy-this-either" not in json.dumps(r5, sort_keys=True))
         secret = "never-copy-this-user-text"
         r4 = record("cli", [secret], ok=True, path=lp, redact=True)
         rendered = json.dumps(r4, sort_keys=True)

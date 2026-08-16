@@ -1,11 +1,25 @@
 # Release — build and publish primus-intelligence to PyPI on version tags.
 #
-# Uses PyPI Trusted Publishing (OIDC) — no API tokens in the repo. Before the
-# first release, register the publisher once at
-#   https://pypi.org/manage/account/publishing/
-#   project: primus-intelligence, owner: jiannotti5040,
-#   repo: chiron, workflow: release.yml, environment: pypi
-# then:  git tag v0.3.0 && git push origin v0.3.0
+# Uses PyPI Trusted Publishing (OIDC) — no API tokens in the repo.
+#
+# The publisher is NOT yet registered: the v0.7.0 and v0.7.1 tag runs both
+# reached pypa/gh-action-pypi-publish and failed with `invalid-publisher`
+# ("valid token, but no corresponding publisher"), and 0.6.4 and 0.9.0 were
+# uploaded by hand with an API token instead. Register it once, at the PROJECT
+# settings page — not /manage/account/publishing/, which is the pending-publisher
+# form and only accepts project names that do not exist yet:
+#
+#   https://pypi.org/manage/project/primus-intelligence/settings/publishing/
+#     Owner: jiannotti5040   Repository: chiron
+#     Workflow: release.yml  Environment: pypi
+#
+# Those four values must match exactly; they are the claims PyPI compares
+# against the OIDC token. Then:  git tag v0.10.0 && git push origin v0.10.0
+#
+# Do not twine-upload a version first. PyPI burns version numbers permanently
+# (this repo already learned that at 0.6.4), so a manual upload of the same
+# version makes the token-free path fail with a 400 and unrecoverable.
+#
 # The tag must match Primus/pyproject.toml's version (checked below).
 
 name: release

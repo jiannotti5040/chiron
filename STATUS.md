@@ -83,7 +83,7 @@ construction, not only the verification layer.
 
 | Item | State |
 |---|---|
-| PyPI | 0.9.0 is live and was verified by installing from PyPI. **0.10.0 is built, `twine check` clean, and verified from a clean install outside the repo — not uploaded.** Publishing needs a fresh API token; see below |
+| PyPI | 0.9.0 is live. **0.10.0 is built and verified from a clean install outside the repo — not uploaded.** It needs no token: `release.yml` publishes by Trusted Publishing. One one-time registration is missing; see below |
 | `chiron-app` (SwiftPM macOS workstation) | still exists beside `ChironMobile`; retiring it is a deletion, not done without approval |
 | Conversation UI, result history, onboarding | absent |
 | Web retrieval boundary (§17) | absent |
@@ -95,17 +95,39 @@ construction, not only the verification layer.
 | Foundry function publish | needs a token from a browser session |
 | UI tests, prompt-injection tests, performance tests | absent |
 
-## Publishing 0.10.0
+## Publishing 0.10.0 — no token required
 
-The distribution is built and validated but deliberately not uploaded — a
-released version cannot be replaced, and the token used for 0.9.0 was pasted
-in plaintext and should be treated as compromised. With a fresh token:
+`.github/workflows/release.yml` publishes by PyPI Trusted Publishing (OIDC) on
+a `v*` tag. It has never actually run to completion: the v0.7.0 and v0.7.1 tag
+runs both reached `pypa/gh-action-pypi-publish` and failed with
+`invalid-publisher` — *valid token, but no corresponding publisher*. 0.6.4 and
+0.9.0 were uploaded by hand with an API token instead, which is why no
+`v0.8.0` or `v0.9.0` tag exists and why 0.8.0 was never published at all
+despite a commit announcing it.
+
+Exactly one thing is missing, and only the account owner can do it — register
+the Trusted Publisher at the **project** settings page:
+
+    https://pypi.org/manage/project/primus-intelligence/settings/publishing/
+
+    Owner: jiannotti5040     Repository: chiron
+    Workflow: release.yml    Environment: pypi
+
+Not `/manage/account/publishing/` — that is the *pending* publisher form and
+accepts only project names that do not exist yet. These four values are the
+claims PyPI compares against the OIDC token, so they must match exactly.
+
+After that, the release is one tag. Every pre-publish gate in the workflow
+already passes on HEAD, and the `pypi` GitHub environment exists with no
+protection rules, so nothing will pause it.
 
 ```bash
-python3 -m build --outdir dist Primus
-python3 -m twine check dist/*
-python3 -m twine upload dist/primus_intelligence-0.10.0*
+git tag v0.10.0 && git push origin v0.10.0
 ```
+
+Do not `twine upload` 0.10.0 first. PyPI burns version numbers permanently —
+this repository already learned that at 0.6.4 — and a manual upload makes the
+token-free path fail with a 400 that cannot be retried on that version.
 
 ## Requires account credentials
 

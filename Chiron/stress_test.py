@@ -166,7 +166,7 @@ def p3_ledger_concurrency():
         def hammer(wid):
             try:
                 for i in range(N):
-                    run_ledger.record(f"w{wid}", ["beat", str(i)], ok=True,
+                    run_ledger.record(f"w{wid}", ["beat", str(i)], ok=True, redact=False,
                                       verdict="x" * 50, path=lp)
             except Exception as e:  # a writer must never throw
                 errors.append(str(e))
@@ -194,7 +194,7 @@ def p3_ledger_concurrency():
         run_ledger.MAX_LINES, run_ledger.KEEP_LINES = 200, 100
         try:
             for i in range(400):
-                run_ledger.record("flood", [str(i)], ok=True, path=lp)
+                run_ledger.record("flood", [str(i)], ok=True, path=lp, redact=False)
             n = len(open(lp, "rb").read().splitlines())
             newest = run_ledger.read(1, path=lp)[0]
             checks.append((f"ledger is bounded under flood ({n} <= 200)", n <= 200))

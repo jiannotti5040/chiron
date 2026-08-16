@@ -233,6 +233,8 @@ def beat_once(movers=None, quiet=False):
         movements.append({"name": name, "ok": norm, "verdict": verdict,
                           "seconds": None if secs is None else round(secs, 2)})
         run_ledger.record(f"heartbeat.{name}", ["beat", str(beat)], ok=norm,
+                          # constant, author-written argv: no user text can reach it
+                          redact=False,
                           verdict=verdict[:200], seconds=secs, source="heartbeat",
                           certificate="artifacts/vault/latest.json")
         if not quiet:

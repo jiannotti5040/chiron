@@ -80,7 +80,7 @@ def _seq(s):
 def _record(step, ok, verdict):
     if run_ledger:
         try:
-            run_ledger.record("planner." + step, [step], ok=ok,
+            run_ledger.record("planner." + step, [step], ok=ok, redact=False,
                               verdict=str(verdict)[:180], source="planner")
         except Exception:
             pass
