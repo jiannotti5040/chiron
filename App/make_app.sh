@@ -41,8 +41,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleName</key><string>Chiron</string>
-  <key>CFBundleDisplayName</key><string>Chiron</string>
+  <key>CFBundleName</key><string>Chiron Workstation</string>
+  <key>CFBundleDisplayName</key><string>Chiron Workstation</string>
   <key>CFBundleExecutable</key><string>Chiron</string>
   <key>CFBundleIdentifier</key><string>com.jacobiannotti.chiron</string>
   <key>CFBundlePackageType</key><string>APPL</string>

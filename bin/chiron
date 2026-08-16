@@ -206,6 +206,8 @@ def cmd_test(args):
          [PY, _script("compare_explore.py"), "selftest"], None),
         ("evidence graph (lineage, contradictions, and what stands on nothing)",
          [PY, _script("evidence_graph.py"), "selftest"], None),
+        ("folded artifact matches the source it came from",
+         [PY, os.path.join(VAULT, "ci", "check_fold_current.py")], None),
         ("credential detection works in both directions",
          [PY, os.path.join(VAULT, "ci", "check_publishable.py"), "--selftest"], None),
         ("no iCloud conflicted copies committed",

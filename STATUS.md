@@ -84,7 +84,7 @@ construction, not only the verification layer.
 | Item | State |
 |---|---|
 | PyPI | 0.9.0 is live. **0.10.0 is built and verified from a clean install outside the repo — not uploaded.** It needs no token: `release.yml` publishes by Trusted Publishing. One one-time registration is missing; see below |
-| `chiron-app` (SwiftPM macOS workstation) | still exists beside `ChironMobile`; retiring it is a deletion, not done without approval |
+| ~~Retire `chiron-app`~~ | **Not the right call — see "Two apps" below.** It is kept deliberately |
 | Conversation UI, result history, onboarding | absent |
 | Web retrieval boundary (§17) | absent |
 | Chunking, persistent index, retrieval | absent |
@@ -94,6 +94,35 @@ construction, not only the verification layer.
 | Codex MCP client | not installed in the development environment; config written, unverified |
 | Foundry function publish | needs a token from a browser session |
 | UI tests, prompt-injection tests, performance tests | absent |
+
+## Two apps, and why both stay
+
+The repository builds two different Apple programs, and until now both
+displayed as **Chiron**, which is why the documentation kept conflating them.
+
+| | `Chiron Workstation` | `Chiron` |
+|---|---|---|
+| Built from | `App/` (SwiftPM), `swift run chiron-app` or `App/make_app.sh` | `iOS/ChironMobile.xcodeproj` |
+| Runs on | macOS only | iOS **and** macOS, one target |
+| Reaches the engine by | spawning `python3` directly (`Foundation.Process`) | HTTP to `127.0.0.1` over the versioned `/v1` contract |
+| Needs a service running first | no | yes |
+| Launched by `run-chiron.command` | no | yes — this is the one that becomes `build/Chiron.app` |
+
+Retiring the workstation was listed here as pending approval. It is the wrong
+call and is now closed:
+
+- It does something the other cannot — run the vault with no service already
+  listening, which is the only way to use it on a machine where nothing has
+  been started.
+- Nothing outside `App/Sources/ChironApp/` imports its types, so it costs the
+  rest of the package nothing.
+- Two documents cite its source as a live boundary:
+  `docs/SECURITY_MODEL.md` for file ingestion and `docs/FILE_SUPPORT.md` for
+  the accepted content types and size bound. Deleting it would leave both
+  pointing at nothing and remove a documented policy.
+
+What was actually wrong was the shared name. The workstation is now
+`Chiron Workstation`; only the multiplatform app is `Chiron`.
 
 ## Publishing 0.10.0 — no token required
 
