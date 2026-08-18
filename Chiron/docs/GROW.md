@@ -1,6 +1,6 @@
 # Growing Chiron — `chiron_grow.py`
 
-**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../LICENSE)).**
+**Author: Jacob Iannotti. Licensed under Apache-2.0 — free to use, modify, distribute, and use commercially, with attribution and the license notice preserved (see the repository-root [LICENSE](../../LICENSE)).**
 
 `chiron_grow.py` is the **shared grower**: one local, network-capable engine that
 feeds Chiron continuously. It is deliberately separate from the monolith —

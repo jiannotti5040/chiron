@@ -33,7 +33,7 @@ concerns are organized as clearly separated sections:
 - **Portability, one dependency.** One file runs anywhere Python + numpy do.
   numpy is required by the engine today (the recovery math and the physics/UMA
   layers use it); making the bare `collapse` path numpy-free is a tracked item in
-  [HORIZON.md](HORIZON.md). scipy is an optional accelerator with a pure-Python fallback.
+  [HORIZON.md](../../notes/HORIZON.md). scipy is an optional accelerator with a pure-Python fallback.
 - **Auditability.** A reviewer reads one artifact end to end. The self-test scans
   the core to prove properties (e.g. no network in the core path).
 - **Owner-signed integrity.** Hashes and the Merkle root bind the whole record.

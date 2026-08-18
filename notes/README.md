@@ -29,7 +29,7 @@ misses) is part of what it is selling.
 | [STATUS_REPORT_2026-07-04.md](STATUS_REPORT_2026-07-04.md) | 07-04 | End-of-day verification totals, all reproducible by command |
 | [EXTERNAL_VALIDATION_ADDENDUM_2026-07-07.md](EXTERNAL_VALIDATION_ADDENDUM_2026-07-07.md) | 07-07 | A live false verification, published while still open — since RESOLVED (v0.5.1). The "falsified again, repaired again" entry |
 | [WHAT_PRIMUS_NEEDS.md](WHAT_PRIMUS_NEEDS.md) | 07-07 | The grounded roadmap: outward reach over inward growth |
-| [RELEASE_AND_REACH.md](RELEASE_AND_REACH.md) · [SHOW_HN_DRAFT.md](SHOW_HN_DRAFT.md) | 07-08 | Release/announcement working drafts |
+| [RELEASE_AND_REACH.md](RELEASE_AND_REACH.md) · [SHOW_HN.md](SHOW_HN.md) | 07-08 | Release/announcement working drafts |
 
 The project's validation history proper lives in
 [`Primus/EXTERNAL_VALIDATION.md`](../Primus/EXTERNAL_VALIDATION.md); the

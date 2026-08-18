@@ -7,6 +7,9 @@ data the solver never saw, and refuses when no exact rule exists. All
 arithmetic on the deciding path is rational; there is no tolerance parameter
 and no residual threshold.
 
+[![Chiron CI](https://github.com/jiannotti5040/chiron/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jiannotti5040/chiron/actions/workflows/ci.yml)
+[![Swift](https://github.com/jiannotti5040/chiron/actions/workflows/swift.yml/badge.svg?branch=main)](https://github.com/jiannotti5040/chiron/actions/workflows/swift.yml)
+[![proof](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml/badge.svg?branch=main)](https://github.com/jiannotti5040/chiron/actions/workflows/proof.yml)
 [![PyPI](https://img.shields.io/pypi/v/primus-intelligence)](https://pypi.org/project/primus-intelligence/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
