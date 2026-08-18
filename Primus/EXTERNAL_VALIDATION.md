@@ -256,3 +256,69 @@ and negative operands are all regression-guarded. Certify **45/45** (was 40).
 Note: the `mcp__primus__certify` MCP tool still shows the old behaviour — it
 runs the published 0.9.0 package in a separate process, not `src/`. It will
 pick the fix up at the next release.
+
+## 2026-08-18 — the grounded layer verified across units. RESOLVED same day.
+
+Issue #3 was opened on 2026-08-15 against 0.9.0 and left open. It was still
+live on `main` three days later, and it is the plainest false-verification
+class this project has shipped: **three claims whose digits matched a supplied
+fact while the thing being counted did not.**
+
+Reproduce against 0.9.0 or any commit up to `df8597f`:
+
+```python
+from primus.grounded import check_text
+check_text("Revenue was $4.2M.", {"Revenue": {"value": 4200000, "unit": "vehicles"}})
+check_text("Readiness was 74%.", {"Readiness": {"value": 74}})
+check_text("Species was 2.",     {"specie":    {"value": 2}})
+```
+
+All three returned `VERIFIED`, with the reason `exact match against the
+supplied fact`. A dollar figure confirmed a vehicle count; a percentage
+confirmed a bare number; a claim about *species* was answered by a fact about
+*specie*.
+
+| Defect | Root cause | Repair |
+|---|---|---|
+| **Currency dropped before comparison** | `$` was stripped off the *value* token (`"$4.2M"`) and never recorded anywhere, so a dollar claim arrived carrying no unit at all | the currency is read from the value and becomes the claim's semantic unit |
+| **Magnitude scaling erased the unit** | `_scaled()` folded `M`/`thousand` into the number and then returned the unit slot as `None` — so any claim with a magnitude suffix lost whatever unit it had | `_measure()` returns `(value, semantic_unit, conflict)`; a magnitude scales the number and is *not* a unit, and the semantic unit survives the scaling |
+| **Unit mismatch checked only when both sides had one** | the guard read `if a_unit and f_unit and a_unit != f_unit`, so every one-sided pairing fell through to a digit comparison | units must be **equal**, and "no unit" is a unit that matches only "no unit" |
+| **Subject normalisation was not injective** | a trailing-`s` fold mapped `species → specie`, merging two distinct words — the exact thing the function's own docstring said must never happen | nothing is stemmed. The fold survives only as a *hint* in the refusal text, which now names the nearest supplied subject |
+
+A bounded property sweep over the unit pairings — the same shape as the
+certify kernel sweep — found the class was **wider than the three reported
+cases: 10 of 30 pairings verified off the diagonal.** Fixing the three named
+cases without the sweep would have left seven live.
+
+The lesson is not that a gate was missing. `grounded.py` had a 20-gate
+selftest, and `bin/chiron test --full` ran it, and it was green through all
+ten leaks. The gates asked whether the *values* matched and never asked
+whether the *units* did. A green battery is evidence about the questions it
+asks, and this one had a question-shaped hole in it.
+
+Negative control, because a gate that cannot fail proves nothing: the new
+`test_grounded_units.py` was written **fail-first** against the unrepaired
+tree and reported `5/12 passed`, naming all three reported cases plus the
+seven unreported pairings. Against the repaired tree it reports `12/12`, and
+`grounded.py`'s own selftest went 20/20 with its plural-folding gate
+**inverted** — it had asserted the defect (`"plural and possessive fold to the
+same key"`) and now asserts the invariant (`"distinct subjects never fold
+together"`).
+
+Reproduced against the **shipped wheel**, installed in a clean virtualenv
+outside the repository: 0 false verifications, with refusals that say why
+(`units differ: claim in 'usd', fact in 'vehicles'`).
+
+Both gates now run in `ci.yml` on every push, not only in the release
+battery — the narrower true gap, since the grounded layer was previously
+checked only at release time.
+
+Battery after the fix, unchanged where it should be: `chiron test --full`
+**61/61** · parity **138 gates** identical through both incarnations · certify
+property sweep PASS (4,116 claims, 0 false VERIFIED) · engine server 48/48 ·
+fuzz 16/16 · engine stress 60/60 · MCP 11/11 · drift 42/42 GREEN · `oeis_live`
+n=29, **20 verified, 0 false confidence** — no recall lost.
+
+Issue #2 (the primality pseudoprime above) was **already repaired** by the
+2026-08-11 work and was verified fixed on the same pass; it had simply been
+left open.

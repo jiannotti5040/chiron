@@ -25,14 +25,17 @@ THE RULES THAT KEEP ZERO FALSE VERIFICATIONS
    the values differ exactly.
 3. Everything else is REFUSED: subject absent, subject ambiguous between two
    facts, units disagreeing, or a value the engine will not parse.
-4. Units must match when both sides state one. "74%" against a fact recorded
-   as "74 vehicles" is REFUSED, not VERIFIED — agreeing digits are not
-   agreeing facts.
+4. Units must be equal, and "no unit" is a unit that matches only "no unit".
+   "74%" against a fact recorded as "74 vehicles" is REFUSED, and so is "74%"
+   against a bare 74 — agreeing digits are not agreeing facts. A magnitude
+   ("M", "thousand") scales the number and is not a unit; a currency ("$")
+   is a unit and rides on the value, not the suffix.
 5. Subject matching is exact after normalisation (case, whitespace,
-   punctuation, and a small set of possessive/plural suffixes). There is no
-   fuzzy matching, no stemming beyond that, and no embedding similarity. A
-   near-miss refuses, because a subject the caller did not name is a subject
-   the engine cannot claim to have checked.
+   punctuation). Nothing is stemmed: no suffix rule is injective over English,
+   and the one that was here folded "species" onto "specie". There is no fuzzy
+   matching and no embedding similarity. A near-miss refuses and says what the
+   nearest supplied subject was, because a subject the caller did not name is
+   a subject the engine cannot claim to have checked.
 
 WHAT THIS IS NOT
 
@@ -54,28 +57,45 @@ MAX_SUBJECT_CHARS = 80
 MAX_FACTS = 5_000
 
 _WORD = re.compile(r"[a-z0-9]+")
-# Only a trailing plural/possessive `s`. An `es` rule folds "vehicles" to
-# "vehicl" while "vehicle" stays whole, so the two stop matching — and worse,
-# it folds more aggressively in general. Over-folding is the dangerous
-# direction here: it makes the engine claim to have checked a subject the
-# caller never wrote. Under-folding merely refuses.
+# Suffix stripping used to run on the comparison key. It cannot: no
+# suffix rule is injective over English. Stripping a trailing `s` folds
+# "species" onto "specie" — two different words, one of which a caller may
+# genuinely have supplied — and an external audit (issue #3) caught exactly
+# that pairing stamping VERIFIED. The rule survives only as a *hint* in the
+# refusal message, where it can help a caller without deciding anything.
 _PLURAL = ("'s", "s'", "s")
+
+
+def _plural_hint(key: str) -> str:
+    """A near-miss key, for explaining a refusal. Never used to match."""
+    out = []
+    for word in key.split():
+        for suffix in _PLURAL:
+            if len(word) > 3 and word.endswith(suffix):
+                word = word[: -len(suffix)]
+                break
+        out.append(word)
+    return " ".join(out)
 
 
 def normalise_subject(subject: str) -> str:
     """Fold a subject to its comparison key.
 
-    Deliberately shallow: lowercase, strip punctuation, collapse whitespace,
-    and remove one trailing plural/possessive `s`. Anything cleverer would
-    start matching subjects the caller never wrote, which is the failure mode
-    this whole module exists to avoid.
+    Deliberately shallow, and now deliberately **injective**: lowercase,
+    strip punctuation, collapse whitespace. Nothing else. Two subjects that
+    were written differently stay different.
 
-    Leading articles are dropped for the same reason, and that one is safe in
-    both directions: no two distinct subjects differ only by "the".
+    Leading articles are dropped, and that one is safe in both directions:
+    no two distinct subjects differ only by "the".
 
-    Folding need not be linguistically correct, only *consistent*: "readiness"
-    folds to "readines" on both sides, so it still matches itself. What must
-    never happen is two different subjects folding together.
+    What must never happen is two different subjects folding together — and
+    for a while one did. Plural/possessive stripping folded "species" onto
+    "specie", so a claim about one verified against a fact about the other.
+    The whole point of this module is that it never claims to have checked a
+    subject the caller did not write, so the fold is gone. The cost is that
+    "vehicle" no longer matches a fact recorded as "vehicles": that is a
+    REFUSAL, which is the honest direction to be wrong in, and the refusal
+    says so by name.
     """
     words = _WORD.findall(str(subject).lower())
     # A leading article is not part of a subject. "The 2nd Brigade" and
@@ -84,14 +104,7 @@ def normalise_subject(subject: str) -> str:
     # cannot merge two subjects that were otherwise distinct.
     while words and words[0] in ("the", "a", "an"):
         words = words[1:]
-    out = []
-    for word in words:
-        for suffix in _PLURAL:
-            if len(word) > 3 and word.endswith(suffix):
-                word = word[: -len(suffix)]
-                break
-        out.append(word)
-    return " ".join(out)
+    return " ".join(words)
 
 
 def _as_number(value: Any) -> Optional[Fraction]:
@@ -213,14 +226,33 @@ _ASSERTION = re.compile(
 )
 
 
-def _scaled(value: Fraction, unit: Optional[str]) -> Tuple[Fraction, Optional[str]]:
-    """Fold a magnitude suffix into the number, keeping the real unit.
+def _measure(value: Fraction, unit: Optional[str],
+             currency: Optional[str] = None
+             ) -> Tuple[Fraction, Optional[str], bool]:
+    """Separate the magnitude from the unit, and keep both.
 
-    "$4.2M" and a fact of 4200000 usd must agree; "4.2" and "4200000" must not.
+    A written quantity carries up to two different things after the digits.
+    "$4.2M" is *4.2 million* — a magnitude, which scales the number — and
+    *dollars* — a semantic unit, which says what the number counts. They are
+    not interchangeable and folding them together is precisely how a dollar
+    figure came to verify against a vehicle count (issue #3): the magnitude
+    was folded in and the unit slot was then blanked, so the comparison had
+    nothing left to disagree about.
+
+    Returns `(scaled_value, semantic_unit, conflict)`. `conflict` is True when
+    the claim states two different semantic units at once ("$4.2 percent"),
+    which is not a thing to adjudicate — it is a thing to refuse.
     """
     if unit in _SCALE:
-        return value * _SCALE[unit], None
-    return value, unit
+        value = value * _SCALE[unit]
+        semantic = None
+    else:
+        semantic = unit
+    if currency:
+        if semantic is not None and semantic != currency:
+            return value, semantic, True
+        semantic = currency
+    return value, semantic, False
 
 
 def check_text(text: str, facts: Any) -> Dict[str, Any]:
@@ -231,7 +263,11 @@ def check_text(text: str, facts: Any) -> Dict[str, Any]:
     for match in _ASSERTION.finditer(text or ""):
         raw_subject = match.group("subject").strip()
         key = normalise_subject(raw_subject)
-        asserted = _as_number(match.group("value").replace("$", ""))
+        raw_value = match.group("value")
+        # The currency sits on the *value* ("$4.2M"), not in the unit slot.
+        # Dropping it here is what let a dollar claim arrive unitless.
+        currency = "usd" if "$" in raw_value else None
+        asserted = _as_number(raw_value.replace("$", ""))
         unit = _unit_of(match.group("unit"))
         if asserted is None or not key:
             continue
@@ -248,8 +284,16 @@ def check_text(text: str, facts: Any) -> Dict[str, Any]:
 
         candidates = table.get(key)
         if not candidates:
-            entry.update(status="REFUSED",
-                         reason="no supplied fact names this subject")
+            # Say whether a plural/possessive near-miss was the reason, so a
+            # caller can fix their table. The hint never selects a fact.
+            hint = _plural_hint(key)
+            near = [k for k in table if k != key and _plural_hint(k) == hint]
+            entry.update(
+                status="REFUSED",
+                reason=("no supplied fact names this subject"
+                        + (" (closest supplied: %s — subjects must match "
+                           "exactly; singular and plural are different keys)"
+                           % ", ".join(sorted(near)[:3]) if near else "")))
             results.append(entry)
             continue
         if len(candidates) > 1:
@@ -264,13 +308,30 @@ def check_text(text: str, facts: Any) -> Dict[str, Any]:
         fact = candidates[0]
         entry["fact"] = fact.as_dict()
 
-        a_value, a_unit = _scaled(asserted, unit)
-        f_value, f_unit = _scaled(fact.value, fact.unit)
+        a_value, a_unit, a_conflict = _measure(asserted, unit, currency)
+        f_value, f_unit, _ = _measure(fact.value, fact.unit)
+        entry["asserted_unit"] = a_unit
 
-        if a_unit and f_unit and a_unit != f_unit:
+        if a_conflict:
             entry.update(status="REFUSED",
-                         reason="units differ: claim in %r, fact in %r"
-                                % (a_unit, f_unit))
+                         reason="the claim states two different units at once")
+            results.append(entry)
+            continue
+
+        # Units must be *equal*, and "no unit" is a unit. Requiring both sides
+        # to state one before comparing left every one-sided pairing open, and
+        # agreeing digits then decided the verdict on their own.
+        if a_unit != f_unit:
+            if a_unit is None:
+                reason = ("the claim states no unit but the fact is recorded "
+                          "in %r" % f_unit)
+            elif f_unit is None:
+                reason = ("the claim is in %r but the fact is recorded with "
+                          "no unit" % a_unit)
+            else:
+                reason = "units differ: claim in %r, fact in %r" % (a_unit,
+                                                                    f_unit)
+            entry.update(status="REFUSED", reason=reason)
             results.append(entry)
             continue
 
@@ -345,8 +406,19 @@ def _selftest() -> int:
                   [{"subject": "readiness", "value": 74},
                    {"subject": "Readiness", "value": 71}]) == ["REFUSED"])
 
-    gate("plural and possessive fold to the same key",
-         normalise_subject("Vehicles'") == normalise_subject("vehicle"))
+    # This gate used to assert the opposite — that "Vehicles'" and "vehicle"
+    # fold together. That fold is what let a claim about "Species" verify
+    # against a fact about "specie" (issue #3), so the invariant is inverted:
+    # subjects the caller wrote differently must stay different.
+    gate("distinct subjects never fold together",
+         normalise_subject("Species") != normalise_subject("specie"))
+    gate("punctuation and case still do not distinguish a subject",
+         normalise_subject("Vehicles'") == normalise_subject("vehicles"))
+    gate("a singular claim against a plural fact refuses rather than matching",
+         statuses("Vehicle was 412.", {"vehicles": 412}) == ["REFUSED"])
+    gate("...and the refusal points at the subject the caller did supply",
+         "closest supplied" in check_text("Vehicle was 412.",
+                                          {"vehicles": 412})["claims"][0]["reason"])
     gate("a leading article does not prevent a match",
          normalise_subject("The 2nd Brigade") == normalise_subject("2nd Brigade"))
     gate("a near-miss subject does not match",

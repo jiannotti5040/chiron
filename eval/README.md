@@ -1,14 +1,16 @@
-# The public eval build — verify zero-false before you pay
+# The public eval build — verify zero-false yourself
 
-**Author: Jacob Iannotti. Apache-2.0 (see ../LICENSE.md).**
+**Author: Jacob Iannotti. Apache-2.0 (see [../LICENSE](../LICENSE)).**
 
-The strongest outside review of this repo said, correctly: *"the proof of
-the thing being sold is behind the thing being sold."* This folder is the
-answer. It does not ship the engine. It ships the engine's **outputs** on
-a public held-out suite, plus a stdlib-only grader that checks them
-against ground truth the author does not control — because *zero false
-verifications* is a property of outputs, and outputs can be verified
-without source.
+This folder exists to let a skeptic check the headline property without
+taking the author's word for anything — and, originally, without access to
+the engine at all. The engine is now Apache-2.0 and you can simply read it
+(`pip install primus-intelligence`), so this is no longer the *only* way in.
+It remains the sharpest one: it ships the engine's **outputs** on a public
+held-out suite, frozen and hash-bound, plus a stdlib-only grader that checks
+them against ground truth the author does not control. *Zero false
+verifications* is a property of outputs, and outputs can be checked by
+someone who trusts neither the code nor the person who wrote it.
 
 ## What's here
 
@@ -19,7 +21,7 @@ without source.
 | `challenge.py` | The buyer-chosen protocol: **you** pick any A-numbers; only their first 12 terms go to the author; returned answers are graded on your machine against live OEIS. |
 | `oeis_snapshot_2026-07-07.json` | A pinned public snapshot (with fetch provenance) for offline/CI grading — the weaker mode; live is the point. |
 
-## Run it (two minutes, no purchase, no engine)
+## Run it (two minutes, no install, no engine)
 
 ```
 python3 eval/grade.py                                      # live oeis.org
@@ -55,30 +57,30 @@ guessing. Refusal is the designed behavior — the falsifiable claim is
 that **what is stamped is never externally wrong**, not that everything
 gets stamped.
 
-What this folder still does not do: it does not let you run the engine on
-arbitrary input yourself before licensing. The engine's own gate battery
-(the vault tiers in [`../docs/BATTERIES.md`](../docs/BATTERIES.md)) still
-runs post-purchase. This eval reduces the pre-purchase gap from "trust
-the philosophy" to "verify the headline property on data you choose."
-
-One more rung is live: a currently deployed engine is served over
-HTTP (request in, certificate out, hard rate limits, engine source never
-serialized — 18/18 endpoint gates), and [`remote.py`](remote.py) in this
-folder is the stdlib client. Run the **real engine** on input you choose,
-before you trust it:
+What this folder does not do: it does not run the engine for you. It grades
+outputs the engine already committed to. To run the engine on arbitrary input
+of your own, install it and use the gate battery directly — the vault tiers
+are described in [`../docs/BATTERIES.md`](../docs/BATTERIES.md):
 
 ```
-python3 eval/remote.py --url http://localhost:8790 collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
-python3 eval/remote.py --url http://localhost:8790 collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
-python3 eval/remote.py --url http://localhost:8790 certify "2+2=5, 97 is prime"
+pip install primus-intelligence
+primus certify "2+2=5, 97 is prime"
+primus collapse "1 1 2 3 5 8 13 21 34 55 89 144"
 ```
 
-That is a demo instance on a free tier: it's rate-limited (per-IP 20/min),
-refuses anything over budget, and the first request after idle may take
-~30 s to wake. It is the real engine, not the browser demo core, but it is a
-moving deployment rather than a claim of byte identity with the frozen 0.6.0
-evaluation above. Check `/health` for its currently deployed version. The
-frozen evaluation remains the dated, hash-bound artifact supporting the
-22-stamped claim; the endpoint demonstrates current behavior on
-non-sensitive input. `remote.py` works against any deployment, so the
-mechanism outlives any one URL.
+The same engine is also serveable over HTTP — request in, certificate out,
+engine source never serialized — and [`remote.py`](remote.py) is the
+stdlib client for it. Start one locally and point the client at it:
+
+```
+primus-serve --port 8790 &
+python3 eval/remote.py --url http://127.0.0.1:8790 collapse "1 1 2 3 5 8 13 21 34 55 89 144"   # VERIFIED
+python3 eval/remote.py --url http://127.0.0.1:8790 collapse "2 3 5 7 11 13 17 19 23 29 31 37"   # refuses
+python3 eval/remote.py --url http://127.0.0.1:8790 certify "2+2=5, 97 is prime"
+```
+
+`remote.py` works against any deployment, so the mechanism outlives any one
+URL. No hosted instance is published here: an endpoint this document cannot
+name is an endpoint a reader cannot check, and an unverifiable claim is not
+one this repository should make. The frozen evaluation above remains the
+dated, hash-bound artifact supporting the 22-stamped claim.

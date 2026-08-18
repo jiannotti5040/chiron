@@ -55,6 +55,12 @@ jobs:
       - name: Certify kernel property sweep (invariant over a bounded grid, zero false stamps)
         working-directory: Primus
         run: python test_certify_property.py
+      - name: Grounded layer gates (the module's own 20)
+        working-directory: Primus
+        run: python src/primus/grounded.py
+      - name: Grounded units — VERIFIED must never cross a unit boundary (issue #3)
+        working-directory: Primus
+        run: python test_grounded_units.py
   # The flagship spine + the fold + differential testing, on one reference env.
   chiron:
     runs-on: ubuntu-latest
@@ -90,6 +96,10 @@ jobs:
 
       - name: Current license claims match Apache-2.0
         run: python ci/check_license_claims.py
+      - name: Claim kinds the engine emits are all in SCHEMA.md
+        run: python ci/check_schema_kinds.py
+      - name: docs/STATE.json matches the checkout (counts, tool surface)
+        run: python ci/state.py --check
       - name: Drift detector — seed vs monolith must not contradict
         working-directory: Primus
         run: python drift_check.py

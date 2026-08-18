@@ -65,6 +65,18 @@ python3 bin/chiron engines
 | 18 | Publication gates | `ci/check_publishable.py` and `ci/check_duplicates.py`, each verified against a planted failure |
 | 19 | Pushed to GitHub | `main` and `chiron/mandate-20260809` in sync; CI green |
 
+## Open P0s — state as of 2026-08-18
+
+| Issue | State | Evidence |
+|---|---|---|
+| [#2](https://github.com/jiannotti5040/chiron/issues/2) primality gate verifies a 12-base strong pseudoprime | **Already fixed** — repaired by the 2026-08-11 witness/bound derivation; `certify("318665857834031151167461 is prime")` now REFUTES. The issue was simply left open | reproduced the issue's own snippet against the installed 0.10.0 wheel |
+| [#3](https://github.com/jiannotti5040/chiron/issues/3) grounded facts verify mismatched units and colliding subjects | **Fixed this session.** All three reported cases were still live on `df8597f`, and a bounded property sweep found the class was wider — 10 of 30 unit pairings verified off the diagonal | fail-first `Primus/test_grounded_units.py` reported 5/12 before the repair and 12/12 after; 0 false verifications reproduced against the shipped wheel in a clean venv. Written up in `Primus/EXTERNAL_VALIDATION.md` |
+
+The grounded layer had a 20-gate selftest that was green through all ten
+leaks: it asked whether values matched and never whether units did. Both the
+selftest and the new regression now run in `ci.yml` on every push, not only in
+the release battery.
+
 ## Recently added capability
 
 | Thing | What it does |
@@ -83,7 +95,7 @@ construction, not only the verification layer.
 
 | Item | State |
 |---|---|
-| PyPI | 0.9.0 is live. **0.10.0 is built and verified from a clean install outside the repo — not uploaded.** It needs no token: `release.yml` publishes by Trusted Publishing. One one-time registration is missing; see below |
+| PyPI | 0.9.0 is live **and carries the issue #3 false verifications**. 0.10.0 repairs them and is built and verified from a clean install outside the repo — **not uploaded**. It needs no token: `release.yml` publishes by Trusted Publishing. One one-time registration is missing; see below |
 | ~~Retire `chiron-app`~~ | **Not the right call — see "Two apps" below.** It is kept deliberately |
 | Conversation UI, result history, onboarding | absent |
 | Web retrieval boundary (§17) | absent |

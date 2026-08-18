@@ -103,9 +103,27 @@ def main(argv=None) -> int:
         except Exception:
             print("state: docs/STATE.json missing or unreadable")
             return 1
-        volatile = {"generated_utc"}
-        a = {k: v for k, v in state.items() if k not in volatile}
-        b = {k: v for k, v in on_disk.items() if k not in volatile}
+        # Compare only what the REPOSITORY determines. An allowlist, not a
+        # denylist, so a new environment-derived field cannot silently make
+        # this gate unsatisfiable again.
+        #
+        # Everything else in the file is a snapshot of wherever it was
+        # generated, and comparing it for equality is incoherent:
+        #   git        — branch/HEAD/uncommitted change on the very next commit,
+        #                so the file went stale the instant it was committed.
+        #                This is why --check was perpetually red and wired into
+        #                no workflow.
+        #   published  — pypi_version is fetched from the network, so every
+        #                release to PyPI would turn CI red until someone
+        #                remembered to regenerate a file.
+        #   toolchain  — the local Python/Swift/Xcode; a Linux runner has no
+        #                Xcode at all, so this can never match in CI.
+        #
+        # What is left is exactly the class of thing that can be stale *and
+        # wrong*: the counts and the tool surface a reader is told to expect.
+        CHECKED = {"schema", "counts", "mcp_tools"}
+        a = {k: v for k, v in state.items() if k in CHECKED}
+        b = {k: v for k, v in on_disk.items() if k in CHECKED}
         if a != b:
             print("state: docs/STATE.json is stale; run python3 ci/state.py")
             return 1
