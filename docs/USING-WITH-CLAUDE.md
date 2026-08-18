@@ -114,6 +114,6 @@ When a file is truncated, the record says so.
 
 ```bash
 python3 Chiron/mcp_server.py selftest    # 20/20
-python3 Chiron/tests/test_mcp_server.py  # 14/14, real Chiron stdio session
+python3 Chiron/tests/test_mcp_server.py  # 25/25, real Chiron stdio session
 python3 Primus/test_mcp_server.py        # 11/11, live subprocess over stdio
 ```

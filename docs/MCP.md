@@ -92,7 +92,7 @@ The same engine runs in your browser, no install:
 
 ## Verify the tool itself
 
-The Chiron MCP layer is gated: **14/14** handshake gates drive the real server
+The Chiron MCP layer is gated: **25/25** handshake gates drive the real server
 process over real stdio JSON-RPC (initialize / tools/list / tools/call for
 every tool, plus unknown-tool and ping). The engine behind it has a published
 zero-false-verification record on external data —
