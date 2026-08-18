@@ -74,7 +74,12 @@ if __version__ is None:
         from importlib.metadata import version as _pkg_version
         __version__ = _pkg_version("primus-intelligence")
     except Exception:  # not installed and no readable project file
-        __version__ = "0.7.2+source"
+        # Do NOT name a version here. This string is stamped into every
+        # certificate as `engine.version`, and a hardcoded literal goes stale
+        # silently — this one sat at "0.7.2+source" while the package was at
+        # 0.9.0, so a 0.9.0 engine could issue a certificate claiming 0.7.2.
+        # An engine that cannot read its own version says so.
+        __version__ = "0+unknown"
 
 __all__ = [
     "collapse", "same_family", "same_generator", "same_structure", "cast",

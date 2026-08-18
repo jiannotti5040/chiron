@@ -96,6 +96,10 @@ jobs:
 
       - name: Current license claims match Apache-2.0
         run: python ci/check_license_claims.py
+      - name: Claim kinds the engine emits are all in SCHEMA.md
+        run: python ci/check_schema_kinds.py
+      - name: docs/STATE.json matches the checkout (counts, tool surface)
+        run: python ci/state.py --check
       - name: Drift detector — seed vs monolith must not contradict
         working-directory: Primus
         run: python drift_check.py

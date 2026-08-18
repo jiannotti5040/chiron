@@ -25,7 +25,7 @@ arithmetic on every deciding path; no tolerance, no residual threshold.
 
 | | |
 |---|---|
-| PyPI | `primus-intelligence` **0.9.0**, published |
+| PyPI | `primus-intelligence` — **0.9.0** live; **0.10.0** built, gated, and tagged for release (it repairs the issue #3 false verifications that 0.9.0 carries) |
 | GitHub | `jiannotti5040/chiron`, `main` = local HEAD |
 | MCP tools | 16, one dispatch (`Chiron/mcp_server.py:_IMPL`) |
 | Chiron modules | 92 |

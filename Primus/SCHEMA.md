@@ -79,6 +79,23 @@ correct rounding — `1 of 3, or 40 percent` — is REFUTED normally. Rounding i
 a reporting convention, not a falsehood, and a gate that refutes conventions
 invents errors; that costs exactly as much as missing them.
 
+`gcd` / `lcm` — `gcd(a, b) = c` and `lcm(a, b) = c`, in symbolic or worded
+form, checked by exact integer computation. Operands beyond the
+exact-arithmetic digit bound are REFUSED rather than computed. These are
+emitted under the operator's own name, so the claim kind is literally `gcd`
+or `lcm`.
+
+`grounded_fact` — a claim whose truth lives *outside* the sentence, checked
+against facts the caller supplies alongside the text (see
+[`grounded.py`](src/primus/grounded.py), schema `primus.grounded/1`). VERIFIED
+requires that the subject resolve to exactly one supplied fact **and** that the
+semantic units be equal, where "no unit" is a unit matching only "no unit"; a
+magnitude (`M`, `thousand`) scales the number and is not a unit. Absent,
+ambiguous, or unit-mismatched subjects are REFUSED, never guessed. Subjects
+are matched exactly after normalisation — nothing is stemmed, so a singular
+claim against a plural fact refuses and names the nearest supplied subject.
+This kind appears only when the caller passes `facts`.
+
 **Deliberately not judged:** approximations (`sqrt(2) = 1.414` is neither
 verified nor refuted — it is not extracted; the gate refuses to grade
 "approximately true" claims as exact ones), multi-operation expressions,
@@ -104,6 +121,9 @@ created_utc             ISO-8601 UTC timestamp
 input                   {sha256 (over the ORIGINAL, untruncated text), chars, truncated}
 claims[]                {kind, text (≤100 chars), status, span, ...kind-specific detail}
 counts                  {checkable, verified, refuted, refused}
+grounding               present ONLY when the caller supplied `facts`:
+                        {schema: "primus.grounded/1", claims[], counts,
+                         facts_supplied, facts_rejected, note}
 coverage                checked-span chars / analyzed chars, 0..1
 claims_capped           true if MAX_CLAIMS was hit
 unverifiable_remainder  true if meaningful text remains outside checked spans
@@ -123,7 +143,26 @@ provenance, sign certificates externally (the Merkle-chained machinery in
 
 ## Versioning
 
-The `schema` string bumps on any field addition, removal, or semantic
-change (`/1` → `/2` added: coverage, claims_capped, input.truncated, span,
-attestation.kind, and the v2 claim kinds). Consumers should tolerate
-unknown extra fields and hard-fail on an unknown schema major.
+The `schema` string is a **major** version. It bumps on any change that could
+break a consumer reading the previous contract: a field removed or renamed, a
+field's meaning changed, or a status gaining new semantics (`/1` → `/2`
+removed nothing but redefined enough to warrant it, and added: coverage,
+claims_capped, input.truncated, span, attestation.kind, and the v2 claim
+kinds). Consumers should tolerate unknown extra fields and hard-fail on an
+unknown schema major.
+
+**Additive-only changes do not bump the major**, precisely because consumers
+are told above to tolerate unknown extra fields — a bump for a purely additive
+change would hard-fail every consumer for something it was instructed to
+ignore. New claim kinds and new optional top-level blocks are additive: a
+consumer that has never heard of `grounded_fact` still reads every other claim
+correctly.
+
+Disclosed rather than papered over: an earlier wording of this section said the
+string bumps on *any* field addition. Under that wording, adding the optional
+`grounding` block in 0.8.0 and the `gcd` / `lcm` / `grounded_fact` kinds should
+each have bumped the major, and none did. The rule as written contradicted the
+consumer guidance three lines above it; the rule is now stated in the form the
+code has actually followed. Nothing about an existing field changed, so no
+consumer of `/2` was ever broken — but the contract said something it did not
+do, and that is worth naming.

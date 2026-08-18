@@ -9,7 +9,7 @@ The engine can be served as a minimal HTTP endpoint (request in,
 certificate out, hard rate limits, everything over budget REFUSED). This
 stdlib client is the public half: point it at a running endpoint and get
 the real engine's verify-or-refuse on input YOU choose — the strongest
-possible pre-purchase eval when an endpoint URL is published.
+possible independent eval when an endpoint URL is published.
 
 Run your own instance with `primus-serve` (defaults to http://localhost:8790;
 rate-limited, refuses over budget, ~30 s cold start after idle). This client

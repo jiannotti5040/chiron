@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Jacob Iannotti
 """
-challenge.py — the buyer-chosen half of the eval protocol.
+challenge.py — the reader-chosen half of the eval protocol.
 
 The frozen-prediction grade (grade.py) carries one residual trust
 assumption: the author froze predictions on sequences the author selected,

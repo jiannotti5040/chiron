@@ -30,8 +30,8 @@ supported inputs you choose.
 
 | Battery | Covers | Count |
 |---|---|---|
-| Invariant stress gates | recovery, refusal, adversarial input, the evidence rule | **55/55** |
-| `primus selftest` | engine 4 + certificate layer 35 + guess-and-prove conjecture layer 16 | **55/55** |
+| Invariant stress gates | recovery, refusal, adversarial input, the evidence rule | **60/60** |
+| `primus selftest` | engine 4 + certificate layer 63 + guess-and-prove conjecture layer 15 | **82/82** |
 | Certify fuzz | hostile input: floods, bombs, bounds, noise-stability, determinism | **16/16** |
 | MCP handshake | the live server process over real stdio JSON-RPC | **11/11** |
 | HTTP endpoint gates | the engine served as a live HTTP endpoint (`primus.engine_server`): legacy verify/refuse round-trips plus strict `/v1` capabilities/collapse/certify envelopes, over-budget refusals, rate limits with retry hints, development auth, CORS default-deny, and the no-leak rule (no traceback or source path in hostile responses); closed route table (404 / 405 + Allow), adversarial-JSON bounded refusal, log hygiene | **48/48** |
@@ -50,10 +50,10 @@ supported inputs you choose.
 | Reproducibility harness | same input, same version ⇒ byte-identical results | digest-stable |
 | Monolith standalone smoke | the certified core from ONE file, no vault beside it (semic 56/56, JDICert 280/280 inside) | **5/5** |
 | Monolith full folded sweep | every selftest-bearing module, through the fold | **61/61** |
-| Invariant-operation stress probes | recovery/refusal/cipher/structure (build of 2026-07-16) | **23/23** |
+| Invariant-operation stress probes | recovery/refusal/cipher/structure | **26/26** |
 | Pipeline composer | chain/team/swarm compose; unknown component fails safe | **7/7** |
 | Documented-command smoke | every command in the manual runs as written | **9/9** |
-| Chiron MCP tools (`Chiron/mcp_server.py selftest`) | the vault as agent tools: attest refuses without candidates, file reading and its bounds, text/path exclusivity, catalog discovery, dispatch and its refusals | **17/17** |
+| Chiron MCP tools (`Chiron/mcp_server.py selftest`) | the vault as agent tools: attest refuses without candidates, file reading and its bounds, text/path exclusivity, catalog discovery, dispatch and its refusals | **20/20** |
 
 **UMA Suite (research package in the vault):**
 
@@ -81,6 +81,6 @@ claim this project exists to reject — the code and every gate above are
 Apache-2.0 in this repository, with nothing behind a licence key.
 
 *Single-file scope, precisely: the standalone 5/5 runs from one file with
-no vault beside it; the 52/52 sweep includes modules (servers, packaged
+no vault beside it; the 61/61 sweep includes modules (servers, packaged
 seed, growth tooling) that need the full vault install. We do not claim
 the servers run from the single file, because they don't.*

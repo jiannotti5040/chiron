@@ -2,7 +2,14 @@
 
 All notable changes to the installable seed. Dates are UTC.
 
-## 0.10.0
+Not every version below reached PyPI. As of 2026-08-18, `primus-intelligence`
+on PyPI carries **0.6.4 and 0.9.0 only**: the 0.7.x line and 0.8.0 were tagged
+or announced in this file but never uploaded, because the release workflow's
+Trusted Publisher was never registered and the tagged runs failed with
+`invalid-publisher`. Entries for versions that never shipped are marked as
+such.
+
+## 0.10.0 — 2026-08-18
 
 - **Grounded facts no longer verify across units (issue #3).** Three reported
   false verifications — a `$4.2M` revenue claim confirmed by a fact recorded
@@ -42,7 +49,7 @@ All notable changes to the installable seed. Dates are UTC.
   suite goes 45 → 63 checks, and the property sweep still presents 4,116
   claims with zero false verifications and zero false refutations.
 
-## 0.9.0
+## 0.9.0 — 2026-08-10
 
 - **Exact laws across columns.** `primus.relate` recovers `y = f(x1..xk)` over
   a bounded class, solves the coefficients in exact rational arithmetic, and
@@ -61,7 +68,7 @@ All notable changes to the installable seed. Dates are UTC.
   per-column map carrying one table to another. A column with no exact law is
   reported unmapped rather than paired by closest fit.
 
-## 0.8.0
+## 0.8.0 — 2026-08-09 (never published to PyPI)
 
 - **Grounded claims.** `certify` accepts a `facts` table and checks claims
   whose truth lives outside the sentence against it, exactly. Coverage on
