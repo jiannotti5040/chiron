@@ -48,6 +48,7 @@ jobs:
           pip install ./Primus
           python bin/chiron test --full
           python Primus/test_certify_property.py
+          python Primus/test_grounded_units.py
           python Primus/test_engine_server.py
           python bin/chiron parity
       - name: Monolith source is current

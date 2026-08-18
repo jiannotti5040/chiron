@@ -4,6 +4,21 @@ All notable changes to the installable seed. Dates are UTC.
 
 ## 0.10.0
 
+- **Grounded facts no longer verify across units (issue #3).** Three reported
+  false verifications — a `$4.2M` revenue claim confirmed by a fact recorded
+  in *vehicles*, a `74%` readiness claim confirmed by a bare `74`, and a claim
+  about *Species* answered by a fact about *specie* — plus seven more found by
+  a bounded property sweep over unit pairings, 10 of 30 verifying off the
+  diagonal. Four root causes: the currency was stripped off the value and
+  never recorded, magnitude scaling blanked the unit slot, the mismatch guard
+  only fired when *both* sides carried a unit, and subject normalisation
+  folded `species` onto `specie`. Units must now be **equal**, where "no unit"
+  matches only "no unit"; a magnitude scales the number and is not a unit; and
+  nothing is stemmed, so a near-miss refuses and names the nearest supplied
+  subject. Fail-first regression in `test_grounded_units.py`, now gated in
+  `ci.yml` on every push as well as in the release battery. No recall lost:
+  `oeis_live` still reports 20 verified, 0 false confidence.
+
 - **The extractor reads report prose.** Until now it could read text that
   already looked like arithmetic homework; a paragraph of ordinary business
   writing states the same facts in forms it saw as nothing, and silence is

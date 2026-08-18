@@ -55,6 +55,12 @@ jobs:
       - name: Certify kernel property sweep (invariant over a bounded grid, zero false stamps)
         working-directory: Primus
         run: python test_certify_property.py
+      - name: Grounded layer gates (the module's own 20)
+        working-directory: Primus
+        run: python src/primus/grounded.py
+      - name: Grounded units — VERIFIED must never cross a unit boundary (issue #3)
+        working-directory: Primus
+        run: python test_grounded_units.py
   # The flagship spine + the fold + differential testing, on one reference env.
   chiron:
     runs-on: ubuntu-latest

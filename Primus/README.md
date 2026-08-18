@@ -7,11 +7,12 @@ Python package: **exact invariant recovery with held-out verification and
 refusal** — plus that discipline turned into an accountability certificate
 for LLM/agent output. One idea: never certify what you cannot exactly verify.
 
-From the vault root (PyPI name: `primus-intelligence`):
-
 ```bash
-pip install ./Primus
+pip install primus-intelligence
 ```
+
+(From a checkout of the vault, `pip install ./Primus` installs the same
+package from source.)
 
 ## Two operations
 
