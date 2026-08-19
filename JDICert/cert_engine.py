@@ -75,7 +75,19 @@ TIME_BUDGET_CONTRACTUAL = 86.0
 ENTROPY_GATE_MAX = 0.30
 THETA_MIN = 3.0
 CP_MIN = 5.0
+# Retained at its historical value so stored certificates and manifests keep
+# comparing equal. Its PROVENANCE, however, does not survive: 19.4 is the
+# Stage-6 "lambda_max = +19.4" figure, and the RSLS Lyapunov study showed that
+# number is an artifact of the discretisation (lambda doubles when N doubles;
+# lambda*dt is constant to 0.3%), not a physical exponent. It is therefore no
+# longer used as a Lyapunov threshold anywhere.
 LYAPUNOV_CRITICAL = 19.4
+# What the survival gate actually tests: the per-step growth rate of a single
+# trajectory's own increment (see `trajectory_growth_rate`). This is an
+# operating budget, not a measured constant of the theory. The value is the
+# historical one so that survival outcomes do not silently change with this
+# rename; choosing it on evidence is a separate decision.
+DIVERGENCE_CRITICAL = 19.4
 NOVELTY_KAPPA = 1.5
 R_MIN = 0.85
 COHERENCE_THRESHOLD = 0.95
@@ -1489,20 +1501,118 @@ def stage6_coupling_step(state: State, dt: float, cfg: MemoryConfig) -> State:
     return State(new_g, state.U_flow, new_M, state.t + dt)
 
 
+@dataclass(frozen=True)
+class GrowthReport:
+    """How fast one trajectory's own increment grows. NOT a Lyapunov exponent.
+
+    Read `per_step` only when `converged` is True; otherwise `reason` names the
+    check that failed. `per_unit_time` is `per_step / dt` and is None when no
+    dt was supplied, because a growth rate without a clock has no units.
+    """
+    per_step: float
+    per_unit_time: Optional[float]
+    converged: bool
+    reason: str
+    n_increments: int
+    r_squared: float
+
+    def summary(self) -> dict:
+        return {
+            "growth_per_step": self.per_step,
+            "growth_per_unit_time": self.per_unit_time,
+            "growth_converged": self.converged,
+            "growth_reason": self.reason,
+        }
+
+
+def trajectory_growth_rate(states: List[State],
+                           dt: Optional[float] = None) -> GrowthReport:
+    """Exponential growth rate of |M_i - M_{i-1}| along a SINGLE trajectory.
+
+    WHAT THIS IS NOT
+    ================
+    This is **not** a Lyapunov exponent, and until 2026-08-19 it was named as
+    though it were (`lyapunov_max_forecast`, "distance-doubling Lyapunov
+    estimator") and compared against `LYAPUNOV_CRITICAL`. Three controls show
+    why the name was wrong; they now ship as gates in `_selftest`:
+
+      * **It cannot detect chaos.** On canonical Lorenz (sigma=10, rho=28,
+        beta=8/3) it returns +0.0000 where the literature exponent is +0.906.
+        A Lyapunov exponent measures how two *nearby trajectories* separate;
+        this measures the size of successive steps along *one*. On a bounded
+        attractor those steps stay bounded, so the slope is zero no matter how
+        chaotic the flow is.
+      * **Its units are per step, not per unit time.** On pure decay
+        (true lambda = -0.5) it returns -0.0500, -0.0250, -0.0125 at
+        dt = 0.1, 0.05, 0.025 — halving exactly when dt halves, with
+        value/dt = -0.500 at every resolution. That 1/dt scaling is precisely
+        the signature the RSLS Lyapunov study identified as *grid* rather than
+        physics (`UMA Suite/uma_build_v4/studies/rsls_lyapunov/README.md`).
+      * **It never refused.** Degenerate input returned 0.0 and white noise
+        returned a number, so a caller could not tell "no growth" from
+        "no measurement".
+
+    A real exponent is available and validated: `lyapunov_max_benettin`
+    recovers Lorenz at +0.8761 and pure decay at -0.5000 exactly. Use that
+    when an exponent is what you need; it requires the right-hand side, not
+    just a trajectory.
+
+    WHAT THIS IS
+    ============
+    A divergence detector for a single trajectory: is this run's own step size
+    growing exponentially? That is a real and cheap question, and it is the
+    question the survival gate actually wants answered. It is reported under
+    its own name so no caller can mistake it for an exponent.
+    """
+    n = len(states)
+    if n < 3:
+        return GrowthReport(0.0, None, False,
+                            "fewer than 3 states; nothing to fit", 0, 0.0)
+
+    logs = []
+    for i in range(1, n):
+        d = float(np.linalg.norm(states[i].M - states[i - 1].M))
+        if d > 0 and math.isfinite(d):
+            logs.append(math.log(d + 1e-12))
+    if len(logs) < 8:
+        return GrowthReport(0.0, None, False,
+                            "only %d usable increments; too few to fit"
+                            % len(logs), len(logs), 0.0)
+    y = np.asarray(logs, dtype=float)
+    if not np.all(np.isfinite(y)):
+        return GrowthReport(0.0, None, False,
+                            "trajectory contains non-finite increments",
+                            len(logs), 0.0)
+
+    x = np.arange(y.size, dtype=float)
+    slope, intercept = np.polyfit(x, y, 1)
+    resid = y - (slope * x + intercept)
+    ss_res = float(np.sum(resid ** 2))
+    ss_tot = float(np.sum((y - y.mean()) ** 2))
+    r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
+
+    per_time = (float(slope) / dt) if (dt and dt > 0) else None
+
+    # A straight line through log-increments is the whole model. If the data
+    # do not lie on one, the slope is a number without a meaning attached.
+    if r2 < 0.30:
+        return GrowthReport(float(slope), per_time, False,
+                            "log-increments are not exponential "
+                            "(R^2 = %.3f)" % r2, len(logs), r2)
+    return GrowthReport(float(slope), per_time, True, "", len(logs), r2)
+
+
 def lyapunov_max_forecast(states: List[State]) -> float:
-    """Distance-doubling Lyapunov estimator."""
-    if len(states) < 2:
-        return 0.0
-    distances = []
-    for i in range(1, len(states)):
-        d = np.linalg.norm(states[i].M - states[i-1].M)
-        if d > 0:
-            distances.append(math.log(d + 1e-12))
-    if len(distances) < 2:
-        return 0.0
-    times = np.arange(len(distances))
-    slope, _ = np.polyfit(times, distances, 1)
-    return float(slope)
+    """DEPRECATED NAME. Returns `trajectory_growth_rate(...).per_step`.
+
+    Kept so existing callers keep working, but the quantity is a per-step
+    trajectory growth rate and **not** a Lyapunov exponent — see
+    `trajectory_growth_rate` for the three controls that establish that.
+    Returns 0.0 where the statistic is refused, which is exactly the
+    ambiguity this shim exists to phase out: prefer the report.
+    """
+    report = trajectory_growth_rate(states)
+    return report.per_step if report.converged else 0.0
 
 
 def cone_aperture(state: State) -> float:
@@ -1533,8 +1643,8 @@ def propagate_trajectory(state: State, n_steps: int,
                       s.t)
         trajectory.append(s)
         cone_min = min(cone_min, cone_aperture(s))
-    lam = lyapunov_max_forecast(trajectory)
-    return trajectory, lam, cone_min
+    growth = trajectory_growth_rate(trajectory, dt=dt)
+    return trajectory, growth, cone_min
 
 
 # ============================================================================
@@ -1625,28 +1735,42 @@ def propagate_world_models(
         if m.role == "Data_Lag":
             f_art = f_art + 0.2
 
-        trajectory, lam_max, cone_min_t = propagate_trajectory(
+        trajectory, growth, cone_min_t = propagate_trajectory(
             state, n_steps, cfg, f_art_inject=f_art,
         )
 
         # Final energy = sum of memory accumulator + lambda_max contribution
         final_state = trajectory[-1]
-        E_final = float(np.sum(final_state.M)) + max(0.0, lam_max) * 0.5
+        _growth_energy = growth.per_step if growth.converged else 0.0
+        E_final = float(np.sum(final_state.M)) + max(0.0, _growth_energy) * 0.5
 
         # Track free energy total injected
         f_total = f_art * n_steps
 
         # Survival logic:
-        # - If lambda_max exceeds LYAPUNOV_CRITICAL → trajectory diverges (dies)
+        # - If the trajectory's own growth rate exceeds DIVERGENCE_CRITICAL it
+        #   is running away (dies)
         # - If cone_min collapses (≤ 0) → trajectory is ill-posed (dies)
         # - If f_total > 5.0 → trajectory boiled apart by ungrounded claims
-        survived = (lam_max < LYAPUNOV_CRITICAL
+        #
+        # A REFUSED growth statistic is not a failed trajectory. It used to be
+        # read as one: `lam_max` came back NaN or 0.0 from an unfittable run
+        # and `NaN < critical` is False, so the trajectory died with the
+        # reason "λ_max=nan ≥ critical" — reporting a measurement that never
+        # happened as a threshold that was crossed. The two are now distinct.
+        measured = growth.converged
+        survived = (measured
+                    and growth.per_step < DIVERGENCE_CRITICAL
                     and cone_min_t > 0.0
                     and f_total < 5.0)
         failure_reason = ""
         if not survived:
-            if lam_max >= LYAPUNOV_CRITICAL:
-                failure_reason = f"λ_max={lam_max:.3f} ≥ critical {LYAPUNOV_CRITICAL}"
+            if not measured:
+                failure_reason = ("growth rate not measurable: %s"
+                                  % growth.reason)
+            elif growth.per_step >= DIVERGENCE_CRITICAL:
+                failure_reason = (f"growth={growth.per_step:.3f}/step ≥ "
+                                  f"critical {DIVERGENCE_CRITICAL}")
             elif cone_min_t <= 0.0:
                 failure_reason = f"cone aperture collapsed: {cone_min_t:.3e}"
             else:
@@ -1662,7 +1786,11 @@ def propagate_world_models(
 
         results.append(TrajectoryResult(
             model_id=m.model_id, role=m.role,
-            lambda_max=lam_max, cone_min=cone_min_t,
+            # NaN while the statistic is refused, so no downstream caller can
+            # read an unmeasured growth rate as a result (the discipline
+            # uma/rsls/lyapunov.py arrived at independently).
+            lambda_max=(growth.per_step if growth.converged else float("nan")),
+            cone_min=cone_min_t,
             epistemic_energy_final=E_final,
             cp_accumulated=m.counterfactual_pressure,
             free_energy_total=f_total,
@@ -8170,7 +8298,11 @@ def certify(context: TargetContext,
         bystander_present_probability=bystander_present_p,
         sensor_confidence=sensor_confidence,
     )
-    lam_max_envelope = max(r.lambda_max for r in traj_results)
+    # Refused trajectories carry NaN and must not silently win or lose a max().
+    _measured = [r.lambda_max for r in traj_results
+                 if r.lambda_max == r.lambda_max]      # NaN != NaN
+    _n_refused = len(traj_results) - len(_measured)
+    lam_max_envelope = max(_measured) if _measured else float("nan")
     cone_min_envelope = min(r.cone_min for r in traj_results)
 
     sim_summary = {

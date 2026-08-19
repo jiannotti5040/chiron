@@ -5,8 +5,8 @@
   "script": "semic",
   "purpose": "prove the SEMIC semantic-invariant calculus on held-out gates (MDL collapse == T->0 Gibbs limit; cross-pool refusal)",
   "verified": true,
-  "generated_utc": "2026-08-18T20:41:17Z",
-  "commit": "06eedb3bdf668404031382332124d0b879cb0500",
+  "generated_utc": "2026-08-19T13:32:40Z",
+  "commit": "f32a1e42b2ca8ed7ea9800a4846e6dbe2bf0a816",
   "machine_view": {
     "gates_total": 56,
     "gates_passed": 56,
@@ -21,5 +21,5 @@
     "residual": "n/a",
     "confidence": "high"
   },
-  "self_hash": "d17232846ce53cd4"
+  "self_hash": "9ee1260a5ebcfc48"
 }
