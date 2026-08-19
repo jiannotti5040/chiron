@@ -5,8 +5,8 @@
   "script": "density_emotion",
   "purpose": "model competing readings of a surface as a quantum density matrix decohering (CPTP) toward commitment",
   "verified": true,
-  "generated_utc": "2026-08-19T21:36:02Z",
-  "commit": "ae17aa69f441a021df7b8383ca62b723d34fe06a",
+  "generated_utc": "2026-08-19T21:50:57Z",
+  "commit": "214eddec007478ac65001f60f66d5cf00dd18337",
   "machine_view": {
     "selftest": "passed",
     "cptp_valid_throughout": true,
@@ -20,5 +20,5 @@
     "residual": "n/a",
     "confidence": "high"
   },
-  "self_hash": "1d217f911233270e"
+  "self_hash": "b3c6fee42f1b6661"
 }

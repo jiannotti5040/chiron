@@ -82,3 +82,53 @@ class TestPhaseAWallScaling:
         assert threshold is not None
         assert abs(canonical - threshold) / canonical < 0.05, (
             "canonical %0.4f vs threshold %0.4f" % (canonical, threshold))
+
+
+class TestWhyTheWallDoesNotTrackTheory:
+    """The mechanism behind the scaling result, pinned as behaviour.
+
+    ell_* = sqrt(mu * tau_M / V''(M)) is the length where diffusion balances
+    the barrier's curvature -- the steady state of d_t M = mu grad^2 M - V'(M).
+    The kernel integrates d_t M = -div J - 0.5 div v with tau_J d_t J + J =
+    -mu grad M, which has no -V'(M) term. V_prime is defined, imported, and
+    never called; clip_M (a hard np.clip) is what holds M below M_max.
+
+    The barrier is NOT absent from the model -- it is the effective pressure in
+    the momentum flux, V(M) in d_t(R S_R) + d_R(R[S_R v_R + V(M)]) = 0. So
+    lambda does perturb the solution. It just does not set the interface width.
+    """
+
+    def test_lambda_does_perturb_the_solution(self):
+        """Via the momentum pressure -- so 'the barrier does nothing' is wrong."""
+        import numpy as np
+        outs = {}
+        for lam in (0.12, 0.48):
+            m = MemoryConfig(lam=lam)
+            r = run_phase_a(PhaseAConfig(N=150, n_steps=2000, pulse_width=2.0,
+                                         memory=m), verbose=False)
+            outs[lam] = r.M_history[-1].copy()
+        delta = float(np.max(np.abs(outs[0.48] - outs[0.12])))
+        assert delta > 1e-3, (
+            "lambda appears to have no effect at all (max|dM| = %.2e). It "
+            "should act through the barrier pressure V(M) in the momentum "
+            "flux." % delta)
+
+    def test_the_relaxed_interface_is_grid_scale(self):
+        """The published mesh-independence measured the widest (initial)
+        interface. The relaxed one holds a fixed CELL count, not a length."""
+        import numpy as np
+        cells = []
+        for N in (100, 200):
+            m = MemoryConfig()
+            cfg = PhaseAConfig(N=N, n_steps=4000, pulse_width=2.0, memory=m)
+            r = run_phase_a(cfg, verbose=False)
+            dR = (cfg.R_out - cfg.R_in) / N
+            ws = [interface_width(M, r.r_centers, m) for M in r.M_history]
+            ws = [w for w in ws if w is not None and np.isfinite(w)]
+            cells.append(ws[-1] / dR)
+        assert all(c < 8.0 for c in cells), (
+            "the relaxed interface should sit within a few cells; got %r"
+            % cells)
+        assert abs(cells[1] - cells[0]) / cells[0] < 1.0, (
+            "cell count should be roughly resolution-independent (that is the "
+            "defect); got %r" % cells)

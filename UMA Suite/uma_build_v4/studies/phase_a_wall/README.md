@@ -91,6 +91,68 @@ barrier-set wall cannot exist. It means:
    tests the grid. The parameter slope is the one that discriminates, and it
    was never tested.
 
+## Root cause: ℓ\* is derived from an equation the code does not solve
+
+`ell_star` is the length at which diffusion balances the barrier's curvature:
+
+    ell_*(M) = sqrt(mu * tau_M / V''(M))
+
+That balance is the steady state of an M-equation of the form
+
+    d_t M = mu grad^2 M - V'(M)
+
+The M-equation the kernel actually integrates (`phase_a.py`, `stage6.py`) is
+
+    d_t M = -div J - 0.5 div v ,        tau_J d_t J + J = -mu grad M
+
+so with the flux relaxed, `d_t M ≈ mu grad^2 M - 0.5 div v`. **There is no
+`-V'(M)` restoring term.** `V_prime` is defined at `memory.py:77`, imported by
+`phase_a.py:35` and `frame_dragging.py:45`, and never called anywhere in
+`uma/rsls/`. What holds M below M_max is `clip_M`, a hard `np.clip`, not a
+barrier force.
+
+So the length ℓ\* describes a balance that never occurs in the M dynamics.
+That is why varying λ does not move the wall: λ reaches the M field only
+indirectly.
+
+**A correction to a first reading of this.** It is tempting to conclude from
+the above that "the barrier is not in the model". That is wrong, and the code
+says so: `hll.py:121,170` and `frame_dragging.py:226` compute `P = V(M, cfg)`
+and use it as the effective pressure in the **momentum** flux —
+`d_t(R S_R) + d_R(R [S_R v_R + V(M)]) = 0`. The barrier is real and it acts;
+it acts on the momentum, not on M directly. Varying λ does perturb the
+solution (max|ΔM| ≈ 8e-2 for λ: 0.12 → 0.48) through that pressure and the
+advection it drives. It simply does not set the interface width, because the
+term that would set it is not in the M equation.
+
+For completeness, `tau_M` enters the kernel only through
+`c_diff = sqrt(mu/(tau_J tau_M))`, which sets the Cattaneo CFL timestep. The
+flux relaxes on `tau_J`, not `tau_M`. So of the three quantities in ℓ\*, one
+(`mu`) acts on M, one (`lambda`) acts on momentum, and one (`tau_M`) acts only
+on the timestep.
+
+## The relaxed interface sits at the grid scale
+
+The published mesh-independence measured `wall_thickness_max`, the widest
+interface across all snapshots — which is the *initial* one. The interface
+does not stay there. It collapses within one snapshot interval and then holds
+at a fixed number of CELLS, not a fixed length:
+
+| N | dR | wall_max | wall_final | final / dR |
+|---|---|---|---|---|
+| 100 | 0.1400 | 0.8919 | 0.2800 | 2.00 cells |
+| 200 | 0.0700 | 0.8679 | 0.1919 | 2.74 cells |
+| 400 | 0.0350 | 0.8611 | 0.1297 | 3.71 cells |
+| 800 | 0.0175 | 1.1186 | 0.0681 | 3.89 cells |
+
+log-log slope against dR: **wall_max −0.097** (mesh-independent, reproducing
+the published 0.015), **wall_final +0.669** (1.0 would be pure numerical
+diffusion).
+
+So the quantity the mesh-independence test was designed to protect — a
+physical interface width that survives dx → 0 — is grid-dependent. The test
+missed it by measuring a transient that could not exhibit it.
+
 ## What would settle it
 
 Find the regime, if there is one, where the barrier rather than the initial
