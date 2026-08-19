@@ -80,8 +80,6 @@ Recorded because they are the active cleanup task, not as commentary.
    bound; whether it belongs in this public repository is an open decision.
    The README should not read as an app announcement either way.
 
-`docs/INVENTORY.json` records the per-area findings behind these.
-
 ## How to continue without repeating the last session's failures
 
 - Do not report a build as working on `xcodebuild` exit code alone. Launch it
