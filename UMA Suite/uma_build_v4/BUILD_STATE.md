@@ -86,6 +86,9 @@ HEADLINE RESULT (the Stage-5 falsification verdict):
     M_max reached         = 1.0 (full saturation)
     Cone sat-layer margin = +0.077  (cone STRICTLY OPEN)
     Lyapunov max          = +1.127  (strong chaos)
+      [2026-08-19 WITHDRAWN: a discretisation artifact. lambda*dt is
+       constant under grid refinement, so this measured the timestep.
+       Left in place because this file is a dated build log.]
     All 4 success criteria: PASS
   WITHOUT frame-dragging (control, beta^phi = 0):
     M_max reached         = 0.7 (plateau, no driver)

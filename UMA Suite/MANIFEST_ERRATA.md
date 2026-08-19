@@ -147,3 +147,50 @@ that produced them.
 |---|---|---|
 | `./README.md` | `a994706923621e28edbf46a21b4dbedc81e708e5060cabe7d1211a0a5644ad3a` | 10606 |
 
+
+
+**2026-08-19 — the chaos claim withdrawn in the documents, and three gates repaired** (11 files)
+
+`MANIFEST.sha256` is not edited; these are the current hashes.
+
+Code:
+- `uma/rsls/stage6.py` — `adaptive_dt` and `density_floor` added, both default
+  OFF so every published number reproduces bit for bit. Fixed `dt` violated
+  CFL by ~548x by step 8000; without a floor the run stalls at t ~ 3.34.
+- `uma/rsls/ligo_lisa.py` — the echo prediction could not recover its own
+  injection. Forward and inverse used length conventions differing by
+  M_adm = 30, the search window `[0.002, 0.2]` s excluded the true spacing
+  (~1.2-1.45 ms) for every admissible ell_star, and autocorrelation cannot
+  separate the comb from the 250 Hz carrier over that lag range. Now cepstral;
+  injected ell_*/M of 0.3, 0.6, 0.9 recover exactly. Added a timing-resolution
+  floor so an unresolvable value REFUSES instead of reporting "inconsistent".
+- `uma/rsls/memory.py` — `nec_violation` discarded its contraction and returned
+  min((k.grad M)^2), a square, so it could not fail. Now contracts a genuinely
+  null vector in (2+1) Minkowski, where the identity has content.
+- `uma/rsls/frame_dragging.py` — cone compression `eta` was assigned 0.99 for
+  saturated cells with `change_rate` computed and never read. It now refuses.
+
+Tests: `test_ligo_lisa.py` +4 round-trip gates including the cepstrum-vs-ACF
+control; `test_rsls.py` +3 NEC gates including a non-null contraction that must
+go negative.
+
+Documents: PRESENTATION.md, TOTALITY_OF_THEORY.md,
+PROOF_AND_FALSIFICATION_CHECKPOINTS.md, BUILD_STATE.md and FRAMEWORK_MAP.md
+still presented lambda = +1.127 and +19.4 as verified while the code, the tests
+and IMPASSES.md had withdrawn them. Checkpoint N8 cited a test that no longer
+exists. Corrected; BUILD_STATE.md is annotated rather than rewritten because it
+is a dated log.
+
+| Path | SHA-256 (current) | Bytes |
+|---|---|---|
+| `./uma_build_v4/BUILD_STATE.md` | `db6a3f820f96a63941371f622135d6497f07f1f27f721f90b51430254956b812` | 8625 |
+| `./uma_build_v4/FRAMEWORK_MAP.md` | `b1358981e463000f3219e199e2ffc359d06915466ead0be66aa2b6880b135c78` | 15188 |
+| `./uma_build_v4/PRESENTATION.md` | `b30023aa49aa4f9509618c21439970bb1a3ee67d998977c976b726d2711fe4c7` | 8646 |
+| `./uma_build_v4/docs/PROOF_AND_FALSIFICATION_CHECKPOINTS.md` | `57cf35b15d48d9c2b002dd7b6a3d277efa695f2d337b7ba45baf671d6cc11661` | 12139 |
+| `./uma_build_v4/docs/TOTALITY_OF_THEORY.md` | `32f95a75a2ac90a6325d1cf7eec559be35dac9be8207e71d5fa572d1ef1885b1` | 13648 |
+| `./uma_build_v4/tests/test_ligo_lisa.py` | `3d78ca7b9e05d7f0d8ddde702b53391af788e61a0f1ffc1f19302cf4e783eda5` | 7550 |
+| `./uma_build_v4/tests/test_rsls.py` | `96437d065ed952189594c9c35787add1a383c08d819672de455b532e0a5414ad` | 12206 |
+| `./uma_build_v4/uma/rsls/frame_dragging.py` | `0b8cb5bd5d74e62d0eaf474442a7917877a8f4389f8d16fa1cd72ff598816f94` | 27281 |
+| `./uma_build_v4/uma/rsls/ligo_lisa.py` | `351cc213a8ea6ca519a0fc1ae153968d9d13c253e99add3b8d3af42ef91bb169` | 17940 |
+| `./uma_build_v4/uma/rsls/memory.py` | `bc3c086fde5b1821ba64fd86ea882da1de90fb01df7b9079ef382117f18a985e` | 11893 |
+| `./uma_build_v4/uma/rsls/stage6.py` | `6e149064497e17d00883d8cd35e217181025bbb95896a859c5c372136afdb393` | 22754 |

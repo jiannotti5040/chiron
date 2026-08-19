@@ -213,12 +213,43 @@ the suite.
 
 Run from `uma_build_v4/` with `PYTHONPATH=. python3.12 studies/rsls_lyapunov/<script>`.
 
-## Not done
+## Not done — resolved 2026-08-19
 
-The kernel's fixed-`dt` and vacuum defects are **documented here, not fixed in
-the module**. Changing the timestepping alters every Stage-5/6 result
-(cone aperture, drift, saturation), which is a modelling decision rather than
-a diagnostic fix. The density floor likewise changes the physics. Settling
-whether the dragged kernel is chaotic needs those decisions made first, then a
-tangent-space (variational) integrator rather than a finite-difference twin,
-on a shock-capturing scheme where the linearisation is meaningful.
+This section used to say the question needed two modelling decisions made and
+then a tangent-space integrator. It contradicted the tangent-space section
+directly above it, which had already done exactly that and settled the answer:
+the positive exponent is an artifact of the discretisation.
+
+The remaining half was true and is now also done. The fixed-`dt` and vacuum
+defects were documented here and not fixed in the module, on the grounds that
+changing the timestepping alters every Stage-5/6 result. That objection is
+void — those results are the ones this study showed to be artifacts, so there
+was nothing left to protect. `Stage6Config` now carries `adaptive_dt` and
+`density_floor`, both defaulting OFF so every published number reproduces bit
+for bit. Measured at N = 100 over 16000 steps:
+
+| configuration | t reached | max\|S_R\| |
+|---|---|---|
+| baseline, as published | 8.801 | 1.181e+15 |
+| adaptive dt only | 2.710 | 7.579e-01 |
+| **adaptive dt + floor 0.1** | **8.801** | **2.482e-01** |
+
+The published configuration reaches t = 8.8 only by integrating an unstable
+scheme; the floored adaptive run reaches the same physical time with the
+solution bounded. A valid long-time integration now exists in the module, not
+only in this directory's private `Kernel`.
+
+### Still open
+
+Grid refinement was extended to N = 400 on 2026-08-19 and remains
+non-monotonic — +62.756, +16.101, +4.125, +30.392 at N = 50/100/200/400 for
+T = 5 — so the refusal stands and the N = 200 dip was not the artifact
+resolving away.
+
+**These numbers do not reproduce the table above.** That table reports
++86.24 / +172.02 / +9.23 at N = 50/100/200 with λ·dt constant to 0.3%; the
+2026-08-19 run gives λ·dt of 0.069 / 0.0089 / 0.0011, which is not constant.
+The seed is fixed, so this should be deterministic. Until the discrepancy is
+explained, the *conclusion* (non-convergence, therefore refuse) is supported
+by both runs, but the specific "λ doubles when N doubles, λ·dt constant"
+evidence should not be quoted.

@@ -61,7 +61,7 @@ it?). The trace is the unification check.
 | 3 | Perturbative analysis: Whitham, pseudospectral envelope, complex impedance, Wigner delay, detectability bound | ✅ implemented in `uma/rsls/stage3.py`; 16/16 tests pass |
 | 4 | Global well-posedness: 4A–4F (entropy variables, characteristic decoupling, BV closure, NEC, Maxwell-Cattaneo, self-quenching) | ✅ specified in `docs/RSLS_specification.md` §IX; closure proven analytically |
 | 5 | Frame-dragging via β^φ ≠ 0; 1.5-D cylindrical kernel; Coriolis off-diagonal stress | ✅ implemented in `uma/rsls/frame_dragging.py`; λ_max = +1.13 with drag vs −0.04 without; 10/10 tests pass |
-| 6 | Self-consistent ADM-coupled β^φ; Cattaneo-style causal metric evolution; the Pages-file's closing question answered | ✅ implemented in `uma/rsls/stage6.py`; λ_max = +19.4 under coupling; cone strictly positive throughout; 12/12 tests pass |
+| 6 | Self-consistent ADM-coupled β^φ; Cattaneo-style causal metric evolution | ✅ implemented in `uma/rsls/stage6.py`; the coupled evolution runs and stays well-posed. **λ_max = +19.4 is WITHDRAWN** — a discretisation artifact (λ·dt constant under refinement). Cone positivity is an algebraic identity (2·sqrt(c²+G), G ≥ 0) and is not evidence. |
 | 7 | Real LIGO/LISA waveform interface; synthetic injection-recovery; echo-spacing analyzer | ✅ implemented in `uma/rsls/ligo_lisa.py`; ready for real strain data |
 
 ## 3. The headline numerical results
@@ -96,7 +96,7 @@ These are what runs and prints, today, on `python3 -m pytest tests/`.
 | Self-consistency converges | **True** | n/a |
 | Cone strictly positive throughout | **True** | True |
 | β^φ drift | 0.089 (coherent metric response) | 0.0 (frozen) |
-| λ_max | **+19.4** | +1.13 |
+| λ_max | **withdrawn** (was +19.4) | **withdrawn** (was +1.13) |
 
 Self-consistent coupling *amplifies* the chaos signature by ~17× because perturbations now propagate through both matter and metric. The Pages-file's "first shift-vector-driven collapse on the PG background" runs, holds, and amplifies as predicted.
 
@@ -140,7 +140,7 @@ The mapping is term-by-term in the corpus; this table is the reference.
 1. **Phase A grid-independence**: the wall thickness ℓ_* converges to a non-zero, mesh-independent constant. *Numerically verified to slope 0.015 across an order of magnitude in N.* This is the load-bearing claim — without it the whole framework would be a numerical artifact.
 2. **Stage 5 cone-aperture dichotomy**: β^φ ≠ 0 ⇔ ΔΛ > 2c_diff strictly. *Algebraically derived (Section XIV) and numerically verified (margin +0.077 vs 0.0).*
 3. **Stage 5 Lyapunov dichotomy**: under frame-dragging, twin trajectories diverge at λ ≈ +1.13; without it, they converge at λ ≈ −0.04. *Numerically verified, 25× separation.*
-4. **Stage 6 self-consistency closure**: under causal-relaxation β^φ evolution, the cone-aperture invariance survives and the Lyapunov signature amplifies. *Numerically verified, λ = +19.4 under coupling.*
+4. **Stage 6 self-consistency closure**: under causal-relaxation β^φ evolution the coupled system runs and remains well-posed. The claim that "the Lyapunov signature amplifies" is **withdrawn**: λ = +19.4 was an artifact of the timestep, not a measurement. Cone-aperture positivity holds but is an identity, not a result.
 5. **Stage 4 well-posedness**: the coupled Einstein–Cattaneo system is symmetric-hyperbolic, BV-closed, NEC-compliant, and self-quenching. *Proven analytically; section IX of the spec.*
 6. **Stage 3 spectral admissibility**: all linearized perturbations of the saturated background decay (Im ω ≤ 0); the impedance is finite; the Wigner delay is well-defined; the detectability bound rules out a Planck-scale ℓ_*. *Algebraically derived and tested.*
 7. **Lorenz Lyapunov calibration**: the same Benettin algorithm that gives λ ≈ 0.88 on Lorenz (correct to 3%) is the one used in Stages 5 and 6. *Validation anchor.*

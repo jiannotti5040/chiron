@@ -169,7 +169,7 @@ THE NEXT-STEP POC.
 - **FrameDraggingResult** -- `D_final, S_R_final, S_phi_final, M_final, beta_phi, times, cone_aperture_history, cone_compression_history, M_max_history, lyapunov_max, cone_aperture_strictly_positive, cone_aperture_min_margin, cone_aperture_saturation_margin, cone_compression_below_unity_fraction, converged`.
 - **kerr_like_drag(R_centers, R_in, Omega_0, exponent)** -- `beta^phi(R) = Omega_0 (R_in/R)^p`.
 - **cone_aperture_full(R_centers, beta_phi, cfg)** -- `Delta_Lambda(R) = 2 sqrt(c_diff^2 + (R d_R beta^phi)^2)`.
-- **cylindrical_hll_step(D, S_R, S_phi, M, beta_phi, R_faces, R_centers, dt, cfg)** -- conservative `(R D, R S_R, R S_phi)` HLL with cylindrical-shell volumes, plus Coriolis coupling `+2 D beta^phi v_phi on S_R, -2 D beta^phi v_R on S_phi` (the off-diagonal stress `T_{R phi}` that produces structural chaos).
+- **cylindrical_hll_step(D, S_R, S_phi, M, beta_phi, R_faces, R_centers, dt, cfg)** -- conservative `(R D, R S_R, R S_phi)` HLL with cylindrical-shell volumes, plus Coriolis coupling `+2 D beta^phi v_phi on S_R, -2 D beta^phi v_R on S_phi` (the off-diagonal stress `T_{R phi}`; it was described as producing structural chaos, a claim withdrawn 2026-08-19 as a discretisation artifact).
 - **lyapunov_kernel(cfg)** -- twin-trajectory Benettin with perturbation at `perturb_cell` in `S_R`, renorm every `lyap_renorm_every` steps.
 - **run_frame_dragging(cfg, snapshot_every=200, verbose=False)** -- main entry point.
 
