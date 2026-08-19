@@ -105,6 +105,12 @@ class Stage6Config(FrameDraggingConfig):
     kappa_drag: float = 0.4       # coupling: T_Rphi -> beta^phi_eq
     enable_self_consistency: bool = True
     beta_phi_freeze_steps: int = 100  # let matter settle before evolving metric
+    # --- the two defects studies/rsls_lyapunov/ documented, now fixable here ---
+    # Both default OFF so every existing Stage-5/6 number is reproduced bit for
+    # bit. Turn them on to get an integration that is actually valid for long
+    # times; see `adaptive_dt` and `density_floor` in the module docstring.
+    adaptive_dt: bool = False     # recompute the CFL step every step
+    density_floor: float = 0.0    # D >= floor ("atmosphere"); 0 disables
 
 
 @dataclass
@@ -231,10 +237,23 @@ def run_stage6(cfg: Optional[Stage6Config] = None,
     J = np.zeros(cfg.N)
 
     # Time step (matter CFL + Cattaneo CFL + beta_phi CFL)
-    dt_trans = transport_cfl(S_R / np.maximum(D, 1e-12), dR, mcfg, safety=cfg.cfl_safety)
-    dt_catt = cattaneo_cfl(dR, mcfg, safety=cfg.cfl_safety)
-    dt_beta = cfg.cfl_safety * min(cfg.tau_beta, (dR ** 2) / (2 * max(cfg.mu_beta, 1e-12)))
-    dt = min(dt_trans, dt_catt, dt_beta, 0.005 * dR)
+    def _cfl_dt(S_R_now, D_now):
+        """Most-restrictive stable step for the CURRENT state.
+
+        Evaluated once at t=0 when `adaptive_dt` is False, which is what every
+        published Stage-5/6 number used. That is unsound once the flow speeds
+        up: max|v| grows 0.30 -> 8.7 -> 4.4e4, so the frozen step exceeds the
+        transport CFL bound by ~548x by step 8000 and the solution is
+        non-finite by 12951 (studies/rsls_lyapunov/adaptive.py).
+        """
+        dt_trans = transport_cfl(S_R_now / np.maximum(D_now, 1e-12), dR, mcfg,
+                                 safety=cfg.cfl_safety)
+        dt_catt = cattaneo_cfl(dR, mcfg, safety=cfg.cfl_safety)
+        dt_beta = cfg.cfl_safety * min(cfg.tau_beta,
+                                       (dR ** 2) / (2 * max(cfg.mu_beta, 1e-12)))
+        return min(dt_trans, dt_catt, dt_beta, 0.005 * dR)
+
+    dt = _cfl_dt(S_R, D)
 
     if verbose:
         print(f"[Stage6] N={cfg.N} dR={dR:.3e} dt={dt:.3e} tau_beta={cfg.tau_beta}")
@@ -246,15 +265,25 @@ def run_stage6(cfg: Optional[Stage6Config] = None,
     T_Rphi_history = []
     min_margin_throughout = float("inf")
 
+    t_now = 0.0
     for step in range(cfg.n_steps + 1):
         # ---- Matter step (with current beta_phi) ----
+        if cfg.adaptive_dt:
+            dt = _cfl_dt(S_R, D)
         M = clip_M(M, mcfg)
         D, S_R, S_phi = cylindrical_hll_step(
             D, S_R, S_phi, M, beta_phi, R_faces, R_centers, dt, mcfg)
+        if cfg.density_floor > 0.0:
+            # Standard atmosphere treatment. Without it min(D) collapses to
+            # ~1e-6, v = S/D reaches 4e5, dt collapses to 1e-7 and the clock
+            # stalls at t ~ 3.34 -- a coordinate singularity in finite time,
+            # with no long-time trajectory for anything to be measured on.
+            D = np.maximum(D, cfg.density_floor)
         v_R = S_R / np.maximum(D, 1e-12)
         M = M + dt * (-np.gradient(J, dR) - 0.5 * np.gradient(v_R, dR))
         M = clip_M(M, mcfg)
         J = cattaneo_step(J, M, dR, dt, mcfg)
+        t_now += dt
 
         # ---- Metric step (beta_phi evolution from T_Rphi) ----
         if cfg.enable_self_consistency and step >= cfg.beta_phi_freeze_steps:
@@ -281,7 +310,7 @@ def run_stage6(cfg: Optional[Stage6Config] = None,
             min_margin_throughout = margin
 
         if step % snapshot_every == 0 or step == cfg.n_steps:
-            times.append(step * dt)
+            times.append(t_now)
             beta_history.append(beta_phi.copy())
             cone_history.append(aperture_now.copy())
             M_max_history.append(float(M.max()))
