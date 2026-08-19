@@ -194,3 +194,25 @@ is a dated log.
 | `./uma_build_v4/uma/rsls/ligo_lisa.py` | `351cc213a8ea6ca519a0fc1ae153968d9d13c253e99add3b8d3af42ef91bb169` | 17940 |
 | `./uma_build_v4/uma/rsls/memory.py` | `bc3c086fde5b1821ba64fd86ea882da1de90fb01df7b9079ef382117f18a985e` | 11893 |
 | `./uma_build_v4/uma/rsls/stage6.py` | `6e149064497e17d00883d8cd35e217181025bbb95896a859c5c372136afdb393` | 22754 |
+
+
+**2026-08-19 (second) — the Phase A wall does not scale with ell_*** (1 file)
+
+`PRESENTATION.md` presented mesh-independence (log-log slope 0.015 vs N) as
+showing "the wall is a structural feature of the theory, not the grid". The
+first half holds -- it is not numerical diffusion. The second does not: a
+width set by a mesh-independent INITIAL CONDITION is also mesh-independent.
+
+The theory predicts ell_*(M) = (M_max - M) * sqrt(mu * tau_M / lambda), so the
+wall should scale linearly with sqrt(mu*tau_M/lambda). Measured across a 4x
+range of that quantity the canonical interface width is **0.8630 to four
+decimals, unchanged** -- log-log slope +0.000 against a predicted +1.0 -- at
+full saturation and at the full 15000-step run length. Against the initial
+pulse width the slope is +0.988.
+
+New: `studies/phase_a_wall/` (scaling.py, README.md) and
+`tests/test_phase_a_wall.py`, which gates the finding in both directions.
+
+| Path | SHA-256 (current) | Bytes |
+|---|---|---|
+| `./uma_build_v4/PRESENTATION.md` | `ee979f825ce3f9a04b142a430bc29da74d1b0f2d9923aa8c8f249e783df0c476` | 10242 |

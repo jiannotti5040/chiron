@@ -12,16 +12,20 @@ A working numerical implementation of a field theory in which:
 
 1. Gravitational singularities are replaced by a **saturated information
    attractor** governed by a singular convex barrier V(M).
-2. An **emergent length scale** ℓ_* arises naturally, mesh-independent,
-   and is in principle observable in LIGO/LISA ringdown data.
+2. An **emergent length scale** ℓ_* is defined in closed form and is in
+   principle observable in LIGO/LISA ringdown data. The measured Phase A
+   wall is mesh-independent but does **not** scale with ℓ_*'s parameters —
+   see below.
 3. **Frame-dragging** (a non-zero shift vector β^φ) changes the character
    of the dynamics. It was claimed to produce structural chaos via a
    positive Lyapunov exponent; **that claim is withdrawn** — see below.
 4. A route to the **Born rule** as the ergodic limit of an SRB measure.
    This rested on 3, so it is currently **unsupported**, not established.
 
-Items 1 and 2 are implemented and tested. Items 3 and 4 are open. The
-suite is 205 passing tests.
+Item 1 is implemented and tested. Item 2 is implemented, and the
+observational pipeline now recovers an injected ℓ_* exactly — but the Phase A
+wall does not exhibit ℓ_*'s predicted scaling. Items 3 and 4 are open. The
+suite is 214 passing tests.
 
 ## What's new
 
@@ -37,13 +41,33 @@ with a well-defined SRB measure.
 
 ## The headline numerical results
 
-### The wall is mesh-independent
+### The wall is mesh-independent — but it is not ℓ_*
 
 The Phase A falsification kernel was run at N = 50, 100, 200, 400, 800
-cells. The wall thickness ℓ_* (the characteristic length of the
-diffuse interface) varied between 0.86 and 1.16 — *flat to within
+cells. The wall thickness varied between 0.86 and 1.16 — *flat to within
 30%* — with a log-log slope of **0.015** versus 1.0 for a pure-numerical
-artifact. The wall is a structural feature of the theory, not the grid.
+artifact. **That result stands: the wall is not numerical diffusion.**
+
+It is also not the theory's ℓ_*. Mesh-independence rules out the grid; it
+does not rule out the other way to get a mesh-independent width, which is for
+the width to be set by a mesh-independent *initial condition*. The theory
+makes the sharper claim ℓ_*(M) = (M_max − M)·sqrt(μ·τ_M/λ), so the wall
+should scale linearly with sqrt(μ·τ_M/λ). Tested 2026-08-19:
+
+| varied | log-log slope | theory predicts |
+|---|---|---|
+| sqrt(μ·τ_M/λ), pulse fixed | **+0.000** | +1.0 |
+| initial pulse width, theory fixed | **+0.988** | — |
+
+Across a 4× range of sqrt(μ·τ_M/λ) the measured width is **0.8630 to four
+decimals, unchanged**, at full saturation and at the full 15000-step run
+length. It is ≈ 0.43 × the initial pulse width instead.
+
+So the wall is neither a grid artifact nor the predicted barrier length: in
+this configuration it is the initial condition, propagated. That does not make
+ℓ_* wrong as theory, but Phase A does not currently demonstrate it, and the
+mesh-independence number should not be quoted as if it did. Full record and
+the regime that would settle it: `studies/phase_a_wall/README.md`.
 
 ### Frame-dragging and chaos — claim withdrawn
 
@@ -123,7 +147,10 @@ A scientific theory is one that *could* be wrong in specific,
 measurable ways. The framework can be falsified by:
 
 - **Phase A grid-dependence.** If on careful re-run the wall-thickness
-  slope is ≥ 0.5 (not ~ 0), the singular-barrier mechanism is wrong.
+  slope against N is ≥ 0.5, the wall is numerical diffusion. It is 0.015, so
+  it is not. **But this is the wrong discriminator for the mechanism:** the
+  slope against the theory's own sqrt(μ·τ_M/λ) is the one that distinguishes
+  a barrier-set wall from an initial-condition-set one, and it is 0.000.
 - **Stage 5 dichotomy collapse.** If the Lyapunov exponent is ≈ 0 with
   β^φ ≠ 0, the Coriolis-coupling derivation is wrong. **This handle is
   currently pulled:** the dragged exponent is unresolved, so the dichotomy
