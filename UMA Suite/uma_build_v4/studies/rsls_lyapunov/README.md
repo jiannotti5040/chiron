@@ -171,6 +171,12 @@ Grid convergence at equal physical time, with the validated method:
 | 100 | 0.110 | 5.500e-4 | +172.02 | **0.09461** |
 | 200 | 0.055 | 2.750e-4 | +9.23 | 0.00254 |
 
+*(Window: `T_target = 20.0`, `T_burn = 2.0`. Re-derived 2026-08-19 — every
+entry reproduces to three decimals, and λ·dt to five. An earlier revision of
+this section described the window as T = 5, which is wrong: at T = 5 the same
+code gives +62.76, +16.10, +4.13. See "How much the window matters" below,
+which is why the distinction is not pedantic.)*
+
 λ **doubles exactly** when N doubles (ratio 1.99), and `λ·dt` is identical to
 0.3%. That is the signature of **grid-scale numerical amplification**: the
 tangent vector grows by a fixed factor *per timestep* irrespective of
@@ -239,17 +245,33 @@ scheme; the floored adaptive run reaches the same physical time with the
 solution bounded. A valid long-time integration now exists in the module, not
 only in this directory's private `Kernel`.
 
-### Still open
+### How much the window matters — and a reproduction, 2026-08-19
 
-Grid refinement was extended to N = 400 on 2026-08-19 and remains
-non-monotonic — +62.756, +16.101, +4.125, +30.392 at N = 50/100/200/400 for
-T = 5 — so the refusal stands and the N = 200 dip was not the artifact
-resolving away.
+A re-run at T = 5 gave +62.76, +16.10, +4.13 against the table's +86.24,
++172.02, +9.23, which looked at first like a failure to reproduce. It was not:
+the harness is deterministic and the table is exact. The ε-independence figures
+quoted above reproduce to four decimals (+113.4747, +110.8471, +110.6263,
++111.1995 against +113.5, +110.8, +110.6, +111.2), and every entry of the grid
+table reproduces at **T = 20**, which is the window it was actually run at.
 
-**These numbers do not reproduce the table above.** That table reports
-+86.24 / +172.02 / +9.23 at N = 50/100/200 with λ·dt constant to 0.3%; the
-2026-08-19 run gives λ·dt of 0.069 / 0.0089 / 0.0011, which is not constant.
-The seed is fixed, so this should be deterministic. Until the discrepancy is
-explained, the *conclusion* (non-convergence, therefore refuse) is supported
-by both runs, but the specific "λ doubles when N doubles, λ·dt constant"
-evidence should not be quoted.
+The reason the mislabel mattered so much is itself the sharpest evidence in
+this directory. At fixed N = 100 and a fixed grid, the exponent moves by more
+than an order of magnitude with the *window alone*:
+
+| T_burn (T = 5) | λ |     | T_target (burn = 2) | λ |
+|---|---|---|---|---|
+| 0.0 | +5.54 | | 5.0 | +16.10 |
+| 1.0 | +6.85 | | 8.0 | +82.77 |
+| 2.0 | +16.10 | | 12.0 | +111.20 |
+| 3.0 | +45.13 | | 20.0 | +172.02 |
+| 5.0 | +129.31 | | | |
+
+**A 23× swing from the burn-in and a 10× swing from the window length, with
+nothing about the physics or the discretisation changed.** A Lyapunov exponent
+is a limit; a quantity that depends this strongly on where you start looking
+and how long you look has not reached one. This is an independent argument for
+the refusal, and it does not depend on the grid-refinement argument at all.
+
+Both the λ·dt-constant signature (N = 50 → 100, constant to 0.3%) and the
+non-monotonicity under further refinement therefore stand as originally
+written.
