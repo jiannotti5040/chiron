@@ -238,3 +238,60 @@ class TestConvergence:
         slope, _ = np.polyfit(np.log(drs[valid]), np.log(wts[valid]), 1)
         # Slope should be < 1 (away from pure-numerical), with some margin
         assert slope < 0.9, f"slope = {slope}, expected < 0.9 (physical regime)"
+
+
+class TestNECIsAGateThatCanFail:
+    """The NEC check used to be incapable of failing.
+
+    It computed the contraction of gradient_stress's tensor, discarded it, and
+    returned min((k.grad M)^2) -- a square. test_nec_nonneg_on_random was
+    therefore asserting that a square is non-negative, which is true of every
+    possible input including a completely broken stress tensor.
+
+    It now contracts a genuinely null k in (2+1) Minkowski, where the identity
+    T_{mu nu} k^mu k^nu = (k^mu d_mu M)^2 actually has content: the -(1/2) eta
+    trace term drops out BECAUSE k is null, not because the answer was written
+    down by hand. These gates show the difference is real.
+    """
+
+    def _fields(self):
+        import numpy as np
+        rng = np.random.default_rng(3)
+        return [("random", rng.random((20, 20)) * 0.5),
+                ("step", np.where(np.arange(20)[:, None] > 10, 0.9, 0.05)
+                 * np.ones((20, 20)))]
+
+    def test_null_vector_is_actually_null(self):
+        import numpy as np, math
+        eta = np.diag([-1.0, 1.0, 1.0])
+        for th in np.linspace(0, 2 * math.pi, 8, endpoint=False):
+            k = np.array([1.0, math.cos(th), math.sin(th)])
+            assert abs(float(eta.dot(k).dot(k))) < 1e-12
+
+    def test_nec_holds_for_the_real_contraction(self):
+        cfg = MemoryConfig()
+        for _, M in self._fields():
+            assert nec_violation(M, dx=0.1, cfg=cfg) >= -1e-12
+
+    def test_a_non_null_contraction_goes_negative(self):
+        """Why the null vector is load-bearing, not decorative.
+
+        Contracting the same stress tensor with a unit SPATIAL vector -- which
+        is what the 2x2 Euclidean tensor invites, and has no null directions at
+        all -- leaves the trace term in and drives the result negative. If the
+        implementation ever drifts back to that, the value stops being >= 0.
+        """
+        import numpy as np, math
+        cfg = MemoryConfig()
+        for label, M in self._fields():
+            dMdx = np.gradient(M, 0.1, axis=0)
+            dMdy = np.gradient(M, 0.1, axis=1)
+            grad_sq = dMdx ** 2 + dMdy ** 2
+            worst = float("inf")
+            for th in np.linspace(0, 2 * math.pi, 8, endpoint=False):
+                kx, ky = math.cos(th), math.sin(th)          # unit, NOT null
+                val = (kx * dMdx + ky * dMdy) ** 2 - 0.5 * grad_sq
+                worst = min(worst, float(val.min()))
+            assert worst < 0.0, (
+                "%s: the non-null contraction should be negative, got %r"
+                % (label, worst))

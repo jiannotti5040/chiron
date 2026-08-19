@@ -130,7 +130,11 @@ class FrameDraggingResult:
             "cone_aperture_min_margin":       round(self.cone_aperture_min_margin, 6),
             "cone_aperture_sat_margin":       round(self.cone_aperture_saturation_margin, 6),
             "cone_aperture_strictly_positive": self.cone_aperture_strictly_positive,
-            "cone_compression_<1_fraction":   round(self.cone_compression_below_unity_fraction, 4),
+            "cone_compression_<1_fraction":   (
+                "REFUSED (not measured; needs tangent-space analysis)"
+                if self.cone_compression_below_unity_fraction
+                != self.cone_compression_below_unity_fraction
+                else round(self.cone_compression_below_unity_fraction, 4)),
             "lyapunov_max":                   round(self.lyapunov_max, 6),
             "converged":                      self.converged,
         }
@@ -536,13 +540,27 @@ def run_frame_dragging(cfg: Optional[FrameDraggingConfig] = None,
             # cone compression proxy: the ratio of new aperture to old --
             # for static beta_phi this is 1; we instead track relative
             # change in the state vector magnitude as a discrete proxy
-            eta = np.ones(cfg.N)
-            # Only meaningful in saturated cells (M > 0.5)
+            # eta used to be fabricated here: `change_rate` above was computed
+            # and never read, and saturated cells were simply ASSIGNED 0.99
+            # with the comment "# contracting". The reported
+            # cone_compression_below_unity_fraction was therefore exactly 1.0
+            # whenever any cell was saturated, for any dynamics whatsoever --
+            # a constant presented as one of three things "the kernel proves
+            # numerically".
+            #
+            # Cone compression eta < 1 is an Anosov statement: the discrete
+            # flow contracts tangent vectors uniformly onto E^u. Establishing
+            # it needs tangent-space analysis, which lives in
+            # studies/rsls_lyapunov/tangent_lyapunov.py -- and that analysis
+            # found the growth in this kernel to be grid-scale numerical
+            # amplification (lambda doubles when N doubles, lambda*dt constant),
+            # so there is no measured uniform contraction to report.
+            #
+            # NaN rather than a number: the quantity is not measured here, and
+            # a caller must not be able to read one that never was.
+            eta = np.full(cfg.N, np.nan)
             sat_mask = M > 0.5 * mcfg.M_max
-            if sat_mask.any():
-                eta[sat_mask] = 0.99  # contracting
-            eta_total_count += sat_mask.sum()
-            eta_below_one_count += (eta[sat_mask] < 1.0).sum()
+            eta_total_count += int(sat_mask.sum())
         else:
             eta = np.ones(cfg.N)
 
@@ -558,7 +576,10 @@ def run_frame_dragging(cfg: Optional[FrameDraggingConfig] = None,
             break
 
     cone_strictly_positive = bool(min_margin > 0)
-    eta_below_unity_fraction = (eta_below_one_count / max(eta_total_count, 1))
+    # Refused, not zero: nothing here measured a contraction rate. The count of
+    # saturated cells is still tracked so a future tangent-space implementation
+    # has the population it would need to report over.
+    eta_below_unity_fraction = float("nan")
 
     # Cone aperture in the SATURATION LAYER specifically (where the
     # cone analysis lives): cells where M > 0.5 * Mmax

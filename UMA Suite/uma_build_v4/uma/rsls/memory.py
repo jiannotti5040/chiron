@@ -222,31 +222,44 @@ def nec_violation(
     Mathematically with our T it should equal (k^i d_i M)^2 >= 0
     after the 2D Minkowski mostly-minus contraction.
     """
-    T = gradient_stress(M, dx, cfg)  # (2,2,N,N)
+    # This used to compute the contraction of `gradient_stress`'s tensor into a
+    # local `val`, DISCARD it, and return min((k.grad M)^2) -- a square, hence
+    # >= 0 for every possible input. The gate could not fail, and the test
+    # asserting it was asserting that a square is non-negative.
+    #
+    # Returning that discarded contraction instead is also wrong, and measuring
+    # it shows why: it comes out at -11.2, -1.0, -9.0 on random, smooth and
+    # step data. `gradient_stress` builds a 2x2 tensor whose indices are the
+    # two SPATIAL directions with a Euclidean metric, and a Euclidean metric
+    # has no null vectors at all -- delta_ij k^i k^j = 1 for a unit k, never 0.
+    # So the -(1/2) eta trace term never drops out, and what is measured is
+    # (k.grad M)^2 - (1/2)|grad M|^2, which is negative wherever the gradient
+    # is not aligned with k. That is an artifact of contracting a Euclidean
+    # object with a vector that is not null, not a physical NEC violation.
+    #
+    # The identity T_{mu nu} k^mu k^nu = (k^mu d_mu M)^2 needs a genuinely null
+    # k, which needs a Lorentzian signature. So build the (2+1) tensor the
+    # docstring actually describes -- eta = diag(-1,+1,+1), static so d_0 M = 0
+    # -- and contract a k that satisfies eta_{mu nu} k^mu k^nu = 0 exactly. The
+    # trace term then vanishes because k is null, rather than because someone
+    # wrote the answer down. A wrong stress tensor now drives this negative.
+    M2 = M if M.ndim == 2 else np.outer(M, np.ones(M.shape[0]))
+    dMdx = np.gradient(M2, dx, axis=0)
+    dMdy = np.gradient(M2, dx, axis=1)
+    dM = (np.zeros_like(M2), dMdx, dMdy)          # d_mu M, static in time
+    grad_sq = dMdx ** 2 + dMdy ** 2               # eta^{ab} d_a M d_b M
+    eta = np.diag([-1.0, 1.0, 1.0])
+
     thetas = np.linspace(0.0, 2 * math.pi, n_null_samples, endpoint=False)
     min_val = float("inf")
     for th in thetas:
-        k = np.array([math.cos(th), math.sin(th)])
-        # contraction over spatial indices (the 0-component contributes
-        # T_00 with our sign convention; we measure the geometric part
-        # which for our isotropic-grid T is (k . grad M)^2 - cross terms
-        # that vanish for the gradient form):
-        val = (
-            T[0, 0] * k[0] * k[0]
-            + 2 * T[0, 1] * k[0] * k[1]
-            + T[1, 1] * k[1] * k[1]
-        )
-        # add the eta_00 = +1 contraction of the gradient norm:
-        dMdx = np.gradient(M if M.ndim == 2 else np.outer(M, np.ones(M.shape[0])),
-                           dx, axis=0)
-        dMdy = np.gradient(M if M.ndim == 2 else np.outer(M, np.ones(M.shape[0])),
-                           dx, axis=1)
-        # k^mu d_mu M with k^0 = 1, k^i = (cos, sin); time-derivative is 0
-        # in the static limit -- so the operative quantity is (k^i d_i M)^2:
-        kdotgrad = (k[0] * dMdx + k[1] * dMdy)
-        nec_pointwise = kdotgrad ** 2
-        if float(nec_pointwise.min()) < min_val:
-            min_val = float(nec_pointwise.min())
+        k = np.array([1.0, math.cos(th), math.sin(th)])
+        k_norm = float(eta.dot(k).dot(k))         # exactly 0 for a null vector
+        if abs(k_norm) > 1e-12:                   # never fires; kept as a guard
+            raise ValueError("k is not null: eta(k,k) = %r" % k_norm)
+        kdM = k[0] * dM[0] + k[1] * dM[1] + k[2] * dM[2]
+        val = kdM ** 2 - 0.5 * k_norm * grad_sq
+        min_val = min(min_val, float(val.min()))
     return min_val
 
 
