@@ -216,3 +216,22 @@ New: `studies/phase_a_wall/` (scaling.py, README.md) and
 | Path | SHA-256 (current) | Bytes |
 |---|---|---|
 | `./uma_build_v4/PRESENTATION.md` | `ee979f825ce3f9a04b142a430bc29da74d1b0f2d9923aa8c8f249e783df0c476` | 10242 |
+
+
+**2026-08-21 — the barrier's restoring force, as an opt-in** (1 file)
+
+`uma/rsls/phase_a.py` gains `PhaseAConfig.barrier_force`, default **off**, so
+every published Phase A number is reproduced unchanged. When on it adds the
+`-V'(M)` term that `ell_* = sqrt(mu*tau_M/V''(M))` presupposes and the M
+equation lacks, so the emergent-length prediction can be tested rather than
+assumed.
+
+Result, recorded in `studies/phase_a_wall/`: it does not rescue the claim. The
+transient wall's slope against lambda moves from +0.000 to -0.075 (theory
+-0.5), and the relaxed wall stays at 2.0-2.3 grid cells for every (mu, lambda)
+tested while ell_* spans 9-46 cells. The interface is compression-controlled
+and mesh-limited, not diffusion-controlled.
+
+| Path | SHA-256 (current) | Bytes |
+|---|---|---|
+| `./uma_build_v4/uma/rsls/phase_a.py` | `8192d3b6841f824f6407fa587b3bbf2e9f4f57c605755bc1688849fb557b4b20` | 12979 |

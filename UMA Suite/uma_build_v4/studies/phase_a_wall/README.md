@@ -167,3 +167,51 @@ had the wrong initial data. If it never does, the claim needs withdrawing.
 
 Gated in `tests/test_phase_a_wall.py`, which asserts the measured slopes so
 the finding cannot silently reverse.
+
+## The constructive test: supplying the missing term does NOT rescue it
+
+`PhaseAConfig.barrier_force` (default **off**, so every published number is
+unchanged) adds the absent `-V'(M)` to the M equation, making the prediction
+testable rather than assumed. It is a clean negative result.
+
+**Transient wall** (`wall_thickness_max`), log-log slope against λ:
+
+| | slope | theory |
+|---|---|---|
+| barrier force OFF | **+0.000** | −0.5 |
+| barrier force ON | **−0.075** | −0.5 |
+
+So the term does couple λ to the interface — the response goes from exactly
+flat to slightly negative — but it recovers about 15% of the predicted
+exponent.
+
+**Relaxed wall** (final snapshot), where the diffusion/barrier balance would
+actually live, at N = 300 (dR = 0.0467):
+
+| μ | λ | ℓ\* | wall (force ON) | cells |
+|---|---|---|---|---|
+| 0.08 | 0.03 | 1.6330 | 0.0941 | 2.02 |
+| 0.08 | 0.12 | 0.8165 | 0.0933 | 2.00 |
+| 0.08 | 0.48 | 0.4082 | 0.0933 | 2.00 |
+| 0.14 | 0.03 | 2.1602 | 0.1058 | 2.27 |
+| 0.14 | 0.12 | 1.0801 | 0.0933 | 2.00 |
+| 0.14 | 0.48 | 0.5401 | 0.1004 | 2.15 |
+
+The relaxed interface is **2.0–2.3 cells in every configuration tested**, while
+ℓ\* ranges over 0.41–2.16 — that is 9 to 46 cells, comfortably resolvable. The
+wall does not track it, with or without the barrier force, at any μ tested
+inside the causality bound.
+
+### What this means
+
+The interface is not diffusion-controlled at these parameters; it is
+compression-controlled and mesh-limited. The barrier can only push M away from
+M_max — it does not by itself set a profile width — and the width that would
+come from μ is overwhelmed by the `-0.5 div v` compression, which sharpens the
+front until the grid stops it.
+
+So the repair is **not** "add the missing term". The missing term is real and
+should be there, but the emergent-length claim needs the M equation's
+advection/compression balance addressed as well. That is a structural question
+about the model, not a bug, and it is now a measured one rather than an
+assumed one.

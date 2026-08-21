@@ -132,3 +132,50 @@ class TestWhyTheWallDoesNotTrackTheory:
         assert abs(cells[1] - cells[0]) / cells[0] < 1.0, (
             "cell count should be roughly resolution-independent (that is the "
             "defect); got %r" % cells)
+
+
+class TestBarrierForceDoesNotRescueTheScaling:
+    """PhaseAConfig.barrier_force supplies the absent -V'(M). It is not enough.
+
+    Measured: the transient wall's slope against lambda moves from +0.000 to
+    -0.075 (theory -0.5), and the RELAXED wall stays at 2.0-2.3 cells for every
+    (mu, lambda) tested while ell_* ranges over 9-46 cells. The interface is
+    compression-controlled and mesh-limited, not diffusion-controlled.
+    """
+
+    def test_default_is_off_so_published_numbers_are_unchanged(self):
+        assert PhaseAConfig().barrier_force is False
+
+    def test_the_force_does_couple_lambda_to_the_wall(self):
+        import numpy as np
+        widths = []
+        for lam in (0.03, 1.92):
+            m = MemoryConfig(lam=lam)
+            r = run_phase_a(PhaseAConfig(N=200, n_steps=3000, pulse_width=2.0,
+                                         memory=m, barrier_force=True),
+                            verbose=False)
+            ws = [interface_width(M, r.r_centers, m) for M in r.M_history]
+            ws = [w for w in ws if w is not None and np.isfinite(w)]
+            widths.append(max(ws))
+        assert widths[1] < widths[0], (
+            "with the barrier force on, a larger lambda should give a thinner "
+            "wall; got %r" % widths)
+
+    def test_but_the_relaxed_wall_stays_at_the_grid_floor(self):
+        """The negative result, pinned: ell_* is resolvable and still ignored."""
+        import numpy as np
+        N = 200
+        dR = 14.0 / N
+        cells = []
+        for lam in (0.03, 0.48):
+            m = MemoryConfig(lam=lam)
+            r = run_phase_a(PhaseAConfig(N=N, n_steps=4000, pulse_width=2.0,
+                                         memory=m, barrier_force=True),
+                            verbose=False)
+            ws = [interface_width(M, r.r_centers, m) for M in r.M_history]
+            ws = [w for w in ws if w is not None and np.isfinite(w)]
+            cells.append(ws[-1] / dR)
+        assert all(c < 8.0 for c in cells), (
+            "the relaxed wall is expected to sit at the grid floor even with "
+            "the barrier force on; got %r cells. If this has become resolved, "
+            "the emergent-length claim is worth re-testing." % cells)

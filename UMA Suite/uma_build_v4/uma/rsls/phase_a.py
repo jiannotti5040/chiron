@@ -59,6 +59,10 @@ class PhaseAConfig:
 # ---------------------------------------------------------------------------
 # Result
 # ---------------------------------------------------------------------------
+    # Supply the barrier's restoring force -V'(M) in the M equation.
+    # OFF by default: every published Phase A number assumes it absent.
+    barrier_force: bool = False
+
 
 @dataclass
 class PhaseAResult:
@@ -173,7 +177,26 @@ def run_phase_a(cfg: Optional[PhaseAConfig] = None, snapshot_every: int = 500,
         # (3) Memory accumulates kinematic compression: dM/dt = -div J - 0.5 div v
         v_r = S / np.maximum(D, 1e-12)
         grad_vR = np.gradient(v_r, dr)
-        M = M + dt * (-np.gradient(J, dr) - 0.5 * grad_vR)
+        # The barrier's restoring force. OFF by default, so every published
+        # Phase A number is reproduced unchanged.
+        #
+        # ell_* = sqrt(mu * tau_M / V''(M)) is the length at which diffusion
+        # balances the barrier curvature -- the steady state of
+        # d_t M = mu grad^2 M - V'(M). The line below integrates
+        # d_t M = -div J - 0.5 div v, which with the flux relaxed is
+        # d_t M ~ mu grad^2 M - 0.5 div v: no -V'(M). So ell_* describes a
+        # balance the M dynamics never perform, which is why the measured wall
+        # does not scale with lambda at all (see studies/phase_a_wall/).
+        #
+        # `barrier_force` supplies the missing term so the prediction can be
+        # tested rather than assumed. V'(M) = lambda / (M_max - M) is singular
+        # at saturation by design; it is evaluated on the clipped field so the
+        # pole is never reached.
+        if getattr(cfg, "barrier_force", False):
+            M = M + dt * (-np.gradient(J, dr) - 0.5 * grad_vR
+                          - V_prime(clip_M(M, mcfg), mcfg))
+        else:
+            M = M + dt * (-np.gradient(J, dr) - 0.5 * grad_vR)
         M = clip_M(M, mcfg)
 
         # (4) Implicit Cattaneo update for J_r (causal, unconditionally stable)
