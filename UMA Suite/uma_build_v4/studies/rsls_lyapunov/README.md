@@ -275,3 +275,29 @@ the refusal, and it does not depend on the grid-refinement argument at all.
 Both the λ·dt-constant signature (N = 50 → 100, constant to 0.3%) and the
 non-monotonicity under further refinement therefore stand as originally
 written.
+
+### Why the tangent table stops at N = 200
+
+It is not an oversight. **N = 400 at T = 20 is not reachable**: the adaptive
+step collapses. Measured by integrating each resolution for 8 wall-clock
+seconds and reading `dt` at the end —
+
+| N | dt initial | dt after 8 s | t reached |
+|---|---|---|---|
+| 100 | 5.500e-4 | 5.500e-4 | 47.70 |
+| 200 | 2.750e-4 | 2.750e-4 | 21.96 |
+| 400 | 1.375e-4 | **1.185e-5** | 8.94 |
+
+At N = 100 and N = 200 the step never leaves its initial value. At N = 400 it
+has fallen 12× and is still falling, so the projected step count to reach
+T = 20 grows faster than the run completes it. A 33-minute run produced no
+result.
+
+This is the finite-time vacuum from `vacuum.py` reappearing at high
+resolution *despite* the density floor: a finer grid resolves sharper velocity
+gradients, `max|v|` rises, the transport CFL tightens, and the clock stalls.
+So the refinement ladder has a practical ceiling here, and the honest reading
+is that the dragged statistic is unresolved over the range that CAN be
+computed — which is the conclusion this directory already reached by three
+independent routes (grid non-monotonicity, λ·dt constancy, and window
+sensitivity).
