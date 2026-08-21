@@ -2282,12 +2282,21 @@ def analyze_legal_admissibility(
         prong="Daubert Factor 3: Error Rate",
         standard="The known or potential rate of error",
         finding="satisfied",
-        basis=("The engine reports calibrated thresholds with PAC bounds: "
+        basis=("The engine's decision thresholds are explicit named constants "
+               "fixed in source, recorded in every certificate, and auditable: "
                "R_MIN, CP_MIN, COHERENCE_THRESHOLD, SEMANTIC_ENTROPY_MAX, "
-               "LYAPUNOV_CRITICAL, SOCPM_THRESHOLD_T. The empirical "
-               "test suite passes 217 tests covering each primitive. "
-               "Belief Delta and counterfactual robustness band "
-               "quantify uncertainty per certificate."),
+               "SOCPM_THRESHOLD_T. They are CHOSEN OPERATING BUDGETS, not "
+               "empirically calibrated error rates, and this finding does not "
+               "represent them as the latter. The engine does carry a "
+               "calibration protocol with a PAC bound (LEXGUARD 17, "
+               "`nnls_calibrate` and `pac_bound_on_threshold`), but it "
+               "calibrates the Safety_Tax weights, not these thresholds. "
+               "What IS an established error rate is the zero-false-"
+               "verification record on external data: the live-OEIS run "
+               "stamps 20 sequences with 0 false verifications, and the "
+               "certify property sweep presents 4116 claims with 0 false "
+               "VERIFIED. Belief Delta and the counterfactual robustness "
+               "band quantify uncertainty per certificate."),
         citation="Daubert v. Merrell Dow Pharms., 509 U.S. 579, 594 (1993)",
         opposing_counsel_attack=(
             "Argue calibration on synthetic data does not establish "
